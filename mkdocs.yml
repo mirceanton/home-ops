@@ -1,0 +1,78 @@
+---
+site_name: Amir Homelab
+site_url: https://docs.mirceanton.com/amir-hlb
+site_author: Mircea-Pavel Anton
+# site_description: 
+
+repo_name: mirceanton/amir-hlb
+repo_url: https://github.com/mirceanton/amir-hlb
+
+# copyright: 
+
+theme:
+  name: material
+  # logo: images/logo.png
+  # favicon: images/logo.png
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Cascadia Code PL
+    code: Cascadia Mono PL
+  language: en
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.expand
+    - navigation.tabs.sticky
+    - navigation.indexes 
+    - navigation.top
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+plugins:
+  - search
+  - tags
+  - glightbox
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - def_list
+  - tables
+  - footnotes
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.details
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
