@@ -7,6 +7,8 @@ site_url: https://docs.mirceanton.com/amir-hlb
 site_author: Mircea-Pavel Anton
 # site_description: 
 # copyright: 
+extra:
+    version: 1.0.0
 
 # =================================================================================================
 # Repo Setup
