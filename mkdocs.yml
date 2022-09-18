@@ -98,7 +98,6 @@ markdown_extensions:
 # =================================================================================================
 nav:
   - Home:
-    - Welcome: home/welcome.md
     - Getting Started: home/getting-started.md
     - Equipment: home/equipment.md
 
