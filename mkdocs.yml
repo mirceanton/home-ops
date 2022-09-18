@@ -1,0 +1,157 @@
+---
+# =================================================================================================
+# Site Configurations
+# =================================================================================================
+site_name: Amir Homelab
+site_url: https://docs.mirceanton.com/amir-hlb
+site_author: Mircea-Pavel Anton
+# site_description: 
+# copyright: 
+extra:
+    version: 1.0.0
+
+# =================================================================================================
+# Repo Setup
+# =================================================================================================
+repo_name: mirceanton/amir-hlb
+repo_url: https://github.com/mirceanton/amir-hlb
+
+# =================================================================================================
+# Theme Configuration
+# =================================================================================================
+theme:
+  name: material
+  # logo: images/logo.png
+  # favicon: images/logo.png
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  font:
+    text: Cascadia Code PL
+    code: Cascadia Mono PL
+  language: en
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.expand
+    - navigation.tabs.sticky
+    - navigation.indexes 
+    - navigation.top
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+
+# =================================================================================================
+# Installed Plugins
+# =================================================================================================
+plugins:
+  - search
+  - tags
+  - glightbox
+
+# =================================================================================================
+# Installed Extensions
+# =================================================================================================
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - def_list
+  - tables
+  - footnotes
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.details
+  - pymdownx.tilde
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# =================================================================================================
+# Navigation Layout
+# =================================================================================================
+nav:
+  - Home:
+    - Getting Started: home/getting-started.md
+    - Equipment: home/equipment.md
+
+  - Infrastructure:
+    - Infrastructure: infra/index.md
+    - Bare Metal Servers:
+      - Automaton: infra/bare-metal-servers/automaton.md
+      - Chongus: infra/bare-metal-servers/chongus.md
+      - Chonker: infra/bare-metal-servers/chonker.md
+      - BackNAS: infra/bare-metal-servers/backnas.md
+    - Clusters:
+      - Docker Swarm Central: infra/clusters/docker-swarm-central.md
+      - KARMa Cluster: infra/clusters/karma-cluster.md
+    - Networking Equipment:
+      - Management Switch: infra/networking-equipment/management.md
+      - Core Switch: infra/networking-equipment/core.md
+
+  - Virtual Machines:
+    - Virtual Machines: virtual-machines/index.md
+    - Chongus:
+      - OPNsense: virtual-machines/chongus/opnsense.md
+      - AdGuard Home: virtual-machines/chongus/adguard.md
+      - OpenLDAP: virtual-machines/chongus/ldap.md
+      - TrueNAS: virtual-machines/chongus/truenas.md
+      - Gaming VM: virtual-machines/chongus/gaming.md
+      - Studio Workstation: virtual-machines/chongus/studio.md
+      - Video Editing Workstation: virtual-machines/chongus/video.md
+    - BackNAS:
+      - TrueNAS: virtual-machines/backnas/truenas.md
+  
+  - Applications:
+    - Applications: apps/index.md
+    - Automaton:
+      - Automaton: apps/automaton/index.md
+      - Jenkins: apps/automaton/jenkins.md
+      - MinIO: apps/automaton/minio.md
+      - Planka: apps/automaton/planka.md
+      - Vault: apps/automaton/vault.md
+    - Docker Swarm Central:
+      - Docker Swarm Central: apps/docker-swarm-central/index.md
+      - Rancher: apps/docker-swarm-central/rancher.md
+    - Karma Cluster:
+      - Karma Cluster: apps/karma-cluster/index.md
+      - Bitwarden: apps/karma-cluster/bitwarden.md
+
+  - Utils:
+    - Utils: utils/index.md
+    - Scripts:
+      - Scripts: utils/scripts/index.md
+    - Ansible:
+      - Ansible: utils/ansible/index.md
+    - Packer:
+      - Packer: utils/packer/index.md
+    - Terraform:
+      - Terraform: utils/terraform/index.md
+    - Templates:
+      - Templates: utils/templates/index.md
