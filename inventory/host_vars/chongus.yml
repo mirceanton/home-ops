@@ -1,0 +1,4 @@
+---
+ansible_host: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:address token=1qaz2wsx3edc') }}"
+ansible_user: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:username token=1qaz2wsx3edc') }}"
+ansible_ssh_pass: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:password token=1qaz2wsx3edc') }}"
