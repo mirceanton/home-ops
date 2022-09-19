@@ -1,0 +1,30 @@
+---
+- name: Initialize Proxmox Servers
+  hosts: proxmox
+  become: true
+
+  roles:
+    - role: mirceanton.proxmox_nosub
+    - role: mirceanton.proxmox_dark_theme
+    - role: mirceanton.proxmox_cloudbuntu
+      vars:
+        vm_vmid: 1000
+        vm_name: cloudbuntu
+        vm_storage: local-zfs
+        vm_cloudinit_user: mike
+        vm_cloudinit_password: wicarina31
+    - role: mirceanton.proxmox_nested_virt
+      vars:
+        cpu_type: intel
+    - role: mirceanton.proxmox_pci_passthrough
+      vars:
+        boot: systemd
+        cpu_type: intel
+
+  tasks:
+    - name: Install utility packages
+      ansible.builtin.apt:
+        name:
+          - vim
+          - htop
+          - nload
