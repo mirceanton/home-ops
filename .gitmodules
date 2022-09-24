@@ -1,0 +1,12 @@
+[submodule "utils/ansible/mirceanton.docker"]
+	path = utils/ansible/mirceanton.docker
+	url = https://github.com/mirceanton/ansible_role-docker
+[submodule "utils/ansible/mirceanton.packer"]
+	path = utils/ansible/mirceanton.packer
+	url = https://github.com/mirceanton/ansible_role-packer
+[submodule "utils/ansible/mirceanton.terraform"]
+	path = utils/ansible/mirceanton.terraform
+	url = https://github.com/mirceanton/ansible_role-terraform
+[submodule "utils/ansible/mirceanton.ansible"]
+	path = utils/ansible/mirceanton.ansible
+	url = https://github.com/mirceanton/ansible_role-ansible
