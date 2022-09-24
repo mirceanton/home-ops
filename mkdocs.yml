@@ -5,10 +5,10 @@
 site_name: Amir Homelab
 site_url: https://docs.mirceanton.com/amir-hlb
 site_author: Mircea-Pavel Anton
-# site_description: 
-# copyright: 
+# site_description:
+# copyright:
 extra:
-    version: 1.0.0
+  version: 1.0.0
 
 # =================================================================================================
 # Repo Setup
@@ -42,7 +42,7 @@ theme:
     - navigation.tabs
     - navigation.expand
     - navigation.tabs.sticky
-    - navigation.indexes 
+    - navigation.indexes
     - navigation.top
     - content.code.annotate
     - content.tabs.link
@@ -79,7 +79,7 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.tilde
   - pymdownx.tabbed:
-      alternate_style: true 
+      alternate_style: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -127,7 +127,7 @@ nav:
       - Video Editing Workstation: virtual-machines/chongus/video.md
     - BackNAS:
       - TrueNAS: virtual-machines/backnas/truenas.md
-  
+
   - Applications:
     - Applications: apps/index.md
     - Automaton:
