@@ -24,10 +24,11 @@
         docker_users: [ mike ]
     - role: mirceanton.ansible
       vars:
-        pip_additional: [ lxml, docker, jsondiff ]
+        ansible_pip_additional: [ lxml, docker, jsondiff ]
 
   tasks:
     - name: Initialize The Docker Swarm
       community.docker.docker_swarm:
         state: "{{ docker_swarm_state }}"
         advertise_addr: "{{ docker_swarm_iface }}"
+ 
