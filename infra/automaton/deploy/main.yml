@@ -1,0 +1,21 @@
+---
+- name: Install and Configure Automaton
+  hosts: automaton
+  become: true
+
+  pre_tasks:
+    - name: Update and Upgrade System
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install Utility Packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: "{{ apt_utility_state }}"
+      loop: "{{ apt_utility_packages }}"
+
+  roles: []
+
+  tasks: []
