@@ -16,6 +16,14 @@
         state: "{{ apt_utility_state }}"
       loop: "{{ apt_utility_packages }}"
 
-  roles: []
+  roles:
+    - role: mirceanton.terraform
+    - role: mirceanton.packer
+    - role: mirceanton.docker
+      vars:
+        docker_users: [ mike ]
+    - role: mirceanton.ansible
+      vars:
+        pip_additional: [ lxml, docker, jsondiff ]
 
   tasks: []
