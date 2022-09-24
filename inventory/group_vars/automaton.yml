@@ -15,3 +15,10 @@ apt_utility_packages:
   - nload
   - git
   - vim
+
+
+# ===============================================
+# Docker Swarm configuration
+# ===============================================
+docker_swarm_state: present
+docker_swarm_iface: ens0

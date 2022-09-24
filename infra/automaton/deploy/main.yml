@@ -26,4 +26,8 @@
       vars:
         pip_additional: [ lxml, docker, jsondiff ]
 
-  tasks: []
+  tasks:
+    - name: Initialize The Docker Swarm
+      community.docker.docker_swarm:
+        state: "{{ docker_swarm_state }}"
+        advertise_addr: "{{ docker_swarm_iface }}"
