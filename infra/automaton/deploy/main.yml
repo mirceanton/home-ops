@@ -3,28 +3,28 @@
   hosts: automaton
   become: true
 
-  pre_tasks:
-    - name: "automaton: Update and Upgrade System"
-      ansible.builtin.apt:
-        upgrade: dist
-        update_cache: true
-        cache_valid_time: 3600
+  # pre_tasks:
+  #   - name: "automaton: Update and Upgrade System"
+  #     ansible.builtin.apt:
+  #       upgrade: dist
+  #       update_cache: true
+  #       cache_valid_time: 3600
 
-    - name: "automaton: Install Utility Packages"
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: "{{ apt_utility_state }}"
-      loop: "{{ apt_utility_packages }}"
+  #   - name: "automaton: Install Utility Packages"
+  #     ansible.builtin.apt:
+  #       name: "{{ item }}"
+  #       state: "{{ apt_utility_state }}"
+  #     loop: "{{ apt_utility_packages }}"
 
-  roles:
-    - role: mirceanton.terraform
-    - role: mirceanton.packer
-    - role: mirceanton.docker
-      vars:
-        docker_users: [ mike ]
-    - role: mirceanton.ansible
-      vars:
-        ansible_pip_additional: [ lxml, docker, jsondiff ]
+  # roles:
+  #   - role: mirceanton.terraform
+  #   - role: mirceanton.packer
+  #   - role: mirceanton.docker
+  #     vars:
+  #       docker_users: [ mike ]
+  #   - role: mirceanton.ansible
+  #     vars:
+  #       ansible_pip_additional: [ lxml, docker, jsondiff ]
 
   tasks:
     - name: "automaton: Initialize The Docker Swarm"
@@ -38,3 +38,4 @@
     - import_tasks: tasks/deploy-vault.yml
     - import_tasks: tasks/deploy-minio.yml
     - import_tasks: tasks/deploy-gitlab.yml
+    - import_tasks: tasks/deploy-homer.yml

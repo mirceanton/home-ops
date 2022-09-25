@@ -1,0 +1,43 @@
+---
+version: '3'
+
+services:
+  app:
+    image: b4bz/homer:v22.08.1
+    networks: [ {{ docker_proxy_network }} ]
+    volumes: [ {{ docker_data_dir }}/homer/assets:/www/assets ]
+
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Bucharest
+      INIT_ASSETS: 1
+
+    deploy:
+      mode: global
+
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 30s
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+
+        # Frontend HTTP -> HTTPS
+        - 'traefik.http.routers.homer-frontend.rule=Host(`home.{{ fqdn }}`)'
+        - 'traefik.http.routers.homer-frontend.entrypoints=web'
+        - 'traefik.http.routers.homer-frontend.middlewares=redirect@file'
+
+        # Frontend HTTPS
+        - 'traefik.http.routers.homer-frontend-secure.rule=Host(`home.{{ fqdn }}`)'
+        - 'traefik.http.routers.homer-frontend-secure.entrypoints=web-secured'
+        - 'traefik.http.routers.homer-frontend-secure.service=homer-frontend-secure'
+        - 'traefik.http.routers.homer-frontend-secure.tls.certresolver=default'
+        - 'traefik.http.services.homer-frontend-secure.loadbalancer.server.port=8080'
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
