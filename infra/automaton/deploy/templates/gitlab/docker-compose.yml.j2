@@ -1,0 +1,81 @@
+---
+version: '3.7'
+services:
+  web:
+    image: gitlab/gitlab-ce:15.4.0-ce.0
+    hostname: 'git.{{ fqdn }}'
+
+    # Reference: https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
+    environment:
+      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
+    configs:
+      - source: gitlab
+        target: /omnibus_config.rb
+
+    volumes:
+      - {{ docker_data_dir }}/gitlab/data/config:/etc/gitlab
+      - {{ docker_data_dir }}/gitlab/data/logs:/var/log/gitlab
+      - {{ docker_data_dir }}/gitlab/data/gitlab:/var/opt/gitlab
+
+    networks:
+      - internal
+      - {{ docker_proxy_network }}
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 30s
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+
+        # Frontend HTTP -> HTTPS
+        - 'traefik.http.routers.gitlab-frontend.rule=Host(`git.{{ fqdn }}`)'
+        - 'traefik.http.routers.gitlab-frontend.entrypoints=web'
+        - 'traefik.http.routers.gitlab-frontend.middlewares=redirect@file'
+
+        # Frontend HTTPS
+        - 'traefik.http.routers.gitlab-frontend-secure.rule=Host(`git.{{ fqdn }}`)'
+        - 'traefik.http.routers.gitlab-frontend-secure.entrypoints=web-secured'
+        - 'traefik.http.routers.gitlab-frontend-secure.service=gitlab-frontend-secure'
+        - 'traefik.http.routers.gitlab-frontend-secure.tls.certresolver=default'
+        - 'traefik.http.services.gitlab-frontend-secure.loadbalancer.server.port=80'
+
+  runner:
+    image: gitlab/gitlab-runner:ubuntu-v15.2.2
+
+    depends_on: [ web ]
+    networks: [ internal ]
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - '{{ docker_data_dir }}/gitlab/data/runner:/etc/gitlab-runner'
+
+    deploy:
+      mode: replicated
+      replicas: 5
+
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 30s
+
+configs:
+  gitlab:
+    file: {{ docker_data_dir }}/gitlab/gitlab.rb
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
+  internal:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 172.16.3.0/24

@@ -32,3 +32,5 @@ docker_data_dir: /opt/docker
 vault_root_token: test1234
 minio_root_user: root
 minio_root_pass: test1234
+gitlab_root_password: test1234
+gitlab_runners_token: test1234
