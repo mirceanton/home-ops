@@ -1,0 +1,79 @@
+---
+version: "3.8"
+
+services:
+  app:
+    image: portainer/portainer-ce:2.15.1
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+
+    environment:
+      VIRTUAL_HOST: 'portainer.{{ fqdn }}'
+      VIRTUAL_PORT: '9000'
+
+    volumes: [ {{ docker_data_dir }}/portainer/data:/data ]
+
+    networks: 
+      - {{ docker_proxy_network }}
+      - internal
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+
+      placement:
+        constraints:
+          - node.role == manager
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+
+        # Frontend HTTP -> HTTPS
+        - 'traefik.http.routers.portainer-frontend.rule=Host(`portainer.{{ fqdn }}`)'
+        - 'traefik.http.routers.portainer-frontend.entrypoints=web'
+        - 'traefik.http.routers.portainer-frontend.middlewares=redirect@file'
+
+        # Frontend HTTPS
+        - 'traefik.http.routers.portainer-frontend-secure.rule=Host(`portainer.{{ fqdn }}`)'
+        - 'traefik.http.routers.portainer-frontend-secure.entrypoints=web-secured'
+        - 'traefik.http.routers.portainer-frontend-secure.service=portainer-frontend-secure'
+        - 'traefik.http.routers.portainer-frontend-secure.tls.certresolver=default'
+        - 'traefik.http.services.portainer-frontend-secure.loadbalancer.server.port=9000'
+
+  agent:
+    image: portainer/agent:2.15.1
+
+    environment:
+      AGENT_CLUSTER_ADDR: tasks.agent
+      LOG_LEVEL: DEBUG
+      AGENT_PORT: 9001
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+    networks: [ internal ]
+
+    deploy:
+      mode: global
+      
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
+  internal:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24

@@ -33,3 +33,4 @@
         advertise_addr: "{{ docker_swarm_iface }}"
 
     - import_tasks: tasks/deploy-traefik.yml
+    - import_tasks: tasks/deploy-portainer.yml
