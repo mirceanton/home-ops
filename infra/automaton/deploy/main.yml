@@ -4,13 +4,13 @@
   become: true
 
   pre_tasks:
-    - name: Update and Upgrade System
+    - name: "automaton: Update and Upgrade System"
       ansible.builtin.apt:
         upgrade: dist
         update_cache: true
         cache_valid_time: 3600
 
-    - name: Install Utility Packages
+    - name: "automaton: Install Utility Packages"
       ansible.builtin.apt:
         name: "{{ item }}"
         state: "{{ apt_utility_state }}"
@@ -27,8 +27,7 @@
         ansible_pip_additional: [ lxml, docker, jsondiff ]
 
   tasks:
-    - name: Initialize The Docker Swarm
+    - name: "automaton: Initialize The Docker Swarm"
       community.docker.docker_swarm:
         state: "{{ docker_swarm_state }}"
         advertise_addr: "{{ docker_swarm_iface }}"
- 
