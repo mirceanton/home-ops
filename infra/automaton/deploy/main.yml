@@ -34,3 +34,4 @@
 
     - import_tasks: tasks/deploy-traefik.yml
     - import_tasks: tasks/deploy-portainer.yml
+    - import_tasks: tasks/deploy-jenkins.yml

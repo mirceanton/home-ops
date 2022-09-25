@@ -1,0 +1,48 @@
+---
+version: '3.7'
+
+services:
+  app:
+    image: jenkins/jenkins:2.368
+
+    volumes:
+      - {{ docker_data_dir }}/jenkins/data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks: [ {{ docker_proxy_network }} ]
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+
+        # Frontend HTTP -> HTTPS
+        - 'traefik.http.routers.jenkins-frontend.rule=Host(`jenkins.{{ fqdn }}`)'
+        - 'traefik.http.routers.jenkins-frontend.entrypoints=web'
+        - 'traefik.http.routers.jenkins-frontend.middlewares=redirect@file'
+
+        # Frontend HTTPS
+        - 'traefik.http.routers.jenkins-frontend-secure.rule=Host(`jenkins.{{ fqdn }}`)'
+        - 'traefik.http.routers.jenkins-frontend-secure.entrypoints=web-secured'
+        - 'traefik.http.routers.jenkins-frontend-secure.service=jenkins-frontend-secure'
+        - 'traefik.http.routers.jenkins-frontend-secure.tls.certresolver=default'
+        - 'traefik.http.services.jenkins-frontend-secure.loadbalancer.server.port=8080'
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sS http://localhost:8080/login || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
