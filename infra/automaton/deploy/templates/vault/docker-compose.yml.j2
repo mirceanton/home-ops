@@ -1,0 +1,45 @@
+---
+version: "3.8"
+
+services:
+  app:
+    image: vault:1.11.3
+    networks: [ {{ docker_proxy_network }} ]
+
+    cap_add: [ IPC_LOCK ]
+    volumes: [ {{ docker_data_dir }}/vault/data:/vault/file ]
+
+    environment:
+      VAULT_ADDR: "http://vault.{{ fqdn }}"
+      VAULT_DEV_ROOT_TOKEN_ID: "{{ vault_root_token }}"
+
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+
+        # Frontend HTTP -> HTTPS
+        - 'traefik.http.routers.vault-frontend.rule=Host(`vault.{{ fqdn }}`)'
+        - 'traefik.http.routers.vault-frontend.entrypoints=web'
+        - 'traefik.http.routers.vault-frontend.middlewares=redirect@file'
+
+        # Frontend HTTPS
+        - 'traefik.http.routers.vault-frontend-secure.rule=Host(`vault.{{ fqdn }}`)'
+        - 'traefik.http.routers.vault-frontend-secure.entrypoints=web-secured'
+        - 'traefik.http.routers.vault-frontend-secure.service=vault-frontend-secure'
+        - 'traefik.http.routers.vault-frontend-secure.tls.certresolver=default'
+        - 'traefik.http.services.vault-frontend-secure.loadbalancer.server.port=8200'
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true

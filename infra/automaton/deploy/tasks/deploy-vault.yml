@@ -1,0 +1,20 @@
+---
+- name: "automaton.vault: Create Data Directory"
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/vault/data"
+    state: directory
+    recurse: true
+    mode: u=rw,g=r,o=
+
+- name: "automaton.vault: Copy docker-compose File"
+  ansible.builtin.template:
+    src: templates/vault/docker-compose.yml.j2
+    dest: "{{ docker_data_dir }}/vault/docker-compose.yml"
+    mode: u=r,g=r,o=
+
+- name: "automaton.vault: Deploy Stack"
+  community.docker.docker_stack:
+    name: vault
+    state: present
+    compose:
+      - "{{ docker_data_dir }}/vault/docker-compose.yml"

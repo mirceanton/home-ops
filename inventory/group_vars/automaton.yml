@@ -28,3 +28,5 @@ docker_swarm_iface: ens0
 
 docker_proxy_network: traefik-net
 docker_data_dir: /opt/docker
+
+vault_root_token: test1234
