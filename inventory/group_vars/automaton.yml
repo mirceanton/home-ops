@@ -1,6 +1,10 @@
 ---
 ansible_connection: local
 
+hostname: automaton
+domain: local
+fqdn: "{{ hostname }}.{{ domain }}"
+
 # ===============================================
 # Deployment Configuration
 # ===============================================
@@ -16,9 +20,11 @@ apt_utility_packages:
   - git
   - vim
 
-
 # ===============================================
 # Docker Swarm configuration
 # ===============================================
 docker_swarm_state: present
 docker_swarm_iface: ens0
+
+docker_proxy_network: traefik-net
+docker_data_dir: /opt/docker

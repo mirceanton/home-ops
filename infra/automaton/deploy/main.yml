@@ -31,3 +31,5 @@
       community.docker.docker_swarm:
         state: "{{ docker_swarm_state }}"
         advertise_addr: "{{ docker_swarm_iface }}"
+
+    - import_tasks: tasks/deploy-traefik.yml

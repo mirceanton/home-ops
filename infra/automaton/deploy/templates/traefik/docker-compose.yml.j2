@@ -1,0 +1,47 @@
+---
+version: '3'
+
+services:
+  app:
+    image: traefik:v2.6
+    networks: [ {{ docker_proxy_network }} ]
+    ports:
+      - 80:80
+      - 443:443
+      
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - {{ docker_data_dir }}/traefik/letsencrypt:/letsencrypt
+      - {{ docker_data_dir }}/traefik/config.yml:/traefik.yml:ro
+
+    deploy:
+      mode: global
+
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 30s
+
+      placement:
+        constraints:
+          - node.role == manager
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+        
+        # Traefik HTTP -> HTTPS
+        - 'traefik.http.routers.traefik.rule=Host(`traefik.{{ fqdn }}`)'
+        - 'traefik.http.routers.traefik.entrypoints=web'
+        - 'traefik.http.routers.traefik.middlewares=redirect@file'
+        
+        # Traefik HTTPS
+        - 'traefik.http.routers.traefik-secured.rule=Host(`traefik.{{ fqdn }}`)'
+        - 'traefik.http.routers.traefik-secured.entrypoints=web-secured'
+        - 'traefik.http.routers.traefik-secured.tls.certresolver=default'
+        - 'traefik.http.services.traefik.loadbalancer.server.port=8080'
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
