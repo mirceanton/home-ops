@@ -36,3 +36,4 @@
     - import_tasks: tasks/deploy-portainer.yml
     - import_tasks: tasks/deploy-jenkins.yml
     - import_tasks: tasks/deploy-vault.yml
+    - import_tasks: tasks/deploy-minio.yml

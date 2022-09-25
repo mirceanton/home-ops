@@ -1,0 +1,20 @@
+---
+- name: "automaton.minio: Create Data Directory"
+  ansible.builtin.file:
+    path: "{{ docker_data_dir }}/minio/data"
+    state: directory
+    recurse: true
+    mode: u=rw,g=rw,o=
+
+- name: "automaton.minio: Copy docker-compose File"
+  ansible.builtin.template:
+    src: templates/minio/docker-compose.yml.j2
+    dest: "{{ docker_data_dir }}/minio/docker-compose.yml"
+    mode: u=r,g=r,o=
+
+- name: "automaton.minio: Deploy Stack"
+  community.docker.docker_stack:
+    name: minio
+    state: present
+    compose:
+      - "{{ docker_data_dir }}/minio/docker-compose.yml"
