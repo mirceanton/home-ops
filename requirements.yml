@@ -1,0 +1,6 @@
+---
+- name: mirceanton.ansible
+- name: mirceanton.docker
+- name: mirceanton.packer
+- name: mirceanton.terraform
+- name: mirceanton.docker_stack_deploy
