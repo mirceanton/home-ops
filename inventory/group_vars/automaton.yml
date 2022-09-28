@@ -143,21 +143,23 @@ homer_stack_data_dir_mode: u=rwx,g=rw,o=rw
 homer_stack_additional_dirs:
   - path: assets
     mode: u=rwx,g=rwx,o=rwx
+  - path: assets/icons
+    mode: u=rwx,g=rwx,o=rwx
 homer_stack_copy_files:
   - src: "{{ playbook_dir }}/files/homer/icons/dickbutt.svg"
-    dest: assets/dickbutt.svg
+    dest: assets/icons/dickbutt.svg
   - src: "{{ playbook_dir }}/files/homer/icons/gitlab.svg"
-    dest: assets/gitlab.svg
+    dest: assets/icons/gitlab.svg
   - src: "{{ playbook_dir }}/files/homer/icons/jenkins.svg"
-    dest: assets/jenkins.svg
+    dest: assets/icons/jenkins.svg
   - src: "{{ playbook_dir }}/files/homer/icons/minio.svg"
-    dest: assets/minio.svg
+    dest: assets/icons/minio.svg
   - src: "{{ playbook_dir }}/files/homer/icons/portainer.svg"
-    dest: assets/portainer.svg
+    dest: assets/icons/portainer.svg
   - src: "{{ playbook_dir }}/files/homer/icons/traefik.svg"
-    dest: assets/traefik.svg
+    dest: assets/icons/traefik.svg
   - src: "{{ playbook_dir }}/files/homer/icons/vault.svg"
-    dest: assets/vault.svg
+    dest: assets/icons/vault.svg
 homer_stack_template_files:
   - src: "{{ playbook_dir }}/templates/homer/docker-compose.yml.j2"
     dest: docker-compose.yml
