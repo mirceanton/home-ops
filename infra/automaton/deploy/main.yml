@@ -67,5 +67,13 @@
         docker_stack_deploy_additional_dirs: "{{ jenkins_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ jenkins_stack_template_files }}"
+    - role: mirceanton.docker_stack_deploy # GitLab
+      vars:
+        docker_stack_deploy_name: "{{ gitlab_stack_name }}"
+        docker_stack_deploy_root_dir_path: "{{ gitlab_stack_data_dir_path }}"
+        docker_stack_deploy_root_dir_mode: "{{ gitlab_stack_data_dir_mode }}"
+        docker_stack_deploy_additional_dirs: "{{ gitlab_stack_additional_dirs }}"
+        docker_stack_deploy_copy_files: []
+        docker_stack_deploy_template_files: "{{ gitlab_stack_template_files }}"
 
   tasks: []

@@ -108,3 +108,27 @@ jenkins_stack_template_files:
   - src: "{{ playbook_dir }}/templates/jenkins/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+
+# ===============================================
+# GITLAB CONFIGURATION
+# ===============================================
+gitlab_stack_name: gitlab
+gitlab_stack_data_dir_path: /opt/services/gitlab
+gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
+gitlab_stack_additional_dirs:
+  - path: data/logs
+    mode: u=rwx,g=rw,o=r
+  - path: data/config
+    mode: u=rwx,g=rw,o=r
+  - path: data/gitlab
+    mode: u=rwx,g=rw,o=r
+gitlab_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/gitlab/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/gitlab/config.rb.j2"
+    dest: data/gitlab/gitlab.rb
+    mode: "u=r,g=r,o=r"
+
+gitlab_root_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/dev/null', seed=gitlab_root_password) }}"
