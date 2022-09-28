@@ -1,14 +1,18 @@
+{% import "macros.j2" as templates with context %}
 ---
-version: "3.8"
+version: '3'
 
 services:
   app:
     image: vault:1.11.3
+    entrypoint: vault server -config=/vault/config/vault.json
+
     networks:
       - {{ docker_proxy_network }}
-    entrypoint: vault server -config=/vault/config/vault.json
+
     cap_add:
       - IPC_LOCK
+
     volumes:
       - {{ vault_stack_data_dir_path }}/data:/vault/file
       - {{ vault_stack_data_dir_path }}/config:/vault/config
@@ -20,27 +24,10 @@ services:
       mode: replicated
       replicas: 1
 
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 30s
+      {{ templates.restart_policy() | indent(6) }}
 
       labels:
-        # Enable traefik to proxy this service
-        - 'traefik.enable=true'
-
-        # Frontend HTTP -> HTTPS
-        - 'traefik.http.routers.vault-frontend.rule=Host(`vault.{{ fqdn }}`)'
-        - 'traefik.http.routers.vault-frontend.entrypoints=web'
-        - 'traefik.http.routers.vault-frontend.middlewares=redirect@file'
-
-        # Frontend HTTPS
-        - 'traefik.http.routers.vault-frontend-secure.rule=Host(`vault.{{ fqdn }}`)'
-        - 'traefik.http.routers.vault-frontend-secure.entrypoints=web-secured'
-        - 'traefik.http.routers.vault-frontend-secure.service=vault-frontend-secure'
-        - 'traefik.http.routers.vault-frontend-secure.tls.certresolver=default'
-        - 'traefik.http.services.vault-frontend-secure.loadbalancer.server.port=8200'
+        {{ templates.traefik_labels('vault', '8200') | indent(8) }}
 
 networks:
   {{ docker_proxy_network }}:

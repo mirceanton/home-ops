@@ -1,19 +1,22 @@
+{% import "macros.j2" as templates with context %}
 ---
 version: '3'
 
 services:
   app:
     image: minio/minio:RELEASE.2022-09-25T15-44-53Z
-    command:  minio server /data --console-address ":9001"
+    command: minio server /data --console-address ":9001"
+
     volumes:
       - {{ minio_stack_data_dir_path }}/data:/data
+
     networks:
       - {{ docker_proxy_network }}
 
     environment:
       MINIO_ROOT_USER: {{ minio_root_user }}
       MINIO_ROOT_PASSWORD: {{ minio_root_pass }}
-      MINIO_BROWSER_REDIRECT_URL: https://console.minio.{{ fqdn }}
+      MINIO_BROWSER_REDIRECT_URL: https://minio-console.{{ fqdn }}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -24,30 +27,12 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-      
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 30s
+
+      {{ templates.restart_policy() | indent(6) }}
 
       labels:
-        # Enable traefik to proxy this service
-        - 'traefik.enable=true'
-
-        # [MinIO] Frontend HTTPS
-        - 'traefik.http.routers.minio-frontend-secure.rule=Host(`minio.{{ fqdn }}`)'
-        - 'traefik.http.routers.minio-frontend-secure.entrypoints=web-secured'
-        - 'traefik.http.routers.minio-frontend-secure.service=minio-frontend-secure'
-        - 'traefik.http.routers.minio-frontend-secure.tls.certresolver=default'
-        - 'traefik.http.services.minio-frontend-secure.loadbalancer.server.port=9000'
-
-        # [MinIO Console] Frontend HTTPS
-        - 'traefik.http.routers.minio-console-secure.rule=Host(`console.minio.{{ fqdn }}`)'
-        - 'traefik.http.routers.minio-console-secure.entrypoints=web-secured'
-        - 'traefik.http.routers.minio-console-secure.service=minio-console-secure'
-        - 'traefik.http.routers.minio-console-secure.tls.certresolver=default'
-        - 'traefik.http.services.minio-console-secure.loadbalancer.server.port=9001'
+        {{ templates.traefik_labels('minio', '9000') | indent(8) }}
+        {{ templates.traefik_labels('minio-console', '9001', false) | indent(8) }}
 
 networks:
   {{ docker_proxy_network }}:

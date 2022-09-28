@@ -1,14 +1,18 @@
+{% import "macros.j2" as templates with context %}
 ---
 version: '3'
 
 services:
   app:
     image: traefik:v2.6
-    networks: [ {{ docker_proxy_network }} ]
+
+    networks:
+      - {{ docker_proxy_network }}
+
     ports:
       - 80:80
       - 443:443
-      
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - {{ traefik_stack_data_dir_path }}/letsencrypt:/letsencrypt
@@ -23,30 +27,14 @@ services:
     deploy:
       mode: global
 
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 30s
-
       placement:
         constraints:
           - node.role == manager
 
+      {{ templates.restart_policy() | indent(6) }}
+
       labels:
-        # Enable traefik to proxy this service
-        - 'traefik.enable=true'
-        
-        # Traefik HTTP -> HTTPS
-        - 'traefik.http.routers.traefik.rule=Host(`traefik.{{ fqdn }}`)'
-        - 'traefik.http.routers.traefik.entrypoints=web'
-        - 'traefik.http.routers.traefik.middlewares=redirect@file'
-        
-        # Traefik HTTPS
-        - 'traefik.http.routers.traefik-secured.rule=Host(`traefik.{{ fqdn }}`)'
-        - 'traefik.http.routers.traefik-secured.entrypoints=web-secured'
-        - 'traefik.http.routers.traefik-secured.tls.certresolver=default'
-        - 'traefik.http.services.traefik.loadbalancer.server.port=8080'
+        {{ templates.traefik_labels('traefik', '8080') | indent(8) }}
 
 networks:
   {{ docker_proxy_network }}:

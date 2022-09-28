@@ -1,3 +1,4 @@
+{% import "macros.j2" as templates with context %}
 ---
 version: '3'
 
@@ -5,7 +6,6 @@ services:
   app:
     image: portainer/portainer-ce:2.15.1-alpine
     command: -H tcp://tasks.agent:9001 --tlsskipverify
-
     environment:
       VIRTUAL_HOST: 'portainer.{{ fqdn }}'
       VIRTUAL_PORT: '9000'
@@ -27,31 +27,14 @@ services:
       mode: replicated
       replicas: 1
 
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 30s
-
       placement:
         constraints:
           - node.role == manager
 
+      {{ templates.restart_policy() | indent(6) }}
+
       labels:
-        # Enable traefik to proxy this service
-        - 'traefik.enable=true'
-
-        # Frontend HTTP -> HTTPS
-        - 'traefik.http.routers.portainer-frontend.rule=Host(`portainer.{{ fqdn }}`)'
-        - 'traefik.http.routers.portainer-frontend.entrypoints=web'
-        - 'traefik.http.routers.portainer-frontend.middlewares=redirect@file'
-
-        # Frontend HTTPS
-        - 'traefik.http.routers.portainer-frontend-secure.rule=Host(`portainer.{{ fqdn }}`)'
-        - 'traefik.http.routers.portainer-frontend-secure.entrypoints=web-secured'
-        - 'traefik.http.routers.portainer-frontend-secure.service=portainer-frontend-secure'
-        - 'traefik.http.routers.portainer-frontend-secure.tls.certresolver=default'
-        - 'traefik.http.services.portainer-frontend-secure.loadbalancer.server.port=9000'
+        {{ templates.traefik_labels('portainer', '9000') | indent(8) }}
 
   agent:
     image: portainer/agent:2.15.1-alpine
@@ -70,12 +53,7 @@ services:
 
     deploy:
       mode: global
-      
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 30s
+      {{ templates.restart_policy() | indent(6) }}
 
 networks:
   {{ docker_proxy_network }}:
