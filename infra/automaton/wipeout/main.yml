@@ -1,0 +1,33 @@
+---
+- name: Clean Automaton Services
+  hosts: automaton
+  become: true
+
+  tasks:
+    - name: Remove Docker Stack
+      community.docker.docker_stack:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ traefik_stack_name }}"
+        - "{{ portainer_stack_name }}"
+        - "{{ vault_stack_name }}"
+        - "{{ minio_stack_name }}"
+        - "{{ jenkins_stack_name }}"
+        - "{{ gitlab_stack_name }}"
+        - "{{ homer_stack_name }}"
+
+    - name: Wait For Remove
+      ansible.builtin.shell: docker ps -a | grep {{ item }} | wc -l
+      register: __cmd__
+      retries: 100
+      delay: 3
+      until: __cmd__.stdout == "0"
+      loop:
+        - "{{ traefik_stack_name }}"
+        - "{{ portainer_stack_name }}"
+        - "{{ vault_stack_name }}"
+        - "{{ minio_stack_name }}"
+        - "{{ jenkins_stack_name }}"
+        - "{{ gitlab_stack_name }}"
+        - "{{ homer_stack_name }}"
