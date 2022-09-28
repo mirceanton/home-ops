@@ -10,6 +10,12 @@ services:
     networks:
       - {{ docker_proxy_network }}
 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sS http://localhost:8080/login || exit 1"]
+      interval: {{ docker_healthcheck_interval | default('30s') }}
+      timeout: {{ docker_healtcheck_timeout | default('10s') }}
+      retries: {{ docker_healthcheck_retries | default(5) }}
+
     deploy:
       mode: replicated
       replicas: 1

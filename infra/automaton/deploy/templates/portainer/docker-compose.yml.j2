@@ -3,7 +3,7 @@ version: '3'
 
 services:
   app:
-    image: portainer/portainer-ce:2.15.1
+    image: portainer/portainer-ce:2.15.1-alpine
     command: -H tcp://tasks.agent:9001 --tlsskipverify
 
     environment:
@@ -16,6 +16,12 @@ services:
     networks:
       - {{ docker_proxy_network }}
       - internal
+
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider --no-check-certificate https://localhost:9443 || exit 1"
+      interval: {{ docker_healthcheck_interval | default('30s') }}
+      timeout: {{ docker_healtcheck_timeout | default('10s') }}
+      retries: {{ docker_healthcheck_retries | default(5) }}
 
     deploy:
       mode: replicated
@@ -48,7 +54,7 @@ services:
         - 'traefik.http.services.portainer-frontend-secure.loadbalancer.server.port=9000'
 
   agent:
-    image: portainer/agent:2.15.1
+    image: portainer/agent:2.15.1-alpine
 
     environment:
       AGENT_CLUSTER_ADDR: tasks.agent

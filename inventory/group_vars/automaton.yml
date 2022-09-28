@@ -19,6 +19,10 @@ docker_swarm_iface: ens0
 
 docker_proxy_network: traefik-net
 
+docker_healthcheck_interval: 5s
+docker_healtcheck_timeout: 5s
+docker_healthcheck_retries: 20
+
 # ===============================================
 # TRAEFIK CONFIGURATION
 # ===============================================

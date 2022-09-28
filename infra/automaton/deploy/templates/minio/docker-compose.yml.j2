@@ -15,6 +15,12 @@ services:
       MINIO_ROOT_PASSWORD: {{ minio_root_pass }}
       MINIO_BROWSER_REDIRECT_URL: https://console.minio.{{ fqdn }}
 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: {{ docker_healthcheck_interval | default('30s') }}
+      timeout: {{ docker_healtcheck_timeout | default('10s') }}
+      retries: {{ docker_healthcheck_retries | default(5) }}
+
     deploy:
       mode: replicated
       replicas: 1

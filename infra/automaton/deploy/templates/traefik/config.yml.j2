@@ -40,11 +40,16 @@ providers:
 # Reference: https://docs.traefik.io/routing/entrypoints/#configuration
 # -------------------------------------------------------------------------------------------------
 entrypoints:
-  web:          # HTTP Entrypoint
+  web:
     address: :80
-  web-secured:  # HTTPS Entrypoint
+  web-secured:
     address: :443
-  
+  ping:
+    address: :8082
+
+ping:
+  entryPoint: "ping"
+
 # =================================================================================================
 # Certificate Settings (Let's Encrypt)
 # =================================================================================================
