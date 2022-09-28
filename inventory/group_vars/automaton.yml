@@ -35,3 +35,17 @@ traefik_stack_template_files:
   - src: "{{ playbook_dir }}/templates/traefik/config.yml.j2"
     dest: config.yml
     mode: "u=r,g=r,o=r"
+
+# ===============================================
+# PORTAINER CONFIGURATION
+# ===============================================
+portainer_stack_name: portainer
+portainer_stack_data_dir_path: /opt/services/portainer
+portainer_stack_data_dir_mode: u=rwx,g=rx,o=rx
+portainer_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+portainer_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/portainer/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"

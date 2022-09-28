@@ -1,5 +1,5 @@
 ---
-version: "3.8"
+version: '3'
 
 services:
   app:
@@ -10,9 +10,10 @@ services:
       VIRTUAL_HOST: 'portainer.{{ fqdn }}'
       VIRTUAL_PORT: '9000'
 
-    volumes: [ {{ docker_data_dir }}/portainer/data:/data ]
+    volumes:
+      - {{ portainer_stack_data_dir_path }}/data:/data
 
-    networks: 
+    networks:
       - {{ docker_proxy_network }}
       - internal
 
@@ -58,7 +59,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
 
-    networks: [ internal ]
+    networks:
+      - internal
 
     deploy:
       mode: global
