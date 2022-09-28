@@ -49,3 +49,22 @@ portainer_stack_template_files:
   - src: "{{ playbook_dir }}/templates/portainer/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+
+# ===============================================
+# PORTAINER CONFIGURATION
+# ===============================================
+vault_stack_name: vault
+vault_stack_data_dir_path: /opt/services/vault
+vault_stack_data_dir_mode: u=rwx,g=rx,o=rx
+vault_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+  - path: config
+    mode: u=rwx,g=rw,o=r
+vault_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/vault/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/vault/config.json.j2"
+    dest: config/vault.json
+    mode: "u=r,g=r,o=r"

@@ -4,15 +4,17 @@ version: "3.8"
 services:
   app:
     image: vault:1.11.3
-    networks: [ {{ docker_proxy_network }} ]
-
-    cap_add: [ IPC_LOCK ]
-    volumes: [ {{ docker_data_dir }}/vault/data:/vault/file ]
+    networks:
+      - {{ docker_proxy_network }}
+    entrypoint: vault server -config=/vault/config/vault.json
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - {{ vault_stack_data_dir_path }}/data:/vault/file
+      - {{ vault_stack_data_dir_path }}/config:/vault/config
 
     environment:
       VAULT_ADDR: "http://vault.{{ fqdn }}"
-      VAULT_DEV_ROOT_TOKEN_ID: "{{ vault_root_token }}"
-
 
     deploy:
       mode: replicated
