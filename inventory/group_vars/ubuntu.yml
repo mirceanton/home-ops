@@ -1,0 +1,12 @@
+---
+apt_utility_state: present
+apt_utility_packages:
+  - tree
+  - curl
+  - wget
+  - unzip
+  - htop
+  - net-tools
+  - nload
+  - git
+  - vim

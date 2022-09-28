@@ -1,27 +1,18 @@
 ---
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
 ansible_connection: local
 
+# ===============================================
+# HOST CONFIGURATION
+# ===============================================
 hostname: automaton
 domain: local
 fqdn: "{{ hostname }}.{{ domain }}"
 
 # ===============================================
-# Deployment Configuration
-# ===============================================
-apt_utility_state: present
-apt_utility_packages:
-  - tree
-  - curl
-  - wget
-  - unzip
-  - htop
-  - net-tools
-  - nload
-  - git
-  - vim
-
-# ===============================================
-# Docker Swarm configuration
+# DOCKER SWARM CONFIGURATION
 # ===============================================
 docker_swarm_state: present
 docker_swarm_iface: ens0
