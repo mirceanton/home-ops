@@ -3,39 +3,37 @@
   hosts: automaton
   become: true
 
-  # pre_tasks:
-  #   - name: "automaton: Update and Upgrade System"
-  #     ansible.builtin.apt:
-  #       upgrade: dist
-  #       update_cache: true
-  #       cache_valid_time: 3600
+  pre_tasks:
+    - name: Update and Upgrade System
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+        cache_valid_time: 3600
 
-  #   - name: "automaton: Install Utility Packages"
-  #     ansible.builtin.apt:
-  #       name: "{{ item }}"
-  #       state: "{{ apt_utility_state }}"
-  #     loop: "{{ apt_utility_packages }}"
+    - name: Install Utility Packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: "{{ apt_utility_state }}"
+      loop: "{{ apt_utility_packages }}"
 
-  # roles:
-  #   - role: mirceanton.terraform
-  #   - role: mirceanton.packer
-  #   - role: mirceanton.docker
-  #     vars:
-  #       docker_users: [ mike ]
-  #   - role: mirceanton.ansible
-  #     vars:
-  #       ansible_pip_additional: [ lxml, docker, jsondiff ]
+  roles:
+    # Installed required packages for local development
+    - role: mirceanton.terraform
+    - role: mirceanton.packer
+    - role: mirceanton.ansible
 
-  tasks:
-    - name: "automaton: Initialize The Docker Swarm"
-      community.docker.docker_swarm:
-        state: "{{ docker_swarm_state }}"
-        advertise_addr: "{{ docker_swarm_iface }}"
+    # Deploy Docker & Docker Swarm for Service Hosting
+    - role: mirceanton.docker
+    - role: mirceanton.docker_swarm
 
-    - import_tasks: tasks/deploy-traefik.yml
-    - import_tasks: tasks/deploy-portainer.yml
-    - import_tasks: tasks/deploy-jenkins.yml
-    - import_tasks: tasks/deploy-vault.yml
-    - import_tasks: tasks/deploy-minio.yml
-    - import_tasks: tasks/deploy-gitlab.yml
-    - import_tasks: tasks/deploy-homer.yml
+    # Deploy Services
+    - role: mirceanton.docker_stack_deploy
+      vars:
+        docker_stack_deploy_name: "{{ traefik_stack_name }}"
+        docker_stack_deploy_root_dir_path: "{{ traefik_stack_data_dir_path }}"
+        docker_stack_deploy_root_dir_mode: "{{ traefik_stack_data_dir_mode }}"
+        docker_stack_deploy_additional_dirs: "{{ traefik_stack_additional_dirs }}"
+        docker_stack_deploy_copy_files: []
+        docker_stack_deploy_template_files: "{{ traefik_stack_template_files }}"
+
+  tasks: []

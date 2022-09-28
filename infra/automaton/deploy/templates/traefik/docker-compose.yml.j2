@@ -11,8 +11,8 @@ services:
       
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - {{ docker_data_dir }}/traefik/letsencrypt:/letsencrypt
-      - {{ docker_data_dir }}/traefik/config.yml:/traefik.yml:ro
+      - {{ traefik_stack_data_dir_path }}/letsencrypt:/letsencrypt
+      - {{ traefik_stack_data_dir_path }}/config.yml:/traefik.yml:ro
 
     deploy:
       mode: global

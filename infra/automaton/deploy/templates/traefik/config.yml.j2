@@ -16,7 +16,7 @@ api:
 # Options: ERROR, DEBUG, PANIC, FATAL, WARN, INFO
 # -------------------------------------------------------------------------------------------------
 log:
-  level: DEBUG  # Enable logging
+  level: DEBUG
 
 # =================================================================================================
 # Provider Settings
@@ -24,12 +24,12 @@ log:
 # Reference: https://docs.traefik.io/providers/docker/#provider-configuration
 # -------------------------------------------------------------------------------------------------
 providers:
-  docker:   # Enable docker as a provider
+  docker:
     swarmMode: true
     watch: true
-    exposedbydefault: false # Don't show all containers, only the enabled ones
+    exposedbydefault: false
     endpoint: "unix:///var/run/docker.sock"
-    network: {{ docker_proxy_network }}  # The network traefik manages
+    network: {{ docker_proxy_network }}
   file:
     filename: "traefik.yml" # This config
     watch: true
