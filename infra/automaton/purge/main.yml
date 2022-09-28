@@ -1,0 +1,28 @@
+---
+- ansible.builtin.import_playbook: ../wipeout/main.yml
+
+- name: Purge Automaton Services and Data
+  hosts: automaton
+  become: true
+
+  tasks:
+    - name: Remove Data Directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ traefik_stack_data_dir_path }}"
+        - "{{ portainer_stack_data_dir_path }}"
+        - "{{ vault_stack_data_dir_path }}"
+        - "{{ minio_stack_data_dir_path }}"
+        - "{{ jenkins_stack_data_dir_path }}"
+        - "{{ gitlab_stack_data_dir_path }}"
+        - "{{ homer_stack_data_dir_path }}"
+
+    - name: Cleanup the Docker System
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
