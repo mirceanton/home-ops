@@ -85,3 +85,17 @@ minio_stack_template_files:
 
 minio_root_user: root
 minio_root_pass: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+
+# ===============================================
+# JENKINS CONFIGURATION
+# ===============================================
+jenkins_stack_name: jenkins
+jenkins_stack_data_dir_path: /opt/services/jenkins
+jenkins_stack_data_dir_mode: u=rwx,g=rx,o=rx
+jenkins_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rwx,o=rwx
+jenkins_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/jenkins/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"

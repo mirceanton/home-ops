@@ -3,13 +3,12 @@ version: '3.7'
 
 services:
   app:
-    image: jenkins/jenkins:2.368
-
+    image: jenkins/jenkins:2.371
     volumes:
-      - {{ docker_data_dir }}/jenkins/data:/var/jenkins_home
+      - {{ jenkins_stack_data_dir_path }}/data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-
-    networks: [ {{ docker_proxy_network }} ]
+    networks:
+      - {{ docker_proxy_network }}
 
     deploy:
       mode: replicated
@@ -36,12 +35,6 @@ services:
         - 'traefik.http.routers.jenkins-frontend-secure.service=jenkins-frontend-secure'
         - 'traefik.http.routers.jenkins-frontend-secure.tls.certresolver=default'
         - 'traefik.http.services.jenkins-frontend-secure.loadbalancer.server.port=8080'
-
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sS http://localhost:8080/login || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
 networks:
   {{ docker_proxy_network }}:

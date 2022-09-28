@@ -27,7 +27,7 @@
     - role: mirceanton.docker_swarm
 
     # Deploy Services
-    - role: mirceanton.docker_stack_deploy
+    - role: mirceanton.docker_stack_deploy # Traefik
       vars:
         docker_stack_deploy_name: "{{ traefik_stack_name }}"
         docker_stack_deploy_root_dir_path: "{{ traefik_stack_data_dir_path }}"
@@ -35,7 +35,7 @@
         docker_stack_deploy_additional_dirs: "{{ traefik_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ traefik_stack_template_files }}"
-    - role: mirceanton.docker_stack_deploy
+    - role: mirceanton.docker_stack_deploy # Portainer
       vars:
         docker_stack_deploy_name: "{{ portainer_stack_name }}"
         docker_stack_deploy_root_dir_path: "{{ portainer_stack_data_dir_path }}"
@@ -43,7 +43,7 @@
         docker_stack_deploy_additional_dirs: "{{ portainer_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ portainer_stack_template_files }}"
-    - role: mirceanton.docker_stack_deploy
+    - role: mirceanton.docker_stack_deploy # Vault
       vars:
         docker_stack_deploy_name: "{{ vault_stack_name }}"
         docker_stack_deploy_root_dir_path: "{{ vault_stack_data_dir_path }}"
@@ -51,7 +51,7 @@
         docker_stack_deploy_additional_dirs: "{{ vault_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ vault_stack_template_files }}"
-    - role: mirceanton.docker_stack_deploy
+    - role: mirceanton.docker_stack_deploy # MinIO
       vars:
         docker_stack_deploy_name: "{{ minio_stack_name }}"
         docker_stack_deploy_root_dir_path: "{{ minio_stack_data_dir_path }}"
@@ -59,5 +59,13 @@
         docker_stack_deploy_additional_dirs: "{{ minio_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ minio_stack_template_files }}"
+    - role: mirceanton.docker_stack_deploy # Jenkins
+      vars:
+        docker_stack_deploy_name: "{{ jenkins_stack_name }}"
+        docker_stack_deploy_root_dir_path: "{{ jenkins_stack_data_dir_path }}"
+        docker_stack_deploy_root_dir_mode: "{{ jenkins_stack_data_dir_mode }}"
+        docker_stack_deploy_additional_dirs: "{{ jenkins_stack_additional_dirs }}"
+        docker_stack_deploy_copy_files: []
+        docker_stack_deploy_template_files: "{{ jenkins_stack_template_files }}"
 
   tasks: []
