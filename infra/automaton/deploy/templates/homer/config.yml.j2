@@ -30,11 +30,11 @@ services:
     icon: fa fa-gear
     items:
       - name: Portainer
-        url: https://portainer.{{ fqdn }}
+        url: https://{{ portainer_stack_name }}.{{ fqdn }}
         subtitle: Container Management
         logo: assets/icons/portainer.svg
       - name: Traefik
-        url: https://traefik.{{ fqdn }}
+        url: https://{{ traefik_stack_name }}.{{ fqdn }}
         subtitle: Reverse Proxy Dashboard
         logo: assets/icons/traefik.svg
 
@@ -42,11 +42,11 @@ services:
     icon: fa fa-repeat
     items:
       - name: GitLab
-        url: https://git.{{ fqdn }}
+        url: https://{{ gitlab_stack_name }}.{{ fqdn }}
         subtitle: Source Code Management
         logo: assets/icons/gitlab.svg
       - name: Jenkins
-        url: https://jenkins.{{ fqdn }}
+        url: https://{{ jenkins_stack_name }}.{{ fqdn }}
         subtitle: Automation Server
         logo: assets/icons/jenkins.svg
 
@@ -54,10 +54,10 @@ services:
     icon: fa fa-box-archive
     items:
       - name: Vault
-        url: https://vault.{{ fqdn }}
+        url: https://{{ vault_stack_name }}.{{ fqdn }}
         subtitle: Secrets Storage
         logo: assets/icons/vault.svg
       - name: MinIO
-        url: https://console.minio.{{ fqdn }}
+        url: https://console.{{ minio_stack_name }}.{{ fqdn }}
         subtitle: S3 Storage
         logo: assets/icons/minio.svg

@@ -10,6 +10,7 @@ ansible_connection: local
 hostname: automaton
 domain: local
 fqdn: "{{ hostname }}.{{ domain }}"
+timezone: Europe/Bucharest
 
 # ===============================================
 # DOCKER SWARM CONFIGURATION
@@ -117,11 +118,11 @@ gitlab_stack_data_dir_path: /opt/services/gitlab
 gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
 gitlab_stack_additional_dirs:
   - path: data/logs
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rw,o=rw
   - path: data/config
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rw,o=rw
   - path: data/gitlab
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rw,o=rw
 gitlab_stack_template_files:
   - src: "{{ playbook_dir }}/templates/gitlab/docker-compose.yml.j2"
     dest: docker-compose.yml
@@ -132,3 +133,35 @@ gitlab_stack_template_files:
 
 gitlab_root_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
 gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/dev/null', seed=gitlab_root_password) }}"
+
+# ===============================================
+# HOMER CONFIGURATION
+# ===============================================
+homer_stack_name: homer
+homer_stack_data_dir_path: /opt/services/homer
+homer_stack_data_dir_mode: u=rwx,g=rw,o=rw
+homer_stack_additional_dirs:
+  - path: assets
+    mode: u=rwx,g=rwx,o=rwx
+homer_stack_copy_files:
+  - src: "{{ playbook_dir }}/files/homer/icons/dickbutt.svg"
+    dest: assets/dickbutt.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/gitlab.svg"
+    dest: assets/gitlab.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/jenkins.svg"
+    dest: assets/jenkins.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/minio.svg"
+    dest: assets/minio.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/portainer.svg"
+    dest: assets/portainer.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/traefik.svg"
+    dest: assets/traefik.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/vault.svg"
+    dest: assets/vault.svg
+homer_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/homer/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/homer/config.yml.j2"
+    dest: assets/config.yml
+    mode: "u=r,g=r,o=r"
