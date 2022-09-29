@@ -1,32 +1,9 @@
 ---
-- name: Install and Configure Automaton
+- name: Deploy Automaton Services
   hosts: automaton
   become: true
 
-  pre_tasks:
-    - name: Update and Upgrade System
-      ansible.builtin.apt:
-        upgrade: dist
-        update_cache: true
-        cache_valid_time: 3600
-
-    - name: Install Utility Packages
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: "{{ apt_utility_state }}"
-      loop: "{{ apt_utility_packages }}"
-
   roles:
-    # Installed required packages for local development
-    - role: mirceanton.terraform
-    - role: mirceanton.packer
-    - role: mirceanton.ansible
-
-    # Deploy Docker & Docker Swarm for Service Hosting
-    - role: mirceanton.docker
-    - role: mirceanton.docker_swarm
-
-    # Deploy Services
     - role: mirceanton.docker_stack_deploy # Traefik
       vars:
         docker_stack_deploy_name: "{{ traefik_stack_name }}"
@@ -35,6 +12,7 @@
         docker_stack_deploy_additional_dirs: "{{ traefik_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ traefik_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # Portainer
       vars:
         docker_stack_deploy_name: "{{ portainer_stack_name }}"
@@ -43,6 +21,7 @@
         docker_stack_deploy_additional_dirs: "{{ portainer_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ portainer_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # Vault
       vars:
         docker_stack_deploy_name: "{{ vault_stack_name }}"
@@ -51,6 +30,7 @@
         docker_stack_deploy_additional_dirs: "{{ vault_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ vault_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # MinIO
       vars:
         docker_stack_deploy_name: "{{ minio_stack_name }}"
@@ -59,6 +39,7 @@
         docker_stack_deploy_additional_dirs: "{{ minio_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ minio_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # Jenkins
       vars:
         docker_stack_deploy_name: "{{ jenkins_stack_name }}"
@@ -67,6 +48,7 @@
         docker_stack_deploy_additional_dirs: "{{ jenkins_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ jenkins_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # GitLab
       vars:
         docker_stack_deploy_name: "{{ gitlab_stack_name }}"
@@ -75,6 +57,7 @@
         docker_stack_deploy_additional_dirs: "{{ gitlab_stack_additional_dirs }}"
         docker_stack_deploy_copy_files: []
         docker_stack_deploy_template_files: "{{ gitlab_stack_template_files }}"
+
     - role: mirceanton.docker_stack_deploy # Homer
       vars:
         docker_stack_deploy_name: "{{ homer_stack_name }}"
