@@ -18,6 +18,9 @@ timezone: Europe/Bucharest
 docker_swarm_state: present
 docker_swarm_iface: ens0
 
+docker_data_dir: /opt/services
+docker_backup_dir: /mnt/backup
+
 docker_proxy_network: traefik-net
 
 docker_healthcheck_interval: 5s
@@ -33,7 +36,7 @@ docker_restart_policy_window: 30s
 # TRAEFIK CONFIGURATION
 # ===============================================
 traefik_stack_name: traefik
-traefik_stack_data_dir_path: /opt/services/traefik
+traefik_stack_data_dir_path: "{{ docker_data_dir }}/{{ traefik_stack_name }}"
 traefik_stack_data_dir_mode: u=rwx,g=rx,o=rx
 traefik_stack_additional_dirs:
   - path: letsencrypt
@@ -50,7 +53,7 @@ traefik_stack_template_files:
 # PORTAINER CONFIGURATION
 # ===============================================
 portainer_stack_name: portainer
-portainer_stack_data_dir_path: /opt/services/portainer
+portainer_stack_data_dir_path: "{{ docker_data_dir }}/{{ portainer_stack_name }}"
 portainer_stack_data_dir_mode: u=rwx,g=rx,o=rx
 portainer_stack_additional_dirs:
   - path: data
@@ -64,7 +67,7 @@ portainer_stack_template_files:
 # VAULT CONFIGURATION
 # ===============================================
 vault_stack_name: vault
-vault_stack_data_dir_path: /opt/services/vault
+vault_stack_data_dir_path: "{{ docker_data_dir }}/{{ vault_stack_name }}"
 vault_stack_data_dir_mode: u=rwx,g=rx,o=rx
 vault_stack_additional_dirs:
   - path: data
@@ -83,7 +86,7 @@ vault_stack_template_files:
 # MINIO CONFIGURATION
 # ===============================================
 minio_stack_name: minio
-minio_stack_data_dir_path: /opt/services/minio
+minio_stack_data_dir_path: "{{ docker_data_dir }}/{{ minio_stack_name }}"
 minio_stack_data_dir_mode: u=rwx,g=rx,o=rx
 minio_stack_additional_dirs:
   - path: data
@@ -100,7 +103,7 @@ minio_root_pass: "{{ lookup('ansible.builtin.password', '/dev/null', seed=invent
 # JENKINS CONFIGURATION
 # ===============================================
 jenkins_stack_name: jenkins
-jenkins_stack_data_dir_path: /opt/services/jenkins
+jenkins_stack_data_dir_path: "{{ docker_data_dir }}/{{ jenkins_stack_name }}"
 jenkins_stack_data_dir_mode: u=rwx,g=rx,o=rx
 jenkins_stack_additional_dirs:
   - path: data
@@ -114,7 +117,7 @@ jenkins_stack_template_files:
 # GITLAB CONFIGURATION
 # ===============================================
 gitlab_stack_name: gitlab
-gitlab_stack_data_dir_path: /opt/services/gitlab
+gitlab_stack_data_dir_path: "{{ docker_data_dir }}/{{ gitlab_stack_name }}"
 gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
 gitlab_stack_additional_dirs:
   - path: data/logs
@@ -138,7 +141,7 @@ gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/dev/null', seed=g
 # HOMER CONFIGURATION
 # ===============================================
 homer_stack_name: homer
-homer_stack_data_dir_path: /opt/services/homer
+homer_stack_data_dir_path: "{{ docker_data_dir }}/{{ homer_stack_name }}"
 homer_stack_data_dir_mode: u=rwx,g=rw,o=rw
 homer_stack_additional_dirs:
   - path: assets

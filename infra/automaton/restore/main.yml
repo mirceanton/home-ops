@@ -1,6 +1,4 @@
 ---
-- ansible.builtin.import_playbook: ../purge/main.yml
-
 - name: Restore Automaton
   hosts: automaton
   become: true
@@ -8,36 +6,13 @@
   tasks:
     - name: Restore Data Directory
       ansible.posix.synchronize:
-        src: "/mnt/backup/{{ item.name }}"
-        dest: "{{ item.path }}"
+        src: "{{ docker_backup_dir }}/{{ item }}"
+        dest: "{{ docker_data_dir }}"
       loop:
-        - {
-            path: "{{ traefik_stack_data_dir_path }}",
-            name: "{{ traefik_stack_name }}",
-          }
-        - {
-            path: "{{ portainer_stack_data_dir_path }}",
-            name: "{{ portainer_stack_name }}",
-          }
-        - {
-            path: "{{ vault_stack_data_dir_path }}",
-            name: "{{ vault_stack_name }}",
-          }
-        - {
-            path: "{{ minio_stack_data_dir_path }}",
-            name: "{{ minio_stack_name }}",
-          }
-        - {
-            path: "{{ jenkins_stack_data_dir_path }}",
-            name: "{{ jenkins_stack_name }}",
-          }
-        - {
-            path: "{{ gitlab_stack_data_dir_path }}",
-            name: "{{ gitlab_stack_name }}",
-          }
-        - {
-            path: "{{ homer_stack_data_dir_path }}",
-            name: "{{ homer_stack_name }}",
-          }
-
-- ansible.builtin.import_playbook: ../deploy/main.yml
+        - "{{ traefik_stack_name }}"
+        - "{{ portainer_stack_name }}"
+        - "{{ vault_stack_name }}"
+        - "{{ minio_stack_name }}"
+        - "{{ jenkins_stack_name }}"
+        - "{{ gitlab_stack_name }}"
+        - "{{ homer_stack_name }}"
