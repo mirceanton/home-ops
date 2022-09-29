@@ -1,5 +1,5 @@
 ---
-- ansible.builtin.import_playbook: ../wipeout/main.yml
+- ansible.builtin.import_playbook: ../stop/main.yml
 
 - name: Purge Automaton Services and Data
   hosts: automaton
