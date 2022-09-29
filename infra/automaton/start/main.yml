@@ -1,0 +1,20 @@
+---
+- name: Stop Automaton Services
+  hosts: automaton
+  become: true
+
+  tasks:
+    - name: Start Service
+      community.docker.docker_stack:
+        name: "{{ item }}"
+        state: present
+        compose:
+          - "{{ docker_data_dir }}/{{ item }}/docker-compose.yml"
+      loop:
+        - "{{ traefik_stack_name }}"
+        - "{{ portainer_stack_name }}"
+        - "{{ vault_stack_name }}"
+        - "{{ minio_stack_name }}"
+        - "{{ jenkins_stack_name }}"
+        - "{{ gitlab_stack_name }}"
+        - "{{ homer_stack_name }}"
