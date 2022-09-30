@@ -7,3 +7,6 @@
     docker_stack_deploy_root_dir_mode: "{{ minio_stack_data_dir_mode }}"
     docker_stack_deploy_additional_dirs: "{{ minio_stack_additional_dirs }}"
     docker_stack_deploy_template_files: "{{ minio_stack_template_files }}"
+# TODO: Generate Credentials
+# TODO: Save credentials in vault to use later
+# TODO: Add credentials to bitwarden

@@ -7,3 +7,5 @@
     docker_stack_deploy_root_dir_mode: "{{ vault_stack_data_dir_mode }}"
     docker_stack_deploy_additional_dirs: "{{ vault_stack_additional_dirs }}"
     docker_stack_deploy_template_files: "{{ vault_stack_template_files }}"
+# Auto generate root token
+# TODO: Add credentials to bitwarden
