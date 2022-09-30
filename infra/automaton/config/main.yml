@@ -45,3 +45,9 @@
       loop:
         - "{{ docker_data_dir }}"
         - "{{ docker_backup_dir }}"
+
+    - name: Configure backup cron job
+      ansible.builtin.cron:
+        name: "Backup services"
+        special_time: daily
+        job: "bash /workspace/amir-hlb/utils/scripts/automaton-backup.sh"
