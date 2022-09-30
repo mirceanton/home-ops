@@ -6,7 +6,7 @@
   tasks:
     - name: Restore Data Directory
       ansible.posix.synchronize:
-        src: "{{ docker_backup_dir }}/{{ item }}"
+        src: "{{ backup_dir_path }}/{{ item }}"
         dest: "{{ docker_data_dir }}"
       loop:
         - "{{ traefik_stack_name }}"

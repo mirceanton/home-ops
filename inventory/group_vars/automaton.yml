@@ -13,15 +13,20 @@ fqdn: "{{ hostname }}.{{ domain }}"
 timezone: Europe/Bucharest
 
 # ===============================================
+# BACKUP CONFIGURATION
+# ===============================================
+backup_dir_path: /mnt/backup
+backup_script_path: /workspace/amir-hlb/utils/scripts/automaton-backup.sh
+
+# ===============================================
 # DOCKER SWARM CONFIGURATION
 # ===============================================
 docker_swarm_state: present
 docker_swarm_iface: ens0
 
-docker_data_dir: /opt/services
-docker_backup_dir: /mnt/backup
-
 docker_proxy_network: traefik-net
+
+docker_data_dir: /opt/services
 
 docker_healthcheck_interval: 5s
 docker_healtcheck_timeout: 5s
