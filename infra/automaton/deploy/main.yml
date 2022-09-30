@@ -3,68 +3,11 @@
   hosts: automaton
   become: true
 
-  roles:
-    - role: mirceanton.docker_stack_deploy # Traefik
-      vars:
-        docker_stack_deploy_name: "{{ traefik_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ traefik_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ traefik_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ traefik_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ traefik_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # Portainer
-      vars:
-        docker_stack_deploy_name: "{{ portainer_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ portainer_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ portainer_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ portainer_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ portainer_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # Vault
-      vars:
-        docker_stack_deploy_name: "{{ vault_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ vault_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ vault_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ vault_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ vault_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # MinIO
-      vars:
-        docker_stack_deploy_name: "{{ minio_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ minio_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ minio_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ minio_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ minio_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # Jenkins
-      vars:
-        docker_stack_deploy_name: "{{ jenkins_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ jenkins_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ jenkins_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ jenkins_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ jenkins_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # GitLab
-      vars:
-        docker_stack_deploy_name: "{{ gitlab_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ gitlab_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ gitlab_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ gitlab_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: []
-        docker_stack_deploy_template_files: "{{ gitlab_stack_template_files }}"
-
-    - role: mirceanton.docker_stack_deploy # Homer
-      vars:
-        docker_stack_deploy_name: "{{ homer_stack_name }}"
-        docker_stack_deploy_root_dir_path: "{{ homer_stack_data_dir_path }}"
-        docker_stack_deploy_root_dir_mode: "{{ homer_stack_data_dir_mode }}"
-        docker_stack_deploy_additional_dirs: "{{ homer_stack_additional_dirs }}"
-        docker_stack_deploy_copy_files: "{{ homer_stack_copy_files }}"
-        docker_stack_deploy_template_files: "{{ homer_stack_template_files }}"
-
-  tasks: []
+  tasks:
+    - ansible.builtin.import_tasks: tasks/traefik.yml
+    - ansible.builtin.import_tasks: tasks/vault.yml
+    - ansible.builtin.import_tasks: tasks/portainer.yml
+    - ansible.builtin.import_tasks: tasks/minio.yml
+    - ansible.builtin.import_tasks: tasks/jenkins.yml
+    - ansible.builtin.import_tasks: tasks/gitlab.yml
+    - ansible.builtin.import_tasks: tasks/homer.yml

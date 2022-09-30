@@ -1,0 +1,9 @@
+---
+- ansible.builtin.include_role:
+    name: mirceanton.docker_stack_deploy
+  vars:
+    docker_stack_deploy_name: "{{ minio_stack_name }}"
+    docker_stack_deploy_root_dir_path: "{{ minio_stack_data_dir_path }}"
+    docker_stack_deploy_root_dir_mode: "{{ minio_stack_data_dir_mode }}"
+    docker_stack_deploy_additional_dirs: "{{ minio_stack_additional_dirs }}"
+    docker_stack_deploy_template_files: "{{ minio_stack_template_files }}"
