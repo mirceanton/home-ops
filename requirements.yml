@@ -1,54 +1,58 @@
 ---
-# Automaton roles
-- name: mirceanton.anacron
-  version: v1.0.1
-- name: mirceanton.ansible
-  version: v2.0.1
-- name: mirceanton.docker
-  version: v2.0.0
-- name: mirceanton.packer
-  version: v3.0.2
-- name: mirceanton.terraform
-  version: v3.0.2
-- name: mirceanton.docker_stack_deploy
-  version: v1.0.1
+roles:
+  # Automaton roles
+  - name: mirceanton.anacron
+    version: v1.0.1
+  - name: mirceanton.ansible
+    version: v2.0.1
+  - name: mirceanton.docker
+    version: v2.0.0
+  - name: mirceanton.packer
+    version: v3.0.2
+  - name: mirceanton.terraform
+    version: v3.0.2
+  - name: mirceanton.docker_stack_deploy
+    version: v1.0.1
 
-# Proxmox roles
-- name: mirceanton.proxmox_cloudbuntu
-  version: v2.0.0
-- name: mirceanton.proxmox_dark_theme
-  version: v1.0.4
-- name: mirceanton.proxmox_driver_blacklist
-  version: v1.0.0
-- name: mirceanton.proxmox_iommu
-  version: v1.0.2
-- name: mirceanton.proxmox_nested_virt
-  version: v1.0.2
-- name: mirceanton.proxmox_no_subscription
-  version: v2.0.0
-- name: mirceanton.proxmox_vfio
-  version: v1.0.0
-- name: mirceanton.proxmox_vgpu
-  version: v1.0.2
+  # Proxmox roles
+  - name: mirceanton.proxmox_cloudbuntu
+    version: v2.0.0
+  - name: mirceanton.proxmox_dark_theme
+    version: v1.0.4
+  - name: mirceanton.proxmox_driver_blacklist
+    version: v1.0.0
+  - name: mirceanton.proxmox_iommu
+    version: v1.0.2
+  - name: mirceanton.proxmox_nested_virt
+    version: v1.0.2
+  - name: mirceanton.proxmox_no_subscription
+    version: v2.0.0
+  - name: mirceanton.proxmox_vfio
+    version: v1.0.0
+  - name: mirceanton.proxmox_vgpu
+    version: v1.0.2
 
-# opnSense roles
-- name: mirceanton.opnsense_rules
-  version: v1.0.0
-- name: mirceanton.opnsense_gateway
-  version: v1.0.0
-- name: mirceanton.opnsense_interfaces
-  version: v1.0.0
-- name: mirceanton.opnsense_dhcp
-  version: v1.0.0
-- name: mirceanton.opnsense_plugins
-  version: v1.0.0
-- name: mirceanton.opnsense_unbound
-  version: v1.0.0
-- name: mirceanton.opnsense_ssh
-  version: v1.0.0
-- name: mirceanton.opnsense_theme
-  version: v1.0.0
-- name: mirceanton.opnsense_general
-  version: v1.0.0
-- name: mirceanton.opnsense_dashboard
-  version: v1.0.0
+  # opnSense roles
+  - name: mirceanton.opnsense_rules
+    version: v1.0.0
+  - name: mirceanton.opnsense_gateway
+    version: v1.0.0
+  - name: mirceanton.opnsense_interfaces
+    version: v1.0.0
+  - name: mirceanton.opnsense_dhcp
+    version: v1.0.0
+  - name: mirceanton.opnsense_plugins
+    version: v1.0.0
+  - name: mirceanton.opnsense_unbound
+    version: v1.0.0
+  - name: mirceanton.opnsense_ssh
+    version: v1.0.0
+  - name: mirceanton.opnsense_theme
+    version: v1.0.0
+  - name: mirceanton.opnsense_general
+    version: v1.0.0
+  - name: mirceanton.opnsense_dashboard
+    version: v1.0.0
+
+collections:
+  - community.ciscosmb
