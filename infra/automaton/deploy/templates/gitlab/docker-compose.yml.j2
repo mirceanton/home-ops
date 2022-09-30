@@ -30,6 +30,8 @@ services:
       {{ templates.restart_policy() | indent(6) }}
 
       labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
         {{ templates.traefik_labels('gitlab', '80') | indent(8) }}
 
   runner:

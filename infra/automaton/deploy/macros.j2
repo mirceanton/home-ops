@@ -1,19 +1,18 @@
-{%- macro traefik_labels(name, port, set_enabled=true) -%}    
-{%- if set_enabled -%}
-# Enable traefik to proxy this service
-- 'traefik.enable=true'
-{%- endif -%}
+{%- macro traefik_labels(name, port) -%}
+# Service Definition
+- 'traefik.http.services.{{ name }}.loadbalancer.server.port={{ port }}'
 
-# Traefik HTTP -> HTTPS
+# HTTP -> HTTPS Redirect
 - 'traefik.http.routers.{{ name }}.rule=Host(`{{ name }}.{{ fqdn }}`)'
 - 'traefik.http.routers.{{ name }}.entrypoints=web'
 - 'traefik.http.routers.{{ name }}.middlewares=redirect@file'
+- 'traefik.http.routers.{{ name }}.service={{ name }}'
     
-# Traefik HTTPS
+# HTTPS Entrypoint
 - 'traefik.http.routers.{{ name }}-secured.rule=Host(`{{ name }}.{{ fqdn }}`)'
 - 'traefik.http.routers.{{ name }}-secured.entrypoints=web-secured'
 - 'traefik.http.routers.{{ name }}-secured.tls.certresolver=default'
-- 'traefik.http.services.{{ name }}.loadbalancer.server.port={{ port }}'
+- 'traefik.http.routers.{{ name }}-secured.service={{ name }}'
 {%- endmacro -%}
 
 {%- macro restart_policy() -%}

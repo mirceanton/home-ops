@@ -27,6 +27,8 @@ services:
       {{ templates.restart_policy() | indent(6) }}
 
       labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
         {{ templates.traefik_labels('vault', '8200') | indent(8) }}
 
 networks:

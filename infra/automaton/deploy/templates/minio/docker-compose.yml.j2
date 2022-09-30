@@ -31,8 +31,10 @@ services:
       {{ templates.restart_policy() | indent(6) }}
 
       labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
         {{ templates.traefik_labels('minio', '9000') | indent(8) }}
-        {{ templates.traefik_labels('minio-console', '9001', false) | indent(8) }}
+        {{ templates.traefik_labels('minio-console', '9001') | indent(8) }}
 
 networks:
   {{ docker_proxy_network }}:
