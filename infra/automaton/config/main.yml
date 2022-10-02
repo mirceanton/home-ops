@@ -3,20 +3,20 @@
   hosts: automaton
   become: true
 
-  # pre_tasks:
-  #   - name: Update and Upgrade System
-  #     ansible.builtin.apt:
-  #       upgrade: dist
-  #       update_cache: true
-  #       cache_valid_time: 3600
+  pre_tasks:
+    - name: Update and Upgrade System
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+        cache_valid_time: 3600
 
-  #   - name: Install Utility Packages
-  #     ansible.builtin.apt:
-  #       name: "{{ item }}"
-  #       state: "{{ apt_utility_state }}"
-  #     loop: "{{ apt_utility_packages }}"
+    - name: Install Utility Packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: "{{ apt_utility_state }}"
+      loop: "{{ apt_utility_packages }}"
 
-  # roles:
+  roles:
   #   # Installed required packages for local development
   #   - role: mirceanton.terraform
   #   - role: mirceanton.packer
@@ -26,25 +26,25 @@
   #   - role: mirceanton.docker
 
   tasks:
-    # - name: Initialize The Docker Swarm
-    #   community.docker.docker_swarm:
-    #     state: "{{ docker_swarm_state }}"
-    #     advertise_addr: "{{ docker_swarm_iface }}"
+    - name: Initialize The Docker Swarm
+      community.docker.docker_swarm:
+        state: "{{ docker_swarm_state }}"
+        advertise_addr: "{{ docker_swarm_iface }}"
 
-    # - name: Create the Overlay Network
-    #   community.docker.docker_network:
-    #     name: "{{ docker_proxy_network }}"
-    #     scope: swarm
-    #     driver: overlay
+    - name: Create the Overlay Network
+      community.docker.docker_network:
+        name: "{{ docker_proxy_network }}"
+        scope: swarm
+        driver: overlay
 
-    # - name: Create required directories
-    #   ansible.builtin.file:
-    #     path: "{{ item }}"
-    #     state: directory
-    #     mode: "u=rwx,g=rx,o=rx"
-    #   loop:
-    #     - "{{ docker_data_dir }}"
-    #     - "{{ backup_dir_path }}"
+    - name: Create required directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "u=rwx,g=rx,o=rx"
+      loop:
+        - "{{ docker_data_dir }}"
+        - "{{ backup_dir_path }}"
 
     - name: Install anacron
       ansible.builtin.apt:
