@@ -1,4 +1,5 @@
 ---
+- name: mirceanton.anacron
 - name: mirceanton.ansible
 - name: mirceanton.docker
 - name: mirceanton.packer
