@@ -1,0 +1,35 @@
+{% import "macros.j2" as templates with context %}
+---
+version: '3.9'
+
+services:
+  app:
+    image: jenkins/jenkins:2.371
+
+    volumes:
+      - {{ jenkins_stack_data_dir_path }}/data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks:
+      - {{ docker_proxy_network }}
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sS http://localhost:8080/login || exit 1"]
+      interval: {{ docker_healthcheck_interval | default('30s') }}
+      timeout: {{ docker_healtcheck_timeout | default('10s') }}
+      retries: {{ docker_healthcheck_retries | default(5) }}
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      {{ templates.restart_policy() | indent(6) }}
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+        {{ templates.traefik_labels('jenkins', '8080') | indent(8) }}
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true

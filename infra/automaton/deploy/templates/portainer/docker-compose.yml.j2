@@ -1,0 +1,67 @@
+{% import "macros.j2" as templates with context %}
+---
+version: '3.9'
+
+services:
+  app:
+    image: portainer/portainer-ce:2.15.1-alpine
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    environment:
+      VIRTUAL_HOST: 'portainer.{{ fqdn }}'
+      VIRTUAL_PORT: '9000'
+
+    volumes:
+      - {{ portainer_stack_data_dir_path }}/data:/data
+
+    networks:
+      - {{ docker_proxy_network }}
+      - internal
+
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider --no-check-certificate https://localhost:9443 || exit 1"
+      interval: {{ docker_healthcheck_interval | default('30s') }}
+      timeout: {{ docker_healtcheck_timeout | default('10s') }}
+      retries: {{ docker_healthcheck_retries | default(5) }}
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      placement:
+        constraints:
+          - node.role == manager
+
+      {{ templates.restart_policy() | indent(6) }}
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+        {{ templates.traefik_labels('portainer', '9000') | indent(8) }}
+
+  agent:
+    image: portainer/agent:2.15.1-alpine
+
+    environment:
+      AGENT_CLUSTER_ADDR: tasks.agent
+      LOG_LEVEL: DEBUG
+      AGENT_PORT: 9001
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+
+    networks:
+      - internal
+
+    deploy:
+      mode: global
+      {{ templates.restart_policy() | indent(6) }}
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
+  internal:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
