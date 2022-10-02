@@ -1,0 +1,18 @@
+---
+- name: Back Up Automaton
+  hosts: automaton
+  become: true
+
+  tasks:
+    - name: Back up data Directory
+      ansible.posix.synchronize:
+        src: "{{ item }}"
+        dest: "/mnt/backup/"
+      loop:
+        - "{{ traefik_stack_data_dir_path }}"
+        - "{{ portainer_stack_data_dir_path }}"
+        - "{{ vault_stack_data_dir_path }}"
+        - "{{ minio_stack_data_dir_path }}"
+        - "{{ jenkins_stack_data_dir_path }}"
+        - "{{ gitlab_stack_data_dir_path }}"
+        - "{{ homer_stack_data_dir_path }}"

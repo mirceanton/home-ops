@@ -1,0 +1,11 @@
+---
+- ansible.builtin.include_role:
+    name: mirceanton.docker_stack_deploy
+  vars:
+    docker_stack_deploy_name: "{{ portainer_stack_name }}"
+    docker_stack_deploy_root_dir_path: "{{ portainer_stack_data_dir_path }}"
+    docker_stack_deploy_root_dir_mode: "{{ portainer_stack_data_dir_mode }}"
+    docker_stack_deploy_additional_dirs: "{{ portainer_stack_additional_dirs }}"
+    docker_stack_deploy_template_files: "{{ portainer_stack_template_files }}"
+# TODO: Auto generate admin password
+# TODO: Add credentials to bitwarden

@@ -1,0 +1,36 @@
+{% import "macros.j2" as templates with context %}
+---
+version: '3.9'
+
+services:
+  app:
+    image: vault:1.11.3
+    entrypoint: vault server -config=/vault/config/vault.json
+
+    networks:
+      - {{ docker_proxy_network }}
+
+    cap_add:
+      - IPC_LOCK
+
+    volumes:
+      - {{ vault_stack_data_dir_path }}/data:/vault/file
+      - {{ vault_stack_data_dir_path }}/config:/vault/config
+
+    environment:
+      VAULT_ADDR: "http://vault.{{ fqdn }}"
+
+    deploy:
+      mode: replicated
+      replicas: 1
+
+      {{ templates.restart_policy() | indent(6) }}
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+        {{ templates.traefik_labels('vault', '8200') | indent(8) }}
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true

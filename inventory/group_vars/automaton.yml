@@ -1,0 +1,176 @@
+---
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
+ansible_connection: local
+
+# ===============================================
+# HOST CONFIGURATION
+# ===============================================
+hostname: automaton
+domain: local
+fqdn: "{{ hostname }}.{{ domain }}"
+
+# ===============================================
+# BACKUP CONFIGURATION
+# ===============================================
+backup_dir_path: /mnt/backup
+backup_script_path: /workspace/amir-hlb/utils/scripts/automaton-backup.sh
+
+# ===============================================
+# DOCKER SWARM CONFIGURATION
+# ===============================================
+docker_swarm_state: present
+docker_swarm_iface: ens0
+
+docker_proxy_network: traefik-net
+
+docker_data_dir: /opt/services
+
+docker_healthcheck_interval: 5s
+docker_healtcheck_timeout: 5s
+docker_healthcheck_retries: 20
+
+docker_restart_policy_condition: any
+docker_restart_policy_delay: 5s
+docker_restart_policy_max_attempts: "3"
+docker_restart_policy_window: 30s
+
+# ===============================================
+# TRAEFIK CONFIGURATION
+# ===============================================
+traefik_stack_name: traefik
+traefik_stack_data_dir_path: "{{ docker_data_dir }}/{{ traefik_stack_name }}"
+traefik_stack_data_dir_mode: u=rwx,g=rx,o=rx
+traefik_stack_additional_dirs:
+  - path: letsencrypt
+    mode: u=rwx,g=rw,o=r
+traefik_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/traefik/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/traefik/config.yml.j2"
+    dest: config.yml
+    mode: "u=r,g=r,o=r"
+
+# ===============================================
+# PORTAINER CONFIGURATION
+# ===============================================
+portainer_stack_name: portainer
+portainer_stack_data_dir_path: "{{ docker_data_dir }}/{{ portainer_stack_name }}"
+portainer_stack_data_dir_mode: u=rwx,g=rx,o=rx
+portainer_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+portainer_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/portainer/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+# ===============================================
+# VAULT CONFIGURATION
+# ===============================================
+vault_stack_name: vault
+vault_stack_data_dir_path: "{{ docker_data_dir }}/{{ vault_stack_name }}"
+vault_stack_data_dir_mode: u=rwx,g=rx,o=rx
+vault_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+  - path: config
+    mode: u=rwx,g=rw,o=r
+vault_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/vault/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/vault/config.json.j2"
+    dest: config/vault.json
+    mode: "u=r,g=r,o=r"
+
+# ===============================================
+# MINIO CONFIGURATION
+# ===============================================
+minio_stack_name: minio
+minio_stack_data_dir_path: "{{ docker_data_dir }}/{{ minio_stack_name }}"
+minio_stack_data_dir_mode: u=rwx,g=rx,o=rx
+minio_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+minio_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/minio/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+minio_root_user: root
+minio_root_pass: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+
+# ===============================================
+# JENKINS CONFIGURATION
+# ===============================================
+jenkins_stack_name: jenkins
+jenkins_stack_data_dir_path: "{{ docker_data_dir }}/{{ jenkins_stack_name }}"
+jenkins_stack_data_dir_mode: u=rwx,g=rx,o=rx
+jenkins_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rwx,o=rwx
+jenkins_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/jenkins/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+# ===============================================
+# GITLAB CONFIGURATION
+# ===============================================
+gitlab_stack_name: gitlab
+gitlab_stack_data_dir_path: "{{ docker_data_dir }}/{{ gitlab_stack_name }}"
+gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
+gitlab_stack_additional_dirs:
+  - path: data/logs
+    mode: u=rwx,g=rw,o=rw
+  - path: data/config
+    mode: u=rwx,g=rw,o=rw
+  - path: data/gitlab
+    mode: u=rwx,g=rw,o=rw
+gitlab_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/gitlab/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/gitlab/config.rb.j2"
+    dest: data/gitlab/gitlab.rb
+    mode: "u=r,g=r,o=r"
+
+gitlab_root_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/dev/null', seed=gitlab_root_password) }}"
+
+# ===============================================
+# HOMER CONFIGURATION
+# ===============================================
+homer_stack_name: homer
+homer_stack_data_dir_path: "{{ docker_data_dir }}/{{ homer_stack_name }}"
+homer_stack_data_dir_mode: u=rwx,g=rw,o=rw
+homer_stack_additional_dirs:
+  - path: assets
+    mode: u=rwx,g=rwx,o=rwx
+  - path: assets/icons
+    mode: u=rwx,g=rwx,o=rwx
+homer_stack_copy_files:
+  - src: "{{ playbook_dir }}/files/homer/icons/dickbutt.svg"
+    dest: assets/icons/dickbutt.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/gitlab.svg"
+    dest: assets/icons/gitlab.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/jenkins.svg"
+    dest: assets/icons/jenkins.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/minio.svg"
+    dest: assets/icons/minio.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/portainer.svg"
+    dest: assets/icons/portainer.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/traefik.svg"
+    dest: assets/icons/traefik.svg
+  - src: "{{ playbook_dir }}/files/homer/icons/vault.svg"
+    dest: assets/icons/vault.svg
+homer_stack_template_files:
+  - src: "{{ playbook_dir }}/templates/homer/docker-compose.yml.j2"
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: "{{ playbook_dir }}/templates/homer/config.yml.j2"
+    dest: assets/config.yml
+    mode: "u=r,g=r,o=r"

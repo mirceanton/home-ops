@@ -1,0 +1,33 @@
+{% import "macros.j2" as templates with context %}
+---
+version: '3.9'
+
+services:
+  app:
+    image: b4bz/homer:v22.08.1
+
+    networks:
+      - {{ docker_proxy_network }}
+
+    volumes:
+      - {{ homer_stack_data_dir_path }}/assets:/www/assets
+
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: "{{ timezone }}"
+      INIT_ASSETS: 1
+
+    deploy:
+      mode: global
+
+      {{ templates.restart_policy() | indent(6) }}
+
+      labels:
+        # Enable traefik to proxy this service
+        - 'traefik.enable=true'
+        {{ templates.traefik_labels('home', '8080') | indent(8) }}
+
+networks:
+  {{ docker_proxy_network }}:
+    external: true
