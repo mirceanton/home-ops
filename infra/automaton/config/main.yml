@@ -17,10 +17,8 @@
       loop: "{{ apt_utility_packages }}"
 
     - name: Set Hostname
-      ansible.netcommon.net_system:
-        hostname: "{{ hostname }}"
-        domain_name: "{{ domain }}"
-        name_servers: "{{ nameservers }}"
+      ansible.builtin.hostname:
+        name: "{{ fqdn }}"
 
     - name: Set Timezone
       community.general.timezone:
