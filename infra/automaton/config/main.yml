@@ -16,14 +16,38 @@
         state: "{{ apt_utility_state }}"
       loop: "{{ apt_utility_packages }}"
 
-  roles:
-  #   # Installed required packages for local development
-  #   - role: mirceanton.terraform
-  #   - role: mirceanton.packer
-  #   - role: mirceanton.ansible
+    - name: Set Hostname
+      ansible.netcommon.net_system:
+        hostname: "{{ hostname }}"
+        domain_name: "{{ domain }}"
+        name_servers: "{{ nameservers }}"
 
-  #   # Install docker to host services
-  #   - role: mirceanton.docker
+    - name: Set Timezone
+      community.general.timezone:
+        name: "{{ timezone }}"
+
+    - name: Create required directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "u=rwx,g=rx,o=rx"
+      loop:
+        - "{{ docker_data_dir }}"
+        - "{{ backup_dir_path }}"
+
+  roles:
+    # Installed required packages for local development
+    - role: mirceanton.terraform
+    - role: mirceanton.packer
+    - role: mirceanton.ansible
+
+    # Install docker to host services
+    - role: mirceanton.docker
+
+    - role: mirceanton.anacron
+      vars:
+        anacron_jobs:
+          - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
   tasks:
     - name: Initialize The Docker Swarm
@@ -36,28 +60,3 @@
         name: "{{ docker_proxy_network }}"
         scope: swarm
         driver: overlay
-
-    - name: Create required directories
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: directory
-        mode: "u=rwx,g=rx,o=rx"
-      loop:
-        - "{{ docker_data_dir }}"
-        - "{{ backup_dir_path }}"
-
-    - name: Install anacron
-      ansible.builtin.apt:
-        name: anacron
-        state: present
-
-    - name: Enable and start the anacron service
-      ansible.builtin.service:
-        name: anacron
-        state: starteed
-        enabled: true
-
-    - name: Set up a daily backup with anacron
-      ansible.builtin.lineinfile:
-        path: /etc/anacrontab
-        line: "1       1       backup.daily    /bin/bash {{ backup_script_path }}"

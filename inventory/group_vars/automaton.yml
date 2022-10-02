@@ -10,7 +10,6 @@ ansible_connection: local
 hostname: automaton
 domain: local
 fqdn: "{{ hostname }}.{{ domain }}"
-timezone: Europe/Bucharest
 
 # ===============================================
 # BACKUP CONFIGURATION
