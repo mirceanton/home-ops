@@ -16,14 +16,6 @@
         state: "{{ apt_utility_state }}"
       loop: "{{ apt_utility_packages }}"
 
-    - name: Set Hostname
-      ansible.builtin.hostname:
-        name: "{{ fqdn }}"
-
-    - name: Set Timezone
-      community.general.timezone:
-        name: "{{ timezone }}"
-
     - name: Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
