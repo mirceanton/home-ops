@@ -1,0 +1,24 @@
+---
+proxmox_cloudbuntu_vmid: 1000
+proxmox_cloudbuntu_name: ubuntu-22.04-cloud
+proxmox_cloudbuntu_disk_device: local-zfs
+
+proxmox_cloudbuntu_ci_nameserver: "192.168.10.1"
+proxmox_cloudbuntu_ci_searchdomain: local
+proxmox_cloudbuntu_ci_ipconfig: "ip=dhcp"
+
+proxmox_cloudbuntu_ci_user: user123
+proxmox_cloudbuntu_ci_pass: pass123
+proxmox_cloudbuntu_ci_keys: []
+
+# Generic vars
+cpu_type: intel
+
+# Nested Virtualization Setup
+proxmox_nested_virt_cpu_type: "{{ cpu_type }}"
+
+# GPU Passthrough setup
+proxmox_pci_passthrough_boot_type: systemd
+proxmox_pci_passthrough_cpu_type: "{{ cpu_type }}"
+proxmox_pci_passthrough_gpu_ids: 10de:1e84,10de:10f8,10de:1ad8,10de:1ad9,10de:1c81,10de:0fb9
+proxmox_pci_passthrough_extra_cmdline: pcie_acs_override=downstream pcie_acs_override=multifunction nofb nomodeset video=vesafb:off video=efifb:off video=simplefb:off initcall_blacklist=sysfb_init vga=off
