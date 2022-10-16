@@ -1,0 +1,25 @@
+---
+- name: Initialize Proxmox Servers
+  hosts: proxmox
+  become: true
+
+  pre_tasks:
+    - ansible.builtin.include_role:
+        name: mirceanton.proxmox_nosub
+
+    - name: Install utility packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: "{{ apt_utility_state }}"
+      loop: "{{ apt_utility_packages }}"
+
+  roles:
+    - role: mirceanton.proxmox_nested_virt
+    - role: mirceanton.proxmox_pci_passthrough
+    - role: mirceanton.proxmox_cloudbuntu
+
+  post_tasks:
+    - ansible.builtin.include_role:
+        name: mirceanton.proxmox_dark_theme
+
+  tasks: []
