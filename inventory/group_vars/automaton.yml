@@ -3,6 +3,8 @@
 # ANSIBLE CONFIGURATION
 # ===============================================
 ansible_connection: local
+ansible_pip_additional:
+  - hvac
 
 # ===============================================
 # HOST CONFIGURATION
