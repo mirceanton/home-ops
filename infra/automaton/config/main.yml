@@ -35,9 +35,6 @@
     - role: mirceanton.docker
 
     - role: mirceanton.anacron
-      vars:
-        anacron_jobs:
-          - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
   tasks:
     - name: Initialize The Docker Swarm
