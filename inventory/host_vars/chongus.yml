@@ -1,15 +1,27 @@
 ---
-ansible_host: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:address token=1qaz2wsx3edc') }}"
-ansible_user: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:username token=1qaz2wsx3edc') }}"
-ansible_ssh_pass: "{{ lookup('hashi_vault', 'secret=secret/data/hosts/chongus:password token=1qaz2wsx3edc') }}"
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
+ansible_host: chongus
+ansible_user: root
 
-# Generic vars
+# ===============================================
+# HOST CONFIGURATION
+# ===============================================
+hostname: chongus
+domain: local
+fqdn: "{{ hostname }}.{{ domain }}"
 cpu_type: intel
 
-# Nested Virtualization Setup
+
+# ===============================================
+# NESTED VIRTUALIZATION CONFIGURATION
+# ===============================================
 proxmox_nested_virt_cpu_type: "{{ cpu_type }}"
 
-# GPU Passthrough setup
+# ===============================================
+# GPU PASSTHROUGH CONFIGURATION
+# ===============================================
 proxmox_pci_passthrough_boot_type: systemd
 proxmox_pci_passthrough_cpu_type: "{{ cpu_type }}"
 proxmox_pci_passthrough_gpu_ids: 10de:1e84,10de:10f8,10de:1ad8,10de:1ad9,10de:1c81,10de:0fb9
