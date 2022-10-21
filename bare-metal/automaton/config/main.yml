@@ -24,6 +24,7 @@
       loop:
         - "{{ docker_data_dir }}"
         - "{{ backup_dir_path }}"
+        - /opt/scripts/
 
   roles:
     # Installed required packages for local development
@@ -36,4 +37,11 @@
 
     - role: mirceanton.anacron
 
-  tasks: []
+  tasks:
+    - name: Copy backup script to location
+      ansible.builtin.copy:
+        src: files/automaton-backup.sh
+        dest: "{{ backup_script_path }}"
+        owner: root
+        group: root
+        mode: "u=rwx,g=rw,o="
