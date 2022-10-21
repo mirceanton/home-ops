@@ -133,6 +133,8 @@ jenkins_stack_template_files:
   - src: "{{ playbook_dir }}/templates/jenkins/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+jenkins_admin_user: admin
+jenkins_admin_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/jenkins/admin_password length=32') }}"
 
 # ===============================================
 # GITLAB CONFIGURATION

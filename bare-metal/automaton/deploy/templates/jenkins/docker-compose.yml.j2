@@ -9,7 +9,11 @@ services:
     volumes:
       - {{ jenkins_stack_data_dir_path }}/data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-
+    
+    environment:
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false
+      JENKINS_OPTS: --argumentsRealm.roles.user="{{ jenkins_admin_user }}" --argumentsRealm.passwd.admin="{{ jenkins_admin_pass }}" --argumentsRealm.roles.admin=admin
+    
     networks:
       - {{ docker_proxy_network }}
 
