@@ -32,10 +32,12 @@ services:
       - name: Portainer
         url: https://{{ portainer_stack_name }}.{{ fqdn }}
         subtitle: Container Management
+        target: "_blank"
         logo: assets/icons/portainer.svg
       - name: Traefik
         url: https://{{ traefik_stack_name }}.{{ fqdn }}
         subtitle: Reverse Proxy Dashboard
+        target: "_blank"
         logo: assets/icons/traefik.svg
 
   - name: CI/CD
@@ -44,10 +46,12 @@ services:
       - name: GitLab
         url: https://{{ gitlab_stack_name }}.{{ fqdn }}
         subtitle: Source Code Management
+        target: "_blank"
         logo: assets/icons/gitlab.svg
       - name: Jenkins
         url: https://{{ jenkins_stack_name }}.{{ fqdn }}
         subtitle: Automation Server
+        target: "_blank"
         logo: assets/icons/jenkins.svg
 
   - name: Storage
@@ -56,8 +60,10 @@ services:
       - name: Vault
         url: https://{{ vault_stack_name }}.{{ fqdn }}
         subtitle: Secrets Storage
+        target: "_blank"
         logo: assets/icons/vault.svg
       - name: MinIO
         url: https://console.{{ minio_stack_name }}.{{ fqdn }}
         subtitle: S3 Storage
+        target: "_blank"
         logo: assets/icons/minio.svg
