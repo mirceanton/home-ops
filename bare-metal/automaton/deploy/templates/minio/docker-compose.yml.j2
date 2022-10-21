@@ -16,7 +16,7 @@ services:
     environment:
       MINIO_ROOT_USER: {{ minio_root_user }}
       MINIO_ROOT_PASSWORD: {{ minio_root_pass }}
-      MINIO_BROWSER_REDIRECT_URL: https://minio-console.{{ fqdn }}
+      MINIO_BROWSER_REDIRECT_URL: https:/{{ minio_stack_name }}-console.{{ fqdn }}
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
