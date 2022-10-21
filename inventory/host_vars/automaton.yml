@@ -23,7 +23,9 @@ anacron_jobs:
 # BACKUP CONFIGURATION
 # ===============================================
 backup_dir_path: /mnt/backup
-backup_script_path: /workspace/amir-hlb/utils/scripts/automaton-backup.sh
+backup_script_path: /opt/scripts/automaton-backup.sh
+anacron_jobs:
+  - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
 # ===============================================
 # DOCKER SWARM CONFIGURATION
