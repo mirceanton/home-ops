@@ -82,6 +82,7 @@ portainer_stack_template_files:
   - src: "{{ playbook_dir }}/templates/portainer/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+portainer_admin_password: "{{ lookup('ansible.builtin.password', '/opt/credentials/portainer/admin_password length=32') }}"
 
 # ===============================================
 # VAULT CONFIGURATION

@@ -5,13 +5,15 @@ version: '3.9'
 services:
   app:
     image: portainer/portainer-ce:2.15.1-alpine
-    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    command: -H tcp://tasks.agent:9001 --tlsskipverify --admin-password "{{ portainer_admin_password | password_hash('bcrypt') | replace('$','$$') }}"
     environment:
       VIRTUAL_HOST: 'portainer.{{ fqdn }}'
       VIRTUAL_PORT: '9000'
 
     volumes:
       - {{ portainer_stack_data_dir_path }}/data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
     networks:
       - {{ docker_proxy_network }}
