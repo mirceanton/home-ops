@@ -70,3 +70,9 @@ http:
     redirect:
       redirectScheme:
         scheme: https
+    auth:
+      digestAuth:
+        users:
+          {% for user in traefik_middlewares_auth_users %}
+          - "{{ user.name }}:{{ user.realm | default('traefik') }}:{{ user.password }}"
+          {% endfor %}
