@@ -1,4 +1,4 @@
-{%- macro traefik_labels(name, port) -%}
+{%- macro traefik_labels(name, port, auth=false) -%}
 # Service Definition
 - 'traefik.http.services.{{ name }}.loadbalancer.server.port={{ port }}'
 
@@ -7,7 +7,11 @@
 - 'traefik.http.routers.{{ name }}.entrypoints=web'
 - 'traefik.http.routers.{{ name }}.middlewares=redirect@file'
 - 'traefik.http.routers.{{ name }}.service={{ name }}'
-    
+
+{% if auth %}
+- 'traefik.http.routers.{{ name }}.middlewares=auth@file'
+{% endif %}
+
 # HTTPS Entrypoint
 - 'traefik.http.routers.{{ name }}-secured.rule=Host(`{{ name }}.{{ fqdn }}`)'
 - 'traefik.http.routers.{{ name }}-secured.entrypoints=web-secured'
