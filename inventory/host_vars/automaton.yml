@@ -55,6 +55,8 @@ traefik_stack_data_dir_mode: u=rwx,g=rx,o=rx
 traefik_stack_additional_dirs:
   - path: letsencrypt
     mode: u=rwx,g=rw,o=r
+  - path: logs
+    mode: u=rwx,g=rw,o=r
 traefik_stack_template_files:
   - src: "{{ playbook_dir }}/templates/traefik/docker-compose.yml.j2"
     dest: docker-compose.yml
