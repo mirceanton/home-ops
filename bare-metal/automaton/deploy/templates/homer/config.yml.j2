@@ -63,7 +63,7 @@ services:
         target: "_blank"
         logo: assets/icons/vault.svg
       - name: MinIO
-        url: https://console.{{ minio_stack_name }}.{{ fqdn }}
+        url: https://{{ minio_stack_name }}-console.{{ fqdn }}
         subtitle: S3 Storage
         target: "_blank"
         logo: assets/icons/minio.svg
