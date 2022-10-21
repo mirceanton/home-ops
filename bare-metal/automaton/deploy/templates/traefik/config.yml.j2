@@ -5,7 +5,7 @@
 # Endpoints: https://docs.traefik.io/operations/api/#endpoints
 # -------------------------------------------------------------------------------------------------
 api:
-  insecure: true
+  insecure: false
   dashboard: true
   debug: true
 
@@ -73,8 +73,8 @@ http:
       redirectScheme:
         scheme: https
     auth:
-      digestAuth:
+      basicAuth:
         users:
-          {% for user in traefik_middlewares_auth_users %}
-          - "{{ user.name }}:{{ user.realm | default('traefik') }}:{{ user.password }}"
-          {% endfor %}
+          {% for user in traefik_middlewares_auth_users -%}
+          - {{ user.name }}:{{ user.password | password_hash('bcrypt') }}
+          {%- endfor -%}
