@@ -59,7 +59,7 @@ certificatesresolvers:
   default:
     acme:
       tlschallenge: {}                    # Enable TLS-ALPN-01 to generate and renew ACME certs
-      email: admin@homelab.mirceanton.com # Email for certs
+      email: "{{ traefik_acme_email }}"   # Email for certs
       storage: /letsencrypt/acme.json     # Define acme file to store cert information
 
 # =================================================================================================

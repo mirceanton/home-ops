@@ -62,6 +62,7 @@ traefik_stack_template_files:
   - src: "{{ playbook_dir }}/templates/traefik/config.yml.j2"
     dest: config.yml
     mode: "u=r,g=r,o=r"
+traefik_acme_email: admin@home.mirceanton.com
 traefik_middlewares_auth_users:
   - name: mike
     password: "{{ lookup('ansible.builtin.password', '/opt/credentials/traefik/middlewares_auth_mike_password length=32') }}"
