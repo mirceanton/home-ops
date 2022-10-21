@@ -20,11 +20,19 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
-        mode: "u=rwx,g=rx,o=rx"
+        mode: "u=rwx,g=rx,o="
+        user: mike
+        group: mike
       loop:
         - "{{ docker_data_dir }}"
         - "{{ backup_dir_path }}"
         - /opt/scripts/
+        - /opt/credentials/traefik
+        - /opt/credentials/vault
+        - /opt/credentials/portainer
+        - /opt/credentials/minio
+        - /opt/credentials/jenkins
+        - /opt/credentials/gitlab
 
   roles:
     # Installed required packages for local development
