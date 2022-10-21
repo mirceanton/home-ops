@@ -21,7 +21,7 @@
         path: "{{ item }}"
         state: directory
         mode: "u=rwx,g=rx,o="
-        user: mike
+        owner: mike
         group: mike
       loop:
         - "{{ docker_data_dir }}"
