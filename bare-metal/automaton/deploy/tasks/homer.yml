@@ -8,3 +8,8 @@
     docker_stack_deploy_additional_dirs: "{{ homer_stack_additional_dirs }}"
     docker_stack_deploy_copy_files: "{{ homer_stack_copy_files }}"
     docker_stack_deploy_template_files: "{{ homer_stack_template_files }}"
+
+- name: "[homer] Add local DNS entry"
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ homer_stack_name }}.{{ fqdn }}"

@@ -7,6 +7,12 @@
     docker_stack_deploy_root_dir_mode: "{{ jenkins_stack_data_dir_mode }}"
     docker_stack_deploy_additional_dirs: "{{ jenkins_stack_additional_dirs }}"
     docker_stack_deploy_template_files: "{{ jenkins_stack_template_files }}"
+
+- name: "[jenkins] Add local DNS entry"
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1 {{ jenkins_stack_name }}.{{ fqdn }}"
+
 # TODO: Install plugins
 # TODO: Import job from gitlab
 # TODO: Create user
