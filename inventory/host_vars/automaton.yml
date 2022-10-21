@@ -118,7 +118,7 @@ minio_stack_template_files:
     mode: "u=r,g=r,o=r"
 
 minio_root_user: root
-minio_root_pass: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
+minio_root_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/minio/admin_password length=32') }}"
 
 # ===============================================
 # JENKINS CONFIGURATION
@@ -155,8 +155,8 @@ gitlab_stack_template_files:
     dest: data/gitlab/gitlab.rb
     mode: "u=r,g=r,o=r"
 
-gitlab_root_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname) }}"
-gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/dev/null', seed=gitlab_root_password) }}"
+gitlab_root_password: "{{ lookup('ansible.builtin.password', '/opt/credentials/gitlab/root_password length=32') }}"
+gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/opt/credentials/gitlab/runner_token length=32') }}"
 
 # ===============================================
 # HOMER CONFIGURATION
