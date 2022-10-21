@@ -3,6 +3,18 @@
   hosts: automaton
   become: true
 
+  pre_tasks:
+    - name: Initialize The Docker Swarm
+      community.docker.docker_swarm:
+        state: "{{ docker_swarm_state }}"
+        advertise_addr: "{{ docker_swarm_iface }}"
+
+    - name: Create the Overlay Network
+      community.docker.docker_network:
+        name: "{{ docker_proxy_network }}"
+        scope: swarm
+        driver: overlay
+
   tasks:
     - ansible.builtin.import_tasks: tasks/traefik.yml
     - ansible.builtin.import_tasks: tasks/vault.yml
