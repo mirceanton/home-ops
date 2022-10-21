@@ -37,7 +37,7 @@ services:
       labels:
         # Enable traefik to proxy this service
         - 'traefik.enable=true'
-        {{ templates.traefik_labels('traefik', '8080') | indent(8) }}
+        {{ templates.traefik_labels('traefik', '8080', true) | indent(8) }}
 
 networks:
   {{ docker_proxy_network }}:
