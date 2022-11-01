@@ -5,6 +5,7 @@
 ansible_connection: local
 ansible_pip_additional:
   - hvac
+  - boto3
 
 # ===============================================
 # HOST CONFIGURATION
