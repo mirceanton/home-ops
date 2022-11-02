@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: jenkins/jenkins:2.371
+    image: {{ jenkins_stack_image_name }}:{{ jenkins_stack_image_tag }}
 
     volumes:
       - {{ jenkins_stack_data_dir_path }}/data:/var/jenkins_home

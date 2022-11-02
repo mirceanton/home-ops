@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: b4bz/homer:v22.08.1
+    image: {{ homer_stack_image_name }}:{{ homer_stack_image_tag }}
 
     networks:
       - {{ docker_proxy_network }}

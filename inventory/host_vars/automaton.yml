@@ -61,7 +61,12 @@ traefik_stack_template_files:
   - src: "{{ playbook_dir }}/templates/traefik/config.yml.j2"
     dest: config.yml
     mode: "u=r,g=r,o=r"
-traefik_acme_email: admin@home.mirceanton.com
+
+# Image configuration
+traefik_stack_image_name: traefik
+traefik_stack_image_tag: v2.6
+
+# Credentials
 traefik_middlewares_auth_users:
   - name: mike
     password: "{{ lookup('ansible.builtin.password', '/opt/credentials/traefik/middlewares_auth_mike_password length=32') }}"
@@ -79,6 +84,14 @@ portainer_stack_template_files:
   - src: "{{ playbook_dir }}/templates/portainer/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+
+# Image configuration
+portainer_stack_image_name: portainer/portainer-ce
+portainer_stack_image_tag: 2.15.1-alpine
+portainer_stack_agent_image_name: portainer/agent
+portainer_stack_agent_image_tag: 2.15.1-alpine
+
+# Credentials
 portainer_admin_password: "{{ lookup('ansible.builtin.password', '/opt/credentials/portainer/admin_password length=32') }}"
 
 # ===============================================
@@ -99,6 +112,12 @@ vault_stack_template_files:
     dest: config/vault.json
     mode: "u=r,g=r,o=r"
 
+# Image configuration
+vault_stack_image_name: vault
+vault_stack_image_tag: 1.11.3
+
+# Credentials
+
 # ===============================================
 # MINIO CONFIGURATION
 # ===============================================
@@ -112,6 +131,12 @@ minio_stack_template_files:
   - src: "{{ playbook_dir }}/templates/minio/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+
+# Image configuration
+minio_stack_image_name: minio/minio
+minio_stack_image_tag: RELEASE.2022-09-25T15-44-53Z
+
+# Credentials
 minio_root_user: root
 minio_root_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/minio/admin_password length=32') }}"
 
@@ -128,6 +153,12 @@ jenkins_stack_template_files:
   - src: "{{ playbook_dir }}/templates/jenkins/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
+
+# Image configuration
+jenkins_stack_image_name: jenkins/jenkins
+jenkins_stack_image_tag: 2.371
+
+# Credentials
 jenkins_admin_user: admin
 jenkins_admin_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/jenkins/admin_password length=32') }}"
 
@@ -152,6 +183,11 @@ gitlab_stack_template_files:
     dest: data/gitlab/gitlab.rb
     mode: "u=r,g=r,o=r"
 
+# Image configuration
+gitlab_stack_image_name: yrzr/gitlab-ce-arm64v8
+gitlab_stack_image_tag: 15.5.1-ce.0 
+
+# Credentials
 gitlab_root_password: "{{ lookup('ansible.builtin.password', '/opt/credentials/gitlab/root_password length=32') }}"
 gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/opt/credentials/gitlab/runner_token length=32') }}"
 
@@ -188,3 +224,7 @@ homer_stack_template_files:
   - src: "{{ playbook_dir }}/templates/homer/config.yml.j2"
     dest: assets/config.yml
     mode: "u=r,g=r,o=r"
+
+# Image configuration
+homer_stack_image_name: b4bz/homer
+homer_stack_image_tag: v22.08.1

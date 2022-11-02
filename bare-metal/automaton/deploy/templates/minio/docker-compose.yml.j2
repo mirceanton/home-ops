@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: minio/minio:RELEASE.2022-09-25T15-44-53Z
+    image: {{ minio_stack_image_name }}:{{ minio_stack_image_tag }}
     command: minio server /data --console-address ":9001"
 
     volumes:

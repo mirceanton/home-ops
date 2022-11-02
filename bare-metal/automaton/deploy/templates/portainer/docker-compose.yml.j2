@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: portainer/portainer-ce:2.15.1-alpine
+    image: {{ portainer_stack_image_name }}:{{ portainer_stack_image_tag }}
     command: -H tcp://tasks.agent:9001 --tlsskipverify --admin-password "{{ portainer_admin_password | password_hash('bcrypt') | replace('$','$$') }}"
     environment:
       VIRTUAL_HOST: 'portainer.{{ fqdn }}'
@@ -41,7 +41,7 @@ services:
         {{ templates.traefik_labels('portainer', '9000') | indent(8) }}
 
   agent:
-    image: portainer/agent:2.15.1-alpine
+    image: {{ portainer_stack_agent_image_name }}:{{ portainer_stack_agent_image_tag }}
 
     environment:
       AGENT_CLUSTER_ADDR: tasks.agent

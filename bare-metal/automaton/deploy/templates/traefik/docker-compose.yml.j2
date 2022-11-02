@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: traefik:v2.6
+    image: {{ traefik_stack_image_name }}:{{ traefik_stack_image_tag }}
 
     networks:
       - {{ docker_proxy_network }}

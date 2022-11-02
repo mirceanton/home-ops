@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: gitlab/gitlab-ce:15.4.0-ce.0
+    image: {{ gitlab_stack_image_name }}:{{ gitlab_stack_image_tag }}
     hostname: '{{ gitlab_stack_name }}.{{ fqdn }}'
 
     # Reference: https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template

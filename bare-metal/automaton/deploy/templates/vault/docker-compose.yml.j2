@@ -4,7 +4,7 @@ version: '{{ docker_compose_version }}'
 
 services:
   app:
-    image: vault:1.11.3
+    image: {{ vault_stack_image_name }}:{{ vault_stack_image_tag }}
     entrypoint: vault server -config=/vault/config/vault.json
 
     networks:
