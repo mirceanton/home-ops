@@ -24,7 +24,7 @@
     - role: mirceanton.anacron
 
   tasks:
-    - name: Create required directories
+    - name: Create required directory
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -41,6 +41,20 @@
         - /opt/credentials/minio
         - /opt/credentials/jenkins
         - /opt/credentials/gitlab
+
+    - name: Set ACL for directory
+      ansible.posix.acl:
+        path: "{{ item }}"
+        etype: group
+        entity: developer
+        permissions: rwx
+        state: present
+        recursive: true
+      loop:
+        - "{{ service_data_dir }}"
+        - "{{ backup_dir }}"
+        - "{{ scripts_dir }}"
+        - /opt/credentials
 
     - name: Copy backup script to location
       ansible.builtin.copy:
