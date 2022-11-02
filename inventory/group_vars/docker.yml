@@ -1,5 +1,5 @@
 ---
-docker_compose_version: '{{ docker_compose_version }}'
+docker_compose_version: 3.9
 
 # Harmonized proxy network configuration
 docker_proxy_network: traefik-net
