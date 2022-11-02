@@ -1,6 +1,7 @@
 ---
 - name: Stop Automaton Services
   hosts: automaton
+  gather_facts: false
   become: true
 
   tasks:
@@ -9,7 +10,7 @@
         name: "{{ item }}"
         state: present
         compose:
-          - "{{ docker_data_dir }}/{{ item }}/docker-compose.yml"
+          - "{{ service_data_dir }}/{{ item }}/docker-compose.yml"
       loop:
         - "{{ traefik_stack_name }}"
         - "{{ portainer_stack_name }}"

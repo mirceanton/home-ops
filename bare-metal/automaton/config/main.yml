@@ -29,12 +29,12 @@
         path: "{{ item }}"
         state: directory
         mode: "u=rwx,g=rx,o="
-        owner: mike
-        group: mike
+        owner: root
+        group: root
       loop:
-        - "{{ docker_data_dir }}"
-        - "{{ backup_dir_path }}"
-        - /opt/scripts/
+        - "{{ service_data_dir }}"
+        - "{{ backup_dir }}"
+        - "{{ scripts_dir }}"
         - /opt/credentials/traefik
         - /opt/credentials/vault
         - /opt/credentials/portainer

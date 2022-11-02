@@ -1,7 +1,8 @@
 ---
 - name: Stop Automaton Services
   hosts: automaton
-  become: true
+  gather_facts: false
+  # become: true
 
   tasks:
     - name: Stop Service

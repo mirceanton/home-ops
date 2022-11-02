@@ -1,13 +1,14 @@
 ---
 - name: Restore Automaton
   hosts: automaton
+  gather_facts: false
   become: true
 
   tasks:
     - name: Restore Data Directory
       ansible.posix.synchronize:
-        src: "{{ backup_dir_path }}/{{ item }}"
-        dest: "{{ docker_data_dir }}"
+        src: "{{ backup_dir }}/{{ item }}"
+        dest: "{{ service_data_dir }}"
       loop:
         - "{{ traefik_stack_name }}"
         - "{{ portainer_stack_name }}"

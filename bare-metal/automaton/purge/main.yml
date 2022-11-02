@@ -3,6 +3,7 @@
 
 - name: Purge Automaton Services and Data
   hosts: automaton
+  gather_facts: false
   become: true
 
   tasks:
@@ -11,6 +12,8 @@
         path: "{{ item }}"
         state: absent
       loop:
+        - "{{ service_data_dir }}"
+        - "{{ scripts_dir }}"
         - "{{ traefik_stack_data_dir_path }}"
         - "{{ portainer_stack_data_dir_path }}"
         - "{{ vault_stack_data_dir_path }}"
