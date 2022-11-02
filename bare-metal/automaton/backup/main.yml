@@ -1,13 +1,14 @@
 ---
 - name: Back Up Automaton
   hosts: automaton
+  gather_facts: false
   become: true
 
   tasks:
     - name: Back up data Directory
       ansible.posix.synchronize:
         src: "{{ item }}"
-        dest: "/mnt/backup/"
+        dest: "{{ backup_dir }}"
       loop:
         - "{{ traefik_stack_data_dir_path }}"
         - "{{ portainer_stack_data_dir_path }}"
