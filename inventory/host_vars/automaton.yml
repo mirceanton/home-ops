@@ -15,6 +15,12 @@ domain: local
 fqdn: "{{ hostname }}.{{ domain }}"
 
 # ===============================================
+# PACKAGES CONFIGURATION
+# ===============================================
+terraform_architecture: arm64
+packer_architecture: arm64
+
+# ===============================================
 # ANACRON CONFIGURATION
 # ===============================================
 anacron_jobs:

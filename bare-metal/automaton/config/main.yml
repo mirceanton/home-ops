@@ -16,6 +16,14 @@
         state: "{{ apt_utility_state }}"
       loop: "{{ apt_utility_packages }}"
 
+  roles:
+    - role: mirceanton.ansible
+    - role: mirceanton.terraform
+    - role: mirceanton.packer
+    - role: mirceanton.docker
+    - role: mirceanton.anacron
+
+  tasks:
     - name: Create required directories
       ansible.builtin.file:
         path: "{{ item }}"
@@ -34,18 +42,6 @@
         - /opt/credentials/jenkins
         - /opt/credentials/gitlab
 
-  roles:
-    # Installed required packages for local development
-    - role: mirceanton.terraform
-    - role: mirceanton.packer
-    - role: mirceanton.ansible
-
-    # Install docker to host services
-    - role: mirceanton.docker
-
-    - role: mirceanton.anacron
-
-  tasks:
     - name: Copy backup script to location
       ansible.builtin.copy:
         src: files/automaton-backup.sh
