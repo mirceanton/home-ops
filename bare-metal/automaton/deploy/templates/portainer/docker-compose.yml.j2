@@ -1,6 +1,6 @@
 {% import "macros.j2" as templates with context %}
 ---
-version: '3.9'
+version: '{{ docker_compose_version }}'
 
 services:
   app:
@@ -21,9 +21,9 @@ services:
 
     healthcheck:
       test: "wget --no-verbose --tries=1 --spider --no-check-certificate https://localhost:9443 || exit 1"
-      interval: {{ docker_healthcheck_interval | default('30s') }}
-      timeout: {{ docker_healtcheck_timeout | default('10s') }}
-      retries: {{ docker_healthcheck_retries | default(5) }}
+      interval: {{ docker_healthcheck_interval }}
+      timeout: {{ docker_healtcheck_timeout }}
+      retries: {{ docker_healthcheck_retries }}
 
     deploy:
       mode: replicated
