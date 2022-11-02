@@ -11,7 +11,7 @@ ansible_pip_additional:
 # HOST CONFIGURATION
 # ===============================================
 hostname: automaton
-domain: local
+domain: home.mirceanton.com
 fqdn: "{{ hostname }}.{{ domain }}"
 
 # ===============================================
@@ -27,10 +27,17 @@ anacron_jobs:
   - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
 # ===============================================
+# DIRECTORIES CONFIGURATION
+# ===============================================
+backup_dir: /mnt/backup
+scripts_dir: /opt/scripts
+credentials_dir: /opt/credentials
+service_data_dir: /opt/services
+
+# ===============================================
 # BACKUP CONFIGURATION
 # ===============================================
-backup_dir_path: /mnt/backup
-backup_script_path: /opt/scripts/automaton-backup.sh
+backup_script_path: "{{ scripts_directory }}/automaton-backup.sh"
 anacron_jobs:
   - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
@@ -57,7 +64,7 @@ docker_restart_policy_window: 30s
 # TRAEFIK CONFIGURATION
 # ===============================================
 traefik_stack_name: traefik
-traefik_stack_data_dir_path: "{{ docker_data_dir }}/{{ traefik_stack_name }}"
+traefik_stack_data_dir_path: "{{ service_data_dir }}/{{ traefik_stack_name }}"
 traefik_stack_data_dir_mode: u=rwx,g=rx,o=rx
 traefik_stack_additional_dirs:
   - path: letsencrypt
@@ -80,7 +87,7 @@ traefik_middlewares_auth_users:
 # PORTAINER CONFIGURATION
 # ===============================================
 portainer_stack_name: portainer
-portainer_stack_data_dir_path: "{{ docker_data_dir }}/{{ portainer_stack_name }}"
+portainer_stack_data_dir_path: "{{ service_data_dir }}/{{ portainer_stack_name }}"
 portainer_stack_data_dir_mode: u=rwx,g=rx,o=rx
 portainer_stack_additional_dirs:
   - path: data
@@ -95,7 +102,6 @@ portainer_admin_password: "{{ lookup('ansible.builtin.password', '/opt/credentia
 # VAULT CONFIGURATION
 # ===============================================
 vault_stack_name: vault
-vault_stack_data_dir_path: "{{ docker_data_dir }}/{{ vault_stack_name }}"
 vault_stack_data_dir_mode: u=rwx,g=rx,o=rx
 vault_stack_additional_dirs:
   - path: data
@@ -114,7 +120,7 @@ vault_stack_template_files:
 # MINIO CONFIGURATION
 # ===============================================
 minio_stack_name: minio
-minio_stack_data_dir_path: "{{ docker_data_dir }}/{{ minio_stack_name }}"
+minio_stack_data_dir_path: "{{ service_data_dir }}/{{ minio_stack_name }}"
 minio_stack_data_dir_mode: u=rwx,g=rx,o=rx
 minio_stack_additional_dirs:
   - path: data
@@ -123,7 +129,6 @@ minio_stack_template_files:
   - src: "{{ playbook_dir }}/templates/minio/docker-compose.yml.j2"
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
-
 minio_root_user: root
 minio_root_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/minio/admin_password length=32') }}"
 
@@ -131,7 +136,7 @@ minio_root_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/minio/
 # JENKINS CONFIGURATION
 # ===============================================
 jenkins_stack_name: jenkins
-jenkins_stack_data_dir_path: "{{ docker_data_dir }}/{{ jenkins_stack_name }}"
+jenkins_stack_data_dir_path: "{{ service_data_dir }}/{{ jenkins_stack_name }}"
 jenkins_stack_data_dir_mode: u=rwx,g=rx,o=rx
 jenkins_stack_additional_dirs:
   - path: data
@@ -147,7 +152,7 @@ jenkins_admin_pass: "{{ lookup('ansible.builtin.password', '/opt/credentials/jen
 # GITLAB CONFIGURATION
 # ===============================================
 gitlab_stack_name: gitlab
-gitlab_stack_data_dir_path: "{{ docker_data_dir }}/{{ gitlab_stack_name }}"
+gitlab_stack_data_dir_path: "{{ service_data_dir }}/{{ gitlab_stack_name }}"
 gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
 gitlab_stack_additional_dirs:
   - path: data/logs
@@ -171,7 +176,7 @@ gitlab_runners_token: "{{ lookup('ansible.builtin.password', '/opt/credentials/g
 # HOMER CONFIGURATION
 # ===============================================
 homer_stack_name: homer
-homer_stack_data_dir_path: "{{ docker_data_dir }}/{{ homer_stack_name }}"
+homer_stack_data_dir_path: "{{ service_data_dir }}/{{ homer_stack_name }}"
 homer_stack_data_dir_mode: u=rwx,g=rw,o=rw
 homer_stack_additional_dirs:
   - path: assets
