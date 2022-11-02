@@ -1,0 +1,16 @@
+---
+docker_compose_version: '{{ docker_compose_version }}'
+
+# Harmonized proxy network configuration
+docker_proxy_network: traefik-net
+
+# Harmonized healthcheck configuration
+docker_healthcheck_interval: 5s
+docker_healtcheck_timeout: 5s
+docker_healthcheck_retries: 20
+
+# Harmonized restart configuration
+docker_restart_policy_condition: any
+docker_restart_policy_delay: 5s
+docker_restart_policy_max_attempts: "3"
+docker_restart_policy_window: 30s

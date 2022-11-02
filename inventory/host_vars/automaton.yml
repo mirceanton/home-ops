@@ -41,20 +41,7 @@ anacron_jobs:
 # DOCKER SWARM CONFIGURATION
 # ===============================================
 docker_swarm_state: present
-docker_swarm_iface: ens0
-
-docker_proxy_network: traefik-net
-
-docker_data_dir: /opt/services
-
-docker_healthcheck_interval: 5s
-docker_healtcheck_timeout: 5s
-docker_healthcheck_retries: 20
-
-docker_restart_policy_condition: any
-docker_restart_policy_delay: 5s
-docker_restart_policy_max_attempts: "3"
-docker_restart_policy_window: 30s
+docker_swarm_iface: eth0
 
 # ===============================================
 # TRAEFIK CONFIGURATION
