@@ -1,0 +1,33 @@
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
+ansible_host: ENC[AES256_GCM,data:oZzH15eMQl7d+3KayQ==,iv:LHru60+zfda7BFpCQcAhfW0NxJMh2RTo9Y3csBDplkI=,tag:oGTQebjwAtIhOC6gswX8cw==,type:str]
+ansible_user: ENC[AES256_GCM,data:0US8mg==,iv:dmAS91fXelOd05NMKkNT/svFruE53Tmnx8DzQKGhPzg=,tag:55v/sD2g76PH+XFeyIplwQ==,type:str]
+ansible_ssh_pass: ENC[AES256_GCM,data:LG6elkkA2VAJ0t2qU8h41IOf9WBj2ZL1wtrywgz956OmdSC65k8DdC+ELlZI9SrnuRLRan6JYvWN9EC6YHk8aw==,iv:wk46wTmBK6ATEkuelQGhuycu1j6j05V95newFDXPyUA=,tag:n7NP3LPYdT7/EPXCiXsWqA==,type:str]
+#
+# ===============================================
+# HOST CONFIGURATION
+# ===============================================
+hostname: bingus
+domain: local
+fqdn: '{{ hostname }}.{{ domain }}'
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1kh6wns2rxpm6d6czfv25n293deew86kvvt848q00f4emvcllxqfqllqs9c
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3cFBHME9LY0FvWjQzYyto
+            VnNrNHhIVmN0T2U4bjU2NFBjTVpsS0s3Z1VFCnJJazVwTmZ6SHJ6dGZOQVdSQ1hB
+            ZWZPWXpXNGpZVlA0cFZwVmY0RkJ0U28KLS0tIHhYdlhGWFFYbHJES1ZCVUlRTDg5
+            YVdYc2FpeHVkeWlHQVJ1ZXZmVzhxcW8KqePivUTooWddQEqp31bV8Q6Wnj9i/z3O
+            9Mbrapx8I9pSNkQHOGXW8jLtHDvBfym5vNkvfqWogZsXkAb3CAomEQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-11-05T15:01:24Z"
+    mac: ENC[AES256_GCM,data:0js08okF+Idg0yerfRxbVSCplgSz1rfpBqESml4+pBS2lJ0jlw7jRtOdWn4uRYXntq+wyyFGm6JqHYpOaq9jM3/Rx0WJcKaJAzPOnzd37VWhwiOYd889b2AicIDMFPWdKhGtMnENOOTtl7XL7quL/zyNojg+CAsFmld+OUTiZiQ=,iv:TEQe0A6bZVOeatajDaDUdAlZf8FVBUddI4pZm8Qv5xk=,tag:oF8Jdifd+E+AvpUZIROTrA==,type:str]
+    pgp: []
+    encrypted_regex: ^(ansible_host|ansible_user|ansible_ssh_pass)
+    version: 3.7.3

@@ -3,6 +3,8 @@
 # ANSIBLE CONFIGURATION
 # ===============================================
 ansible_connection: local
+ansible_pip_additional:
+  - hvac
 
 # ===============================================
 # HOST CONFIGURATION
@@ -10,6 +12,12 @@ ansible_connection: local
 hostname: automaton
 domain: local
 fqdn: "{{ hostname }}.{{ domain }}"
+
+# ===============================================
+# ANACRON CONFIGURATION
+# ===============================================
+anacron_jobs:
+  - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
 
 # ===============================================
 # BACKUP CONFIGURATION
