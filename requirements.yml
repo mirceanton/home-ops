@@ -1,7 +1,18 @@
 ---
+# Automaton roles
 - name: mirceanton.anacron
 - name: mirceanton.ansible
 - name: mirceanton.docker
 - name: mirceanton.packer
 - name: mirceanton.terraform
 - name: mirceanton.docker_stack_deploy
+
+# Proxmox roles
+- name: mirceanton.proxmox_cloudbuntu
+- name: mirceanton.proxmox_dark_theme
+- name: mirceanton.proxmox_driver_blacklist
+- name: mirceanton.proxmox_iommu
+- name: mirceanton.proxmox_nested_virt
+- name: mirceanton.proxmox_no_subscription
+- name: mirceanton.proxmox_vfio
+- name: mirceanton.proxmox_vgpu

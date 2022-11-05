@@ -1,6 +1,13 @@
 # Changelog
 
-## v.0.1.0
+## v0.2.0
+
+**Infra**:
+
+- Proxmox/Bingus:
+  - Implemented initial-setup playbook
+
+## v0.1.0
 
 **Infra**:
 

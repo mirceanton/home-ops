@@ -10,3 +10,4 @@ apt_utility_packages:
   - nload
   - git
   - vim
+  - lm-sensors
