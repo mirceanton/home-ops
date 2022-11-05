@@ -22,5 +22,5 @@
     - name: Install utility packages
       ansible.builtin.apt:
         name: "{{ item }}"
-        state: latest
-      loop: "{{ proxmox_apt_packages }}"
+        state: "{{ apt_utility_state }}"
+      loop: "{{ apt_utility_packages }}"
