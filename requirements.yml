@@ -10,6 +10,9 @@
 # Proxmox roles
 - name: mirceanton.proxmox_cloudbuntu
 - name: mirceanton.proxmox_dark_theme
+- name: mirceanton.proxmox_driver_blacklist
+- name: mirceanton.proxmox_iommu
 - name: mirceanton.proxmox_nested_virt
-- name: mirceanton.proxmox_nosub
-- name: mirceanton.proxmox_pci_passthrough
+- name: mirceanton.proxmox_no_subscription
+- name: mirceanton.proxmox_vfio
+- name: mirceanton.proxmox_vgpu
