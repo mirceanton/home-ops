@@ -1,16 +1,9 @@
 ---
 # ===============================================
-# CLOUDBUNTU VM CONFIGURATION
+# PACKAGES
 # ===============================================
-proxmox_cloudbuntu_vmid: 1000
-proxmox_cloudbuntu_name: ubuntu-22.04-cloud
-proxmox_cloudbuntu_disk_device: local-zfs
-
-proxmox_cloudbuntu_ci_nameserver: "192.168.10.1"
-proxmox_cloudbuntu_ci_searchdomain: local
-proxmox_cloudbuntu_ci_ipconfig: "ip=dhcp"
-
-proxmox_cloudbuntu_ci_user: "{{ lookup('hashi_vault', 'secret=data/groups/proxmox/templates/cloudbuntu:user') }}"
-proxmox_cloudbuntu_ci_pass: "{{ lookup('hashi_vault', 'secret=data/groups/proxmox/templates/cloudbuntu:pass') }}"
-proxmox_cloudbuntu_ci_keys:
-  - "{{ lookup('hashi_vault', 'secret=data/groups/proxmox/templates/cloudbuntu:keys') }}"
+proxmox_apt_packages:
+  - vim
+  - htop
+  - nload
+  - lm-sensors
