@@ -15,8 +15,6 @@
     "requirements.txt": true,
     "netlify.toml": true,
     ".gitmodules": true,
-    "README.md": true,
-    "CHANGELOG.md": true,
     ".yamllint": true
   }
 }
