@@ -47,6 +47,11 @@
             packer build .
           register: __packer_run
 
+        - name: Remove template output directory
+          ansible.builtin.file:
+            path: "{{ pkr_project }}/template-output"
+            state: absent
+
         - name: Show Packer Output
           debug:
             var: __packer_run.stdout_lines

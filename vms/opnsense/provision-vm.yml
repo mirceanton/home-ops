@@ -39,3 +39,8 @@
           community.general.terraform:
             project_path: "{{ tf_project }}//template-output"
             force_init: true
+
+        - name: Remove template output directory
+          ansible.builtin.file:
+            path: "{{ tf_project }}/template-output"
+            state: absent
