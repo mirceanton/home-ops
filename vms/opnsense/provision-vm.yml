@@ -1,0 +1,31 @@
+---
+- name: [OPNSENSE] Create VM Template via Terraform
+  hosts: localhost
+
+  vars_files:
+    - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
+
+  tasks:
+    - name: Set terraform project path
+      ansible.builtin.set_fact:
+        tf_project: "{{ project_path }}/utils/terraform/proxmox_opnsense"
+
+    - name: Create template output directory
+      ansible.builtin.file:
+        path: "{{ tf_project }}/template-output"
+        state: directory
+
+    - name: Templatize provider file
+      ansible.builtin.template:
+        src: "{{ tf_project }}/templates/provider.tf.j2"
+        dest: "{{ tf_project }}/template-output/provider.tf"
+
+    - name: Templatize resource file
+      ansible.builtin.template:
+        src: "{{ tf_project }}/templates/main.tf.j2"
+        dest: "{{ tf_project }}/template-output/main.tf"
+
+    - name: Run Terraform
+      community.general.terraform:
+        project_path: "{{ tf_project }}//template-output"
+        force_init: true

@@ -1,0 +1,101 @@
+# ===============================================
+# ISO CONFIGURATION
+# ===============================================
+opnsense_iso_url: https://mirror.dns-root.de/opnsense/releases/22.7/OPNsense-22.7-OpenSSL-dvd-amd64.iso.bz2
+opnsense_iso_name: OPNsense-22.7.iso
+# ===============================================
+# VM TEMPLATE CONFIGURATION
+# ===============================================
+#
+# [Required] The name of the node on which to deploy the VM
+opnsense_tpl_node: '{{ ansible_hostname }}'
+#
+# [Optional] The ID of the VM template
+opnsense_tpl_id: 1100
+#
+# [Optional] The name of the VM template
+opnsense_tpl_name: opnSense-tpl
+#
+# [Required] The path to the ISO file, including the storage device
+opnsense_tpl_iso: local:iso/{{ opnsense_iso_name }}
+#
+# [Required] The password to set for the root user
+opnsense_tpl_root_pass: ENC[AES256_GCM,data:KUXrMyDNXg==,iv:ak4BNmf5PSpwWnG2o+F53CeTeRofKeRt1LUGY9Ft6BU=,tag:DxMk0Pl3Pl+/n4uDSe3kGA==,type:str]
+#
+# [Required] List of network devices
+opnsense_tpl_networks:
+    #
+    # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+    - bridge: vmbr1
+    #
+    # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+    - bridge: vmbr0
+#
+# [Required] List of disks to assign to the VM
+opnsense_tpl_disks:
+    #
+    # [Required] The name of the storage pool on which to store the disk
+    - size: 16G
+      #
+      # [Required] The name of the storage pool on which to store the disk
+      storage_pool: local-zfs
+      #
+      # [Required] The type of the storage pool on which to store the disk
+      storage_pool_type: zfspool
+#
+# ===============================================
+# VIRTUAL MACHINE CONFIGURATION
+# ===============================================
+#
+# [Optional] The name of the VM
+opnsense_vm_name: opnSense
+#
+# [Optional] The name of the VM
+opnsense_vm_clone: '{{ opnsense_tpl_name }}'
+#
+# [Required] The name of the node on which to deploy the VM
+opnsense_vm_target_node: '{{ ansible_hostname }}'
+#
+# [Optional] The ID of the VM
+opnsense_vm_id: 100
+#
+# [Required] List of disks to assign to the VM
+opnsense_vm_disks:
+    #
+    # [Required] The name of the storage pool on which to store the disk.
+    - storage: local-zfs
+      #
+      # [Required] The size of the created disk.
+      size: 16G
+#
+# [Required] List of network devices
+opnsense_vm_networks:
+    #
+    # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+    - bridge: vmbr1
+    #
+    # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+    - bridge: vmbr0
+    #
+    # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+    - bridge: vmbr2
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1kh6wns2rxpm6d6czfv25n293deew86kvvt848q00f4emvcllxqfqllqs9c
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwMEJKeStwdnZiK3FZc1RF
+            dlBKV0xZejBuVW5GeWZsRjRtcEJaMkJWMW1NCkJOL1dzRUdFS0Y5WGtRUzVaSWhJ
+            MGNLNDBGb0l6bVZvY2x0OVN0UWJ5SlkKLS0tIGpQSEh6anBEV2NmT244UUtMclFU
+            bEVCQW5hZ2JiNmE2OXJPNVJkRjRNeVkKKLQPQfe7yHmKcFvXLTPcn2Pu+xsmKsIH
+            1NvfNBFg20HbfBst6Jw0cLJV8ZAMs+gpBFrgvcLhFejxUQcCogTahQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2022-11-06T16:58:39Z"
+    mac: ENC[AES256_GCM,data:SriWoTzqjhz7pOEbpLAWRp6SnhZhINC0N6Xa4wAdgkP+CNCDyRnGxWWqUv8MJKw/uO2zsVCjBLBi1ypaQ5GBEAp8Dh9sRyse77AVta5FFhOJPDQPfpSoCAWWbmwgYyRiJrTZAF6uGJCWcOHuPRXsUokMpA9rcULlsuUpAsz9IwQ=,iv:TcZsIGlDjgmIZPEobOZeqYGZXBt26jwNIY720mcfwgY=,tag:5IF/Gx7wV5CkO/XEWiNNWQ==,type:str]
+    pgp: []
+    encrypted_regex: (ansible_host|ansible_user|pass|token)
+    version: 3.7.3

@@ -1,0 +1,42 @@
+---
+- name: [OPNSENSE] Create VM Template via Packer
+  hosts: localhost
+
+  vars_files:
+    - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
+
+  tasks:
+      - name: Set packer project path
+        ansible.builtin.set_fact:
+          pkr_project: "{{ project_path }}/utils/packer/proxmox_opnsense"
+
+      - name: Create template output directory
+        ansible.builtin.file:
+          path: "{{ pkr_project }}/template-output"
+          state: directory
+
+      - name: Templatize resource file
+        ansible.builtin.template:
+          src: "{{ pkr_project }}/templates/main.pkr.hcl.j2"
+          dest: "{{ pkr_project }}/template-output/main.pkr.hcl"
+
+      - name: Copy the plugins file
+        ansible.builtin.copy:
+          src: "{{ pkr_project }}/plugins.pkr.hcl"
+          dest: "{{ pkr_project }}/template-output/plugins.pkr.hcl"
+
+      - name: Init the Packer project
+        ansible.builtin.shell: |
+          cd {{ pkr_project }}/template-output/;
+          packer init .
+        changed_when: false
+
+      - name: Run Packer
+        ansible.builtin.shell: |
+          cd {{ pkr_project }}/template-output/;
+          packer build .
+        register: __packer_run
+
+      - name: Show Packer Output
+        debug:
+          var: __packer_run.stdout_lines

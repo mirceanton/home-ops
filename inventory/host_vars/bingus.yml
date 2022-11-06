@@ -1,9 +1,9 @@
 # ===============================================
 # ANSIBLE CONFIGURATION
 # ===============================================
-ansible_host: ENC[AES256_GCM,data:oZzH15eMQl7d+3KayQ==,iv:LHru60+zfda7BFpCQcAhfW0NxJMh2RTo9Y3csBDplkI=,tag:oGTQebjwAtIhOC6gswX8cw==,type:str]
-ansible_user: ENC[AES256_GCM,data:0US8mg==,iv:dmAS91fXelOd05NMKkNT/svFruE53Tmnx8DzQKGhPzg=,tag:55v/sD2g76PH+XFeyIplwQ==,type:str]
-ansible_ssh_pass: ENC[AES256_GCM,data:LG6elkkA2VAJ0t2qU8h41IOf9WBj2ZL1wtrywgz956OmdSC65k8DdC+ELlZI9SrnuRLRan6JYvWN9EC6YHk8aw==,iv:wk46wTmBK6ATEkuelQGhuycu1j6j05V95newFDXPyUA=,tag:n7NP3LPYdT7/EPXCiXsWqA==,type:str]
+ansible_host: ENC[AES256_GCM,data:8tjAll5+92sDLmm2hw==,iv:uN9fZS6ffiNUm0xx1Htr8JEnKSsGX166jOIQjaidiR4=,tag:VRjMy/FUM72o3SQiPyeRIw==,type:str]
+ansible_user: ENC[AES256_GCM,data:jxMKLQ==,iv:hgq+JWbOQCoGhyB35xgY7oZGS/yTWzIcu6GlcdypwpY=,tag:z+kKC00IkVtE9QpALXDcxw==,type:str]
+ansible_ssh_pass: ENC[AES256_GCM,data:cZ/MdgvxaPSm0rNWq5X8DM4VjY6WzAmxlevBg8lDuOb9beKwl8GWHGapcCj6P40TR/D01xlVPK/pqskt3ya70w==,iv:Fh/b6CDU8sWMqk+k1z1AcJFSxw9hFtosSJRTqWjqG/c=,tag:JSopi4kuDFC8ricQymhVUw==,type:str]
 #
 # ===============================================
 # HOST CONFIGURATION
@@ -11,6 +11,14 @@ ansible_ssh_pass: ENC[AES256_GCM,data:LG6elkkA2VAJ0t2qU8h41IOf9WBj2ZL1wtrywgz956
 hostname: bingus
 domain: local
 fqdn: '{{ hostname }}.{{ domain }}'
+#
+# ===============================================
+# PROXMOX API CONFIGURATION
+# ===============================================
+proxmox_api_url: https://{{ ansible_host }}:8006/api2/json
+proxmox_api_token_id: ENC[AES256_GCM,data:7pjyQTJDl/4MmZhTjAqov8Im,iv:r8C1thF9AsNHTDf8YipdNPSj/aiOMmpmqs0Q6g2RWN8=,tag:AlYB8eP4AVB59tkNCZZg2Q==,type:str]
+proxmox_api_token_secret: ENC[AES256_GCM,data:1T00lt6QvZWbglp4g4jCYq2nCosFuc8uvuritUy/6leRp6Pv,iv:YQ7wCEGMobVPJVg76F0U4pcaO0IGR5st5w+gFMXCm00=,tag:MawKIdcRDNNGlUeydnE1yQ==,type:str]
+proxmox_api_insecure: true
 sops:
     kms: []
     gcp_kms: []
@@ -20,14 +28,14 @@ sops:
         - recipient: age1kh6wns2rxpm6d6czfv25n293deew86kvvt848q00f4emvcllxqfqllqs9c
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3cFBHME9LY0FvWjQzYyto
-            VnNrNHhIVmN0T2U4bjU2NFBjTVpsS0s3Z1VFCnJJazVwTmZ6SHJ6dGZOQVdSQ1hB
-            ZWZPWXpXNGpZVlA0cFZwVmY0RkJ0U28KLS0tIHhYdlhGWFFYbHJES1ZCVUlRTDg5
-            YVdYc2FpeHVkeWlHQVJ1ZXZmVzhxcW8KqePivUTooWddQEqp31bV8Q6Wnj9i/z3O
-            9Mbrapx8I9pSNkQHOGXW8jLtHDvBfym5vNkvfqWogZsXkAb3CAomEQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBiODZTd3g1cWxROGJmbXk5
+            L2lORVZMOHVzMEEyV3RpZk9OYldLTGUwS1ZFCmV2Q284ZzhJZ1JjTkFlTldreTRM
+            Y1dCL3FhekFGWmNZcUlSYnNJYXJmU1kKLS0tIFZIdTdPSW9MMy91dmEwN1VmWGdy
+            TCtTc1FsUkNYWXhLZmJRWUYvK1BjSjQKB4h9viPAU40D5j38h4N8lrkGFTcirEGi
+            XI182ixownxoLxdABRkgvdiX2CLggQbzC6EMbzV+j5jR9JnNaJYKDQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2022-11-05T15:01:24Z"
-    mac: ENC[AES256_GCM,data:0js08okF+Idg0yerfRxbVSCplgSz1rfpBqESml4+pBS2lJ0jlw7jRtOdWn4uRYXntq+wyyFGm6JqHYpOaq9jM3/Rx0WJcKaJAzPOnzd37VWhwiOYd889b2AicIDMFPWdKhGtMnENOOTtl7XL7quL/zyNojg+CAsFmld+OUTiZiQ=,iv:TEQe0A6bZVOeatajDaDUdAlZf8FVBUddI4pZm8Qv5xk=,tag:oF8Jdifd+E+AvpUZIROTrA==,type:str]
+    lastmodified: "2022-11-06T16:58:39Z"
+    mac: ENC[AES256_GCM,data:qvMKpV6m4DwZkEqFi8lJGn2RMsSpLoISCiets6S3mqGHRhpKecCY9Rbpeicxi1OWU2AM+1kPPxIJaldstVJNjHv9xpMdcNyzxIzxXCdoS0eIrWSSdCSngCZuK+Q263/7UHnBpl5Fi9x5TmJFIaCa5sfQ1FvT9VyYT7eZFs1U1lw=,iv:S7JkF0TcWdQvB4hubM7AUJlTMo6yhOvzLAvfi+I/9f8=,tag:bqLN3Lfu8XCokSvD5umwIA==,type:str]
     pgp: []
-    encrypted_regex: ^(ansible_host|ansible_user|ansible_ssh_pass)
+    encrypted_regex: (ansible_host|ansible_user|pass|token)
     version: 3.7.3

@@ -1,0 +1,27 @@
+---
+- name: [OPNSENSE] Download OPNsense ISO
+  hosts: bingus
+
+  vars_files:
+    - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
+
+  tasks:
+    - name: Check if ISO already exists
+      ansible.builtin.stat: 
+        path: "{{ proxmox_iso_dir }}/{{ opnsense_iso_name }}"
+      register: __opnsense_iso
+
+    - name: Download ISO
+      ansible.builtin.get_url:
+        url: "{{ opnsense_iso_url }}"
+        dest: "/tmp/{{ opnsense_iso_name }}.bz2"
+      when: not __opnsense_iso.stat.exists
+      register: __opnsense_iso_download
+
+    - name: Unarchive ISO
+      ansible.builtin.shell: |
+        bunzip2 /tmp/{{ opnsense_iso_name }}.bz2
+        cp /tmp/{{ opnsense_iso_name }} {{ proxmox_iso_dir }}/{{ opnsense_iso_name }}
+      when:
+        - not __opnsense_iso.stat.exists
+        - __opnsense_iso_download.changed
