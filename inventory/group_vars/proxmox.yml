@@ -1,1 +1,2 @@
 ---
+proxmox_iso_dir: /var/lib/vz/template/iso
