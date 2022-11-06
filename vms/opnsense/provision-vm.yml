@@ -1,31 +1,41 @@
 ---
-- name: [OPNSENSE] Create VM Template via Terraform
-  hosts: localhost
+- name: Create opnSense VM via Terraform
+  hosts: bingus
 
   vars_files:
     - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
 
   tasks:
-    - name: Set terraform project path
-      ansible.builtin.set_fact:
-        tf_project: "{{ project_path }}/utils/terraform/proxmox_opnsense"
+    - name: Check if VM already exists
+      ansible.builtin.command: "qm status {{ opnsense_vm_id }}"
+      changed_when: false
+      failed_when: false
+      register: __vm_exists
 
-    - name: Create template output directory
-      ansible.builtin.file:
-        path: "{{ tf_project }}/template-output"
-        state: directory
+    - name: Create VM
+      delegate_to: localhost
+      when: __vm_exists.rc != 0
+      block:
+        - name: Set terraform project path
+          ansible.builtin.set_fact:
+            tf_project: "{{ project_path }}/utils/terraform/proxmox_opnsense"
 
-    - name: Templatize provider file
-      ansible.builtin.template:
-        src: "{{ tf_project }}/templates/provider.tf.j2"
-        dest: "{{ tf_project }}/template-output/provider.tf"
+        - name: Create template output directory
+          ansible.builtin.file:
+            path: "{{ tf_project }}/template-output"
+            state: directory
 
-    - name: Templatize resource file
-      ansible.builtin.template:
-        src: "{{ tf_project }}/templates/main.tf.j2"
-        dest: "{{ tf_project }}/template-output/main.tf"
+        - name: Templatize provider file
+          ansible.builtin.template:
+            src: "{{ tf_project }}/templates/provider.tf.j2"
+            dest: "{{ tf_project }}/template-output/provider.tf"
 
-    - name: Run Terraform
-      community.general.terraform:
-        project_path: "{{ tf_project }}//template-output"
-        force_init: true
+        - name: Templatize resource file
+          ansible.builtin.template:
+            src: "{{ tf_project }}/templates/main.tf.j2"
+            dest: "{{ tf_project }}/template-output/main.tf"
+
+        - name: Run Terraform
+          community.general.terraform:
+            project_path: "{{ tf_project }}//template-output"
+            force_init: true

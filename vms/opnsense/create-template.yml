@@ -1,42 +1,52 @@
 ---
-- name: [OPNSENSE] Create VM Template via Packer
-  hosts: localhost
+- name: Create opnSense VM Template via Packer
+  hosts: bingus
 
   vars_files:
     - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
 
   tasks:
-      - name: Set packer project path
-        ansible.builtin.set_fact:
-          pkr_project: "{{ project_path }}/utils/packer/proxmox_opnsense"
+    - name: Check if VM template already exists
+      ansible.builtin.command: "qm status {{ opnsense_tpl_id }}"
+      changed_when: false
+      failed_when: false
+      register: __template_exists
 
-      - name: Create template output directory
-        ansible.builtin.file:
-          path: "{{ pkr_project }}/template-output"
-          state: directory
+    - name: Create VM Template
+      delegate_to: localhost
+      when: __template_exists.rc != 0
+      block:
+        - name: Set packer project path
+          ansible.builtin.set_fact:
+            pkr_project: "{{ project_path }}/utils/packer/proxmox_opnsense"
 
-      - name: Templatize resource file
-        ansible.builtin.template:
-          src: "{{ pkr_project }}/templates/main.pkr.hcl.j2"
-          dest: "{{ pkr_project }}/template-output/main.pkr.hcl"
+        - name: Create template output directory
+          ansible.builtin.file:
+            path: "{{ pkr_project }}/template-output"
+            state: directory
 
-      - name: Copy the plugins file
-        ansible.builtin.copy:
-          src: "{{ pkr_project }}/plugins.pkr.hcl"
-          dest: "{{ pkr_project }}/template-output/plugins.pkr.hcl"
+        - name: Templatize resource file
+          ansible.builtin.template:
+            src: "{{ pkr_project }}/templates/main.pkr.hcl.j2"
+            dest: "{{ pkr_project }}/template-output/main.pkr.hcl"
 
-      - name: Init the Packer project
-        ansible.builtin.shell: |
-          cd {{ pkr_project }}/template-output/;
-          packer init .
-        changed_when: false
+        - name: Copy the plugins file
+          ansible.builtin.copy:
+            src: "{{ pkr_project }}/plugins.pkr.hcl"
+            dest: "{{ pkr_project }}/template-output/plugins.pkr.hcl"
 
-      - name: Run Packer
-        ansible.builtin.shell: |
-          cd {{ pkr_project }}/template-output/;
-          packer build .
-        register: __packer_run
+        - name: Init the Packer project
+          ansible.builtin.shell: |
+            cd {{ pkr_project }}/template-output/;
+            packer init .
+          changed_when: false
 
-      - name: Show Packer Output
-        debug:
-          var: __packer_run.stdout_lines
+        - name: Run Packer
+          ansible.builtin.shell: |
+            cd {{ pkr_project }}/template-output/;
+            packer build .
+          register: __packer_run
+
+        - name: Show Packer Output
+          debug:
+            var: __packer_run.stdout_lines

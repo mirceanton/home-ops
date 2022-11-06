@@ -1,5 +1,6 @@
 ---
-- name: [OPNSENSE] Download OPNsense ISO
+- name: Download OPNsense ISO
+  gather_facts: false
   hosts: bingus
 
   vars_files:
