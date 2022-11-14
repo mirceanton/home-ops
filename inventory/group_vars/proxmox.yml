@@ -1,2 +1,11 @@
 ---
+# ===============================================
+# ISO STORAGE CONFIGURATION
+# ===============================================
 proxmox_iso_dir: /var/lib/vz/template/iso
+
+# ===============================================
+# VM BACKUP CONFIGURATION
+# ===============================================
+pve_backup_timeout: 3600
+pve_backout_poll_interval: 3
