@@ -4,7 +4,7 @@
 # ===============================================
 opnsense_pkr_repo: https://github.com/mirceanton/packer-proxmox_opnsense
 opnsese_pkr_tag: v1.0.1
-opnsense_pkr_dest: /tmp/packer-opnsense
+opnsense_pkr_dest: ../../utils/packer/opnsense
 
 # ===============================================
 # OPNSENSE PACKER CONFIGURATION

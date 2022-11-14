@@ -4,7 +4,7 @@
 # ===============================================
 opnsense_tf_repo: https://github.com/mirceanton/terraform-proxmox_opnsense
 opnsese_tf_tag: v1.0.1
-opnsense_tf_dest: /tmp/terraform-opnsense
+opnsense_tf_dest: ../../utils/terraform/opnsense
 
 # ===============================================
 # OPNSENSE TERRAFORM CONFIGURATION
