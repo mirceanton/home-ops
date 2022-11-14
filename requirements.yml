@@ -16,3 +16,15 @@
 - name: mirceanton.proxmox_no_subscription
 - name: mirceanton.proxmox_vfio
 - name: mirceanton.proxmox_vgpu
+
+# OPNsenseroles
+- name: mirceanton.opnsense_rules
+- name: mirceanton.opnsense_gateway
+- name: mirceanton.opnsense_interfaces
+- name: mirceanton.opnsense_dhcp
+- name: mirceanton.opnsense_plugins
+- name: mirceanton.opnsense_unbound
+- name: mirceanton.opnsense_ssh
+- name: mirceanton.opnsense_theme
+- name: mirceanton.opnsense_general
+- name: mirceanton.opnsense_dashboard
