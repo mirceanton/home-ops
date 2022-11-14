@@ -68,5 +68,8 @@ crash.log
 /site/
 
 utils/packer/*
+!utils/packer/.gitkeep
 utils/terraform/*
+!utils/terraform/.gitkeep
 utils/ansible/*
+!utils/ansible/.gitkeep
