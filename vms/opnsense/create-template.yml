@@ -2,54 +2,53 @@
 - name: Create opnSense VM Template via Packer
   hosts: bingus
 
-  vars_files:
-    - "{{ project_path }}/inventory/extra_vars/opnsense.yml"
-
   tasks:
-    - name: Check if VM template already exists
+    - name: Check if the Virtual Machine Template Already Exists
       ansible.builtin.command: "qm status {{ opnsense_tpl_id }}"
       changed_when: false
       failed_when: false
       register: __template_exists
 
-    - name: Create VM Template
+    - name: Create the Virtual Machine Template
       delegate_to: localhost
       when: __template_exists.rc != 0
       block:
-        - name: Set packer project path
-          ansible.builtin.set_fact:
-            pkr_project: "{{ project_path }}/utils/packer/proxmox_opnsense"
+        - name: Clone the Packer-OPNsense Project
+          ansible.builtin.git:
+            repo: "{{ opnsense_pkr_repo }}"
+            version: "{{ opnsese_pkr_tag }}"
+            dest: "{{ opnsense_pkr_dest }}"
 
-        - name: Create template output directory
+        - name: Create the Template Output Directory
           ansible.builtin.file:
-            path: "{{ pkr_project }}/template-output"
+            path: "{{ opnsense_pkr_dest }}/template-output"
             state: directory
 
-        - name: Templatize resource file
+        - name: Templatize the Resource File
           ansible.builtin.template:
-            src: "{{ pkr_project }}/templates/main.pkr.hcl.j2"
-            dest: "{{ pkr_project }}/template-output/main.pkr.hcl"
+            src: "{{ opnsense_pkr_dest }}/templates/main.pkr.hcl.j2"
+            dest: "{{ opnsense_pkr_dest }}/template-output/main.pkr.hcl"
 
-        - name: Copy the plugins file
+        - name: Copy the Plugins File
           ansible.builtin.copy:
-            src: "{{ pkr_project }}/plugins.pkr.hcl"
-            dest: "{{ pkr_project }}/template-output/plugins.pkr.hcl"
+            src: "{{ opnsense_pkr_dest }}/plugins.pkr.hcl"
+            dest: "{{ opnsense_pkr_dest }}/template-output/plugins.pkr.hcl"
 
-        - name: Init the Packer project
+        - name: Initialize the Packer Project
           ansible.builtin.shell: |
-            cd {{ pkr_project }}/template-output/;
+            cd {{ opnsense_pkr_dest }}/template-output/;
             packer init .
           changed_when: false
 
         - name: Run Packer
           ansible.builtin.shell: |
-            cd {{ pkr_project }}/template-output/;
+            cd {{ opnsense_pkr_dest }}/template-output/;
             packer build .
           register: __packer_run
 
-        - name: Remove template output directory
+        - name: Cleanup
           ansible.builtin.file:
-            path: "{{ pkr_project }}/template-output"
+            path: "{{ opnsense_pkr_dest }}"
             state: absent
 
         - name: Show Packer Output
