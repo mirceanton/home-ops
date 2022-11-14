@@ -36,8 +36,3 @@
           community.general.terraform:
             project_path: "{{ opnsense_tf_dest }}//template-output"
             force_init: true
-
-        - name: Cleanup
-          ansible.builtin.file:
-            path: "{{ opnsense_tf_dest }}"
-            state: absent

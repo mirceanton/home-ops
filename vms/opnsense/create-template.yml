@@ -46,11 +46,6 @@
             packer build .
           register: __packer_run
 
-        - name: Cleanup
-          ansible.builtin.file:
-            path: "{{ opnsense_pkr_dest }}"
-            state: absent
-
         - name: Show Packer Output
           debug:
             var: __packer_run.stdout_lines
