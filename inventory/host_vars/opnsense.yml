@@ -1,0 +1,154 @@
+---
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
+ansible_host: 192.168.69.1
+ansible_user: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30306636303732306466346135376565363135626230623434623030323330656362303536663838
+          3436386336386464323666323831313665373032396665640a386363333536626363303530303461
+          35646266383666313264626463303862373736353433316431383735623332333333383232353765
+          6261353436303239380a366466323734626363393337616332373034326434353531623731663062
+          6533
+ansible_ssh_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          34393937333266363837353032633366393964303464666263393130326538623065343939646539
+          3333326466333131316163626533376464353364653530320a323837343734323062353237373062
+          31313535303536653138663539636262313538633230613736373638373162323066363865366239
+          3263343263616631380a383632626334306364376365626363616261306431633266373237656462
+          34376564313061396232323763333235656432366232323035363838626330316164653831616163
+          36393763323736633031373061396332383030616633653065633638303832633064633836386536
+          66366237616462333639306633343566366265616539306433303638393131353864623963633338
+          66383238383931343035
+
+# ===============================================
+# GENERAL SYSTEM CONFIGURATION
+# ===============================================
+opnsense_general_hostname: homebase
+opnsense_general_domain: local
+opnsense_general_search_domain: local
+opnsense_general_timezone: Europe/Bucharest
+opnsense_general_language: en_US
+opnsense_general_dns_server: "1.1.1.1"
+
+# ===============================================
+# THEME CONFIGURATION
+# ===============================================
+opnsense_theme_name: cicada
+
+# ===============================================
+# SSH CONFIGURATION
+# ===============================================
+opnsense_ssh_status: enabled       # enabled / disabled
+opnsense_ssh_interfaces: lan       # comma separated list of interfaces SSH binds to
+opnsense_ssh_port: 22              # SSH port
+opnsense_ssh_groups: admins        # allowed groups for SSH
+opnsense_ssh_password_auth: true   # enable / disable password based authentication
+opnsense_ssh_permit_root: true     # enable / disable root login via SSH
+opnsense_ssh_permit_sudo: true     # enable / disable privilege escalation
+opnsense_ssh_noauto: true          # enable / disable noauto
+opnsense_ssh_auto_logout: 1        # ssh auto logout in minutes
+
+# ===============================================
+# PLUGINS CONFIGURATION
+# ===============================================
+opnsense_plugins:  # List of plugins to install
+  - os-iperf
+  - os-theme-cicada
+
+# ===============================================
+# INTERFACES CONFIGURATION
+# ===============================================
+opnsense_interfaces:
+  - name: wan
+    description: WAN
+    iface: vtnet1
+    enabled: true
+    lock: true
+    address: "192.168.10.90"
+    subnet: "24"
+    gateway: WAN_GW
+    block_private: false
+    block_bogon: false
+
+  - name: lan
+    description: LAN
+    iface: vtnet0
+    enabled: true
+    lock: true
+    address: "192.168.69.1"
+    subnet: "24"
+
+# ===============================================
+# GATEWAY CONFIGURATION
+# ===============================================
+opnsense_gateway_interface: wan
+opnsense_gateway_name: WAN_GW
+opnsense_gateway_description: Interface WAN Gateway
+opnsense_gateway_default: true
+opnsense_gateway_ip_protocol: inet
+opnsense_gateway_ip_addr: "192.168.10.1"
+opnsense_gateway_monitor_disable: true
+opnsense_gateway_interval: 1
+opnsense_gateway_weight: 1
+
+# ===============================================
+# UNBOUND DNS CONFIGURATION
+# ===============================================
+opnsense_unbound_enabled: true
+opnsense_unbound_register_dhcp: true
+opnsense_unbound_register_static_leases: true
+opnsense_unbound_dnssec_enabled: true
+opnsense_unbound_flush_cache: true
+
+# ===============================================
+# DHCP SERVER CONFIGURATION
+# ===============================================
+opnsense_dhcp:
+  - iface: lan
+    enabled: true
+    range:
+      start: "192.168.69.100"
+      end: "192.168.69.199"
+    dns: "8.8.8.8"
+
+# ===============================================
+# DASHBOARD CONFIGURATION
+# ===============================================
+opnsense_dashboard_columns: 3
+opnsense_dashboard_traphic_graph: wan,lan
+opnsense_dashboard_widget_sequence:
+    - widget: system_information-container
+      position: '00000000'
+      column: col1
+    - widget: traffic_graphs-container
+      position: '00000001'
+      column: col4
+    - widget: services_status-container
+      position: '00000002'
+      column: col5
+    - widget: interface_list-container
+      position: '00000003'
+      column: col5
+    - widget: gateways-container
+      position: '00000004'
+      column: col5
+
+# ===============================================
+# FIREWALL RULES CONFIGURATION
+# ===============================================
+opnsense_firewall_rules:
+  - rule:
+      name: Allow LAN to Internet
+      id: "2"
+      _:
+        - descr: Allow LAN to any
+        - type: pass
+        - ipprotocol: inet
+        - interface: lan
+        - source:
+            _:
+              - network: lan
+        - destination:
+            _:
+              - any:
