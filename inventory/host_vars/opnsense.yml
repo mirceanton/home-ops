@@ -118,21 +118,21 @@ opnsense_dhcp:
 opnsense_dashboard_columns: 3
 opnsense_dashboard_traphic_graph: wan,lan
 opnsense_dashboard_widget_sequence:
-    - widget: system_information-container
-      position: '00000000'
-      column: col1
-    - widget: traffic_graphs-container
-      position: '00000001'
-      column: col4
-    - widget: services_status-container
-      position: '00000002'
-      column: col5
-    - widget: interface_list-container
-      position: '00000003'
-      column: col5
-    - widget: gateways-container
-      position: '00000004'
-      column: col5
+  - widget: system_information-container
+    position: '00000000'
+    column: col1
+  - widget: traffic_graphs-container
+    position: '00000001'
+    column: col4
+  - widget: services_status-container
+    position: '00000002'
+    column: col5
+  - widget: interface_list-container
+    position: '00000003'
+    column: col5
+  - widget: gateways-container
+    position: '00000004'
+    column: col5
 
 # ===============================================
 # FIREWALL RULES CONFIGURATION

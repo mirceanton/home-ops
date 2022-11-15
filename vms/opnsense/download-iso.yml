@@ -5,7 +5,7 @@
 
   tasks:
     - name: Check if the ISO Already Exists
-      ansible.builtin.stat: 
+      ansible.builtin.stat:
         path: "{{ proxmox_iso_dir }}/{{ opnsense_iso_name }}"
       register: __opnsense_iso
 
