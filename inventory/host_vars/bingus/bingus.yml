@@ -53,4 +53,4 @@ proxmox_api_token_secret: !vault |
 # VM BACKUP CONFIGURATION
 # ===============================================
 backup_vms:
-  - 100
+  - "{{ opnsense_vm_id }}"
