@@ -5,7 +5,7 @@
 
   tasks:
     - name: Backup VM
-      ansible.builtin.shell: vzdump {{ item }}
+      ansible.builtin.shell: vzdump --mode stop {{ item }}
       async: "{{ pve_backup_timeout }}"
       poll: "{{ pve_backout_poll_interval }}"
       register: __vm_backup
