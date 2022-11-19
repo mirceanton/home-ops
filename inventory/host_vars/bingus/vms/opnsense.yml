@@ -1,0 +1,32 @@
+---
+# ===============================================
+# OPNSENSE TERRAFORM PROJECT
+# ===============================================
+opnsense_tf_repo: https://github.com/mirceanton/terraform-proxmox_opnsense
+opnsese_tf_tag: v1.0.1
+opnsense_tf_dest: ../../utils/terraform/opnsense
+
+# ===============================================
+# OPNSENSE TERRAFORM CONFIGURATION
+# ===============================================
+# [Optional] The name of the VM
+opnsense_vm_name: opnSense
+
+# [Optional] The name of the VM
+opnsense_vm_clone: '{{ opnsense_tpl_name }}'
+
+# [Required] The name of the node on which to deploy the VM
+opnsense_vm_target_node: '{{ ansible_hostname }}'
+
+# [Optional] The ID of the VM
+opnsense_vm_id: 100
+
+# [Required] List of disks to assign to the VM
+opnsense_vm_disks:
+  - storage: local-zfs    # [Required] The name of the storage pool on which to store the disk.
+    size: 16G             # [Required] The size of the created disk.
+
+# [Required] List of network devices
+opnsense_vm_networks:
+  - bridge: vmbr1 # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+  - bridge: vmbr0 # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)

@@ -1,0 +1,12 @@
+---
+- name: Initialize Bingus
+  hosts: bingus
+  become: true
+
+  tasks:
+    - name: Backup VM
+      ansible.builtin.shell: vzdump --mode stop {{ item }}
+      async: "{{ pve_backup_timeout }}"
+      poll: "{{ pve_backout_poll_interval }}"
+      register: __vm_backup
+      loop: "{{ backup_vms }}"
