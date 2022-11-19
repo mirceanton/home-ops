@@ -1,1 +1,0 @@
-# Docker Swarm Central: Apps
