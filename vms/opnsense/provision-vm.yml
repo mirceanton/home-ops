@@ -1,0 +1,38 @@
+---
+- name: Create opnSense VM via Terraform
+  hosts: bingus
+
+  tasks:
+    - name: Check if the Virtual Machine Already Exists
+      ansible.builtin.command: "qm status {{ opnsense_vm_id }}"
+      changed_when: false
+      failed_when: false
+      register: __vm_exists
+
+    - name: Create a new Virtual Machine
+      delegate_to: localhost
+      when: __vm_exists.rc != 0
+      block:
+        - name: Clone the Terraform-OPNsense Project
+          ansible.builtin.git:
+            repo: "{{ opnsense_tf_repo }}"
+            version: "{{ opnsese_tf_tag }}"
+            dest: "{{ opnsense_tf_dest }}"
+
+        - name: Create the Template Output Directory
+          ansible.builtin.file:
+            path: "{{ opnsense_tf_dest }}/template-output"
+            state: directory
+
+        - name: Templatize files the Provider File
+          ansible.builtin.template:
+            src: "{{ opnsense_tf_dest }}/templates/{{ item }}.j2"
+            dest: "{{ opnsense_tf_dest }}/template-output/{{ item }}"
+          loop:
+            - provider.tf
+            - main.tf
+
+        - name: Run Terraform
+          community.general.terraform:
+            project_path: "{{ opnsense_tf_dest }}//template-output"
+            force_init: true
