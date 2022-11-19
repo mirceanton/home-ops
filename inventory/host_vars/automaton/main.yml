@@ -1,0 +1,45 @@
+---
+# ===============================================
+# ANSIBLE CONFIGURATION
+# ===============================================
+ansible_connection: local
+ansible_pip_additional:
+  - boto3
+  - lxml
+  - docker
+  - jsondiff
+
+# ===============================================
+# HOST CONFIGURATION
+# ===============================================
+hostname: automaton
+domain: home.mirceanton.com
+fqdn: "{{ hostname }}.{{ domain }}"
+
+# ===============================================
+# PACKAGES CONFIGURATION
+# ===============================================
+terraform_architecture: arm64
+packer_architecture: arm64
+
+# ===============================================
+# DIRECTORIES CONFIGURATION
+# ===============================================
+backup_dir: /mnt/backup
+scripts_dir: /opt/scripts
+credentials_dir: /opt/credentials
+service_data_dir: /opt/services
+
+# ===============================================
+# BACKUP CONFIGURATION
+# ===============================================
+backup_script_path: "{{ scripts_dir }}/automaton-backup.sh"
+anacron_jobs:
+  - "1  1  backup.daily  /bin/bash {{ backup_script_path }}"
+
+# ===============================================
+# DOCKER SWARM CONFIGURATION
+# ===============================================
+docker_swarm_state: present
+docker_swarm_iface: enp1s0f0
+

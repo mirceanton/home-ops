@@ -1,0 +1,28 @@
+---
+# ===============================================
+# TRAEFIK CONFIGURATION
+# ===============================================
+traefik_stack_name: traefik
+traefik_stack_data_dir_path: "{{ service_data_dir }}/{{ traefik_stack_name }}"
+traefik_stack_data_dir_mode: u=rwx,g=rx,o=rx
+traefik_stack_additional_dirs:
+  - path: letsencrypt
+    mode: u=rwx,g=rw,o=r
+  - path: logs
+    mode: u=rwx,g=rw,o=r
+traefik_stack_template_files:
+  - src: docker-compose.yml.j2
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: config.yml.j2
+    dest: config.yml
+    mode: "u=r,g=r,o=r"
+
+# Image configuration
+traefik_stack_image_name: traefik
+traefik_stack_image_tag: v2.6
+
+# Credentials
+traefik_middlewares_auth_users:
+  - name: mike
+    password: "test123"

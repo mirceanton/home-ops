@@ -1,0 +1,28 @@
+{%- macro traefik_labels(name, port, auth=false) -%}
+# Service Definition
+- 'traefik.http.services.{{ name }}.loadbalancer.server.port={{ port }}'
+
+# HTTP -> HTTPS Redirect
+- 'traefik.http.routers.{{ name }}.rule=Host(`{{ name }}.{{ fqdn }}`)'
+- 'traefik.http.routers.{{ name }}.entrypoints=web'
+- 'traefik.http.routers.{{ name }}.middlewares=redirect@file'
+- 'traefik.http.routers.{{ name }}.service={{ name }}'
+
+{% if auth %}
+- 'traefik.http.routers.{{ name }}.middlewares=auth@file'
+{% endif %}
+
+# HTTPS Entrypoint
+- 'traefik.http.routers.{{ name }}-secured.rule=Host(`{{ name }}.{{ fqdn }}`)'
+- 'traefik.http.routers.{{ name }}-secured.entrypoints=web-secured'
+- 'traefik.http.routers.{{ name }}-secured.tls.certresolver=default'
+- 'traefik.http.routers.{{ name }}-secured.service={{ name }}'
+{%- endmacro -%}
+
+{%- macro restart_policy() -%}
+restart_policy:
+  condition: {{ docker_restart_policy_condition }}
+  delay: {{ docker_restart_policy_delay }}
+  max_attempts: {{ docker_restart_policy_max_attempts }}
+  window: {{ docker_restart_policy_window }}
+{%- endmacro -%}

@@ -1,0 +1,22 @@
+---
+- name: Deploy Vault
+  hosts: automaton
+  gather_facts: true
+  become: true
+
+  tasks:
+    - ansible.builtin.include_role:
+        name: mirceanton.docker_stack_deploy
+      vars:
+        docker_stack_deploy_name: "{{ vault_stack_name }}"
+        docker_stack_deploy_root_dir_path: "{{ vault_stack_data_dir_path }}"
+        docker_stack_deploy_root_dir_mode: "{{ vault_stack_data_dir_mode }}"
+        docker_stack_deploy_additional_dirs: "{{ vault_stack_additional_dirs }}"
+        docker_stack_deploy_template_files: "{{ vault_stack_template_files }}"
+
+    - name: "[vault] Add local DNS entry"
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "127.0.0.1 {{ vault_stack_name }}.{{ fqdn }}"
+    # Auto generate root token
+    # TODO: Add credentials to bitwarden

@@ -1,0 +1,22 @@
+---
+# ===============================================
+# JENKINS CONFIGURATION
+# ===============================================
+jenkins_stack_name: jenkins
+jenkins_stack_data_dir_path: "{{ service_data_dir }}/{{ jenkins_stack_name }}"
+jenkins_stack_data_dir_mode: u=rwx,g=rx,o=rx
+jenkins_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rwx,o=rwx
+jenkins_stack_template_files:
+  - src: docker-compose.yml.j2
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+# Image configuration
+jenkins_stack_image_name: jenkins/jenkins
+jenkins_stack_image_tag: 2.371
+
+# Credentials
+jenkins_admin_user: admin
+jenkins_admin_pass: "test123"

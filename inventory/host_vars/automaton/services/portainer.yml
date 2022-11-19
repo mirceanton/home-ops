@@ -1,0 +1,23 @@
+---
+# ===============================================
+# PORTAINER CONFIGURATION
+# ===============================================
+portainer_stack_name: portainer
+portainer_stack_data_dir_path: "{{ service_data_dir }}/{{ portainer_stack_name }}"
+portainer_stack_data_dir_mode: u=rwx,g=rx,o=rx
+portainer_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+portainer_stack_template_files:
+  - src: docker-compose.yml.j2
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+# Image configuration
+portainer_stack_image_name: portainer/portainer-ce
+portainer_stack_image_tag: 2.15.1-alpine
+portainer_stack_agent_image_name: portainer/agent
+portainer_stack_agent_image_tag: 2.15.1-alpine
+
+# Credentials
+portainer_admin_password: "test123"

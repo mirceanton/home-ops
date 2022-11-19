@@ -1,0 +1,22 @@
+---
+# ===============================================
+# MINIO CONFIGURATION
+# ===============================================
+minio_stack_name: minio
+minio_stack_data_dir_path: "{{ service_data_dir }}/{{ minio_stack_name }}"
+minio_stack_data_dir_mode: u=rwx,g=rx,o=rx
+minio_stack_additional_dirs:
+  - path: data
+    mode: u=rwx,g=rw,o=r
+minio_stack_template_files:
+  - src: docker-compose.yml.j2
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+
+# Image configuration
+minio_stack_image_name: minio/minio
+minio_stack_image_tag: RELEASE.2022-11-17T23-20-09Z
+
+# Credentials
+minio_root_user: root
+minio_root_pass: "Test12341234"

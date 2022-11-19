@@ -1,0 +1,30 @@
+---
+# ===============================================
+# GITLAB CONFIGURATION
+# ===============================================
+gitlab_stack_name: gitlab
+gitlab_stack_data_dir_path: "{{ service_data_dir }}/{{ gitlab_stack_name }}"
+gitlab_stack_data_dir_mode: u=rwx,g=rx,o=rx
+gitlab_stack_additional_dirs:
+  - path: data/logs
+    mode: u=rwx,g=rw,o=rw
+  - path: data/config
+    mode: u=rwx,g=rw,o=rw
+  - path: data/gitlab
+    mode: u=rwx,g=rw,o=rw
+gitlab_stack_template_files:
+  - src: docker-compose.yml.j2
+    dest: docker-compose.yml
+    mode: "u=r,g=r,o=r"
+  - src: config.rb.j2
+    dest: data/gitlab/gitlab.rb
+    mode: "u=r,g=r,o=r"
+
+# Image configuration
+gitlab_stack_image_name: gitlab/gitlab-ce
+gitlab_stack_image_tag: 15.4.5-ce.0
+
+# Credentials
+gitlab_root_password: "test123"
+gitlab_runners_token: "test123"
+
