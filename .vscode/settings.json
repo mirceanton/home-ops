@@ -1,7 +1,8 @@
 {
 	"yaml.schemas": {
-		"https://raw.githubusercontent.com/ansible/schemas/main/f/ansible.json": "file:///workspace/amir-hlb/infra/automaton/deploy/tasks/traefik.yml"
-	},
+    "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible.json": "file:///workspace/amir-hlb/infra/automaton/deploy/tasks/traefik.yml",
+    "https://json.schemastore.org/yamllint.json": "file:///home/mike/Workspace/amir-hlb/inventory/host_vars/automaton/services/traefik.yml"
+  },
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
