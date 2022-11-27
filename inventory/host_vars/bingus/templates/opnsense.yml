@@ -3,7 +3,7 @@
 # OPNSENSE PACKER PROJECT
 # ===============================================
 opnsense_pkr_repo: https://github.com/mirceanton/packer-proxmox_opnsense
-opnsese_pkr_tag: v1.0.1
+opnsese_pkr_tag: v1.0.2
 opnsense_pkr_dest: ../../utils/packer/opnsense
 
 # ===============================================
@@ -44,11 +44,11 @@ opnsense_tpl_lan_ip: "192.168.69.1"
 
 # [Required] List of network devices
 opnsense_tpl_networks:
-  - bridge: vmbr1 # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
-  - bridge: vmbr0 # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+  - bridge: vmbr1
+  - bridge: vmbr0
 
 # [Required] List of disks to assign to the VM
 opnsense_tpl_disks:
-  - size: 16G                     # [Required] The name of the storage pool on which to store the disk
-    storage_pool: local-zfs       # [Required] The name of the storage pool on which to store the disk
-    storage_pool_type: zfspool    # [Required] The type of the storage pool on which to store the disk
+  - size: 16G
+    storage_pool: local-zfs
+    storage_pool_type: zfspool

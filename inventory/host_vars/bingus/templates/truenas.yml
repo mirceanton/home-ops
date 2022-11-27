@@ -22,7 +22,7 @@ truenas_tpl_iso: local:iso/{{ truenas_iso_name }}
 truenas_tpl_node: '{{ ansible_hostname }}'
 
 # [Optional] The ID of the VM template
-truenas_tpl_id: 1100
+truenas_tpl_id: 1105
 
 # [Optional] The name of the VM template
 truenas_tpl_name: TrueNAS-tpl
