@@ -1,7 +1,17 @@
 {
 	"yaml.schemas": {
     "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible.json": "file:///workspace/amir-hlb/infra/automaton/deploy/tasks/traefik.yml",
-    "https://json.schemastore.org/yamllint.json": "file:///home/mike/Workspace/amir-hlb/inventory/host_vars/automaton/services/traefik.yml"
+    "https://json.schemastore.org/yamllint.json": [
+      "file:///home/mike/Workspace/amir-hlb/inventory/host_vars/automaton/services/traefik.yml"
+    ],
+    "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible.json#/$defs/tasks": [
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/vault/deploy.yml",
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/traefik/deploy.yml",
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/minio/deploy.yml",
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/jenkins/deploy.yml",
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/homer/deploy.yml",
+      "file:///home/mike/Workspace/amir-hlb/services/automaton/gitlab/deploy.yml"
+    ]
   },
   "files.exclude": {
     "**/.git": true,
