@@ -10,7 +10,10 @@ truenas_tf_dest: ../../utils/terraform/truenas
 # TRUENAS TERRAFORM CONFIGURATION
 # ===============================================
 # [Optional] The name of the VM
-truenas_vm_name: truenas
+truenas_vm_name: TrueNAS
+
+# [Optional] The name of the pool to assignt the VM to
+truenas_pool_name: Storage
 
 # [Optional] The name of the VM
 truenas_vm_clone_id: "{{ truenas_tpl_id }}"
@@ -32,6 +35,3 @@ truenas_vm_networks:
 
 truenas_hostpci:
   - id: "0000:17:00.0"
-
-# [Optional] The name of the pool to assignt the VM to
-truenas_pool_name: storage

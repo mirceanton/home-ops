@@ -3,7 +3,7 @@
 # OPNSENSE TERRAFORM PROJECT
 # ===============================================
 opnsense_tf_repo: https://github.com/mirceanton/terraform-proxmox_opnsense
-opnsese_tf_tag: v1.0.1
+opnsese_tf_tag: v2.0.0
 opnsense_tf_dest: ../../utils/terraform/opnsense
 
 # ===============================================
@@ -12,8 +12,11 @@ opnsense_tf_dest: ../../utils/terraform/opnsense
 # [Optional] The name of the VM
 opnsense_vm_name: opnSense
 
+# [Optional] The name of the pool to assign the VM to
+opnsense_pool_name: Networking
+
 # [Optional] The name of the VM
-opnsense_vm_clone: '{{ opnsense_tpl_name }}'
+opnsense_vm_clone_id: '{{ opnsense_tpl_id }}'
 
 # [Required] The name of the node on which to deploy the VM
 opnsense_vm_target_node: '{{ ansible_hostname }}'
@@ -24,7 +27,7 @@ opnsense_vm_id: 100
 # [Required] List of disks to assign to the VM
 opnsense_vm_disks:
   - storage: local-zfs    # [Required] The name of the storage pool on which to store the disk.
-    size: 16G             # [Required] The size of the created disk.
+    size: 16             # [Required] The size of the created disk.
 
 # [Required] List of network devices
 opnsense_vm_networks:
