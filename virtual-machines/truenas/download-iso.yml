@@ -1,0 +1,12 @@
+---
+- name: Download TrueNAS ISO
+  gather_facts: false
+  hosts: bingus
+
+  tasks:
+    - name: Download the ISO
+      ansible.builtin.get_url:
+        url: "{{ truenas_iso_url }}"
+        dest: "{{ proxmox_iso_dir }}/{{ truenas_iso_name }}"
+      async: 1000
+      poll: 3

@@ -1,0 +1,50 @@
+---
+# ===============================================
+# TRUENAS PACKER PROJECT
+# ===============================================
+truenas_pkr_repo: https://github.com/mirceanton/packer-proxmox_truenas
+truenas_pkr_tag: v1.0.0
+truenas_pkr_dest: ../../utils/packer/truenas
+
+# ===============================================
+# TRUENAS PACKER CONFIGURATION
+# ===============================================
+# [Required] The URL to download the TrueNAS ISO
+truenas_iso_url: https://download.freenas.org/13.0/STABLE/U3.1/x64/TrueNAS-13.0-U3.1.iso
+
+# [Required] The name for the TrueNAS ISO file
+truenas_iso_name: TrueNAS-13.0-U3.1.iso
+
+# [Required] The path to the ISO file, including the storage device
+truenas_tpl_iso: local:iso/{{ truenas_iso_name }}
+
+# [Required] The name of the node on which to deploy the VM
+truenas_tpl_node: '{{ ansible_hostname }}'
+
+# [Optional] The ID of the VM template
+truenas_tpl_id: 1100
+
+# [Optional] The name of the VM template
+truenas_tpl_name: TrueNAS-tpl
+
+# [Required] The password to set for the root user
+truenas_tpl_root_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          66633935353835303331646638363232356638633930396336366433636565303837316431366364
+          3962646330396539616362393230316336633331633839390a623663363135386631633433373733
+          32313230383830613435663035366433373737613034653664383437636661666331356436353637
+          6561366235633434310a363036633634613163353638313861613733333362656464316334303264
+          66663863383236663136316337343461303765303362346434383938386132356332313531353030
+          33363865356531333430656439333662343462303563363661623530663036653233393130613338
+          39376165353961353632303832323261326639303566663636376534646563373763396361353034
+          31663135616330656637
+
+# [Required] List of network devices
+truenas_tpl_networks:
+  - bridge: vmbr0 # [Required] The name of the network bridge to attach to. (vmbr0, vmbr1 etc)
+
+# [Required] List of disks to assign to the VM
+truenas_tpl_disks:
+  - size: 16G                     # [Required] The name of the storage pool on which to store the disk
+    storage_pool: local-zfs       # [Required] The name of the storage pool on which to store the disk
+    storage_pool_type: zfspool    # [Required] The type of the storage pool on which to store the disk
