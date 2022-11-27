@@ -14,11 +14,12 @@
         name: "{{ docker_proxy_network }}"
         scope: swarm
         driver: overlay
-
-- import_playbook: traefik/main.yml
-- import_playbook: portainer/main.yml
-- import_playbook: minio/main.yml
-- import_playbook: vault/main.yml
-- import_playbook: jenkins/main.yml
-- import_playbook: gitlab/main.yml
-- import_playbook: homer/main.yml
+    
+  tasks:
+    - ansible.builtin.import_tasks: traefik/deploy.yml
+    - ansible.builtin.import_tasks: portainer/deploy.yml
+    - ansible.builtin.import_tasks: minio/deploy.yml
+    - ansible.builtin.import_tasks: vault/deploy.yml
+    - ansible.builtin.import_tasks: jenkins/deploy.yml
+    - ansible.builtin.import_tasks: gitlab/deploy.yml
+    - ansible.builtin.import_tasks: homer/deploy.yml
