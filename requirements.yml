@@ -17,7 +17,7 @@
 - name: mirceanton.proxmox_cloudbuntu
   version: v2.0.0
 - name: mirceanton.proxmox_dark_theme
-  version: v1.0.3
+  version: v1.0.4
 - name: mirceanton.proxmox_driver_blacklist
   version: v1.0.0
 - name: mirceanton.proxmox_iommu
