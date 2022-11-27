@@ -15,6 +15,8 @@
         dest: "/tmp/{{ opnsense_iso_name }}.bz2"
       when: not __opnsense_iso.stat.exists
       register: __opnsense_iso_download
+      async: 1000
+      poll: 3
 
     - name: Unarchive the ISO
       ansible.builtin.shell: |
@@ -23,3 +25,5 @@
       when:
         - not __opnsense_iso.stat.exists
         - __opnsense_iso_download.changed
+      async: 1000
+      poll: 3

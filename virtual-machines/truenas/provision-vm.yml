@@ -1,0 +1,53 @@
+---
+- name: Create TrueNAS VM via Terraform
+  hosts: bingus
+
+  handlers:
+    - name: Restart VM
+      ansible.builtin.shell:
+        cmd: "qm stop {{ truenas_vm_id }} && sleep 2 && qm start {{ truenas_vm_id }}"
+
+  tasks:
+    - name: Check if the Virtual Machine Already Exists
+      ansible.builtin.command: "qm status {{ truenas_vm_id }}"
+      changed_when: false
+      failed_when: false
+      register: __vm_exists
+
+    - name: Create a new Virtual Machine
+      delegate_to: localhost
+      when: __vm_exists.rc != 0
+      block:
+        - name: Clone the Terraform-TrueNAS Project
+          ansible.builtin.git:
+            repo: "{{ truenas_tf_repo }}"
+            version: "{{ truenas_tf_tag }}"
+            dest: "{{ truenas_tf_dest }}"
+
+        - name: Create the Template Output Directory
+          ansible.builtin.file:
+            path: "{{ truenas_tf_dest }}/template-output"
+            state: directory
+
+        - name: Templatize files the Provider File
+          ansible.builtin.template:
+            src: "{{ truenas_tf_dest }}/templates/{{ item }}.j2"
+            dest: "{{ truenas_tf_dest }}/template-output/{{ item }}"
+          loop:
+            - provider.tf
+            - main.tf
+
+        - name: Run Terraform
+          community.general.terraform:
+            project_path: "{{ truenas_tf_dest }}//template-output"
+            force_init: true
+
+    - name: Add PCIe Device(s)
+      ansible.builtin.lineinfile:
+        line: "hostpci{{ device_index }}: {{ device.id }}"
+        path: "/etc/pve/qemu-server/{{ truenas_vm_id }}.conf"
+      loop: "{{ truenas_hostpci }}"
+      loop_control:
+        loop_var: device
+        index_var: device_index
+      notify: Restart VM
