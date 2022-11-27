@@ -9,7 +9,7 @@ minio_stack_additional_dirs:
   - path: data
     mode: u=rwx,g=rw,o=r
 minio_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: minio/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
 

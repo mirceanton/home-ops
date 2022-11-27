@@ -13,10 +13,10 @@ gitlab_stack_additional_dirs:
   - path: data/gitlab
     mode: u=rwx,g=rw,o=rw
 gitlab_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: gitlab/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
-  - src: config.rb.j2
+  - src: gitlab/templates/config.rb.j2
     dest: data/gitlab/gitlab.rb
     mode: "u=r,g=r,o=r"
 

@@ -11,10 +11,10 @@ traefik_stack_additional_dirs:
   - path: logs
     mode: u=rwx,g=rw,o=r
 traefik_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: traefik/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
-  - src: config.yml.j2
+  - src: traefik/templates/config.yml.j2
     dest: config.yml
     mode: "u=r,g=r,o=r"
 

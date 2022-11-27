@@ -11,25 +11,25 @@ homer_stack_additional_dirs:
   - path: assets/icons
     mode: u=rwx,g=rwx,o=rwx
 homer_stack_copy_files:
-  - src: dickbutt.svg
+  - src: homer/files/dickbutt.svg
     dest: assets/icons/dickbutt.svg
-  - src: gitlab.svg
+  - src: homer/files/gitlab.svg
     dest: assets/icons/gitlab.svg
-  - src: jenkins.svg
+  - src: homer/files/jenkins.svg
     dest: assets/icons/jenkins.svg
-  - src: minio.svg
+  - src: homer/files/minio.svg
     dest: assets/icons/minio.svg
-  - src: portainer.svg
+  - src: homer/files/portainer.svg
     dest: assets/icons/portainer.svg
-  - src: traefik.svg
+  - src: homer/files/traefik.svg
     dest: assets/icons/traefik.svg
-  - src: vault.svg
+  - src: homer/files/vault.svg
     dest: assets/icons/vault.svg
 homer_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: homer/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
-  - src: config.yml.j2
+  - src: homer/templates/config.yml.j2
     dest: assets/config.yml
     mode: "u=r,g=r,o=r"
 

@@ -11,10 +11,10 @@ vault_stack_additional_dirs:
   - path: config
     mode: u=rwx,g=rw,o=r
 vault_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: vault/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
-  - src: config.json.j2
+  - src: vault/templates/config.json.j2
     dest: config/vault.json
     mode: "u=r,g=r,o=r"
 

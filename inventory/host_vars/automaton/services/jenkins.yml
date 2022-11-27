@@ -9,7 +9,7 @@ jenkins_stack_additional_dirs:
   - path: data
     mode: u=rwx,g=rwx,o=rwx
 jenkins_stack_template_files:
-  - src: docker-compose.yml.j2
+  - src: jenkins/templates/docker-compose.yml.j2
     dest: docker-compose.yml
     mode: "u=r,g=r,o=r"
 
