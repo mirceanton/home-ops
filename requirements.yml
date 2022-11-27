@@ -21,7 +21,7 @@
 - name: mirceanton.proxmox_driver_blacklist
   version: v1.0.0
 - name: mirceanton.proxmox_iommu
-  version: v1.0.1
+  version: v1.0.2
 - name: mirceanton.proxmox_nested_virt
   version: v1.0.2
 - name: mirceanton.proxmox_no_subscription
@@ -29,7 +29,7 @@
 - name: mirceanton.proxmox_vfio
   version: v1.0.0
 - name: mirceanton.proxmox_vgpu
-  version: v1.0.1
+  version: v1.0.2
 
 # opnSense roles
 - name: mirceanton.opnsense_rules
