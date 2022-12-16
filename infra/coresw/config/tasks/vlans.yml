@@ -1,0 +1,23 @@
+---
+- name: Enter VLAN configuration mode
+  community.ciscosmb.command:
+    commands: 
+      - configure terminal
+      - vlan database
+
+- name: Create VLANs
+  community.ciscosmb.command:
+    commands:
+      - vlan {{ item.id }}
+  register: __cmd
+  loop: "{{ vlans }}"
+
+- debug:
+    var: __cmd
+  when: debug | default(false)
+
+- name: Exit VLAN configuration mode
+  community.ciscosmb.command:
+    commands: 
+      - end
+      - end
