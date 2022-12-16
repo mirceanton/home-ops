@@ -1,3 +1,218 @@
 ---
-ansible_host: 192.168.10.129
+debug: true
+
+# =================================================================================================
+# CONNECTION PARAMS
+# =================================================================================================
+ansible_host: 192.168.10.113
 ansible_network_os: community.ciscosmb.ciscosmb
+
+# =================================================================================================
+# SYSTEM SETTINGS
+# =================================================================================================
+hostname: coresw
+location: TOR
+contact: Mircea Anton
+
+# =================================================================================================
+# CLOCK CONFIGURATION
+# =================================================================================================
+clock:
+  source: browser
+  timezone: 
+    name: "GMT"
+    offset: "+3"
+
+# =================================================================================================
+# SERVICE CONFIGURATION
+# =================================================================================================
+services:
+  ssh:
+    enabled: true
+  http:
+    enabled: true
+  https:
+    enabled: true
+  snmp:
+    enabled: false
+  telnet:
+    enabled: false
+
+# =================================================================================================
+# VLAN MANAGEMENT
+# =================================================================================================
+vlans:
+  - id: 1
+  - id: 2
+  - id: 3
+  - id: 4
+  - id: 5
+
+# =================================================================================================
+# PORT TO VLAN MEMBERSHIP
+# =================================================================================================
+ifaces:
+  - name: ge1
+    mode: access
+    vlan: 5
+  - name: ge2
+    mode: access
+    vlan: 5
+  - name: ge3
+    mode: access
+    vlan: 5
+  - name: ge4
+    mode: access
+    vlan: 5
+  - name: ge5
+    mode: access
+    vlan: 5
+  - name: ge6
+    mode: access
+    vlan: 5
+
+  - name: ge7
+    mode: access
+    vlan: 4
+  - name: ge8
+    mode: access
+    vlan: 4
+  - name: ge9
+    mode: access
+    vlan: 4
+  - name: ge10
+    mode: access
+    vlan: 4
+  - name: ge11
+    mode: access
+    vlan: 4
+  - name: ge12
+    mode: access
+    vlan: 4
+
+  - name: ge13
+    mode: access
+    vlan: 3
+  - name: ge14
+    mode: access
+    vlan: 3
+  - name: ge15
+    mode: access
+    vlan: 3
+  - name: ge16
+    mode: access
+    vlan: 3
+  - name: ge17
+    mode: access
+    vlan: 3
+  - name: ge18
+    mode: access
+    vlan: 3
+
+  - name: ge19
+    mode: access
+    vlan: 2
+  - name: ge20
+    mode: access
+    vlan: 2
+  - name: ge21
+    mode: access
+    vlan: 2
+  - name: ge22
+    mode: access
+    vlan: 2
+  - name: ge23
+    mode: access
+    vlan: 2
+  - name: ge24
+    mode: access
+    vlan: 2
+
+  - name: ge25
+    mode: access
+    vlan: 5
+  - name: ge26
+    mode: access
+    vlan: 5
+  - name: ge27
+    mode: access
+    vlan: 5
+  - name: ge28
+    mode: access
+    vlan: 5
+  - name: ge29
+    mode: access
+    vlan: 5
+  - name: ge30
+    mode: access
+    vlan: 5
+
+  - name: ge31
+    mode: access
+    vlan: 4
+  - name: ge32
+    mode: access
+    vlan: 4
+  - name: ge33
+    mode: access
+    vlan: 4
+  - name: ge34
+    mode: access
+    vlan: 4
+  - name: ge35
+    mode: access
+    vlan: 4
+  - name: ge36
+    mode: access
+    vlan: 4
+
+  - name: ge37
+    mode: access
+    vlan: 3
+  - name: ge38
+    mode: access
+    vlan: 3
+  - name: ge39
+    mode: access
+    vlan: 3
+  - name: ge40
+    mode: access
+    vlan: 3
+  - name: ge41
+    mode: access
+    vlan: 3
+  - name: ge42
+    mode: access
+    vlan: 3
+
+  - name: ge43
+    mode: access
+    vlan: 2
+  - name: ge44
+    mode: access
+    vlan: 2
+  - name: ge45
+    mode: access
+    vlan: 2
+  - name: ge46
+    mode: access
+    vlan: 2
+  - name: ge47
+    mode: access
+    vlan: 2
+  - name: ge48
+    mode: access
+    vlan: 2
+
+  - name: ge49
+    mode: access
+    vlan: 1
+  - name: ge50
+    mode: access
+    vlan: 1
+  - name: ge51
+    mode: access
+    vlan: 1
+  - name: ge52
+    mode: access
+    vlan: 1
