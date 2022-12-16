@@ -1,0 +1,33 @@
+---
+- name: Set System Location
+  community.ciscosmb.command:
+    commands: 
+    - configure terminal
+    - snmp-server location "{{ location }}"
+    - end
+  register: __cmd
+- debug:
+    var: __cmd
+  when: debug | default(false)
+
+- name: Set System Contact
+  community.ciscosmb.command:
+    commands: 
+    - configure terminal
+    - snmp-server contact "{{ contact }}"
+    - end
+  register: __cmd
+- debug:
+    var: __cmd
+  when: debug | default(false)
+
+- name: Set Hostname
+  community.ciscosmb.command:
+    commands: 
+    - configure terminal
+    - hostname "{{ hostname }}"
+    - end
+  register: __cmd
+- debug:
+    var: __cmd
+  when: debug | default(false)

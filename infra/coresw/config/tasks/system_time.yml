@@ -1,0 +1,22 @@
+---
+- name: Set Clock source to HTTP
+  community.ciscosmb.command:
+    commands:
+    - configure terminal
+    - clock source {{ clock.source }}
+    - end
+  register: __cmd
+- debug:
+    var: __cmd
+  when: debug | default(false)
+
+- name: Set Timezone
+  community.ciscosmb.command:
+    commands: 
+    - configure terminal
+    - clock timezone {{ clock.timezone.name }} {{ clock.timezone.offset }}
+    - end
+  register: __cmd
+- debug:
+    var: __cmd
+  when: debug | default(false)
