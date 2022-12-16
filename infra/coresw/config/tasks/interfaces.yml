@@ -1,0 +1,16 @@
+---
+- name: Configure Interfaces
+  community.ciscosmb.command:
+    commands:
+      - configure terminal
+      - int {{ item.name }}
+      - switchport mode access
+      - switchport access vlan {{ item.vlan }}
+      - no shut
+      - end
+  register: __cmd
+  loop: "{{ ifaces }}"
+
+- debug:
+    var: __cmd
+  when: debug | default(false)
