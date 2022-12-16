@@ -4,10 +4,16 @@
   gather_facts: false
 
   tasks:
-    - name: Enter config mode
-      community.ciscosmb.command:
-        commands:
-          - configure terminal
+    - import_tasks: tasks/system_settings.yml
+    - import_tasks: tasks/system_time.yml
+    - import_tasks: tasks/vlans.yml
+    - import_tasks: tasks/interfaces.yml
 
-    - import_tasks: tasks/administration/system_settings.yml
-    - import_tasks: tasks/administration/system_time.yml
+    - name: Save configuration
+      community.ciscosmb.command:
+        commands: copy running-config startup-config
+      register: __cmd
+    - debug:
+        var: __cmd
+      when: debug | default(false)
+      
