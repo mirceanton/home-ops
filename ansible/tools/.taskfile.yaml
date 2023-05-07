@@ -8,3 +8,6 @@ tasks:
   task:
     cmds:
       - ansible-playbook task_install.yaml
+  talosctl:
+    cmds:
+      - ansible-playbook talosctl_install.yaml
