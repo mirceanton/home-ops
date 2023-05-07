@@ -2,8 +2,9 @@
 version: '3'
 
 includes:
-  tools:
-    taskfile: ansible/tools/.taskfile.yaml
+  ansible:
+    taskfile: ansible/.taskfile.yaml
+    dir: ansible/
 
   mkc:
     taskfile: infra/management-cluster/.taskfile.yaml

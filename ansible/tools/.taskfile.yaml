@@ -2,15 +2,9 @@
 version: 3
 
 tasks:
-  ansible:
-    cmds:
-      - sudo apt install python3-pip
-      - pip3 install ansible
-      - ansible-galaxy install -r requirements.yaml
-
   sops:
     cmds:
-      - ansible-playbook ansible/tools/sops_install.yaml
+      - ansible-playbook sops_install.yaml
   task:
     cmds:
-      - ansible-playbook ansible/tools/task_install.yaml
+      - ansible-playbook task_install.yaml
