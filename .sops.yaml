@@ -1,0 +1,12 @@
+---
+creation_rules:
+  - path_regex: infra/.*\.sops\.ya?ml
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    key_groups:
+      - age:
+          - age1c3f5mkutp9j7vfs3qkll86fgnxkgxh2cshr5wjdp7y6gzj9445jqfzpnyy
+
+  - path_regex: infra/.*talosconfig
+    key_groups:
+      - age:
+          - age1c3f5mkutp9j7vfs3qkll86fgnxkgxh2cshr5wjdp7y6gzj9445jqfzpnyy
