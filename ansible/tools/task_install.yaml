@@ -11,6 +11,7 @@
     - name: Get system architecture
       ansible.builtin.shell: dpkg --print-architecture
       register: deb_architecture
+      changed_when: false
 
     - name: "[DEBUG]: Show system architecture"
       ansible.builtin.debug:
