@@ -25,7 +25,7 @@
 
     - name: "[DEBUG]: Show URLs"
       ansible.builtin.debug:
-        msg: 
+        msg:
           - "SOPS URL: {{ sops_url }}"
           - "AGE URL: {{ age_url }}"
       when: debug | default(false)
