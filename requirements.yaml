@@ -1,0 +1,3 @@
+- name: mirceanton.downloader
+  src: https://github.com/mirceanton/ansible_role-downloader
+  version: v2.0.0
