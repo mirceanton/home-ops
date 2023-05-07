@@ -1,0 +1,7 @@
+---
+version: '3'
+
+includes:
+  mkc: 
+    taskfile: infra/management-cluster/.taskfile.yaml
+    dir: infra/management-cluster/
