@@ -1,0 +1,8 @@
+---
+fail_fast: false
+
+repos:
+  - repo: https://github.com/onedr0p/sops-pre-commit
+    rev: v2.1.1
+    hooks:
+      - id: forbid-secrets
