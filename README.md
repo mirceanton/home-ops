@@ -1,3 +1,3 @@
 # Amir Homelab
 
-Central repository which hold all my HomeLab configuration-as-code.
+This is a monorepo that holds the configuration for my home Infrastructure and Kubernetes Clusters.
