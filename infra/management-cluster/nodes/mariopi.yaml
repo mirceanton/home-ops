@@ -1,0 +1,10 @@
+---
+machine:
+  type: worker
+
+  network:
+    hostname: mariopi
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.0.10.18/24

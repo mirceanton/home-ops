@@ -1,0 +1,12 @@
+---
+machine:
+  type: controlplane
+
+  network:
+    hostname: blackpi
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.0.10.11/24
+        vip:
+          ip: 10.0.10.10

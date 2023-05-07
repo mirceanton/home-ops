@@ -1,0 +1,10 @@
+---
+machine:
+  type: worker
+
+  network:
+    hostname: thorpi
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.0.10.17/24
