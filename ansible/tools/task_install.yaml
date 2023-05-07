@@ -1,0 +1,50 @@
+---
+- name: Install Task
+  hosts: localhost
+  gather_facts: true
+  become: true
+
+  vars:
+    task_version: 3.24.0
+
+  tasks:
+    - name: Get system architecture
+      ansible.builtin.shell: dpkg --print-architecture
+      register: deb_architecture
+
+    - name: "[DEBUG]: Show system architecture"
+      ansible.builtin.debug:
+        msg: "System architecture is: {{ deb_architecture.stdout }}"
+      when: debug | default(false)
+
+    - name: Build URLs from vars
+      ansible.builtin.set_fact:
+        task_url: "https://github.com/go-task/task/releases/download/v{{ task_version }}/task_linux_{{ deb_architecture.stdout }}.tar.gz"
+
+    - name: "[DEBUG]: Show URLs"
+      ansible.builtin.debug:
+        msg:
+          - "Task URL: {{ task_url }}"
+      when: debug | default(false)
+
+    - name: Download and Install Task
+      ansible.builtin.include_role:
+        name: mirceanton.downloader
+      vars:
+        downloader_download_url: "{{ task_url }}"
+        downloader_download_dest: "/tmp/task_linux_{{ deb_architecture.stdout }}.tar.gz"
+        downloader_download_validate_certs: false
+        downloader_unarchive: true
+        downloader_executable_src: /tmp/task
+        downloader_executable_dest: /usr/local/bin/task
+
+    - name: Download and Install Task bash completion
+      ansible.builtin.include_role:
+        name: mirceanton.downloader
+      vars:
+        downloader_download_url: "{{ task_url }}"
+        downloader_download_dest: "/tmp/task_linux_{{ deb_architecture.stdout }}.tar.gz"
+        downloader_download_validate_certs: false
+        downloader_unarchive: true
+        downloader_executable_src: /tmp/completion/bash/task.bash
+        downloader_executable_dest: /etc/bash_completion.d/task
