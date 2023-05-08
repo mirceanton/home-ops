@@ -5,9 +5,11 @@ tasks:
   sops:
     cmds:
       - ansible-playbook sops_install.yaml
+
   task:
     cmds:
       - ansible-playbook task_install.yaml
+
   talosctl:
     cmds:
       - ansible-playbook talosctl_install.yaml
