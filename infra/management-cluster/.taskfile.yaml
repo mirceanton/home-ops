@@ -7,29 +7,26 @@ env:
 tasks:
   sops:encrypt:
     cmds:
-      - sops --encrypt --in-place base.sops.yaml
-      - sops --encrypt --in-place secrets.sops.yaml
-      - sops --encrypt --in-place talosconfig.sops.yaml
+      - sops --encrypt base.yaml > base.sops.yaml
+      - sops --encrypt secrets.yaml > secrets.sops.yaml
+      - sops --encrypt talosconfig.yaml > talosconfig.sops.yaml
     silent: true
 
   sops:decrypt:
     cmds:
-      - sops --decrypt --in-place base.sops.yaml
-      - sops --decrypt --in-place secrets.sops.yaml
-      - sops --decrypt --in-place talosconfig.sops.yaml
+      - sops --decrypt base.sops.yaml > base.yaml
+      - sops --decrypt secrets.sops.yaml > secrets.yaml
+      - sops --decrypt talosconfig.sops.yaml > talosconfig.yaml
     silent: true
 
   edit:talosconfig:
     cmds:
       - sops talosconfig.sops.yaml
-  silent: true
 
   edit:secrets:
     cmds:
       - sops secrets.sops.yaml
-  silent: true
 
   edit:config:
     cmds:
       - sops base.sops.yaml
-  silent: true
