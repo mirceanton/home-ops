@@ -30,3 +30,34 @@ tasks:
   edit:config:
     cmds:
       - sops base.sops.yaml
+
+  bootstrap:
+    deps:
+      - sops:decrypt
+    cmds:
+      - echo "Applying talos configuration to controlplane node - blackpi"
+      - talosctl apply --nodes 10.0.10.11 --insecure --file base.yaml --config-patch @nodes/blackpi.yaml
+
+      - echo "Bootstrapping the kubernetes cluster..."
+      - talosctl --talosconfig talosconfig bootstrap --nodes 10.0.10.11
+
+      - echo "Applying talos configuration to worker node - deadpi"
+      - talosctl apply --nodes 10.0.10.16 --insecure --file base.yaml --config-patch @nodes/deadpi.yaml
+
+      - echo "Applying talos configuration to worker node - mariopi"
+      - talosctl apply --nodes 10.0.10.18 --insecure --file base.yaml --config-patch @nodes/mariopi.yaml
+
+      - echo "Applying talos configuration to worker node - thorpi"
+      - talosctl apply --nodes 10.0.10.17 --insecure --file base.yaml --config-patch @nodes/thorpi.yaml
+
+  import:talosconfig:
+    cmds:
+      - sops --decrypt talosconfig.sops.yaml > ~/.talos/config
+
+  import:kubeconfig:
+    cmds:
+      - echo "Temporarily decrypting config files..."
+      - sops --decrypt talosconfig.sops.yaml > talosconfig
+      - talosctl kubeconfig
+      - echo "Cleaning up decypted files..."
+      - rm talosconfig
