@@ -39,10 +39,6 @@
         downloader_executable_dest: /usr/local/bin/talosctl
 
     - name: Generate talosctl bash completion
-      ansible.builtin.shell: talosctl completion bash
-      register: _talosctl_completion
-
-    - name: Save talosctl bash completion
-      ansible.builtin.copy:
-        dest: /etc/bash_completion.d/talosctl
-        content: "{{ _talosctl_completion }}"
+      ansible.builtin.shell: talosctl completion bash > /etc/bash_completion.d/talosctl
+      args:
+        creates: /etc/bash_completion.d/talosctl
