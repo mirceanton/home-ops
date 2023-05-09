@@ -36,11 +36,11 @@ tasks:
       - talosctl disks --nodes 10.0.10.196 --insecure > /dev/null
       - talosctl disks --nodes 10.0.10.197 --insecure > /dev/null
     cmds:
-      - talosctl apply --nodes 10.0.10.197 --insecure --file base.yaml --config-patch @nodes/blackpi.yaml
-      - talosctl apply --nodes 10.0.10.191 --insecure --file base.yaml --config-patch @nodes/deadpi.yaml
-      - talosctl apply --nodes 10.0.10.194 --insecure --file base.yaml --config-patch @nodes/mariopi.yaml
-      - talosctl apply --nodes 10.0.10.196 --insecure --file base.yaml --config-patch @nodes/thorpi.yaml
-      - sleep 5 # wait for the controlplane nodes to be up
+      - talosctl apply --nodes 10.0.10.197 --insecure --file base.yaml --config-patch @nodes/blackpi.yaml --config-patch @roles/controlplane.yaml
+      - talosctl apply --nodes 10.0.10.191 --insecure --file base.yaml --config-patch @nodes/deadpi.yaml --config-patch @roles/worker.yaml
+      - talosctl apply --nodes 10.0.10.194 --insecure --file base.yaml --config-patch @nodes/mariopi.yaml --config-patch @roles/worker.yaml
+      - talosctl apply --nodes 10.0.10.196 --insecure --file base.yaml --config-patch @nodes/thorpi.yaml --config-patch @roles/worker.yaml
+      - sleep 20 # wait for the controlplane nodes to be up
       - talosctl --talosconfig talosconfig.yaml bootstrap
 
   import:talosconfig:
