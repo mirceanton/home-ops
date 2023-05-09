@@ -1,9 +1,8 @@
 ---
 machine:
-  type: worker
-
   network:
     hostname: thorpi
+
     interfaces:
       - interface: eth0
         addresses:
