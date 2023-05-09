@@ -23,7 +23,6 @@ machine:
               routes:
                 - network: 0.0.0.0/0
                   gateway: 10.0.10.1
-              dhcp: true
         # Used to statically set the nameservers for the machine.
         nameservers:
             - 10.0.10.1
@@ -46,13 +45,16 @@ machine:
     # Used to provide instructions for installations.
     install:
         # The disk used for installations.
-        disk: /dev/mmcblk0
+        disk: /dev/sda1
         # Allows for supplying the image used to perform the installation.
-        image: ghcr.io/siderolabs/installer:v1.4.0
+        image: ghcr.io/siderolabs/installer:v1.4.2
         # Indicates if a bootloader should be installed.
         bootloader: true
         # Indicates if the installation disk should be wiped at installation time.
         wipe: false
+        extensions:
+            - image: ghcr.io/siderolabs/iscsi-tools:v0.1.4
+            - image: ghcr.io/siderolabs/gvisor:33f613e
     # Allows the addition of user specified files.
     files:
         - content: |
@@ -128,7 +130,7 @@ cluster:
         image: registry.k8s.io/kube-scheduler:v1.25.8
     # Configures cluster member discovery.
     discovery:
-        enabled: true
+        enabled: false
         # Configure registries used for cluster member discovery.
         registries:
             # Kubernetes registry uses Kubernetes API server to discover cluster members and stores additional information
@@ -162,8 +164,8 @@ sops:
             bEErc0RFa1pZNjFRZ3grWFJjWklZcXMKF0R5G898AaBx0EuAhsPM3VzJH202c5Of
             5DzrWVwzE4lKvpnJVduzkJVmIOvpba402GHRGVMaTcqNoV/wGdXhqg==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-07T21:01:35Z"
-    mac: ENC[AES256_GCM,data:xhLtvRO7IUrIGqZ2oOOsq4slCggpwuH/FacU4uBPr8BPYap9xkjrPleJUy3poBN/YAQFYboexFNaqgUxNAINmUvcBVveZi5walMK18BdVhzAt4kNAOnBhOIdscRF9icAKvFCJUOIF+ZzNWKCtShg9/JnNHG7qcgcRPe+2zQdgas=,iv:nWtbaPstAE5NBjxMbW6Kc0nvFxsjeS7ATANHPAFFu1Y=,tag:ESWnS69cPPkCcN3bOEpcdQ==,type:str]
+    lastmodified: "2023-05-09T16:30:48Z"
+    mac: ENC[AES256_GCM,data:hVFdkSzAji9Qwz9QDke1Dq+Z+71/iURDil1TwDuC8+e1HJgPpzBn87Sm0RojNkehP17Z6x6P8fQ5ceOPk6+3XWvRh2O9mE4Za/F5YzKr2pDvDFzYmQubZEQwcRciHgOafi8eDgRo0RssIAN4SPTK2jFxs4ha8CI+7yXYI74YSXM=,iv:WFeEqdVX40F2yNI/BSp5spinhAutz1byvdnX1u0a5Jw=,tag:fW60PcMl8RJzDwIN8D55nA==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
