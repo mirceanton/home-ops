@@ -6,6 +6,10 @@ metadata:
   namespace: metallb-system
 spec:
   interval: 15m
+  path: metallb-system
+  prune: true
+  timeout: 10m
+
   chart:
     spec:
       chart: metallb
@@ -14,3 +18,12 @@ spec:
         kind: HelmRepository
         name: metallb
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
