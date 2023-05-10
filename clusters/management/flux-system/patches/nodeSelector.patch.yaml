@@ -8,7 +8,8 @@ spec:
   template:
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
 
 ---
 apiVersion: apps/v1
@@ -20,7 +21,8 @@ spec:
   template:
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
 
 ---
 apiVersion: apps/v1
@@ -32,7 +34,8 @@ spec:
   template:
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
 
 ---
 apiVersion: apps/v1
@@ -44,4 +47,5 @@ spec:
   template:
     spec:
       nodeSelector:
-        node-role.kubernetes.io/control-plane:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
