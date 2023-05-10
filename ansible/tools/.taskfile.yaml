@@ -16,3 +16,6 @@ tasks:
 
   flux:
     cmds: [ ansible-playbook flux_install.yaml ]
+
+  helm:
+    cmds: [ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash ] # FIXME
