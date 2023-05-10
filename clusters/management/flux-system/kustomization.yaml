@@ -9,10 +9,5 @@ resources:
 - repositories/rancher-stable.yaml
 
 patches:
-  - patch: patches/nodeSelector.patch.yaml
-    target:
-      kind: Deployment
-  - patch: patches/tolerations.patch.yaml
-    target:
-      kind: Deployment
- 
+  - patches/nodeSelector.patch.yaml
+  - patches/tolerations.patch.yaml
