@@ -2,7 +2,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: (kustomize-controller|helm-controller|notification-controller|source-controller)
+  name: kustomize-controller
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-controller
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-controller
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source-controller
 spec:
   template:
     spec:
