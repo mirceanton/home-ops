@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: homer
+  name: homer
+  namespace: homer-dashboard
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: homer
+
+  template:
+    metadata:
+      labels:
+        app: homer
+
+    spec:
+      volumes:
+      - name: homer-icons-volume
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: homer-configmap
+
+      initContainers:
+      - name: homer-icons-downloader
+        image: alpine
+        command: ['sh', '-c', 'apk add git && git clone https://github.com/NX211/homer-icons && mv homer-icons/png/* /icons/']
+        volumeMounts:
+        - mountPath: /icons
+          name: homer-icons-volume
+
+      containers:
+      - name: homer
+        image: busybox #b4bz/homer:v23.02.2
+        tty: true
+        command: ['sh', '-c', 'sleep infinity']
+        volumeMounts:
+        - mountPath: /www/assets/
+          name: homer-icons-volume
+        - mountPath: /assets/config.yml
+          subPath: config.yml
+          name: config-volume
+
