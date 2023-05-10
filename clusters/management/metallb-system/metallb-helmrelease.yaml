@@ -6,10 +6,6 @@ metadata:
   namespace: metallb-system
 spec:
   interval: 15m
-  path: metallb-system
-  prune: true
-  timeout: 10m
-
   chart:
     spec:
       chart: metallb
@@ -19,6 +15,7 @@ spec:
         name: metallb
         namespace: flux-system
   install:
+    timeout: 10m
     remediation:
       retries: 3
   upgrade:
