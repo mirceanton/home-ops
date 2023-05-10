@@ -9,12 +9,10 @@ resources:
 - repositories/rancher-stable.yaml
 
 patches:
-  - patch: |
-      spec:
-        template:
-          spec:
-            nodeSelector:
-              node-role.kubernetes.io/control-plane:
+  - patch: patches/nodeSelector.patch.yaml
+    target:
+      kind: Deployment
+  - patch: patches/tolerations.patch.yaml
     target:
       kind: Deployment
  
