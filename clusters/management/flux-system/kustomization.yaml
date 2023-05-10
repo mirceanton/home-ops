@@ -3,4 +3,7 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- repositories/
+- repositories/ingress-nginx.yaml
+- repositories/jetstack.yaml
+- repositories/metallb.yaml
+- repositories/rancher-stable.yaml
