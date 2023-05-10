@@ -9,19 +9,17 @@ resources:
 - repositories/rancher-stable.yaml
 
 patches:
-  - patch: |
-        op: add
-        path: /spec/template/spec/nodeSelector
-        value: "{"node-role.kubernetes.io/control-plane: }"
-    target:
-      kind: Deployment
-      name: "(kustomize-controller|helm-controller|notification-controller|source-controller)"
-
   # - patch: |
-  #     - op: add
-  #       path: /spec/template/spec/tolerations
-  #       value: { "key": "node-role.kubernetes.io/control-plane", "operator": "Exists", "effect": "NoSchedule" }
+  #       op: add
+  #       path: /spec/template/spec/nodeSelector
+  #       value: "{node-role.kubernetes.io/control-plane: }"
   #   target:
   #     kind: Deployment
-  #     name: "(kustomize-controller|helm-controller|notification-controller|source-controller)"
+
+  - patch: |
+      - op: add
+        path: /spec/template/spec/tolerations
+        value: { "key": "node-role.kubernetes.io/control-plane", "operator": "Exists", "effect": "NoSchedule" }
+    target:
+      kind: Deployment
  
