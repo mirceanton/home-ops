@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kustomize-controller
+  namespace: flux-system
 spec:
   template:
     spec:
@@ -14,6 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: helm-controller
+  namespace: flux-system
 spec:
   template:
     spec:
@@ -25,6 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: notification-controller
+  namespace: flux-system
 spec:
   template:
     spec:
@@ -36,6 +39,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: source-controller
+  namespace: flux-system
 spec:
   template:
     spec:
