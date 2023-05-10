@@ -21,6 +21,9 @@ spec:
       ingressClassName: nginx
       host: longhorn.mkc.home.mirceanton.com
 
+    defaultSettings:
+      createDefaultDiskLabeledNodes: true
+
     longhornManager:
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
