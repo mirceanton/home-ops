@@ -9,20 +9,12 @@ resources:
 - repositories/rancher-stable.yaml
 
 patches:
-  # - patch: |
-  #       op: add
-  #       path: /spec/template/spec/nodeSelector
-  #       value: "{node-role.kubernetes.io/control-plane: }"
-  #   target:
-  #     kind: Deployment
-
   - patch: |
-      - op: add
-        path: /spec/template/spec/tolerations
-        value: 
-          key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
+      spec:
+        template:
+          spec:
+            nodeSelector:
+              node-role.kubernetes.io/control-plane:
     target:
       kind: Deployment
  
