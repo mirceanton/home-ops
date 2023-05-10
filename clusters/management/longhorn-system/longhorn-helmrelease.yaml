@@ -29,6 +29,15 @@ spec:
           operator: Exists
           effect: NoSchedule
 
+    longhornDriver:
+      replicas: 1
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+
     longhornUI:
       replicas: 1
       nodeSelector:
