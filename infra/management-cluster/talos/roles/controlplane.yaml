@@ -7,6 +7,3 @@ machine:
       - interface: eth0
         vip:
           ip: 10.0.10.10
-
-  nodeLabels:
-    node.longhorn.io/create-default-disk: true
