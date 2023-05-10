@@ -1,0 +1,27 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: rancher
+  namespace: cattle-system
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: rancher
+      version: 
+      sourceRef:
+        kind: HelmRepository
+        name: rancher-stable
+        namespace: flux-system
+      interval: 1m
+  values:
+    hostname: rancher.mkc.home.mirceanton.com
+    bootstrapPassword: test123
+    replicas: 3
+    ingress:
+      ingressClassName: nginx
+    global:
+      cattle:
+        psp:
+          enabled: false
