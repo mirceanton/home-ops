@@ -12,7 +12,7 @@ patches:
   - patch: |
         op: add
         path: /spec/template/spec/nodeSelector
-        value: { "node-role.kubernetes.io/control-plane": null }
+        value: { "node-role.kubernetes.io/control-plane": "" }
     target:
       kind: Deployment
       name: "(kustomize-controller|helm-controller|notification-controller|source-controller)"
