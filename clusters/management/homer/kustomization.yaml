@@ -5,6 +5,7 @@ configMapGenerator:
 - files:
   - config/config.yaml
   name: homer-configmap
+  namespace: homer-dashboard
 
 resources:
 - manifests/homer-namespace.yaml
