@@ -52,8 +52,6 @@ machine:
         image: ghcr.io/siderolabs/installer:v1.4.2
         bootloader: true
         wipe: false
-        extensions:
-            - image: ghcr.io/siderolabs/iscsi-tools:v0.1.4
     # Used to configure the machine's container image registry mirrors.
     registries: {}
     # Features describe individual Talos features that can be switched on or off.
@@ -98,9 +96,7 @@ cluster:
             - 10.96.0.0/12
         # The CNI used.
         cni:
-            name: custom
-            urls:
-                - https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calico.yaml
+            name: none
     # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
     token: ENC[AES256_GCM,data:UR8Y6uLS5AkoImbttDGKTvQXpaHF+ms=,iv:uMPtQg/PBrNwX4mJfDruAlawgczQm9u8uQtc85dRjSI=,tag:QWbbEKSs0VqSmv0iCrvgXg==,type:str]
     # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
@@ -180,8 +176,8 @@ sops:
             YW5nYU1TM0w4TDJzNGxOa0IyYUkvZTAKznwXPEYhQNiwPwNOqbC0ULBBuSoFE5iN
             BKT82jptApfYqDyJzwBtwWztmlRBt++1xm+C4pu7L34EYIK+TnkhoA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-10T11:15:25Z"
-    mac: ENC[AES256_GCM,data:6Jk0zztDoyA8djKHOpC/SoOtmZdBNU/2VjXZZs2GDaRUuupxlZwW8uAxu9WMqC+OgH/I3WLS3EheUBI12Ocgobhz6DhDTBiYmKXG+++KWoNUNwsiMsV4WWSEa5C/Rpb6W8zWc17Pe2ZfergZyRXXgXokHecHO3wPBCHOFEw/lfU=,iv:CJQ/J3JZn2f+LaDS710sqhLaOsUY2Whr3JcXvp2l2gM=,tag:MowSkgn1lgtZIyw4F1foFw==,type:str]
+    lastmodified: "2023-05-12T23:35:16Z"
+    mac: ENC[AES256_GCM,data:xYOg0xAZMx7Q65HtNpgjbaObBM/Lkgyuhki00y9pMsNOWvJ1kWI9mLBLkLZCxlbb3uPzY9hSI5Fhxqog6+wmaDNI1AgWL3ENpsPY3/Fj6D1FHJwUlQQYgA71FuySgnSc0t4yG3mWEYxgm8qBebYoJNOAXlDOU3ZY7SQj52r9Q6M=,iv:Oacs0nXEEft97sIEuiM+g08N3rXH/olWifg0oeSl1vY=,tag:savChUUQ75yyePHpT5GIxQ==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
