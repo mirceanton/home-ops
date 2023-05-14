@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
 - manifests/metallb.namespace.yaml
 - manifests/metallb.helm-release.yaml
-- manifests/metallb.ipaddresspool.yaml
-- manifests/metallb.l2advertisement.yaml
+# - manifests/metallb.ipaddresspool.yaml
+# - manifests/metallb.l2advertisement.yaml
