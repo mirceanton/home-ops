@@ -5,7 +5,7 @@ metadata:
   name: repositories
   namespace: flux-system
 spec:
-  interval: 15m
+  interval: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system

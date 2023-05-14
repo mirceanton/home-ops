@@ -5,7 +5,7 @@ metadata:
   name: core
   namespace: flux-system
 spec:
-  interval: 15m
+  interval: 5m
   dependsOn:
     - name: crds
     - name: repositories
