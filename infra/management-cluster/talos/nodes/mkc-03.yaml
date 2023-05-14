@@ -1,9 +1,9 @@
 ---
 machine:
   network:
-    hostname: blackpi
+    hostname: mkc-03
 
     interfaces:
       - interface: eth0
         addresses:
-          - 10.0.10.11/24
+          - 10.0.10.13/24

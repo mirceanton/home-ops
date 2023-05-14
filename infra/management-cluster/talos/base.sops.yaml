@@ -36,16 +36,13 @@ machine:
         extraHostEntries:
             - ip: 10.0.10.11
               aliases:
-                - blackpi
-            - ip: 10.0.10.16
+                - mkc-01
+            - ip: 10.0.10.12
               aliases:
-                - deadpi
-            - ip: 10.0.10.17
+                - mkc-02
+            - ip: 10.0.10.13
               aliases:
-                - thorpi
-            - ip: 10.0.10.18
-              aliases:
-                - mariopi
+                - mkc-03
     # Used to provide instructions for installations.
     install:
         disk: /dev/sda
@@ -74,6 +71,8 @@ machine:
             - time.cloudflare.com
 # Provides cluster specific configuration options.
 cluster:
+    # Allows running workloads on controlplane nodes
+    allowSchedulingOnControlPlanes: true
     # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
     id: ENC[AES256_GCM,data:/BOOP3OlqpaOGCuPtjrU22IYmxJk4ZPSdptfM0d+JSSx6DAG5N5Nb/kOOxk=,iv:uLRd6Cm+O3KPDM6nMac0Iv3q/wsZY0o058WjbDcu+IU=,tag:2nK3pSi0AYJtaQ4DjPVX3Q==,type:str]
     # Shared secret of cluster (base64 encoded random 32 bytes).
@@ -176,8 +175,8 @@ sops:
             YW5nYU1TM0w4TDJzNGxOa0IyYUkvZTAKznwXPEYhQNiwPwNOqbC0ULBBuSoFE5iN
             BKT82jptApfYqDyJzwBtwWztmlRBt++1xm+C4pu7L34EYIK+TnkhoA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-12T23:35:16Z"
-    mac: ENC[AES256_GCM,data:xYOg0xAZMx7Q65HtNpgjbaObBM/Lkgyuhki00y9pMsNOWvJ1kWI9mLBLkLZCxlbb3uPzY9hSI5Fhxqog6+wmaDNI1AgWL3ENpsPY3/Fj6D1FHJwUlQQYgA71FuySgnSc0t4yG3mWEYxgm8qBebYoJNOAXlDOU3ZY7SQj52r9Q6M=,iv:Oacs0nXEEft97sIEuiM+g08N3rXH/olWifg0oeSl1vY=,tag:savChUUQ75yyePHpT5GIxQ==,type:str]
+    lastmodified: "2023-05-14T12:34:06Z"
+    mac: ENC[AES256_GCM,data:eihI+PY2oy1LukMjP0Ol3WL1T49KDpLkSJOLcILuJ3YIPLZd5h8yCXjFwVIObtKziKgDXl9nNUFTJ/aW9qRb9e8lJANMzjtDwh3TxqEfhAGDx7Re9ElREUBjni6lI/lW3Pa/ErX1SDYrokiMl23LNgAdLkZJ5wZnw4khF6ipXck=,iv:pSbicjQjV6YCBQuVDgyC206vPDLO+6RD7h4zXJgUz6o=,tag:GLasI34tfMPapjw5LX5nZA==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3

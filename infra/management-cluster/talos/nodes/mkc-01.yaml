@@ -1,9 +1,9 @@
 ---
 machine:
   network:
-    hostname: thorpi
+    hostname: mkc-01
 
     interfaces:
       - interface: eth0
         addresses:
-          - 10.0.10.17/24
+          - 10.0.10.11/24

@@ -30,16 +30,14 @@ tasks:
   talos:apply:
     dir: talos
     deps: [ sops:decrypt ]
-    preconditions:
+    preconditions: # make sure the nodes are accessible and have not been bootstrapped yet
       - talosctl disks --nodes 10.0.10.11 --insecure > /dev/null
-      - talosctl disks --nodes 10.0.10.16 --insecure > /dev/null
-      - talosctl disks --nodes 10.0.10.17 --insecure > /dev/null
-      - talosctl disks --nodes 10.0.10.18 --insecure > /dev/null
+      - talosctl disks --nodes 10.0.10.12 --insecure > /dev/null
+      - talosctl disks --nodes 10.0.10.13 --insecure > /dev/null
     cmds:
-      - talosctl apply --nodes 10.0.10.11 --insecure --file base.yaml --config-patch @nodes/blackpi.yaml --config-patch @roles/controlplane.yaml
-      - talosctl apply --nodes 10.0.10.16 --insecure --file base.yaml --config-patch @nodes/deadpi.yaml --config-patch @roles/worker.yaml
-      - talosctl apply --nodes 10.0.10.18 --insecure --file base.yaml --config-patch @nodes/mariopi.yaml --config-patch @roles/worker.yaml
-      - talosctl apply --nodes 10.0.10.17 --insecure --file base.yaml --config-patch @nodes/thorpi.yaml --config-patch @roles/worker.yaml
+      - talosctl apply --nodes 10.0.10.11 --insecure --file base.yaml --config-patch @nodes/mkc-01.yaml --config-patch @roles/controlplane.yaml
+      - talosctl apply --nodes 10.0.10.12 --insecure --file base.yaml --config-patch @nodes/mkc-02.yaml --config-patch @roles/controlplane.yaml
+      - talosctl apply --nodes 10.0.10.13 --insecure --file base.yaml --config-patch @nodes/mkc-03.yaml --config-patch @roles/controlplane.yaml
 
   talos:bootstrap:
     dir: talos
@@ -49,12 +47,11 @@ tasks:
   talos:unattended:
     dir: talos
     cmds:
-      - task: talos:apply
-      - task: import:talosconfig
-      - sleep 10
-      - task: talos:bootstrap
-      - sleep 10
-      - task: import:kubeconfig
+      - task: talos:apply         # apply the machine configs to the machines
+      - sleep 90                  # wait for the machines to boot back up
+      - task: import:talosconfig  # import the talosconfig to run talosctl commands
+      - task: talos:bootstrap     # bootstrap kubernetes on the cluster
+      - task: import:kubeconfig   # import the kubeconfig for kubectl commands
 
   import:talosconfig:
     cmds: 
