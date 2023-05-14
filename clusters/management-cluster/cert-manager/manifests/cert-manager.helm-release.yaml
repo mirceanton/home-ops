@@ -6,6 +6,7 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 15m
+  timeout: 30m
   chart:
     spec:
       chart: cert-manager
