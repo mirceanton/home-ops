@@ -13,3 +13,6 @@ tasks:
 
   kubeutils:
     cmds: [ ansible-playbook kubeutils_install.yaml ]
+
+  flux:
+    cmds: [ ansible-playbook flux_install.yaml ]
