@@ -5,7 +5,7 @@
   become: true
 
   vars:
-    flux_version: 0.41.2
+    flux_version: 2.0.0-rc.3
 
   tasks:
     - name: Get system architecture
