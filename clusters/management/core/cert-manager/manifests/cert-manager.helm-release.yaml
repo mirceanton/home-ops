@@ -7,6 +7,8 @@ metadata:
 spec:
   interval: 15m
   timeout: 30m
+  install:
+    retries: 3
   chart:
     spec:
       chart: cert-manager

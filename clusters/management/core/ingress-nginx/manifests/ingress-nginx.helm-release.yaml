@@ -7,6 +7,8 @@ metadata:
 spec:
   interval: 5m
   timeout: 30m
+  install:
+    retries: 3
   chart:
     spec:
       chart: ingress-nginx
