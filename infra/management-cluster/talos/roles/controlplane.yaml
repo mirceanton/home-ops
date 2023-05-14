@@ -1,0 +1,9 @@
+---
+machine:
+  type: controlplane
+
+  network:
+    interfaces:
+      - interface: eth0
+        vip:
+          ip: 10.0.10.10
