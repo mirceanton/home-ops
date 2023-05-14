@@ -5,9 +5,10 @@ metadata:
   name: core
   namespace: flux-system
 spec:
-  interval: 1m 
+  interval: 5m 
   dependsOn:
     - name: crds
+    - name: repositories
   sourceRef:
     kind: GitRepository
     name: flux-system
