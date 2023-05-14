@@ -2,10 +2,89 @@
 version: '3'
 
 includes:
+# =================================================================================================
+# TOOLING
+# =================================================================================================
   ansible:
     taskfile: ansible/.taskfile.yaml
     dir: ansible/
 
-  mkc:
-    taskfile: infra/management-cluster/.taskfile.yaml
-    dir: infra/management-cluster/
+tasks:
+# =================================================================================================
+# MANAGEMENT CLUSTER - SOPS
+# =================================================================================================
+  mkc:sops:encrypt:
+    dir: infra/management-cluster
+    cmds:
+      - sops --encrypt talos/base.yaml > talos/base.sops.yaml
+      - sops --encrypt talos/secrets.yaml > talos/secrets.sops.yaml
+      - sops --encrypt talos/talosconfig.yaml > talos/talosconfig.sops.yaml
+
+  mkc:sops:decrypt:
+    dir: infra/management-cluster
+    cmds:
+      - sops --decrypt talos/base.sops.yaml > talos/base.yaml
+      - sops --decrypt talos/secrets.sops.yaml > talos/secrets.yaml
+      - sops --decrypt talos/talosconfig.sops.yaml > talos/talosconfig.yaml
+
+  mkc:sops:edit:talosconfig:
+    dir: infra/management-cluster
+    cmds: [ sops talos/talosconfig.sops.yaml ]
+    env:
+      EDITOR: code --wait
+
+  mkc:sops:edit:secrets:
+    dir: infra/management-cluster
+    cmds: [ sops talos/secrets.sops.yaml ]
+    env:
+      EDITOR: code --wait
+
+  mkc:sops:edit:base:
+    dir: infra/management-cluster
+    cmds: [ sops talos/base.sops.yaml ]
+    env:
+      EDITOR: code --wait
+
+# =================================================================================================
+# MANAGEMENT CLUSTER - TALOS
+# =================================================================================================
+  mkc:talos:apply:
+    dir: infra/management-cluster/talos
+    deps: [ mkc:sops:decrypt ]
+    preconditions:
+      # make sure the nodes are accessible and have not been bootstrapped yet
+      - talosctl disks --nodes 10.0.10.11 --insecure > /dev/null
+      - talosctl disks --nodes 10.0.10.12 --insecure > /dev/null
+      - talosctl disks --nodes 10.0.10.13 --insecure > /dev/null
+    cmds:
+      - talosctl apply --nodes 10.0.10.11 --insecure --file base.yaml --config-patch @nodes/mkc-01.yaml --config-patch @roles/controlplane.yaml
+      - talosctl apply --nodes 10.0.10.12 --insecure --file base.yaml --config-patch @nodes/mkc-02.yaml --config-patch @roles/controlplane.yaml
+      - talosctl apply --nodes 10.0.10.13 --insecure --file base.yaml --config-patch @nodes/mkc-03.yaml --config-patch @roles/controlplane.yaml
+
+  mkc:talos:bootstrap:
+    dir: infra/management-cluster/talos
+    deps: [ mkc:talos:import:config ]
+    cmds: [ talosctl bootstrap ]
+
+  mkc:talos:import:config:
+    dir: infra/management-cluster
+    deps: [ mkc:sops:decrypt ]
+    cmds: 
+      - mkdir -p ~/.talos
+      - sops --decrypt talos/talosconfig.sops.yaml > ~/.talos/config
+
+# =================================================================================================
+# MANAGEMENT CLUSTER - K8S
+# =================================================================================================
+  mkc:k8s:bootstrap:
+    deps: [ mkc:talos:import:config]
+    cmds: [ talosctl bootstrap ]
+
+  mkc:k8s:import:config:
+    deps: [ mkc:talos:import:config]
+    cmds: [ talosctl kubeconfig ]
+
+  mkc:flux:bootstrap:
+    deps: [ mkc:k8s:import:config ]
+    cmds:
+      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management-cluster --personal
