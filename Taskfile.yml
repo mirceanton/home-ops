@@ -82,7 +82,7 @@ tasks:
   mkc:flux:bootstrap:
     deps: [ mkc:k8s:import:config ]
     cmds:
-      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management-cluster --personal
+      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --personal
 
   mkc:bootstrap:
     cmds:
