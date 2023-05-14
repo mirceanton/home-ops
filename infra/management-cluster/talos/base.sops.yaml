@@ -97,7 +97,7 @@ cluster:
         cni:
             name: custom
             urls:
-                - https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calico.yaml -O
+                - https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calico.yaml
     # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
     token: ENC[AES256_GCM,data:UR8Y6uLS5AkoImbttDGKTvQXpaHF+ms=,iv:uMPtQg/PBrNwX4mJfDruAlawgczQm9u8uQtc85dRjSI=,tag:QWbbEKSs0VqSmv0iCrvgXg==,type:str]
     # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
@@ -177,8 +177,8 @@ sops:
             YW5nYU1TM0w4TDJzNGxOa0IyYUkvZTAKznwXPEYhQNiwPwNOqbC0ULBBuSoFE5iN
             BKT82jptApfYqDyJzwBtwWztmlRBt++1xm+C4pu7L34EYIK+TnkhoA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-14T15:19:00Z"
-    mac: ENC[AES256_GCM,data:CD64mwlCkZcLYFJdjoJBoTVFHWV1ZFSoYjo78LsDRydrNPEN+PMcfhvETWJ2xzYXpQd5fNnptEZ7+OdK9AP4fBroivjPOi7n9bJ2VsVQgHd0rHQEoa5V20GxCM4TLSuoCiLGtkhqHDcuDLg+nzz69okijgAWpri0RQgHEsYD8rQ=,iv:q1qxjk6YjNYbsntRSkl2GLW0tYO3vk0Yt5H/lidUAW8=,tag:ePZHfovei89FxsTIHSJ3Cg==,type:str]
+    lastmodified: "2023-05-14T15:31:31Z"
+    mac: ENC[AES256_GCM,data:JkdDB/Xrir6q1I+eiev3zl/Mn6F91hi/CluZJTvz0FK9+t4smXfuJcWUKXOUUl2T7Xk2Ulm5GG//DNMqJUF/Kz3BItTDeTFR2AXHZvJ0tbINDQFzRY6nFoRFRnXRG4bmPriGraxPwaQfZSGxegfM1b9bQ1jjF7lRaV4flCwnSoE=,iv:wYgUqleNhOv1BAyVwemqPFsjMgeK/Co29yCozcKiZL0=,tag:HFQfPV7EL1JxIBA43uQUlg==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
