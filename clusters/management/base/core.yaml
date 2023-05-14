@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: core
+  namespace: flux-system
+spec:
+  interval: 1m 
+  dependsOn:
+    - name: crds
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/management/core
+  prune: true
+  wait: true
+  timeout: 2m0s
