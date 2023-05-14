@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- manifests/gotk-components.yaml
-- manifests/gotk-sync.yaml
-- repositories/ingress-nginx.helm-repo.yaml
-- repositories/jetstack.helm-repo.yaml
-- repositories/metallb.helm-repo.yaml
-- repositories/rancher-stable.helm-repo.yaml
