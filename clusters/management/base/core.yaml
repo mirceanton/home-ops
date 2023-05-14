@@ -5,7 +5,7 @@ metadata:
   name: core
   namespace: flux-system
 spec:
-  interval: 5m 
+  interval: 15m
   dependsOn:
     - name: crds
     - name: repositories
@@ -15,4 +15,4 @@ spec:
   path: ./clusters/management/core
   prune: true
   wait: true
-  timeout: 2m0s
+  timeout: 10m0s

@@ -5,11 +5,11 @@ metadata:
   name: repositories
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 15m
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./clusters/management/repositories
   prune: true
   wait: true
-  timeout: 2m0s
+  timeout: 10m0s

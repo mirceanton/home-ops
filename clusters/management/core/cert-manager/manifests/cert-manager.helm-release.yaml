@@ -6,7 +6,7 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 15m
-  timeout: 30m
+  timeout: 10m
   install:
     retries: 3
   chart:

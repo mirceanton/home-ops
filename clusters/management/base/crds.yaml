@@ -5,11 +5,11 @@ metadata:
   name: crds
   namespace: flux-system
 spec:
-  interval: 5m
+  interval: 15m
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./clusters/management/crds
   prune: true
   wait: true
-  timeout: 2m0s
+  timeout: 10m0s
