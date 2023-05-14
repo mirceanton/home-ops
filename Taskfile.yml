@@ -119,13 +119,7 @@ tasks:
     deps: [ mkc:k8s:import:config ]
     silent: true
     cmds:
-      - echo "Waiting for the kubernetes endpoint to be ready..."
-      - while ! kubectl get nodes > /dev/null ; do sleep 1; done
-      - echo "Waiting for the default resources to be ready..."
-      - while kubectl get nodes | grep -q "No resources found"; do sleep 1; done
-      - echo "Waiting for the kubernetes nodes to be ready..."
-      - kubectl wait --for=condition=Ready nodes --all
-
+      - while ! kubectl wait --for=condition=Ready nodes --all 2> /dev/null; do sleep 1; done
   mkc:k8s:import:config:
     deps: [ mkc:talos:import:config]
     cmds: [ talosctl kubeconfig --force ]
