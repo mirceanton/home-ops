@@ -82,10 +82,7 @@ tasks:
     silent: true
     cmds:
       - echo "Waiting for node {{.NODE_IP}} to be ready..."
-      - |
-        while ! talosctl dmesg -n {{.NODE_IP}} 2> /dev/null | grep -q "etcd is waiting to join the cluster"; do
-          sleep 1;
-        done
+      - while ! talosctl dmesg -n {{.NODE_IP}} 2> /dev/null | grep -q "etcd is waiting to join the cluster"; do sleep 1; done
 
   mkc:talos:wait:
     desk: After applying the bootstrap command, wait for the nodes to be ready.
@@ -119,7 +116,9 @@ tasks:
     deps: [ mkc:k8s:import:config ]
     silent: true
     cmds:
-      - while ! kubectl wait --for=condition=Ready nodes --all 2> /dev/null; do sleep 1; done
+      - echo "Waiting for the nodes to be ready..."
+      - while ! kubectl wait --for=condition=Ready nodes --all --timeout 10m 2> /dev/null; do sleep 1; done
+
   mkc:k8s:import:config:
     deps: [ mkc:talos:import:config]
     cmds: [ talosctl kubeconfig --force ]
@@ -132,6 +131,13 @@ tasks:
     cmds:
       - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --personal
 
+  mkc:flux:wait:
+    deps: [ mkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - echo "Waiting for Flux to synchronize all Helm Releases..."
+      - kubectl wait --for=condition=Ready helmreleases.helm.toolkit.fluxcd.io --all -A --timeout 30m
+
 # =================================================================================================
 # MANAGEMENT CLUSTER
 # =================================================================================================
@@ -142,3 +148,4 @@ tasks:
       - task: mkc:k8s:bootstrap
       - task: mkc:k8s:wait
       - task: mkc:flux:bootstrap
+      - task: mkc:flux:waitear
