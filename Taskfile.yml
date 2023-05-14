@@ -22,6 +22,7 @@ tasks:
 
   mkc:sops:decrypt:
     dir: infra/management-cluster
+    run: once
     cmds:
       - sops --decrypt talos/base.sops.yaml > talos/base.yaml
       - sops --decrypt talos/secrets.sops.yaml > talos/secrets.yaml
@@ -100,6 +101,7 @@ tasks:
 
   mkc:talos:import:config:
     dir: infra/management-cluster
+    run: once
     deps: [ mkc:sops:decrypt ]
     cmds: 
       - mkdir -p ~/.talos
@@ -112,14 +114,56 @@ tasks:
     deps: [ mkc:talos:import:config ]
     cmds: [ talosctl bootstrap ]
 
-  mkc:k8s:wait:
+  mkc:k8s:wait:endpoint:
+    deps: [ mkc:k8s:import:config ]
+    silent: true
+    internal: true
+    cmds:
+      - echo "Waiting for the Kubernetes Endpoint to be Ready..."
+      - while ! kubectl get pods 2> /dev/null; do sleep 1; done
+
+  mkc:k8s:wait:nodes:
     deps: [ mkc:k8s:import:config ]
     silent: true
     cmds:
       - echo "Waiting for the Kubernetes Nodes to be Ready..."
       - while ! kubectl wait --for=condition=Ready nodes --all --timeout 10m 2> /dev/null; do sleep 1; done
 
+  mkc:k8s:wait:kube-service:
+    deps: [ mkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - echo "Waiting for service to be ready - {{.SERVICE}}..."
+      - while [ "$(kubectl get pods -n kube-system | grep -c "{{.SERVICE}}")" -ne {{.REPLICAS | default 3}} ]; do sleep 1; done
+
+  mkc:k8s:wait:
+    deps: [ mkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - task: mkc:k8s:wait:endpoint
+      - task: mkc:k8s:wait:nodes
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-apiserver
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-controller-manager
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-proxy
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-scheduler
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: coredns
+          REPLICAS: 2
+      - task: mkc:k8s:wait:kube-service
+        vars:
+          SERVICE: calico-node
+
   mkc:k8s:import:config:
+    run: once
     deps: [ mkc:talos:import:config]
     cmds: [ talosctl kubeconfig --force ]
 
@@ -129,7 +173,7 @@ tasks:
   mkc:flux:bootstrap:
     deps: [ mkc:k8s:import:config ]
     cmds:
-      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --personal
+      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --personal --timeout=15m
 
   mkc:flux:wait:
     deps: [ mkc:k8s:import:config ]
@@ -143,9 +187,9 @@ tasks:
 # =================================================================================================
   mkc:bootstrap:
     cmds:
-      - task: mkc:talos:bootstrap
-      - task: mkc:talos:wait
-      - task: mkc:k8s:bootstrap
-      - task: mkc:k8s:wait
-      - task: mkc:flux:bootstrap
+      # - task: mkc:talos:bootstrap
+      # - task: mkc:talos:wait
+      # - task: mkc:k8s:bootstrap
+      # - task: mkc:k8s:wait
+      # - task: mkc:flux:bootstrap
       - task: mkc:flux:wait
