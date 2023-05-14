@@ -135,8 +135,8 @@ tasks:
     deps: [ mkc:k8s:import:config ]
     silent: true
     cmds:
-      - echo "Waiting for Flux to synchronize all Helm Releases..."
-      - while ! kubectl wait --for=condition=Ready helmreleases.helm.toolkit.fluxcd.io -A  --all --timeout 10m 2> /dev/null; do sleep 1; done
+      - echo "Waiting for Flux to synchronize all Kustomizations..."
+      - while ! kubectl wait --for=condition=Ready kustomizations.kustomize.toolkit.fluxcd.io -A  --all --timeout 10m 2> /dev/null; do sleep 1; done
 
 # =================================================================================================
 # MANAGEMENT CLUSTER
