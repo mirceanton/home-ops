@@ -48,7 +48,7 @@ tasks:
 # =================================================================================================
 # MANAGEMENT CLUSTER - TALOS
 # =================================================================================================
-  mkc:talos:apply:
+  mkc:talos:bootstrap:
     dir: infra/management-cluster/talos
     deps: [ mkc:sops:decrypt ]
     preconditions:
@@ -60,11 +60,6 @@ tasks:
       - talosctl apply --nodes 10.0.10.11 --insecure --file base.yaml --config-patch @nodes/mkc-01.yaml --config-patch @roles/controlplane.yaml
       - talosctl apply --nodes 10.0.10.12 --insecure --file base.yaml --config-patch @nodes/mkc-02.yaml --config-patch @roles/controlplane.yaml
       - talosctl apply --nodes 10.0.10.13 --insecure --file base.yaml --config-patch @nodes/mkc-03.yaml --config-patch @roles/controlplane.yaml
-
-  mkc:talos:bootstrap:
-    dir: infra/management-cluster/talos
-    deps: [ mkc:talos:import:config ]
-    cmds: [ talosctl bootstrap ]
 
   mkc:talos:import:config:
     dir: infra/management-cluster
@@ -88,3 +83,11 @@ tasks:
     deps: [ mkc:k8s:import:config ]
     cmds:
       - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management-cluster --personal
+
+  mkc:bootstrap:
+    cmds:
+      - task: mkc:talos:bootstrap
+      - sleep 60
+      - task: mkc:k8s:bootstrap
+      - sleep 60
+      - task: mkc:flux:bootstrap
