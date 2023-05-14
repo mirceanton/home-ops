@@ -1,0 +1,17 @@
+---
+version: 3
+
+includes:
+  tools:
+    taskfile: tools/.taskfile.yaml
+    dir: tools/
+
+tasks:
+  install:
+    cmds:
+      - sudo apt install python3-pip
+      - pip3 install ansible
+
+  galaxy:
+    cmds:
+      - ansible-galaxy install -r requirements.yaml
