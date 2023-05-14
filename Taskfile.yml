@@ -116,7 +116,7 @@ tasks:
     deps: [ mkc:k8s:import:config ]
     silent: true
     cmds:
-      - echo "Waiting for the nodes to be ready..."
+      - echo "Waiting for the Kubernetes Nodes to be Ready..."
       - while ! kubectl wait --for=condition=Ready nodes --all --timeout 10m 2> /dev/null; do sleep 1; done
 
   mkc:k8s:import:config:
@@ -136,16 +136,16 @@ tasks:
     silent: true
     cmds:
       - echo "Waiting for Flux to synchronize all Helm Releases..."
-      - kubectl wait --for=condition=Ready helmreleases.helm.toolkit.fluxcd.io --all -A --timeout 30m
+      - while ! kubectl wait --for=condition=Ready helmreleases.helm.toolkit.fluxcd.io -A  --all --timeout 10m 2> /dev/null; do sleep 1; done
 
 # =================================================================================================
 # MANAGEMENT CLUSTER
 # =================================================================================================
   mkc:bootstrap:
     cmds:
-      - task: mkc:talos:bootstrap
-      - task: mkc:talos:wait
-      - task: mkc:k8s:bootstrap
-      - task: mkc:k8s:wait
-      - task: mkc:flux:bootstrap
-      - task: mkc:flux:waitear
+      # - task: mkc:talos:bootstrap
+      # - task: mkc:talos:wait
+      # - task: mkc:k8s:bootstrap
+      # - task: mkc:k8s:wait
+      # - task: mkc:flux:bootstrap
+      - task: mkc:flux:wait
