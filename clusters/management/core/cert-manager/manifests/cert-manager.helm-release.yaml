@@ -6,9 +6,15 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 15m
-  timeout: 10m
   install:
-    retries: 3
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   chart:
     spec:
       chart: cert-manager

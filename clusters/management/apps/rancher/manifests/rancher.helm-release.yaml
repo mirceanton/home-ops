@@ -5,10 +5,16 @@ metadata:
   name: rancher
   namespace: cattle-system
 spec:
-  interval: 5m
-  timeout: 30m
+  interval: 15m
   install:
-    retries: 3
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   chart:
     spec:
       chart: rancher

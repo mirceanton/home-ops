@@ -5,10 +5,16 @@ metadata:
   name: metallb
   namespace: metallb-system
 spec:
-  interval: 5m
-  timeout: 10m
+  interval: 15m
   install:
-    retries: 3
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   chart:
     spec:
       chart: metallb
