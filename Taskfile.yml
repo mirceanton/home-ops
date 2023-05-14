@@ -187,9 +187,9 @@ tasks:
 # =================================================================================================
   mkc:bootstrap:
     cmds:
-      # - task: mkc:talos:bootstrap
-      # - task: mkc:talos:wait
-      # - task: mkc:k8s:bootstrap
-      # - task: mkc:k8s:wait
-      # - task: mkc:flux:bootstrap
+      - task: mkc:talos:bootstrap
+      - task: mkc:talos:wait
+      - task: mkc:k8s:bootstrap
+      - task: mkc:k8s:wait
+      - task: mkc:flux:bootstrap
       - task: mkc:flux:wait
