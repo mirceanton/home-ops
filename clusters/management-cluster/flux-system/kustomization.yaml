@@ -7,4 +7,3 @@ resources:
 - repositories/jetstack.helm-repo.yaml
 - repositories/metallb.helm-repo.yaml
 - repositories/rancher-stable.helm-repo.yaml
-- repositories/longhorn.helm-repo.yaml
