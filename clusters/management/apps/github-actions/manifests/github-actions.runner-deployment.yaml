@@ -5,7 +5,7 @@ metadata:
   name: amir-homelab-actions
   namespace: github-actions
 spec:
-  replicas: 1
+  replicas: 5
   template:
     spec:
       repository: mirceanton/amir-hlb
