@@ -1,0 +1,8 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- manifests/github-actions.namespace.yaml
+- manifests/github-actions.secret.sops.yaml   # SOPS
+- manifests/github-actions.helm-release.yaml
+- manifests/github-actions.runner-deployment.yaml
