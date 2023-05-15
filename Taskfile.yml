@@ -186,6 +186,8 @@ tasks:
       - echo "Waiting for Flux to synchronize all Kustomizations..."
       - while ! kubectl wait --for=condition=Ready kustomizations.kustomize.toolkit.fluxcd.io -A  --all --timeout 10m 2> /dev/null; do sleep 1; done
 
+  mkc:flux:reconcile: flux reconcile source git flux-system
+
 # =================================================================================================
 # MANAGEMENT CLUSTER
 # =================================================================================================
