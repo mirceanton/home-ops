@@ -1,24 +1,18 @@
 ---
----
 # Homepage configuration
 # See https://fontawesome.com/v5/search for icons options
 
-title: "Homelab"
-subtitle: "amir"
-documentTitle: "Welcome"
+title: "Admin Dashboard"
+subtitle: "Amir Homelab"
+documentTitle: "Amir | Admin Dashboard"
 
-logo: "assets/logo.png"
-icon: "fas fa-skull-crossbones"
+# logo: "assets/logo.png"
+# icon: "assets/logo.png"
 
 header: true # Set to false to hide the header
+footer: ""
 
 columns: "3" # "auto" or number (must be a factor of 12: 1, 2, 3, 4, 6, 12)
-connectivityCheck: true # whether you want to display a message when the apps are not accessible anymore (VPN disconnected for example).
-                        # You should set it to true when using an authentication proxy, it also reloads the page when a redirection is detected when checking connectivity.
-
-# Optional: Proxy / hosting option
-proxy:
-  useCredentials: false # send cookies & authorization headers when fetching service specific data. Set to `true` if you use an authentication proxy. Can be overrided on service level. 
 
 # Set the default layout and color scheme
 defaults:
@@ -32,11 +26,55 @@ links:
     icon: "fab fa-github"
     url: "https://github.com/mirceanton/amir-hlb"
 
+  - name: "Docs"
+    icon: "fas fa-book"
+    url: "https://github.com/mirceanton/amir-hlb" # fixme
+
 # Services
 # First level array represents a group.
 # Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
 services:
-  - name: "Application"
-    icon: "fas fa-code-branch"
-    logo: "assets/azure.png"
-    items: []
+  - name: "Networking"
+    icon: "fas fa-wifi"
+    items:
+      - name: "OPNsense"
+        logo: "assets/tools/opnsense.png"
+        subtitle: "Router // Firewall"
+        url: "https://10.0.10.1"
+        target: "_blank"
+
+      - name: "Core Switch"
+        logo: "assets/tools/cisco.png"
+        subtitle: "Cisco SG350-52"
+        url: "https://10.0.10.2"
+        target: "_blank"
+
+  - name: "Virtualization"
+    icon: "fas fa-server"
+    items:
+      - name: "Bingus"
+        logo: "assets/tools/proxmox.png"
+        subtitle: "Proxmox VE"
+        url: "https://10.0.10.50:8006"
+        target: "_blank"
+
+      - name: "Kubernetes Clusters"
+        logo: "assets/tools/rancher.png"
+        subtitle: "Rancher Dashboard"
+        url: "https://rancher.admin.home.mirceanton.com"
+        target: "_blank"
+
+  - name: "Storage"
+    icon: "fas fa-boxes-stacked"
+    items:
+      - name: "Storage Server"
+        logo: "assets/tools/truenas.png"
+        subtitle: "TrueNAS Core"
+        url: "https://10.0.10.245"
+        target: "_blank"
+
+      - name: "Backup Server"
+        logo: "assets/tools/truenas.png"
+        subtitle: "TrueNAS Core"
+        url: "https://10.0.10.246"
+        target: "_blank"

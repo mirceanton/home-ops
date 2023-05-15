@@ -8,6 +8,11 @@ configMapGenerator:
   name: homer-configmap
   namespace: homer-dashboard
 
+- files:
+  - config/icon-download.sh
+  name: homer-asset-downloader-script
+  namespace: homer-dashboard
+
 resources:
 - manifests/homer.namespace.yaml
 - manifests/homer.deployment.yaml

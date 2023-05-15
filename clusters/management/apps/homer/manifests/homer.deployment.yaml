@@ -24,14 +24,20 @@ spec:
       - name: config-volume
         configMap:
           name: homer-configmap
+      - name: script-volume
+        configMap:
+          name: homer-asset-downloader-script
 
       initContainers:
       - name: homer-icons-downloader
         image: alpine
-        command: ['sh', '-c', 'apk add git && git clone https://github.com/NX211/homer-icons && mv homer-icons/png/* /icons/']
+        command: [ 'sh', '/scripts/icon-download.sh' ]
         volumeMounts:
         - mountPath: /icons
           name: homer-icons-volume
+        - mountPath: /scripts/icon-download.sh
+          subPath: icon-download.sh
+          name: script-volume
 
       containers:
       - name: homer
