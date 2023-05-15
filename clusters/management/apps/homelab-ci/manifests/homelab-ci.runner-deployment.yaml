@@ -2,10 +2,9 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: amir-homelab-actions
+  name: homelab-ci-runner-deployment
   namespace: homelab-ci
 spec:
-  replicas: 5
   template:
     spec:
       repository: mirceanton/amir-hlb
