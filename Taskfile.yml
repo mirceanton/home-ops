@@ -168,12 +168,20 @@ tasks:
     cmds: [ talosctl kubeconfig --force ]
 
 # =================================================================================================
-# MANAGEMENT CLUSTER - FLUXCD
+# MANAGEMENT CLUSTER - FLUX CD
 # =================================================================================================
   mkc:flux:bootstrap:
     deps: [ mkc:k8s:import:config ]
     cmds:
-      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --personal --timeout=15m
+      - |
+        flux bootstrap github \
+          --owner mirceanton \
+          --repository amir-hlb \
+          --branch clusters/mkc \
+          --path clusters/management/base \
+          --network-policy=false \
+          --timeout=15m \
+          --personal
 
   mkc:flux:wait:
     deps: [ mkc:k8s:import:config ]
