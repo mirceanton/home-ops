@@ -36,6 +36,9 @@ spec:
       containers:
       - name: homer
         image: b4bz/homer:v23.02.2
+        env:
+          - name: INIT_ASSETS
+            value: 0
         volumeMounts:
         - mountPath: /www/assets/
           name: homer-icons-volume
