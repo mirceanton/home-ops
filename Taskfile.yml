@@ -14,19 +14,20 @@ tasks:
 # MANAGEMENT CLUSTER - SOPS
 # =================================================================================================
   mkc:sops:encrypt:
-    dir: infra/management-cluster
-    cmds:
-      - sops --encrypt talos/base.yaml > talos/base.sops.yaml
-      - sops --encrypt talos/secrets.yaml > talos/secrets.sops.yaml
-      - sops --encrypt talos/talosconfig.yaml > talos/talosconfig.sops.yaml
-
-  mkc:sops:decrypt:
-    dir: infra/management-cluster
     run: once
     cmds:
-      - sops --decrypt talos/base.sops.yaml > talos/base.yaml
-      - sops --decrypt talos/secrets.sops.yaml > talos/secrets.yaml
-      - sops --decrypt talos/talosconfig.sops.yaml > talos/talosconfig.yaml
+      - sops --encrypt infra/management-cluster/talos/base.yaml > infra/management-cluster/talos/base.sops.yaml
+      - sops --encrypt infra/management-cluster/talos/secrets.yaml > infra/management-cluster/talos/secrets.sops.yaml
+      - sops --encrypt infra/management-cluster/talos/talosconfig.yaml > infra/management-cluster/talos/talosconfig.sops.yaml
+      - sops --encrypt clusters/management/apps/github-actions/manifests/github-actions.secret.yaml > clusters/management/apps/github-actions/manifests/github-actions.secret.sops.yaml
+
+  mkc:sops:decrypt:
+    run: once
+    cmds:
+      - sops --decrypt infra/management-cluster/talos/base.sops.yaml > infra/management-cluster/talos/base.yaml
+      - sops --decrypt infra/management-cluster/talos/secrets.sops.yaml > infra/management-cluster/talos/secrets.yaml
+      - sops --decrypt infra/management-cluster/talos/talosconfig.sops.yaml > infra/management-cluster/talos/talosconfig.yaml
+      - sops --decrypt clusters/management/apps/github-actions/manifests/github-actions.secret.sops.yaml > clusters/management/apps/github-actions/manifests/github-actions.secret.yaml
 
   mkc:sops:edit:talosconfig:
     dir: infra/management-cluster
