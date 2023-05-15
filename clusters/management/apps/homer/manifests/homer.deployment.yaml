@@ -36,12 +36,13 @@ spec:
       containers:
       - name: homer
         image: b4bz/homer:v23.02.2
+        tty: true
         env:
           - name: INIT_ASSETS
-            value: 0
+            value: "0"
         volumeMounts:
-        - mountPath: /www/assets/
+        - mountPath: /www/assets/png
           name: homer-icons-volume
-        - mountPath: /assets/config.yml
-          subPath: config.yml
+        - mountPath: /www/assets/config.yml
+          subPath: config.yaml
           name: config-volume
