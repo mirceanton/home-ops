@@ -1,6 +1,10 @@
 ---
 version: '3'
 
+env:
+  SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
+  EDITOR: code --wait
+
 includes:
 # =================================================================================================
 # TOOLING
@@ -19,7 +23,7 @@ tasks:
       - sops --encrypt infra/management-cluster/talos/base.yaml > infra/management-cluster/talos/base.sops.yaml
       - sops --encrypt infra/management-cluster/talos/secrets.yaml > infra/management-cluster/talos/secrets.sops.yaml
       - sops --encrypt infra/management-cluster/talos/talosconfig.yaml > infra/management-cluster/talos/talosconfig.sops.yaml
-      - sops --encrypt clusters/management/apps/github-actions/manifests/github-actions.secret.yaml > clusters/management/apps/github-actions/manifests/github-actions.secret.sops.yaml
+      - sops --encrypt clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.yaml > clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.sops.yaml
 
   mkc:sops:decrypt:
     run: once
@@ -27,25 +31,19 @@ tasks:
       - sops --decrypt infra/management-cluster/talos/base.sops.yaml > infra/management-cluster/talos/base.yaml
       - sops --decrypt infra/management-cluster/talos/secrets.sops.yaml > infra/management-cluster/talos/secrets.yaml
       - sops --decrypt infra/management-cluster/talos/talosconfig.sops.yaml > infra/management-cluster/talos/talosconfig.yaml
-      - sops --decrypt clusters/management/apps/github-actions/manifests/github-actions.secret.sops.yaml > clusters/management/apps/github-actions/manifests/github-actions.secret.yaml
+      - sops --decrypt clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.sops.yaml > clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.yaml
 
   mkc:sops:edit:talosconfig:
     dir: infra/management-cluster
     cmds: [ sops talos/talosconfig.sops.yaml ]
-    env:
-      EDITOR: code --wait
 
   mkc:sops:edit:secrets:
     dir: infra/management-cluster
     cmds: [ sops talos/secrets.sops.yaml ]
-    env:
-      EDITOR: code --wait
 
   mkc:sops:edit:base:
     dir: infra/management-cluster
     cmds: [ sops talos/base.sops.yaml ]
-    env:
-      EDITOR: code --wait
 
 # =================================================================================================
 # MANAGEMENT CLUSTER - TALOS
