@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: github-actions-runner-controller
-  namespace: github-actions
+  namespace: github-actions-system
 spec:
   interval: 15m
   install:
