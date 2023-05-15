@@ -2,12 +2,12 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
-  name: homelab-ci-runner-deployment-autoscaler
-  namespace: homelab-ci
+  name: ci-runner-deployment-autoscaler
+  namespace: ci
 spec:
   scaleTargetRef:
     kind: RunnerDeployment
-    name: homelab-ci-runner-deployment
+    name: ci-runner-deployment
   minReplicas: 0
   maxReplicas: 12
   metrics:

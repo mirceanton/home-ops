@@ -2,8 +2,8 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: homelab-ci-runner-deployment
-  namespace: homelab-ci
+  name: ci-runner-deployment
+  namespace: ci
 spec:
   template:
     spec:
