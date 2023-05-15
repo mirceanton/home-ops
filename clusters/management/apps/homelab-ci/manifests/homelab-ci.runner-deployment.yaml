@@ -3,7 +3,7 @@ apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
   name: amir-homelab-actions
-  namespace: github-actions
+  namespace: homelab-ci
 spec:
   replicas: 5
   template:
