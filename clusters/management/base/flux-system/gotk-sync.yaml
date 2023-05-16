@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: clusters/mkc
+    branch: main
   secretRef:
     name: flux-system
   url: ssh://git@github.com/mirceanton/amir-hlb

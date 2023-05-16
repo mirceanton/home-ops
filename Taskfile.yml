@@ -174,7 +174,7 @@ tasks:
     preconditions:
       - test -f ~/.config/sops/age/keys.txt
     cmds:
-      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch clusters/mkc --path clusters/management/base --network-policy=false --timeout=15m --personal
+      - flux bootstrap github --owner mirceanton --repository amir-hlb --branch main --path clusters/management/base --network-policy=false --timeout=15m --personal
       - kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/mike/.config/sops/age/keys.txt
 
   mkc:flux:wait:
