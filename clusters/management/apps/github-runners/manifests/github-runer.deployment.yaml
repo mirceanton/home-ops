@@ -2,8 +2,8 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: ci-runner-deployment
-  namespace: ci
+  name: gh-runner-deployment
+  namespace: gh-runners
 spec:
   template:
     spec:

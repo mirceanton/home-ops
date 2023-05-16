@@ -1,7 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- manifests/ci-runner.namespace.yaml
-- manifests/ci-runner.deployment.yaml
-- manifests/ci-runner.autoscaler.yaml
