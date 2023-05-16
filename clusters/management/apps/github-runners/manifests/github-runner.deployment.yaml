@@ -1,0 +1,10 @@
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: gh-runner-deployment
+  namespace: gh-runners
+spec:
+  template:
+    spec:
+      repository: mirceanton/amir-hlb

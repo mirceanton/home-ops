@@ -1,0 +1,45 @@
+---
+- name: Install Flux CLI
+  hosts: localhost
+  gather_facts: true
+  become: true
+
+  vars:
+    flux_version: 2.0.0-rc.3
+
+  tasks:
+    - name: Get system architecture
+      ansible.builtin.shell: dpkg --print-architecture
+      register: deb_architecture
+      changed_when: false
+
+    - name: "[DEBUG]: Show system architecture"
+      ansible.builtin.debug:
+        msg: "System architecture is: {{ deb_architecture.stdout }}"
+      when: debug | default(false)
+
+    - name: Build URLs from vars
+      ansible.builtin.set_fact:
+        flux_url: "https://github.com/fluxcd/flux2/releases/download/v{{ flux_version }}/flux_{{ flux_version }}_linux_{{ deb_architecture.stdout }}.tar.gz"
+
+    - name: "[DEBUG]: Show URLs"
+      ansible.builtin.debug:
+        msg:
+          - "Flux URL: {{ flux_url }}"
+      when: debug | default(false)
+
+    - name: Download and Install Flux CLI
+      ansible.builtin.include_role:
+        name: mirceanton.downloader
+      vars:
+        downloader_download_url: "{{ flux_url }}"
+        downloader_download_dest: "/tmp/flux_{{ flux_version }}_linux_{{ deb_architecture.stdout }}.tar.gz"
+        downloader_download_validate_certs: false
+        downloader_unarchive: true
+        downloader_executable_src: /tmp/flux
+        downloader_executable_dest: /usr/local/bin/flux
+
+    - name: Generate flux bash completion
+      ansible.builtin.shell: flux completion bash > /etc/bash_completion.d/flux
+      args:
+        creates: /etc/bash_completion.d/flux

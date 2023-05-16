@@ -9,8 +9,8 @@ includes:
 tasks:
   install:
     cmds:
-      - sudo apt install python3-pip
-      - pip3 install ansible
+      - sudo apt install python3-pip -y
+      - sudo pip3 install ansible
 
   galaxy:
     cmds:

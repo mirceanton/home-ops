@@ -16,7 +16,16 @@ Static DHCP reservations for the nodes as follows:
 2. Bootstrap the cluster
 
     ```bash
-    task mkc:talos:unattended
+    task mkc:talos:bootstrap
     ```
 
 3. Profit???
+
+## Workloads Deployed
+
+- MetalLB
+- Ingress NGINX
+- Cert Manager
+- Rancher
+- Homer Dashboard
+- Github ARC (Actions Runner Controller) - autoscaling
