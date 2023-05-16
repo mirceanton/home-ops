@@ -1,0 +1,39 @@
+---
+name: GitHub Actions Demo
+on: 
+  - workflow_dispatch
+
+jobs:
+  job1:
+    runs-on: self-hosted
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: sleep 600;
+
+  job2:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Testing the autoscaling feature"
+      - run: sleep 600;
+
+  job3:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Testing the autoscaling feature"
+      - run: sleep 600;
+
+  job4:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Testing the autoscaling feature"
+      - run: sleep 600;
+
+  job5:
+    runs-on: self-hosted
+    steps:
+      - run: echo "Testing the autoscaling feature"
+      - run: sleep 600;
