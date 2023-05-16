@@ -1,0 +1,12 @@
+---
+creation_rules:
+  - path_regex: talos/(secrets|base|talosconfig)(\.sops)?.yaml
+    encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
+    key_groups:
+      - age:
+          - age1z6la87sppenwcdcr7lqj8amf5e4x7dq9gzr739cwg5ve6vgj0d8s6cahdj
+
+  - encrypted_regex: '^(data|stringData)$'
+    key_groups:
+      - age:
+          - age1z6la87sppenwcdcr7lqj8amf5e4x7dq9gzr739cwg5ve6vgj0d8s6cahdj
