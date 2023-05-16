@@ -197,3 +197,32 @@ tasks:
       - task: mkc:k8s:wait
       - task: mkc:flux:bootstrap
       - task: mkc:flux:wait
+
+# =================================================================================================
+# PRODUCTION CLUSTER - SOPS
+# =================================================================================================
+  pkc:sops:encrypt:
+    run: once
+    cmds:
+      - sops --encrypt infra/production-cluster/talos/base.yaml > infra/production-cluster/talos/base.sops.yaml
+      - sops --encrypt infra/production-cluster/talos/secrets.yaml > infra/production-cluster/talos/secrets.sops.yaml
+      - sops --encrypt infra/production-cluster/talos/talosconfig.yaml > infra/production-cluster/talos/talosconfig.sops.yaml
+
+  pkc:sops:decrypt:
+    run: once
+    cmds:
+      - sops --decrypt infra/production-cluster/talos/base.sops.yaml > infra/production-cluster/talos/base.yaml
+      - sops --decrypt infra/production-cluster/talos/secrets.sops.yaml > infra/production-cluster/talos/secrets.yaml
+      - sops --decrypt infra/production-cluster/talos/talosconfig.sops.yaml > infra/production-cluster/talos/talosconfig.yaml
+
+  pkc:sops:edit:talosconfig:
+    dir: infra/production-cluster
+    cmds: [ sops talos/talosconfig.sops.yaml ]
+
+  pkc:sops:edit:secrets:
+    dir: infra/production-cluster
+    cmds: [ sops talos/secrets.sops.yaml ]
+
+  pkc:sops:edit:base:
+    dir: infra/production-cluster
+    cmds: [ sops talos/base.sops.yaml ]
