@@ -13,4 +13,4 @@ spec:
   metrics:
   - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
     repositoryNames:
-    - mirceanton/amir-hlb
+    - mirceanton/home-ops

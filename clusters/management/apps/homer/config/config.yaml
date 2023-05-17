@@ -24,11 +24,11 @@ defaults:
 links:
   - name: "GitHub"
     icon: "fab fa-github"
-    url: "https://github.com/mirceanton/amir-hlb"
+    url: "https://github.com/mirceanton/home-ops"
 
   - name: "Docs"
     icon: "fas fa-book"
-    url: "https://github.com/mirceanton/amir-hlb" # fixme
+    url: "https://github.com/mirceanton/home-ops" # fixme
 
 # Services
 # First level array represents a group.

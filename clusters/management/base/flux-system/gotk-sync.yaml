@@ -11,7 +11,7 @@ spec:
     branch: main
   secretRef:
     name: flux-system
-  url: ssh://git@github.com/mirceanton/amir-hlb
+  url: ssh://git@github.com/mirceanton/home-ops
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
