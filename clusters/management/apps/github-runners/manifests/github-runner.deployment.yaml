@@ -7,4 +7,4 @@ metadata:
 spec:
   template:
     spec:
-      repository: mirceanton/amir-hlb
+      repository: mirceanton/home-ops
