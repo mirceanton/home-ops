@@ -23,10 +23,10 @@ machine:
             - interface: eth0
               routes:
                 - network: 0.0.0.0/0
-                  gateway: 10.0.42.59
+                  gateway: 10.0.42.1
         # Used to statically set the nameservers for the machine.
         nameservers:
-            - 10.0.42.59
+            - 10.0.42.1
     # Used to provide instructions for installations.
     install:
         disk: /dev/sda
@@ -63,7 +63,7 @@ cluster:
     secret: ENC[AES256_GCM,data:DTmf8qXqfgGxoqzrw3lrLHWD2GNuk+0ZmbU3UN2TvIP4AC6MnD5IcP59lbQ=,iv:EeBuqSSn3RvmQ9/geaXQrCBjKgtivptAK3lOCWN4dtA=,tag:RvxCJOjJLs9dXdccg3vEeg==,type:str]
     # Provides control plane specific configuration options.
     controlPlane:
-        endpoint: https://10.0.42.99:6443
+        endpoint: https://10.0.42.90:6443
     # Provides cluster specific network configuration options.
     network:
         dnsDomain: cluster.local
@@ -98,7 +98,7 @@ cluster:
         image: registry.k8s.io/kube-apiserver:v1.27.1
         # Extra certificate subject alternative names for the API server's certificate.
         certSANs:
-            - 10.0.42.99
+            - 10.0.42.90
         disablePodSecurityPolicy: true
         # Configure the API server admission plugins.
         admissionControl:
@@ -167,8 +167,8 @@ sops:
             QWRYYmtkK0puc1hQK29IZEllZkRyQ3MKOLzDAQdNea7a9fOzclhFh4rc8qLjjcKn
             SYAEiXOozRCW7nIe6GlDbYRtn/49putzDi55VAJlM9MhaiuyzZisHw==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-05-16T19:22:27Z"
-    mac: ENC[AES256_GCM,data:uZc+ol178iaHSsfaeSsMO47BM9WjQZPd9DXigCvuk/F4xwBdv9HCyyGQWKerxYwxCBwJDc4nCL8771bCtHF2aBF0+KyxOC5S006YBf9dAj+k/CPvzsvew1RusX5sEon6eJEHt9BXScHgaWYEP+a56YAqX/cD2067nVM+o4tY5Ro=,iv:jkb0gitpr1EP/ax2QNYcEo2hLTpXU4Hfot+Bp5V2JF4=,tag:l8cNBtcnF3ICi3oWPqvbxQ==,type:str]
+    lastmodified: "2023-05-17T17:43:26Z"
+    mac: ENC[AES256_GCM,data:/q1XAkSwst8pzdmrncTxB0BkSqqdODa1c7piymzN50Hd4Czkmz7vFEaJU3FOTPO6QV7qPSc1dE4hp8H56ImAh4DW1EGZtGQqMvRf3zK3nbwH5zyLsV4RdZrddQyHMryP1gJOSidnRqI5DSGP3P8vm4DdrkGsUuLOzt+RK6S69JQ=,iv:Ovdpa4RynRwrRy53ZaCNS6+eVLu8aeousZK+/SkuNfw=,tag:YsPDcnt4HlB3yEFgbXjspg==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3

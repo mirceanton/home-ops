@@ -1,3 +1,9 @@
 ---
 machine:
   type: controlplane
+
+  network:
+    interfaces:
+      - interface: eth0
+        vip:
+          ip: 10.0.42.90
