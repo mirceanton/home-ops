@@ -244,7 +244,7 @@ tasks:
     cmds:
       - task: pkc:talos:bootstrap:node
         vars:
-          NODE_IP: 10.0.42.91
+          NODE_IP: 172.16.42.31
           NODE_NAME: minisforum
           NODE_ROLE: controlplane
 
@@ -262,7 +262,7 @@ tasks:
     cmds:
       - task: pkc:talos:wait:node
         vars:
-          NODE_IP: 10.0.42.91
+          NODE_IP: 172.16.42.31
 
   pkc:talos:import:config:
     dir: infra/production-cluster

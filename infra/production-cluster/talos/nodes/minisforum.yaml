@@ -6,4 +6,4 @@ machine:
     interfaces:
       - interface: eth0
         addresses:
-          - 10.0.42.91/24
+          - 172.16.42.31/24
