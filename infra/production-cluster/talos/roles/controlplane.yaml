@@ -1,0 +1,9 @@
+---
+machine:
+  type: controlplane
+
+  network:
+    interfaces:
+      - interface: eth0
+        vip:
+          ip: 172.16.42.30

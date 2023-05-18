@@ -197,3 +197,149 @@ tasks:
       - task: mkc:k8s:wait
       - task: mkc:flux:bootstrap
       - task: mkc:flux:wait
+
+# =================================================================================================
+# PRODUCTION CLUSTER - SOPS
+# =================================================================================================
+  pkc:sops:encrypt:
+    run: once
+    cmds:
+      - sops --encrypt infra/production-cluster/talos/base.yaml > infra/production-cluster/talos/base.sops.yaml
+      - sops --encrypt infra/production-cluster/talos/secrets.yaml > infra/production-cluster/talos/secrets.sops.yaml
+      - sops --encrypt infra/production-cluster/talos/talosconfig.yaml > infra/production-cluster/talos/talosconfig.sops.yaml
+
+  pkc:sops:decrypt:
+    run: once
+    cmds:
+      - sops --decrypt infra/production-cluster/talos/base.sops.yaml > infra/production-cluster/talos/base.yaml
+      - sops --decrypt infra/production-cluster/talos/secrets.sops.yaml > infra/production-cluster/talos/secrets.yaml
+      - sops --decrypt infra/production-cluster/talos/talosconfig.sops.yaml > infra/production-cluster/talos/talosconfig.yaml
+
+  pkc:sops:edit:talosconfig:
+    dir: infra/production-cluster
+    cmds: [ sops talos/talosconfig.sops.yaml ]
+
+  pkc:sops:edit:secrets:
+    dir: infra/production-cluster
+    cmds: [ sops talos/secrets.sops.yaml ]
+
+  pkc:sops:edit:base:
+    dir: infra/production-cluster
+    cmds: [ sops talos/base.sops.yaml ]
+
+# =================================================================================================
+# PRODUCTION CLUSTER - TALOS
+# =================================================================================================
+  pkc:talos:bootstrap:node:
+    internal: true
+    dir: infra/production-cluster/talos
+    preconditions:
+      - talosctl disks --nodes {{.NODE_IP}} --insecure > /dev/null
+    cmds:
+      - talosctl apply --nodes {{.NODE_IP}} --insecure --file base.yaml --config-patch @nodes/{{.NODE_NAME}}.yaml --config-patch @roles/{{.NODE_ROLE}}.yaml
+
+  pkc:talos:bootstrap:
+    dir: infra/production-cluster/talos
+    deps: [ pkc:sops:decrypt ]
+    cmds:
+      - task: pkc:talos:bootstrap:node
+        vars:
+          NODE_IP: 172.16.42.31
+          NODE_NAME: minisforum
+          NODE_ROLE: controlplane
+
+  pkc:talos:wait:node:
+    desc: Wait for a given node to be ready for kubernetes bootstrapping, after applying the talos config.
+    internal: true
+    silent: true
+    cmds:
+      - echo "Waiting for node {{.NODE_IP}} to be ready..."
+      - while ! talosctl dmesg -n {{.NODE_IP}} 2> /dev/null | grep -q "etcd is waiting to join the cluster"; do sleep 1; done
+
+  pkc:talos:wait:
+    desk: After applying the bootstrap command, wait for the nodes to be ready.
+    deps: [ pkc:talos:import:config ]
+    cmds:
+      - task: pkc:talos:wait:node
+        vars:
+          NODE_IP: 172.16.42.31
+
+  pkc:talos:import:config:
+    dir: infra/production-cluster
+    run: once
+    deps: [ pkc:sops:decrypt ]
+    cmds: 
+      - mkdir -p ~/.talos
+      - sops --decrypt talos/talosconfig.sops.yaml > ~/.talos/config
+
+# =================================================================================================
+# PRODUCTION CLUSTER - K8S
+# =================================================================================================
+  pkc:k8s:bootstrap:
+    deps: [ pkc:talos:import:config ]
+    cmds: [ talosctl bootstrap ]
+
+  pkc:k8s:wait:endpoint:
+    deps: [ pkc:k8s:import:config ]
+    silent: true
+    internal: true
+    cmds:
+      - echo "Waiting for the Kubernetes Endpoint to be Ready..."
+      - while ! kubectl get pods 2> /dev/null; do sleep 1; done
+
+  pkc:k8s:wait:nodes:
+    deps: [ pkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - echo "Waiting for the Kubernetes Nodes to be Ready..."
+      - while ! kubectl wait --for=condition=Ready nodes --all --timeout 10m 2> /dev/null; do sleep 1; done
+
+  pkc:k8s:wait:kube-service:
+    deps: [ pkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - echo "Waiting for service to be ready - {{.SERVICE}}..."
+      - while [ "$(kubectl get pods -n kube-system | grep -c "{{.SERVICE}}")" -ne {{.REPLICAS | default 1}} ]; do sleep 1; done
+
+  pkc:k8s:wait:
+    deps: [ pkc:k8s:import:config ]
+    silent: true
+    cmds:
+      - task: pkc:k8s:wait:endpoint
+      - task: pkc:k8s:wait:nodes
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-apiserver
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-controller-manager
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-proxy
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: kube-scheduler
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: coredns
+          REPLICAS: 2
+      - task: pkc:k8s:wait:kube-service
+        vars:
+          SERVICE: calico-node
+
+  pkc:k8s:import:config:
+    run: once
+    deps: [ pkc:talos:import:config]
+    cmds: [ talosctl kubeconfig --force ]
+
+# =================================================================================================
+# PRODUCTION CLUSTER
+# =================================================================================================
+  pkc:bootstrap:
+    cmds:
+      - task: pkc:talos:bootstrap
+      - task: pkc:talos:wait
+      - task: pkc:k8s:bootstrap
+      - task: pkc:k8s:wait
+      # - task: pkc:flux:bootstrap
+      # - task: pkc:flux:wait

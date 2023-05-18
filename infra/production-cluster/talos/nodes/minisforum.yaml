@@ -1,0 +1,9 @@
+---
+machine:
+  network:
+    hostname: minisforum
+
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 172.16.42.31/24
