@@ -1,0 +1,10 @@
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: gh-runner-deployment
+  namespace: home-ops-runners
+spec:
+  template:
+    spec:
+      repository: mirceanton/home-ops
