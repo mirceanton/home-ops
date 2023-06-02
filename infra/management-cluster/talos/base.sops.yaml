@@ -145,7 +145,8 @@ cluster:
     coreDNS:
         image: docker.io/coredns/coredns:1.10.1
     # A list of urls that point to additional manifests.
-    extraManifests: []
+    extraManifests:
+        - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
     # A list of inline Kubernetes manifests.
     inlineManifests: []
 sops:
@@ -163,8 +164,8 @@ sops:
             MDQ3UGdhRzhNWHlrYytZVEtCeUQzV0kKS3GN6BMEwbKmcsMWbyeK3N/bz5VPQlAg
             R4IJt1xtIRG9dvOVW80Tbhiy1wA14wajaD9dEV3DXuFX1ppG3KgOaQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-06-02T13:14:05Z"
-    mac: ENC[AES256_GCM,data:r/ULkKdCpLnhVfnSHgHsIk6Lcc31pH2tdlBrHltI8c+vtidjkBaANuk1nhZh8AmMEqmjvoHJTNnmhCMbZuhS3Wxgr5EZkylvpgAO2rR9xHtb/MmVtXQ8fW57uIiFWs1s5M9Mgjxovf5B8YxhESwdwSAwoto7Fv0MFt3Kh4pbOzw=,iv:S9iQgehSjhiRSpVSQNYw0Mj0FBABUFLyEy1HizThEcs=,tag:YEZU4D5bp1C9fEv4HW9IjQ==,type:str]
+    lastmodified: "2023-06-02T13:14:39Z"
+    mac: ENC[AES256_GCM,data:RyLsfqfoPsk39wTDvbnxgGhj5+lTDagtkE+BWsSUjJJ8Pbe12ZEaC/7ANmtZeJKlEqZzvAzQE60h8ZzfW81mpOSMnlguGWHIiyNN1xjEyJXyEZ1UAMRwgTwP72Ntc5QdozqOMC4Ye4BkSppy2foH/Qszo35QK4Aba73eOHdaV/s=,iv:vBhtxvMl6DMJ1Y0MlVes84tKnkokbNzertmicF4SisA=,tag:VKAZrOqRk6foc8JtYFYGTw==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
