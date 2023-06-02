@@ -66,6 +66,8 @@ machine:
         disabled: false
         servers:
             - time.cloudflare.com
+    sysctls:
+        vm_hugepages: "1024"
     # Features describe individual Talos features that can be switched on or off.
     features:
         rbac: true
@@ -165,8 +167,8 @@ sops:
             MDQ3UGdhRzhNWHlrYytZVEtCeUQzV0kKS3GN6BMEwbKmcsMWbyeK3N/bz5VPQlAg
             R4IJt1xtIRG9dvOVW80Tbhiy1wA14wajaD9dEV3DXuFX1ppG3KgOaQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-06-02T13:15:07Z"
-    mac: ENC[AES256_GCM,data:NcF/k+nU9opekNperXT7OA6AYIkXUMOJmLMGO/J6F1WPXuhF1Z4SogxK2plBoxh5hTretauyz9C9qQt94X1lr9IUtkhCI3UXUUP5f/UKg9Z9a8xUnG/cAwU01gW9l37oxreQhGIwLdz3nK5JOYjp9YTqGwinydiD4yUC9azuBIc=,iv:W/m/EuM59ApugvxL5JRqxcuYBjziCcJz5lCKAiQQyLs=,tag:/UlAKantssTNBh1/NENbRw==,type:str]
+    lastmodified: "2023-06-02T14:15:27Z"
+    mac: ENC[AES256_GCM,data:nTP9yPAzEQ+0Edmicr/rGklFzkwxvPo9nEO9B80J813ubCzFgI96XDYdqXFU9D39oLW+BAp0kEf/TT3HN6paDRDDDp35GZMhupmfuXkBLTH7Oo00qRSlj2ETqpJBQeLEvuSnMXm16JOwWzJaNedJy1Q+Nb0sD+KaExZNnVAzhws=,iv:+3Ng5erZfdCJ8HwhAXkVVQ8xbdiCqOhdc29jApkgy7Q=,tag:bpzITAKtpgf6cQcgyEXWdQ==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
