@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: mayastor
+  namespace: mayastor
+spec:
+  interval: 15m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  chart:
+    spec:
+      chart: mayastor
+      version: 2.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: mayastor
+        namespace: flux-system
+  values:
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      openebs.io/engine: mayastor
+    loki-stack:
+      loki:
+        persistence:
+          storageClassName: manual
+    etcd:
+      persistence:
+        storageClassName: manual

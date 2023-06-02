@@ -1,0 +1,29 @@
+---
+apiVersion: "openebs.io/v1alpha1"
+kind: DiskPool
+metadata:
+  name: mkc-01-ssd
+  namespace: mayastor
+spec:
+  node: mkc-01
+  disks: ["/dev/sdb"]
+
+---
+apiVersion: "openebs.io/v1alpha1"
+kind: DiskPool
+metadata:
+  name: mkc-02-ssd
+  namespace: mayastor
+spec:
+  node: mkc-02
+  disks: ["/dev/sdb"]
+
+---
+apiVersion: "openebs.io/v1alpha1"
+kind: DiskPool
+metadata:
+  name: mkc-03-ssd
+  namespace: mayastor
+spec:
+  node: mkc-03
+  disks: ["/dev/sdb"]
