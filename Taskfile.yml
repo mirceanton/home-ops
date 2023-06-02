@@ -23,7 +23,7 @@ tasks:
       - sops --encrypt infra/management-cluster/talos/base.yaml > infra/management-cluster/talos/base.sops.yaml
       - sops --encrypt infra/management-cluster/talos/secrets.yaml > infra/management-cluster/talos/secrets.sops.yaml
       - sops --encrypt infra/management-cluster/talos/talosconfig.yaml > infra/management-cluster/talos/talosconfig.sops.yaml
-      - sops --encrypt clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.yaml > clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.sops.yaml
+      - sops --encrypt clusters/management/apps/github-actions-controller/github-actions.secret.yaml > clusters/management/apps/github-actions-controller/github-actions.secret.sops.yaml
 
   mkc:sops:decrypt:
     run: once
@@ -31,7 +31,7 @@ tasks:
       - sops --decrypt infra/management-cluster/talos/base.sops.yaml > infra/management-cluster/talos/base.yaml
       - sops --decrypt infra/management-cluster/talos/secrets.sops.yaml > infra/management-cluster/talos/secrets.yaml
       - sops --decrypt infra/management-cluster/talos/talosconfig.sops.yaml > infra/management-cluster/talos/talosconfig.yaml
-      - sops --decrypt clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.sops.yaml > clusters/management/core/github-actions-runner-controller/manifests/github-actions.secret.yaml
+      - sops --decrypt clusters/management/apps/github-actions-controller/github-actions.secret.sops.yaml > clusters/management/apps/github-actions-controller/github-actions.secret.yaml
 
   mkc:sops:edit:talosconfig:
     dir: infra/management-cluster
