@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: metallb-operator
+  name: mayastor-operator
   namespace: flux-system
 spec:
   interval: 5m
@@ -11,7 +11,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/common/apps/metallb
+  path: ./clusters/common/apps/mayastor
   prune: true
   wait: true
   timeout: 10m0s
@@ -20,16 +20,16 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: metallb-resources
+  name: mayastor-resources
   namespace: flux-system
 spec:
   interval: 5m
   dependsOn:
-    - name: metallb-operator
+    - name: mayastor-operator
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/management/core/metallb
+  path: ./clusters/management/apps/mayastor
   prune: true
   wait: true
   timeout: 10m0s

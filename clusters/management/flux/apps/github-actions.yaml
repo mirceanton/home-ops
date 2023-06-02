@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: mayastor-operator
+  name: github-actions-controller
   namespace: flux-system
 spec:
   interval: 5m
@@ -11,25 +11,29 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/common/apps/mayastor
+  path: ./clusters/management/apps/github-actions-controller
   prune: true
   wait: true
   timeout: 10m0s
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
 
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: mayastor-resources
+  name: github-runners
   namespace: flux-system
 spec:
   interval: 5m
   dependsOn:
-    - name: mayastor-operator
+    - name: github-actions-controller
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./clusters/management/core/mayastor
+  path: ./clusters/management/apps/github-actions-runner
   prune: true
   wait: true
   timeout: 10m0s
