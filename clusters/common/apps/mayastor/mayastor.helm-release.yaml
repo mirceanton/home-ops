@@ -31,7 +31,7 @@ spec:
     loki-stack:
       loki:
         persistence:
-          storageClassName: manual
+          storageClassName: "manual"
     etcd:
       persistence:
-        storageClassName: manual
+        storageClassName: "manual"
