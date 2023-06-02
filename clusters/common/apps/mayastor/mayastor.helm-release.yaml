@@ -5,14 +5,15 @@ metadata:
   name: mayastor
   namespace: mayastor
 spec:
-  interval: 15m
+  interval: 40m
+  timeout: 30m
   install:
     remediation:
-      retries: 3
+      retries: 5
   upgrade:
     cleanupOnFail: true
     remediation:
-      retries: 3
+      retries: 5
   uninstall:
     keepHistory: false
   chart:
