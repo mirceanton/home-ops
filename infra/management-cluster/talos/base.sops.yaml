@@ -21,6 +21,14 @@ machine:
         disableManifestsDirectory: true
         extraArgs:
             rotate-server-certificates: true
+        extraMounts:
+            - destination: /var/local
+              source: /var/local
+              type: bind
+              options:
+                - rbind
+                - rshared
+                - rw
     # Provides machine specific network configuration options.
     network:
         interfaces:
@@ -167,8 +175,8 @@ sops:
             MDQ3UGdhRzhNWHlrYytZVEtCeUQzV0kKS3GN6BMEwbKmcsMWbyeK3N/bz5VPQlAg
             R4IJt1xtIRG9dvOVW80Tbhiy1wA14wajaD9dEV3DXuFX1ppG3KgOaQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-06-02T14:15:27Z"
-    mac: ENC[AES256_GCM,data:nTP9yPAzEQ+0Edmicr/rGklFzkwxvPo9nEO9B80J813ubCzFgI96XDYdqXFU9D39oLW+BAp0kEf/TT3HN6paDRDDDp35GZMhupmfuXkBLTH7Oo00qRSlj2ETqpJBQeLEvuSnMXm16JOwWzJaNedJy1Q+Nb0sD+KaExZNnVAzhws=,iv:+3Ng5erZfdCJ8HwhAXkVVQ8xbdiCqOhdc29jApkgy7Q=,tag:bpzITAKtpgf6cQcgyEXWdQ==,type:str]
+    lastmodified: "2023-06-02T14:17:01Z"
+    mac: ENC[AES256_GCM,data:oGZ8LjgbqhBB7FNOBqD37WQddrSSNluKQ8vKDjMkm3GNsfz14OSNBTdeHIxpFpNS/AEbhjpTHab/8ZnpuN708UyvK0wOG/gF9ZJPS0kBbe7XReBl0ud4majWlXAfesLc+l/d9CJTmEee+A8gTOZyjhzq2aCXQe2gBgxMxIFXbEs=,iv:tRxwIQTnnC02lOiCOEvYGfnStPXPdfNoiRkMHxxRkv8=,tag:0RJSWg9wJP694fZVTAfOMw==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
