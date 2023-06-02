@@ -147,6 +147,7 @@ cluster:
     # A list of urls that point to additional manifests.
     extraManifests:
         - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+        - https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
     # A list of inline Kubernetes manifests.
     inlineManifests: []
 sops:
@@ -164,8 +165,8 @@ sops:
             MDQ3UGdhRzhNWHlrYytZVEtCeUQzV0kKS3GN6BMEwbKmcsMWbyeK3N/bz5VPQlAg
             R4IJt1xtIRG9dvOVW80Tbhiy1wA14wajaD9dEV3DXuFX1ppG3KgOaQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2023-06-02T13:14:39Z"
-    mac: ENC[AES256_GCM,data:RyLsfqfoPsk39wTDvbnxgGhj5+lTDagtkE+BWsSUjJJ8Pbe12ZEaC/7ANmtZeJKlEqZzvAzQE60h8ZzfW81mpOSMnlguGWHIiyNN1xjEyJXyEZ1UAMRwgTwP72Ntc5QdozqOMC4Ye4BkSppy2foH/Qszo35QK4Aba73eOHdaV/s=,iv:vBhtxvMl6DMJ1Y0MlVes84tKnkokbNzertmicF4SisA=,tag:VKAZrOqRk6foc8JtYFYGTw==,type:str]
+    lastmodified: "2023-06-02T13:15:07Z"
+    mac: ENC[AES256_GCM,data:NcF/k+nU9opekNperXT7OA6AYIkXUMOJmLMGO/J6F1WPXuhF1Z4SogxK2plBoxh5hTretauyz9C9qQt94X1lr9IUtkhCI3UXUUP5f/UKg9Z9a8xUnG/cAwU01gW9l37oxreQhGIwLdz3nK5JOYjp9YTqGwinydiD4yUC9azuBIc=,iv:W/m/EuM59ApugvxL5JRqxcuYBjziCcJz5lCKAiQQyLs=,tag:/UlAKantssTNBh1/NENbRw==,type:str]
     pgp: []
     encrypted_regex: ^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$
     version: 3.7.3
