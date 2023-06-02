@@ -34,4 +34,4 @@ spec:
           storageClassName: "manual"
     etcd:
       persistence:
-        storageClassName: "manual"
+        storageClass: "manual"
