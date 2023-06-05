@@ -7,3 +7,6 @@ machine:
       - interface: eth0
         addresses:
           - 10.0.10.12/24
+
+  nodeLabels:
+    openebs.io/engine: mayastor
