@@ -1,0 +1,35 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: metallb-operator
+  namespace: flux-system
+spec:
+  interval: 5m
+  dependsOn:
+    - name: repositories
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/common/apps/metallb
+  prune: true
+  wait: true
+  timeout: 10m0s
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: metallb-resources
+  namespace: flux-system
+spec:
+  interval: 5m
+  dependsOn:
+    - name: metallb-operator
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/management/apps/metallb
+  prune: true
+  wait: true
+  timeout: 10m0s
