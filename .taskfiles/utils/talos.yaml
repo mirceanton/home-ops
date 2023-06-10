@@ -1,0 +1,28 @@
+---
+version: '3'
+
+tasks:
+  bootstrap:node:
+    desc: Bootstrap talos on the given node.
+    preconditions:
+      - talosctl disks --nodes {{.NODE_IP}} --insecure > /dev/null
+    cmds:
+      - talosctl apply --nodes {{.NODE_IP}} --insecure --file base.yaml --config-patch @nodes/{{.NODE_NAME}}.yaml --config-patch @roles/{{.NODE_ROLE}}.yaml
+
+  wait:node:
+    desc: Wait for a given node to be ready for kubernetes bootstrapping, after applying the talos config.
+    silent: true
+    cmds:
+      - echo "Waiting for node {{.NODE_IP}} to be ready..."
+      - cmd: >
+          command="talosctl dmesg -n {{.NODE_IP}} 2> /dev/null"
+
+          while ! $($command | grep -q "etcd is waiting to join the cluster"); do
+            sleep 1
+          done
+
+  import:config:
+    run: once
+    cmds:
+      - mkdir -p ~/.talos
+      - sops --decrypt talos/talosconfig.sops.yaml > ~/.talos/config

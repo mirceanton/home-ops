@@ -1,0 +1,33 @@
+---
+version: '3'
+
+tasks:
+  bootstrap:
+    desc: Install flux on a cluster.
+    preconditions:
+      - sh: test -f ~/.config/sops/age/keys.txt
+        msg: "No age key found at ~/.config/sops/age/keys.txt"
+    vars:
+      REPO: home-ops
+      OWNER: mirceanton
+      BRANCH: main
+      TIMEOUT: 15m
+    cmds:
+      - flux bootstrap github --owner {{.OWNER}} --repository {{.REPO}} --branch {{.BRANCH}} --path {{.PATH}} --network-policy=false --timeout={{.TIMEOUT}} --personal
+      - kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/mike/.config/sops/age/keys.txt
+
+  wait:
+    desc: Wait for flux to finish installing and synchronize all of the kustomizations.
+    silent: true
+    cmds:
+      - echo "Waiting for Flux to synchronize all Kustomizations..."
+      - cmd: >
+          command="kubectl wait --for=condition=Ready kustomizations.kustomize.toolkit.fluxcd.io -A --all --timeout 10m 2> /dev/null"
+
+          while ! $($command); do
+            sleep 1
+          done
+
+  reconcile:
+    desc: Force flux to reconcile all kustomizations.
+    cmds: [ flux reconcile source git flux-system ]
