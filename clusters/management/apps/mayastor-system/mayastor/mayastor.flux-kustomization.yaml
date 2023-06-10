@@ -1,0 +1,33 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: mayastor-operator
+  namespace: flux-system
+spec:
+  interval: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: clusters/management/apps/mayastor-system/mayastor/app
+  prune: true
+  wait: true
+  timeout: 10m0s
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: mayastor-resources
+  namespace: flux-system
+spec:
+  interval: 5m
+  dependsOn:
+    - name: mayastor-operator
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: clusters/management/apps/mayastor-system/mayastor/resources
+  prune: true
+  wait: true
+  timeout: 10m0s
