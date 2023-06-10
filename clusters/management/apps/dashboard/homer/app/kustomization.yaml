@@ -6,7 +6,7 @@ configMapGenerator:
 - files:
   - config/config.yaml
   name: homer-configmap
-  namespace: homer-dashboard
+  namespace: dashboard
 
 - files:
   - config/icon-download.sh
