@@ -2,7 +2,6 @@
 version: '3'
 
 vars:
-  TALOS_DIR: infra/management-cluster/talos
 
 includes:
   sops:
@@ -25,16 +24,19 @@ tasks:
     cmds:
       - task: talos-utils:bootstrap:node
         vars:
+          TALOS_DIR: infra/management-cluster/talos
           NODE_IP: 10.0.10.11
           NODE_NAME: mkc-01
           NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
+          TALOS_DIR: infra/management-cluster/talos
           NODE_IP: 10.0.10.12
           NODE_NAME: mkc-02
           NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
+          TALOS_DIR: infra/management-cluster/talos
           NODE_IP: 10.0.10.13
           NODE_NAME: mkc-03
           NODE_ROLE: controlplane
@@ -43,6 +45,8 @@ tasks:
     desc: Import the talosconfig file for the management cluster.
     cmds:
       - task: talos-utils:import:config
+        vars:
+          TALOS_DIR: infra/management-cluster/talos
       - talosctl config context management-cluster
 
   wait:

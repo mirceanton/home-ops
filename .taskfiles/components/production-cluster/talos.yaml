@@ -1,9 +1,6 @@
 ---
 version: '3'
 
-vars:
-  TALOS_DIR: infra/production-cluster/talos
-
 includes:
   sops:
     taskfile: ../../sops.yaml
@@ -25,6 +22,7 @@ tasks:
     cmds:
       - task: talos-utils:bootstrap:node
         vars:
+          TALOS_DIR: infra/production-cluster/talos
           NODE_IP: 172.16.42.31
           NODE_NAME: minisforum
           NODE_ROLE: controlplane
@@ -33,6 +31,8 @@ tasks:
     desc: Import the talosconfig file for the production cluster.
     cmds:
       - task: talos-utils:import:config
+        vars:
+          TALOS_DIR: infra/production-cluster/talos
       - talosctl config context production-cluster
 
   wait:
