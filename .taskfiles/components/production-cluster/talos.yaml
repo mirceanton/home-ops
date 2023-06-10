@@ -1,6 +1,9 @@
 ---
 version: '3'
 
+vars:
+  TALOS_DIR: infra/production-cluster/talos
+
 includes:
   sops:
     taskfile: ../../sops.yaml
@@ -10,9 +13,13 @@ includes:
     internal: true
 
 tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
   bootstrap:
     desc: Bootstrap talos on the production cluster nodes.
-    dir: infra/production-cluster/talos
     deps:
       - sops:decrypt # decrypt the talos config files
     cmds:
@@ -24,7 +31,6 @@ tasks:
 
   import:config:
     desc: Import the talosconfig file for the production cluster.
-    dir: infra/production-cluster/talos
     cmds:
       - task: talos-utils:import:config
       - talosctl config context production-cluster

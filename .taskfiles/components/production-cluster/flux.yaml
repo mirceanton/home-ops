@@ -11,6 +11,11 @@
 #     internal: true
 
 # tasks:
+#   default:
+#     cmds:
+#       - task: bootstrap
+#       - task: wait
+
 #   bootstrap:
 #     desc: Install flux on the production cluster.
 #     deps: [ pkc-k8s:import:config ]

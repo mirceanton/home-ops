@@ -10,6 +10,11 @@ includes:
     internal: true
 
 tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
   bootstrap:
     desc: Install Kubernetes on the Talos cluster.
     deps: [ pkc-talos:import:config ]
@@ -17,13 +22,13 @@ tasks:
       - task: kubernetes-utils:bootstrap
 
   import:config:
-    desc: Import the kubeconfig file for the production cluster
+    desc: Import the kubeconfig file for the production cluster.
     deps: [ pkc-talos:import:config ]
     cmds:
       - task: kubernetes-utils:import:config
         vars:
           CLUSTER_NAME: production-cluster
-      - kubectx admin@production-cluster
+      - kswitch admin@production-cluster
 
   wait:
     desc: Wait for Kubernetes to be ready on the production cluster.
