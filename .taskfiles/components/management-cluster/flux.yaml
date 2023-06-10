@@ -22,7 +22,6 @@ tasks:
       - task: flux-utils:bootstrap
         vars:
           PATH: clusters/management/flux
-          BRANCH: main
 
   reconcile:
     desc: Force flux to reconcile all kustomizations.
