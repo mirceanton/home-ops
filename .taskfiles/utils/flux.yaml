@@ -15,7 +15,8 @@ tasks:
     vars:
       REPO: home-ops
       OWNER: mirceanton
-      BRANCH: main
+      BRANCH:
+        sh: git branch --show-current
       TIMEOUT: 15m
     cmds:
       - flux bootstrap github --owner {{.OWNER}} --repository {{.REPO}} --branch {{.BRANCH}} --path {{.PATH}} --network-policy=false --timeout={{.TIMEOUT}} --personal
