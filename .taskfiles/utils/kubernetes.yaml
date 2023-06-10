@@ -1,6 +1,11 @@
 ---
 version: '3'
 
+includes:
+  wait_for:
+    taskfile: ./wait.yaml
+    internal: true
+
 tasks:
   bootstrap:
     desc: Install Kubernetes on the Talos cluster.
@@ -10,27 +15,25 @@ tasks:
     desc: Fetch the kubeconfig from the talos cluster/
     run: once
     cmds:
-      - talosctl kubeconfig "{{.CLUSTER_NAME}}.yaml" --force
+      - talosctl kubeconfig ~/.kube/configs/{{.CLUSTER_NAME}}.yaml --force
 
   wait:endpoint:
     desc: Wait for the Kubernetes endpoint to respond to requests.
     silent: true
     cmds:
       - echo "Waiting for the Kubernetes Endpoint to be Ready..."
-      - cmd: >
-          while ! kubectl get pods 2> /dev/null; do
-            sleep 1;
-          done
+      - task: wait_for:command
+        vars:
+          COMMAND: kubectl get pods
 
   wait:nodes:
     desc: Wait for all of the nodes to be marked as ready.
+    silent: true
     cmds:
       - echo "Waiting for the Kubernetes Nodes to be Ready..."
-      - cmd: >
-          command="kubectl wait --for=condition=Ready nodes --all --timeout 10m 2> /dev/null"
-          while ! $($command); do
-            sleep 1
-          done
+      - task: wait_for:command
+        vars:
+          COMMAND: kubectl wait --for=condition=Ready nodes --all --timeout 10m
 
   wait:kube-service:
     desc: Wait for the specified kubernetes deployment to reach the specified number of replicas.
@@ -39,8 +42,6 @@ tasks:
       REPLICAS: 3
     cmds:
       - echo "Waiting for service to be ready - {{.SERVICE}}..."
-      - cmd: >
-          command="kubectl get pods -n kube-system | grep -c '{{.SERVICE}}'"
-          while [ "$($command)" -ne "{{.REPLICAS}}" ]; do
-            sleep 1;
-          done
+      - task: wait_for:command
+        vars:
+          COMMAND: kubectl get pods -n kube-system | grep -c '{{.SERVICE}}'

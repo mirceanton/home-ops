@@ -10,6 +10,11 @@ includes:
     internal: true
 
 tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
   bootstrap:
     desc: Install flux on the management cluster.
     deps: [ mkc-k8s:import:config ]

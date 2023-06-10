@@ -1,0 +1,15 @@
+---
+version: '3'
+
+tasks:
+  command:
+    desc: Wait for the given command to return OK.
+    silent: true
+    vars:
+      SLEEP_INTERVAL_SECONDS: 1
+    cmds:
+      - cmd: >
+          while ! {{.COMMAND}} >/dev/null 2>/dev/null;
+          do
+            sleep {{.SLEEP_INTERVAL_SECONDS}}
+          done
