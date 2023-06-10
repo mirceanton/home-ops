@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: cleanup
   secretRef:
     name: flux-system
   url: ssh://git@github.com/mirceanton/home-ops
