@@ -1,0 +1,83 @@
+---
+version: '3'
+
+tasks:
+  default:
+    desc: Install all the required tools and utilities.
+    cmds:
+      - task: flux
+      - task: sops
+      - task: age
+      - task: talosctl
+      - task: kubectl
+      - task: kubectx
+      - task: kubens
+      - task: k9s
+      - task: helm
+
+  flux:
+    desc: Install the flux CLI and set up bash completion.
+    cmds:
+      - curl -s https://fluxcd.io/install.sh | sudo bash
+      - flux completion bash | sudo tee /etc/bash_completion.d/flux.sh > /dev/null
+
+  sops:
+    desc: Install the sops CLI.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/mozilla/sops/releases/download/v3.7.3/sops-v3.7.3.linux.amd64 -O sops
+      - sudo install -o root -g root sops /usr/local/bin/sops
+
+  age:
+    desc: Install the sops CLI.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz -O age.tar.gz
+      - tar xvf age.tar.gz
+      - sudo install -o root -g root age/age /usr/local/bin/age
+      - sudo install -o root -g root age/age-keygen /usr/local/bin/age-keygen
+
+  talosctl:
+    desc: Install the talosctl CLI and set up bash completion.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/siderolabs/talos/releases/download/v1.4.5/talosctl-linux-amd64 -O talosctl
+      - sudo install -o root -g root talosctl /usr/local/bin/talosctl
+      - talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl > /dev/null
+
+  kubectl:
+    desc: Install the kubectl CLI and set up bash completion.
+    dir: /tmp
+    cmds:
+      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+
+  kubectx:
+    desc: Install the kubectx CLI.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx_v0.9.4_linux_x86_64.tar.gz -O kubectx.tar.gz
+      - tar xvf kubectx.tar.gz
+      - sudo install -o root -g root kubectx /usr/local/bin/kubectx
+
+  kubens:
+    desc: Install the kubens CLI.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz -O kubens.tar.gz
+      - tar xvf kubens.tar.gz
+      - sudo install -o root -g root kubens /usr/local/bin/kubens
+
+  helm:
+    desc: Install the helm CLI and set up bash completion.
+    cmds:
+      - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sudo bash
+      - helm completion bash | sudo tee /etc/bash_completion.d/helm > /dev/null
+
+  k9s:
+    desc: Install the k9s CLI and set up bash completion.
+    dir: /tmp
+    cmds:
+      - wget https://github.com/derailed/k9s/releases/download/v0.27.4/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
+      - tar xvf k9s.tar.gz
+      - sudo install -o root -g root k9s /usr/local/bin/k9s

@@ -2,7 +2,7 @@
 version: '3'
 
 includes:
-  ansible: ansible/.taskfile.yaml
+  tools: .taskfiles/tools.yaml
   sops: .taskfiles/sops.yaml
   mkc: .taskfiles/components/management-cluster
   pkc: .taskfiles/components/production-cluster
