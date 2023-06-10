@@ -52,21 +52,24 @@ tasks:
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
-  kubectx:
-    desc: Install the kubectx CLI.
+  kswitch:
+    desc: Install the kswitch CLI.
     dir: /tmp
     cmds:
-      - wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx_v0.9.4_linux_x86_64.tar.gz -O kubectx.tar.gz
-      - tar xvf kubectx.tar.gz
-      - sudo install -o root -g root kubectx /usr/local/bin/kubectx
+      - wget https://github.com/danielfoehrKn/kubeswitch/releases/download/0.7.2/switcher_linux_amd64 -O kswitch
+      - sudo install -o root -g root kswitch /usr/local/bin/kswitch
+      - cmd: |
+          cat <<EOF >>~/.kube/switch-config.yaml 
+          kind: SwitchConfig
+          version: v1alpha1
+          kubeconfigName: "*.yaml"
+          kubeconfigStores:
+          - kind: filesystem
+            kubeconfigName: "*.yaml"
+            paths:
+            - ~/.kube/configs/
+          EOF
 
-  kubens:
-    desc: Install the kubens CLI.
-    dir: /tmp
-    cmds:
-      - wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz -O kubens.tar.gz
-      - tar xvf kubens.tar.gz
-      - sudo install -o root -g root kubens /usr/local/bin/kubens
 
   helm:
     desc: Install the helm CLI and set up bash completion.
