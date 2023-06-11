@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - flux-system/
+  - repositories/
+  - discord-notifier/discord-notifier.flux-kustomization.yaml
+  - apps.flux-kustomization.yaml

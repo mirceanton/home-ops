@@ -1,7 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - github-actions.namespace.yaml
-  - github-actions.secret.sops.yaml
-  - github-actions.helm-release.yaml

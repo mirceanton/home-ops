@@ -1,0 +1,44 @@
+---
+version: '3'
+
+includes:
+  sops:
+    taskfile: ../../sops.yaml
+    internal: true
+  talos-utils:
+    taskfile: ../../utils/talos.yaml
+    internal: true
+
+tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
+  bootstrap:
+    desc: Bootstrap talos on the production cluster nodes.
+    deps:
+      - sops:decrypt # decrypt the talos config files
+    cmds:
+      - task: talos-utils:bootstrap:node
+        vars:
+          TALOS_DIR: infra/production-cluster/talos
+          NODE_IP: 172.16.42.31
+          NODE_NAME: minisforum
+          NODE_ROLE: controlplane
+
+  import:config:
+    desc: Import the talosconfig file for the production cluster.
+    cmds:
+      - task: talos-utils:import:config
+        vars:
+          TALOS_DIR: infra/production-cluster/talos
+      - talosctl config context production-cluster
+
+  wait:
+    desc: Wait for the production talos cluster to be up and running.
+    deps: [ import:config ]
+    cmds:
+      - task: talos-utils:wait:node
+        vars:
+          NODE_IP: 172.16.42.31

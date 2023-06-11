@@ -1,0 +1,39 @@
+---
+version: '3'
+
+includes:
+  sops:
+    taskfile: ../sops.yaml
+    internal: true
+  wait_for:
+    taskfile: ./wait.yaml
+    internal: true
+
+tasks:
+  bootstrap:node:
+    desc: Bootstrap talos on the given node.
+    preconditions:
+      - talosctl disks --nodes {{.NODE_IP}} --insecure > /dev/null
+    cmds:
+      - task: sops:decrypt
+      - cmd: >
+          talosctl apply --nodes {{.NODE_IP}} --insecure \
+            --file {{.ROOT_DIR}}/{{.TALOS_DIR}}/base.yaml \
+            --config-patch @{{.ROOT_DIR}}/{{.TALOS_DIR}}/nodes/{{.NODE_NAME}}.yaml \
+            --config-patch @{{.ROOT_DIR}}/{{.TALOS_DIR}}/roles/{{.NODE_ROLE}}.yaml
+
+  wait:node:
+    desc: Wait for a given node to be ready for kubernetes bootstrapping, after applying the talos config.
+    deps: [ import:config ]
+    silent: true
+    cmds:
+      - echo "Waiting for node {{.NODE_IP}} to be ready..."
+      - task: wait_for:command
+        vars:
+          COMMAND: "talosctl dmesg -n {{.NODE_IP}}"
+
+  import:config:
+    run: once
+    cmds:
+      - mkdir -p ~/.talos
+      - sops --decrypt {{.ROOT_DIR}}/{{.TALOS_DIR}}/talosconfig.sops.yaml > ~/.talos/config

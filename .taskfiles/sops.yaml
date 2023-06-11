@@ -1,0 +1,32 @@
+---
+version: '3'
+
+env:
+  SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
+
+tasks:
+  encrypt:
+    desc: Encrypt all sops files in this repository.
+    run: once
+    silent: true
+    cmds:
+    - cmd: >
+        while IFS= read -r path; do
+          path=$(echo "$path" | sed 's/\(\.sops\)/ /g')
+          find . -regextype egrep -regex ".*/$path" -type f | while IFS= read -r file; do
+            echo "Encrypting file: $file"
+            sops --encrypt "$file" > "${file%.yaml}.sops.yaml"
+          done
+        done < <(grep -oP '^\s*- path_regex:\s*\K.*' ".sops.yaml")
+
+  decrypt:
+    desc: Decrypt all sops files in this repository.
+    run: once
+    silent: true
+    cmds:
+    - cmd: >
+        find . -regextype egrep -regex "\.\/.+\/.*.sops.yaml" -type f | while IFS= read -r file; do
+          decrypted_file="${file%.sops.yaml}.yaml"
+          echo "Decrypting file: $file"
+          sops --decrypt "$file" > "$decrypted_file"
+        done
