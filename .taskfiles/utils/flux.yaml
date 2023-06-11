@@ -19,8 +19,9 @@ tasks:
         sh: git branch --show-current
       TIMEOUT: 15m
     cmds:
-      - flux bootstrap github --owner {{.OWNER}} --repository {{.REPO}} --branch {{.BRANCH}} --path {{.PATH}} --network-policy=false --timeout={{.TIMEOUT}} --personal
+      - kubectl create ns flux-system
       - kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/mike/.config/sops/age/keys.txt
+      - flux bootstrap github --owner {{.OWNER}} --repository {{.REPO}} --branch {{.BRANCH}} --path {{.PATH}} --network-policy=false --timeout={{.TIMEOUT}} --personal
 
   wait:
     desc: Wait for flux to finish installing and synchronize all of the kustomizations.
