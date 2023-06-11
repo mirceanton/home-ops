@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - flux-system/
   - repositories/
-  - discord-notifier/
+  - discord-notifier/discord-notifier.flux-kustomization.yaml
   - apps.flux-kustomization.yaml
