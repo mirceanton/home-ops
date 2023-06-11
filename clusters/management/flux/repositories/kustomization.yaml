@@ -4,7 +4,6 @@ resources:
   - actions-runner-controller.yaml
   - ingress-nginx.helm-repository.yaml
   - jetsack.helm-repository.yaml
-  - kustomization.yaml
   - mayastor.helm-repository.yaml
   - metallb.helm-repository.yaml
   - rancher-stable.helm-repository.yaml
