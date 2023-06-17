@@ -52,23 +52,11 @@ tasks:
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       - kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
-  kswitch:
+  kswitcher:
     desc: Install the kswitch CLI.
     dir: /tmp
     cmds:
-      - wget https://github.com/danielfoehrKn/kubeswitch/releases/download/0.7.2/switcher_linux_amd64 -O kswitch
-      - sudo install -o root -g root kswitch /usr/local/bin/kswitch
-      - cmd: |
-          cat <<EOF >>~/.kube/switch-config.yaml 
-          kind: SwitchConfig
-          version: v1alpha1
-          kubeconfigName: "*.yaml"
-          kubeconfigStores:
-          - kind: filesystem
-            kubeconfigName: "*.yaml"
-            paths:
-            - ~/.kube/configs/
-          EOF
+      - curl -fsSL https://raw.githubusercontent.com/mirceanton/kswitcher/v1.0.0/scripts/install.sh | sudo sh
 
   kube-ps1:
     desc: Install the kube-ps1 shell prompt.
