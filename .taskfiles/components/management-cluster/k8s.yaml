@@ -28,7 +28,7 @@ tasks:
       - task: kubernetes-utils:import:config
         vars:
           CLUSTER_NAME: management-cluster
-      - kswitch admin@management-cluster > /dev/null
+      - kswitcher admin@management-cluster
 
   wait:
     desc: Wait for Kubernetes to be ready on the management cluster.
