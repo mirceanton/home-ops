@@ -1,0 +1,57 @@
+---
+version: '3'
+
+includes:
+  dkc-talos:
+    taskfile: ./talos.yaml
+    internal: true
+  kubernetes-utils:
+    taskfile: ../../utils/kubernetes.yaml
+    internal: true
+
+tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
+  bootstrap:
+    desc: Install Kubernetes on the Talos cluster.
+    deps: [ dkc-talos:import:config ]
+    cmds:
+      - task: kubernetes-utils:bootstrap
+
+  import:config:
+    desc: Import the kubeconfig file for the development cluster.
+    deps: [ pkc-talos:import:config ]
+    cmds:
+      - task: kubernetes-utils:import:config
+        vars:
+          CLUSTER_NAME: development-cluster
+      - kswitcher admin@development-cluster
+
+  wait:
+    desc: Wait for Kubernetes to be ready on the development cluster.
+    deps: [ import:config ]
+    cmds:
+      - task: kubernetes-utils:wait:endpoint
+      - task: kubernetes-utils:wait:nodes
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: kube-apiserver
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: kube-controller-manager
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: kube-proxy
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: kube-scheduler
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: coredns
+          REPLICAS: 2
+      - task: kubernetes-utils:wait:kube-service
+        vars:
+          SERVICE: calico-node
