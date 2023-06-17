@@ -30,7 +30,7 @@ tasks:
       - echo "Waiting for node {{.NODE_IP}} to be ready..."
       - task: wait_for:command
         vars:
-          COMMAND: "talosctl dmesg -n {{.NODE_IP}}"
+          COMMAND: "talosctl dmesg -n {{.NODE_IP}} | grep 'etcd is waiting to join the cluster'"
 
   import:config:
     run: once

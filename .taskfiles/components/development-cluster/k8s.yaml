@@ -23,7 +23,7 @@ tasks:
 
   import:config:
     desc: Import the kubeconfig file for the development cluster.
-    deps: [ pkc-talos:import:config ]
+    deps: [ dkc-talos:import:config ]
     cmds:
       - task: kubernetes-utils:import:config
         vars:
