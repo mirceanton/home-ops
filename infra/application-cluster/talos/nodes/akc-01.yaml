@@ -1,0 +1,12 @@
+---
+machine:
+  network:
+    hostname: akc-01
+
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.0.69.11/24
+
+  nodeLabels:
+    openebs.io/engine: mayastor

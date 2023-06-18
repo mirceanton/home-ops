@@ -24,7 +24,7 @@ tasks:
         vars:
           TALOS_DIR: infra/production-cluster/talos
           NODE_IP: 172.16.42.31
-          NODE_NAME: minisforum
+          NODE_NAME: pkc-01
           NODE_ROLE: controlplane
 
   import:config:

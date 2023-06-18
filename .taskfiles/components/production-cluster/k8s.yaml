@@ -28,7 +28,7 @@ tasks:
       - task: kubernetes-utils:import:config
         vars:
           CLUSTER_NAME: production-cluster
-      - kswitch admin@production-cluster >/dev/null
+      - kswitcher admin@production-cluster
 
   wait:
     desc: Wait for Kubernetes to be ready on the production cluster.

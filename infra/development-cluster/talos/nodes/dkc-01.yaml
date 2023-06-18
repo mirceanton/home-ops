@@ -1,9 +1,9 @@
 ---
 machine:
   network:
-    hostname: minisforum
+    hostname: dkc-01
 
     interfaces:
       - interface: eth0
         addresses:
-          - 172.16.42.31/24
+          - 10.0.69.21/24
