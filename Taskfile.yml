@@ -7,6 +7,7 @@ includes:
   mkc: .taskfiles/components/management-cluster
   pkc: .taskfiles/components/production-cluster
   dkc: .taskfiles/components/development-cluster
+  akc: .taskfiles/components/application-cluster
 
 tasks:
   default:

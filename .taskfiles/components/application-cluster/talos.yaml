@@ -1,0 +1,62 @@
+---
+version: '3'
+
+includes:
+  sops:
+    taskfile: ../../sops.yaml
+    internal: true
+  talos-utils:
+    taskfile: ../../utils/talos.yaml
+    internal: true
+
+tasks:
+  default:
+    cmds:
+      - task: bootstrap
+      - task: wait
+
+  bootstrap:
+    desc: Bootstrap talos on the application cluster nodes.
+    deps:
+      - sops:decrypt # decrypt the talos config files
+    cmds:
+      - task: talos-utils:bootstrap:node
+        vars:
+          TALOS_DIR: infra/application-cluster/talos
+          NODE_IP: 10.0.69.11
+          NODE_NAME: akc-01
+          NODE_ROLE: controlplane
+      - task: talos-utils:bootstrap:node
+        vars:
+          TALOS_DIR: infra/application-cluster/talos
+          NODE_IP: 10.0.69.12
+          NODE_NAME: akc-02
+          NODE_ROLE: controlplane
+      - task: talos-utils:bootstrap:node
+        vars:
+          TALOS_DIR: infra/application-cluster/talos
+          NODE_IP: 10.0.69.13
+          NODE_NAME: akc-03
+          NODE_ROLE: controlplane
+
+  import:config:
+    desc: Import the talosconfig file for the application cluster.
+    cmds:
+      - task: talos-utils:import:config
+        vars:
+          TALOS_DIR: infra/application-cluster/talos
+      - talosctl config context application-cluster
+
+  wait:
+    desc: Wait for the application talos cluster to be up and running.
+    deps: [ import:config ]
+    cmds:
+      - task: talos-utils:wait:node
+        vars:
+          NODE_IP: 10.0.69.11
+      - task: talos-utils:wait:node
+        vars:
+          NODE_IP: 10.0.69.12
+      - task: talos-utils:wait:node
+        vars:
+          NODE_IP: 10.0.69.13
