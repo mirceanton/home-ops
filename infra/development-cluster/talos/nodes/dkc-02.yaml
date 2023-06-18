@@ -1,0 +1,9 @@
+---
+machine:
+  network:
+    hostname: dkc-02
+
+    interfaces:
+      - interface: eth0
+        addresses:
+          - 10.0.69.22/24

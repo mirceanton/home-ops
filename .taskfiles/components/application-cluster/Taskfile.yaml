@@ -1,0 +1,15 @@
+---
+version: '3'
+
+includes:
+  talos: ./talos.yaml
+  k8s: ./k8s.yaml
+
+tasks:
+  bootstrap:
+    desc: Bootstrap the application cluster end to end.
+    cmds:
+      - task: talos:bootstrap
+      - task: talos:wait
+      - task: k8s:bootstrap
+      - task: k8s:wait
