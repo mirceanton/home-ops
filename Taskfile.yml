@@ -5,8 +5,6 @@ includes:
   tools: .taskfiles/tools.yaml
   sops: .taskfiles/sops.yaml
   mkc: .taskfiles/components/management-cluster
-  pkc: .taskfiles/components/production-cluster
-  dkc: .taskfiles/components/development-cluster
   akc: .taskfiles/components/application-cluster
 
 tasks:

@@ -1,9 +1,0 @@
----
-machine:
-  network:
-    hostname: dkc-01
-
-    interfaces:
-      - interface: eth0
-        addresses:
-          - 10.0.69.21/24
