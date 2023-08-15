@@ -8,3 +8,4 @@ resources:
   - descheduler.helm-repository.yaml
   - metrics-server.helm-repository.yaml
   - node-feature-discovery.helm-repository.yaml
+  - k8s-at-home.helm-repository.yaml
