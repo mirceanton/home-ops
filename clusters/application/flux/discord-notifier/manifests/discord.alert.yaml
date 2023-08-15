@@ -5,14 +5,11 @@ metadata:
   name: discord
   namespace: flux-system
 spec:
-  summary: "management cluster"
   providerRef:
     name: discord
-  eventSeverity: info
+  eventSeverity: warning
   eventSources:
     - kind: GitRepository
       name: '*'
     - kind: Kustomization
-      name: '*'
-    - kind: HelmRelease
       name: '*'
