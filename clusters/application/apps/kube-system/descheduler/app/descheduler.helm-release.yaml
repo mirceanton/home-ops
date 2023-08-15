@@ -24,4 +24,5 @@ spec:
         name: descheduler
         namespace: flux-system
       interval: 1m
-  values: {}
+  values:
+    schedule: "*/5 * * * *"
