@@ -7,7 +7,7 @@ metadata:
 spec:
   providerRef:
     name: discord
-  eventSeverity: warning
+  eventSeverity: error
   eventSources:
     - kind: GitRepository
       name: '*'
