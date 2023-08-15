@@ -8,6 +8,8 @@ spec:
   containers:
     - name: fio
       image: nixery.dev/shell/fio
+      stdin: true
+      tty: true
       args:
         - sleep
         - "infinity"
