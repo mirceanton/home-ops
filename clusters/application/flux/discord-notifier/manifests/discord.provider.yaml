@@ -6,6 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   type: discord
-  channel: notifs
+  channel: application-cluster
   secretRef:
     name: discord-url
