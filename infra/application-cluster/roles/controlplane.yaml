@@ -6,4 +6,4 @@ machine:
     interfaces:
       - interface: eth0
         vip:
-          ip: 10.0.69.10
+          ip: 10.0.20.10

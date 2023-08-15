@@ -22,20 +22,20 @@ tasks:
     cmds:
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster/talos
-          NODE_IP: 10.0.69.11
+          TALOS_DIR: infra/application-cluster
+          NODE_IP: 10.0.20.11
           NODE_NAME: akc-01
           NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster/talos
-          NODE_IP: 10.0.69.12
+          TALOS_DIR: infra/application-cluster
+          NODE_IP: 10.0.20.12
           NODE_NAME: akc-02
           NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster/talos
-          NODE_IP: 10.0.69.13
+          TALOS_DIR: infra/application-cluster
+          NODE_IP: 10.0.20.13
           NODE_NAME: akc-03
           NODE_ROLE: controlplane
 
@@ -44,7 +44,7 @@ tasks:
     cmds:
       - task: talos-utils:import:config
         vars:
-          TALOS_DIR: infra/application-cluster/talos
+          TALOS_DIR: infra/application-cluster
       - talosctl config context application-cluster
 
   wait:
@@ -53,10 +53,10 @@ tasks:
     cmds:
       - task: talos-utils:wait:node
         vars:
-          NODE_IP: 10.0.69.11
+          NODE_IP: 10.0.20.11
       - task: talos-utils:wait:node
         vars:
-          NODE_IP: 10.0.69.12
+          NODE_IP: 10.0.20.12
       - task: talos-utils:wait:node
         vars:
-          NODE_IP: 10.0.69.13
+          NODE_IP: 10.0.20.13

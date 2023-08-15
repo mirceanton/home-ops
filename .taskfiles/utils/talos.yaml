@@ -19,7 +19,6 @@ tasks:
       - cmd: >
           talosctl apply --nodes {{.NODE_IP}} --insecure \
             --file {{.ROOT_DIR}}/{{.TALOS_DIR}}/base.yaml \
-            --config-patch @{{.ROOT_DIR}}/{{.TALOS_DIR}}/nodes/{{.NODE_NAME}}.yaml \
             --config-patch @{{.ROOT_DIR}}/{{.TALOS_DIR}}/roles/{{.NODE_ROLE}}.yaml
 
   wait:node:
