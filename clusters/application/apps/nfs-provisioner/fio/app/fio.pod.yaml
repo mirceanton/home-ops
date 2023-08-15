@@ -1,0 +1,21 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: fio-tester
+  namespace: nfs-provisioner-system
+spec:
+  containers:
+    - name: fio
+      image: nixery.dev/shell/fio
+      args:
+        - sleep
+        - "infinity"
+      volumeMounts:
+        - name: nfs-pvc
+          mountPath: "/mnt"
+  volumes:
+    - name: nfs-pvc
+      persistentVolumeClaim:
+        claimName: nfs-test-claim
+  restartPolicy: "Never"
