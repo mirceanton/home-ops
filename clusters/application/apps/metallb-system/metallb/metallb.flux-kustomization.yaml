@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: clusters/management/apps/metallb-system/metallb/app
+  path: clusters/application/apps/metallb-system/metallb/app
   prune: true
   wait: true
   timeout: 10m0s
@@ -27,7 +27,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: clusters/management/apps/metallb-system/metallb/resources
+  path: clusters/application/apps/metallb-system/metallb/resources
   prune: true
   wait: true
   timeout: 10m0s

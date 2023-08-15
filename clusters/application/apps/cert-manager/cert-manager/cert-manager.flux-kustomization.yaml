@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: clusters/management/apps/cert-manager/cert-manager/app
+  path: clusters/application/apps/cert-manager/cert-manager/app
   prune: true
   wait: true
   timeout: 10m0s

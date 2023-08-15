@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: clusters/management/apps/ingress-nginx/ingress-nginx/app
+  path: clusters/application/apps/ingress-nginx/ingress-nginx/app
   prune: true
   wait: true
   timeout: 10m0s
