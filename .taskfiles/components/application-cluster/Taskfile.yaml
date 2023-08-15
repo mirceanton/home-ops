@@ -4,6 +4,7 @@ version: '3'
 includes:
   talos: ./talos.yaml
   k8s: ./k8s.yaml
+  flux: ./flux.yaml
 
 tasks:
   bootstrap:
@@ -13,3 +14,5 @@ tasks:
       - task: talos:wait
       - task: k8s:bootstrap
       - task: k8s:wait
+      - task: flux:bootstrap
+      - task: flux:wait
