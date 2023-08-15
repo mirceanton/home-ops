@@ -10,10 +10,10 @@ tasks:
       - task: age
       - task: talosctl
       - task: kubectl
-      - task: kubectx
-      - task: kubens
-      - task: k9s
+      - task: kswitcher
+      - task: kube-ps1
       - task: helm
+      - task: k9s
 
   flux:
     desc: Install the flux CLI and set up bash completion.
@@ -41,7 +41,7 @@ tasks:
     desc: Install the talosctl CLI and set up bash completion.
     dir: /tmp
     cmds:
-      - wget https://github.com/siderolabs/talos/releases/download/v1.4.5/talosctl-linux-amd64 -O talosctl
+      - wget https://github.com/siderolabs/talos/releases/download/v1.4.8/talosctl-linux-amd64 -O talosctl
       - sudo install -o root -g root talosctl /usr/local/bin/talosctl
       - talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl > /dev/null
 
@@ -57,6 +57,7 @@ tasks:
     dir: /tmp
     cmds:
       - curl -fsSL https://raw.githubusercontent.com/mirceanton/kswitcher/v1.0.0/scripts/install.sh | sudo sh
+      - mkdir -p ~/.kube/configs
 
   kube-ps1:
     desc: Install the kube-ps1 shell prompt.
@@ -71,7 +72,6 @@ tasks:
             echo -e "\n. ~/.kube/kube-ps1.sh" >> ~/.bashrc
             echo -e "PS1='\$(kube_ps1)] \W \$ '" >> ~/.bashrc
           fi
-
 
   helm:
     desc: Install the helm CLI and set up bash completion.
