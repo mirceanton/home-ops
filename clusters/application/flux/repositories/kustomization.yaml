@@ -5,3 +5,6 @@ resources:
   - jetstack.helm-repository.yaml
   - metallb.helm-repository.yaml
   - nfs-subdir-external-provisioner.helm-repository.yaml
+  - descheduler.helm-repository.yaml
+  - metrics-server.helm-repository.yaml
+  - node-feature-discovery.helm-repository.yaml
