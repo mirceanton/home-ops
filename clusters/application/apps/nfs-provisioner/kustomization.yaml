@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - nfs-provisioner.namespace.yaml
   - nfs-provisioner/nfs-provisioner.flux-kustomization.yaml
-  - nfs-provisioner/fio.flux-kustomization.yaml
+  - fio/fio.flux-kustomization.yaml
