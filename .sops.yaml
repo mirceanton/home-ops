@@ -1,7 +1,7 @@
 ---
 creation_rules:
   # Talos files
-  - path_regex: .*\/talos\/(secrets|base|talosconfig)(\.sops)?\.yaml
+  - path_regex: .*\/(secrets|base|talosconfig)(\.sops)?\.yaml
     encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
     key_groups:
       - age:
