@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: home-ops
+  name: flux-system
   namespace: flux-system
 spec:
   interval: 1m0s
@@ -13,12 +13,12 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: home-ops
+  name: flux-system
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/application
+  path: ./clusters/application/flux
   prune: true
   sourceRef:
     kind: GitRepository
-    name: home-ops
+    name: flux-system
