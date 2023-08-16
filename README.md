@@ -8,4 +8,4 @@ _... managed with Flux, Renovate and GitHub Actions_ :robot:
 
 </div>
 
-<br/>
+---
