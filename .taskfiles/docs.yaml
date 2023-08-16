@@ -1,0 +1,16 @@
+---
+version: '3'
+
+tasks:
+  build:
+    desc: Build the docs site.
+    cmds:
+      - docker run --rm -it -v ${PWD}:/docs squidfunk/mkdocs-material build
+
+  dev:
+    desc: Run the mkdocs development server.
+    cmds:
+      - docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+
+  init:
+    desc: Initialize a new mkdocs site.
