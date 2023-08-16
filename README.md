@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="https://camo.githubusercontent.com/5b298bf6b0596795602bd771c5bddbb963e83e0f/68747470733a2f2f692e696d6775722e636f6d2f7031527a586a512e706e67" align="center" width="144px" height="144px"/>
+<img src="https://raw.githubusercontent.com/mirceanton/home-ops/docs/init/icon.png" align="center" width="144px" height="144px"/>
 
-### My home operations repository :octocat:
+<h3> My home operations repository </h3>
 
-_... managed with Flux, Renovate and GitHub Actions_ :robot:
+<i>managed with Flux, Renovate and GitHub Actions</i> 🤖
 
 </div>
 
