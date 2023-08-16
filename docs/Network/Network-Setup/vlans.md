@@ -1,6 +1,4 @@
-# Network Setup
-
-## VLANS
+# VLANS
 
 |  Name   |      Network      |  Tag   | Description                    |
 | :-----: | :---------------: | :----: | :----------------------------- |
