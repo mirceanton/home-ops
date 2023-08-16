@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/mirceanton/home-ops/docs/init/icon.png" align="center" width="144px" height="144px"/>
+<img src="https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png" align="center" width="144px" height="144px"/>
 
 <h3> My home operations repository </h3>
 

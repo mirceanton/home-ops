@@ -10,8 +10,8 @@ theme:
   name: material
   language: en
 
-  favicon: https://raw.githubusercontent.com/mirceanton/home-ops/docs/init/icon.png
-  logo: https://raw.githubusercontent.com/mirceanton/home-ops/docs/init/icon.png
+  favicon: https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png
+  logo: https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png
 
   icon:
     repo: fontawesome/brands/github
