@@ -8,10 +8,10 @@ repo_name: mirceanton/home-ops
 
 theme:
   name: material
-  # favicon: 
-  # logo: 
-
   language: en
+
+  favicon: icon.png
+  logo: icon.png
 
   icon:
     repo: fontawesome/brands/github
