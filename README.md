@@ -1,13 +1,11 @@
-# Amir Homelab
+<div align="center">
 
-This is a monorepo that holds the configuration for my home Infrastructure and Kubernetes Clusters.
+<img src="https://camo.githubusercontent.com/5b298bf6b0596795602bd771c5bddbb963e83e0f/68747470733a2f2f692e696d6775722e636f6d2f7031527a586a512e706e67" align="center" width="144px" height="144px"/>
 
-## Quickstart
+### My home operations repository :octocat:
 
-In order to clone and start using this repo, you need to have Taskfile installed, then use the `tools` task to install all the other dependencies:
+_... managed with Flux, Renovate and GitHub Actions_ :robot:
 
-```bash
-wget https://github.com/go-task/task/releases/download/v3.28.0/task_linux_amd64.deb
-sudo dpkg -i task_linux_amd64.deb
-task tools
-```
+</div>
+
+<br/>
