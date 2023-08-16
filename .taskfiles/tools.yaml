@@ -50,6 +50,7 @@ tasks:
     dir: /tmp
     cmds:
       - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - sudo install -o root -g root kubectl /usr/local/bin/kubectl
       - kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
   kswitcher:
