@@ -1,3 +1,7 @@
-# HomeOPS
+---
+hide:
+  - navigation
+  - toc
+---
 
-Homelab implemented as-code.
+--8<-- "README.md"
