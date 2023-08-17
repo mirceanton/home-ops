@@ -20,7 +20,7 @@ tasks:
   bootstrap:
     desc: Bootstrap talos on the management cluster nodes.
     deps:
-      - sops:decrypt # decrypt the talos config files
+      - sops:decrypt  # decrypt the talos config files
     cmds:
       - task: talos-utils:bootstrap:node
         vars:
