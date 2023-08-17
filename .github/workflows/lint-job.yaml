@@ -1,0 +1,22 @@
+---
+name: Lint Job
+
+on:
+  push:
+    branches: [ main ]
+  pull_request: {}
+
+jobs:
+  lint-job:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11.4-alpine3.18
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@master
+
+      - name: Install pip packages
+        run: pip3 install yamllint
+
+      - name: Run yamllint
+        run: yamllint .
