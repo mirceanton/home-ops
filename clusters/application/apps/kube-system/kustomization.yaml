@@ -1,7 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - descheduler/descheduler.flux-kustomization.yaml
-  - metrics-server/metrics-server.flux-kustomization.yaml
-  - node-feature-discovery/node-feature-discovery.flux-kustomization.yaml

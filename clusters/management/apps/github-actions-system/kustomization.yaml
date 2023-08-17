@@ -1,7 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - github-actions-system.namespace.yaml
-  - github-token.secret.sops.yaml
-  - actions-runner-controller/actions-runner-controller.flux-kustomization.yaml

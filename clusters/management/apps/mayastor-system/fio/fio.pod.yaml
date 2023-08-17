@@ -1,0 +1,23 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: fio-tester
+  namespace: mayastor-system
+spec:
+  containers:
+    - name: fio
+      image: nixery.dev/shell/fio
+      stdin: true
+      tty: true
+      args:
+        - sleep
+        - "infinity"
+      volumeMounts:
+        - name: mayastor-pvc
+          mountPath: "/mnt"
+  volumes:
+    - name: mayastor-pvc
+      persistentVolumeClaim:
+        claimName: mayastor-test-claim
+  restartPolicy: "Never"

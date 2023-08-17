@@ -1,0 +1,15 @@
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: gh-runner-autoscaler
+  namespace: home-ops-runners
+spec:
+  scaleTargetRef:
+    kind: RunnerDeployment
+    name: gh-runner-deployment
+  minReplicas: 1
+  maxReplicas: 12
+  metrics:
+    - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+      repositoryNames: [ mirceanton/home-ops ]

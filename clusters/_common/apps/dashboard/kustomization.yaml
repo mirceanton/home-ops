@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - files:
+      - homer/config/config.yaml
+    name: homer-configmap
+    namespace: dashboard
+
+  - files:
+      - homer/config/icon-download.sh
+    name: homer-asset-downloader-script
+    namespace: dashboard
+
+resources:
+  - dashboard.namespace.yaml
+  - homer/homer.deployment.yaml
+  - homer/homer.service.yaml
+  - homer/homer.ingress.yaml
