@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - flux-system/
   - discord-notifier.ks.yaml
-  - common.ks.yaml
-  - apps.ks.yaml
+  - repositories.ks.yaml

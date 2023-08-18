@@ -1,6 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ingress-advertisement.l2-advertisement.yaml
-  - ingress-pool.ip-address-pool.yaml
