@@ -6,6 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   type: discord
-  channel: application-cluster
+  channel: home-cluster
   secretRef:
     name: discord-url

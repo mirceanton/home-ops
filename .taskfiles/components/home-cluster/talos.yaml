@@ -22,17 +22,17 @@ tasks:
     cmds:
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster
+          TALOS_DIR: infra/home-cluster
           NODE_IP: 10.0.20.11
           NODE_NAME: hkc-01
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster
+          TALOS_DIR: infra/`
           NODE_IP: 10.0.20.12
           NODE_NAME: hkc-02
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/application-cluster
+          TALOS_DIR: infra/home-cluster
           NODE_IP: 10.0.20.13
           NODE_NAME: hkc-03
 
@@ -41,8 +41,8 @@ tasks:
     cmds:
       - task: talos-utils:import:config
         vars:
-          TALOS_DIR: infra/application-cluster
-      - talosctl config context application-cluster
+          TALOS_DIR: infra/home-cluster
+      - talosctl config context home-cluster
 
   wait:
     desc: Wait for the application talos cluster to be up and running.

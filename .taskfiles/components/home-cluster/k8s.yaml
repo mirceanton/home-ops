@@ -27,8 +27,8 @@ tasks:
     cmds:
       - task: kubernetes-utils:import:config
         vars:
-          CLUSTER_NAME: application-cluster
-      - kswitcher admin@application-cluster
+          CLUSTER_NAME: home-cluster
+      - kswitcher admin@home-cluster
 
   wait:
     desc: Wait for Kubernetes to be ready on the application cluster.
