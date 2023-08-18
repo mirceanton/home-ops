@@ -1,18 +1,13 @@
 ---
 version: '3'
 
-includes:
-  wait_for:
-    taskfile: ./wait.yaml
-    internal: true
-
 tasks:
   bootstrap:
     desc: Install Kubernetes on the Talos cluster.
     cmds: [ talosctl bootstrap ]
 
   import:config:
-    desc: Fetch the kubeconfig from the talos cluster/
+    desc: Fetch the kubeconfig from the talos cluster
     run: once
     cmds:
       - talosctl kubeconfig ~/.kube/configs/{{.CLUSTER_NAME}}.yaml --force
@@ -21,27 +16,44 @@ tasks:
     desc: Wait for the Kubernetes endpoint to respond to requests.
     silent: true
     cmds:
-      - echo "Waiting for the Kubernetes Endpoint to be Ready..."
-      - task: wait_for:command
-        vars:
-          COMMAND: kubectl get pods
+      - printf "Waiting for the Kubernetes Endpoint to be Ready"
+      - |
+        #!/bin/bash
 
-  wait:nodes:
-    desc: Wait for all of the nodes to be marked as ready.
-    silent: true
-    cmds:
-      - echo "Waiting for the Kubernetes Nodes to be Ready..."
-      - task: wait_for:command
-        vars:
-          COMMAND: kubectl wait --for=condition=Ready nodes --all --timeout 10m
+        while true; do
+            output=$(kubectl get --raw='/readyz?verbose' 2>&1)
+            if echo "$output" | grep -q "readyz check passed"; then
+                echo " Endpoint is Healthy!"
+                break
+            else
+                printf "."
+                sleep 1
+            fi
+        done
 
-  wait:kube-service:
+  wait:pod-replicas:
     desc: Wait for the specified kubernetes deployment to reach the specified number of replicas.
     silent: true
     vars:
       REPLICAS: 3
     cmds:
       - echo "Waiting for service to be ready - {{.SERVICE}}..."
-      - task: wait_for:command
-        vars:
-          COMMAND: kubectl get pods -n kube-system | grep -c '{{.SERVICE}}'
+      - |
+        #!/bin/bash
+
+        desired_count={{.REPLICAS}}
+        label_selector="{{.SERVICE}}"
+
+        echo "Waiting for $desired_count pods with label '$label_selector' to be running..."
+
+        while true; do
+            running_count=$(kubectl get pods -A -l k8s-app=$label_selector -o jsonpath='{.items[*].status.phase}' | tr ' ' '\n' | grep "Running" | wc -l)
+            
+            if [[ $running_count -eq $desired_count ]]; then
+                echo "All $desired_count pods are running."
+                break
+            else
+                echo "$running_count out of $desired_count pods are running. Waiting..."
+                sleep 1
+            fi
+        done

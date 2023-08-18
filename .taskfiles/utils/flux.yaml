@@ -1,11 +1,6 @@
 ---
 version: '3'
 
-includes:
-  wait_for:
-    taskfile: ./wait.yaml
-    internal: true
-
 tasks:
   bootstrap:
     desc: Install flux on a cluster.
@@ -28,9 +23,9 @@ tasks:
     silent: true
     cmds:
       - echo "Waiting for Flux to synchronize all Kustomizations..."
-      - task: wait_for:command
-        vars:
-          COMMAND: "kubectl wait --for=condition=Ready kustomizations.kustomize.toolkit.fluxcd.io -A --all --timeout 10m"
+      # - task: wait_for:command
+      #   vars:
+      #     COMMAND: "kubectl wait --for=condition=Ready kustomizations.kustomize.toolkit.fluxcd.io -A --all --timeout 10m"
 
   reconcile:
     desc: Force flux to reconcile all kustomizations.
