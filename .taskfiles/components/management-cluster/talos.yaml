@@ -27,19 +27,16 @@ tasks:
           TALOS_DIR: infra/management-cluster
           NODE_IP: 10.0.10.11
           NODE_NAME: mkc-01
-          NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
           TALOS_DIR: infra/management-cluster
           NODE_IP: 10.0.10.12
           NODE_NAME: mkc-02
-          NODE_ROLE: controlplane
       - task: talos-utils:bootstrap:node
         vars:
           TALOS_DIR: infra/management-cluster
           NODE_IP: 10.0.10.13
           NODE_NAME: mkc-03
-          NODE_ROLE: controlplane
 
   import:config:
     desc: Import the talosconfig file for the management cluster.
