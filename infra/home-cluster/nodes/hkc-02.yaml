@@ -1,0 +1,10 @@
+---
+machine:
+  type: controlplane
+
+  network:
+    interfaces:
+      - interface: enx4efcccb71390
+        dhcp: true
+        vip:
+          ip: 10.0.20.10
