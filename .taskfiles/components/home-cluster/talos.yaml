@@ -27,7 +27,7 @@ tasks:
           NODE_NAME: hkc-01
       - task: talos-utils:bootstrap:node
         vars:
-          TALOS_DIR: infra/`
+          TALOS_DIR: infra/home-cluster
           NODE_IP: 10.0.20.12
           NODE_NAME: hkc-02
       - task: talos-utils:bootstrap:node
