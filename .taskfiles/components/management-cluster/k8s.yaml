@@ -34,16 +34,31 @@ tasks:
     desc: Wait for Kubernetes to be ready on the management cluster.
     deps: [ import:config ]
     cmds:
-      - task: kubernetes-utils:wait:endpoint
       - task: kubernetes-utils:wait:pod-replicas
         vars:
-          SERVICE: kube-apiserver
+          SERVICE: calico-node
+          REPLICAS: 3
       - task: kubernetes-utils:wait:pod-replicas
         vars:
-          SERVICE: kube-controller-manager
+          SERVICE: calico-kube-controllers
+          REPLICAS: 1
       - task: kubernetes-utils:wait:pod-replicas
         vars:
           SERVICE: kube-proxy
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
+        vars:
+          SERVICE: kube-controller-manager
+          REPLICAS: 3
       - task: kubernetes-utils:wait:pod-replicas
         vars:
           SERVICE: kube-scheduler
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
+        vars:
+          SERVICE: kube-apiserver
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
+        vars:
+          SERVICE: kube-dns
+          REPLICAS: 2

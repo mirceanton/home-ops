@@ -12,48 +12,23 @@ tasks:
     cmds:
       - talosctl kubeconfig ~/.kube/configs/{{.CLUSTER_NAME}}.yaml --force
 
-  wait:endpoint:
-    desc: Wait for the Kubernetes endpoint to respond to requests.
-    silent: true
-    cmds:
-      - printf "Waiting for the Kubernetes Endpoint to be Ready"
-      - |
-        #!/bin/bash
-
-        while true; do
-            output=$(kubectl get --raw='/readyz?verbose' 2>&1)
-            if echo "$output" | grep -q "readyz check passed"; then
-                echo " Endpoint is Healthy!"
-                break
-            else
-                printf "."
-                sleep 1
-            fi
-        done
-
   wait:pod-replicas:
     desc: Wait for the specified kubernetes deployment to reach the specified number of replicas.
     silent: true
-    vars:
-      REPLICAS: 3
     cmds:
-      - echo "Waiting for service to be ready - {{.SERVICE}}..."
+      - echo "Waiting for {{.REPLICAS}} replicas of service to be ready - {{.SERVICE}}..."
       - |
         #!/bin/bash
 
         desired_count={{.REPLICAS}}
         label_selector="{{.SERVICE}}"
 
-        echo "Waiting for $desired_count pods with label '$label_selector' to be running..."
-
         while true; do
-            running_count=$(kubectl get pods -A -l k8s-app=$label_selector -o jsonpath='{.items[*].status.phase}' | tr ' ' '\n' | grep "Running" | wc -l)
+            running_count=$(kubectl get pods -A -l k8s-app=$label_selector -o jsonpath='{.items[*].status.phase}' 2>/dev/null | tr ' ' '\n' | grep "Running" | wc -l)
             
             if [[ $running_count -eq $desired_count ]]; then
-                echo "All $desired_count pods are running."
                 break
             else
-                echo "$running_count out of $desired_count pods are running. Waiting..."
                 sleep 1
             fi
         done

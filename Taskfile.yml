@@ -7,7 +7,7 @@ includes:
   docs: .taskfiles/docs.yaml
 
   mkc: .taskfiles/components/management-cluster
-  akc: .taskfiles/components/application-cluster
+  hkc: .taskfiles/components/home-cluster
 
 tasks:
   default:

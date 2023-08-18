@@ -1,8 +1,6 @@
 ---
 version: '3'
 
-vars:
-
 includes:
   sops:
     taskfile: ../../sops.yaml
@@ -50,6 +48,7 @@ tasks:
     desc: Wait for the management talos cluster to be up and running.
     deps: [ import:config ]
     cmds:
+      - sleep 2
       - task: talos-utils:wait:node
         vars:
           NODE_IP: 10.0.10.11

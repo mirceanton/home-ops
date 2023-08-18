@@ -2,7 +2,7 @@
 version: '3'
 
 includes:
-  akc-talos:
+  hkc-talos:
     taskfile: ./talos.yaml
     internal: true
   kubernetes-utils:
@@ -17,13 +17,13 @@ tasks:
 
   bootstrap:
     desc: Install Kubernetes on the Talos cluster.
-    deps: [ akc-talos:import:config ]
+    deps: [ hkc-talos:import:config ]
     cmds:
       - task: kubernetes-utils:bootstrap
 
   import:config:
     desc: Import the kubeconfig file for the application cluster.
-    deps: [ akc-talos:import:config ]
+    deps: [ hkc-talos:import:config ]
     cmds:
       - task: kubernetes-utils:import:config
         vars:
@@ -34,20 +34,31 @@ tasks:
     desc: Wait for Kubernetes to be ready on the application cluster.
     deps: [ import:config ]
     cmds:
-      - task: kubernetes-utils:wait:endpoint
-      - task: kubernetes-utils:wait:kube-service
+      - task: kubernetes-utils:wait:pod-replicas
         vars:
-          SERVICE: kube-apiserver
-      - task: kubernetes-utils:wait:kube-service
+          SERVICE: calico-node
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
         vars:
-          SERVICE: kube-controller-manager
-      - task: kubernetes-utils:wait:kube-service
+          SERVICE: calico-kube-controllers
+          REPLICAS: 1
+      - task: kubernetes-utils:wait:pod-replicas
         vars:
           SERVICE: kube-proxy
-      - task: kubernetes-utils:wait:kube-service
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
+        vars:
+          SERVICE: kube-controller-manager
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
         vars:
           SERVICE: kube-scheduler
-      - task: kubernetes-utils:wait:kube-service
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
         vars:
-          SERVICE: coredns
+          SERVICE: kube-apiserver
+          REPLICAS: 3
+      - task: kubernetes-utils:wait:pod-replicas
+        vars:
+          SERVICE: kube-dns
           REPLICAS: 2

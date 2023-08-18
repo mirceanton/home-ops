@@ -24,20 +24,17 @@ tasks:
         vars:
           TALOS_DIR: infra/application-cluster
           NODE_IP: 10.0.20.11
-          NODE_NAME: akc-01
-          NODE_ROLE: controlplane
+          NODE_NAME: hkc-01
       - task: talos-utils:bootstrap:node
         vars:
           TALOS_DIR: infra/application-cluster
           NODE_IP: 10.0.20.12
-          NODE_NAME: akc-02
-          NODE_ROLE: controlplane
+          NODE_NAME: hkc-02
       - task: talos-utils:bootstrap:node
         vars:
           TALOS_DIR: infra/application-cluster
           NODE_IP: 10.0.20.13
-          NODE_NAME: akc-03
-          NODE_ROLE: controlplane
+          NODE_NAME: hkc-03
 
   import:config:
     desc: Import the talosconfig file for the application cluster.
@@ -51,6 +48,7 @@ tasks:
     desc: Wait for the application talos cluster to be up and running.
     deps: [ import:config ]
     cmds:
+      - sleep 2
       - task: talos-utils:wait:node
         vars:
           NODE_IP: 10.0.20.11
