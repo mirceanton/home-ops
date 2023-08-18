@@ -1,0 +1,13 @@
+---
+machine:
+  type: controlplane
+
+  network:
+    interfaces:
+      - interface: enx927a32a9519f
+        dhcp: true
+        vip:
+          ip: 10.0.10.10
+
+  nodeLabels:
+    openebs.io/engine: mayastor
