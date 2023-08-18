@@ -5,3 +5,4 @@ resources:
   - flux-system/
   - discord-notifier.ks.yaml
   - repositories.ks.yaml
+  - apps.ks.yaml
