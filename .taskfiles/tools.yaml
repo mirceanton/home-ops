@@ -1,6 +1,17 @@
 ---
 version: '3'
 
+vars:
+  FLUX_VERSION: latest
+  SOPS_VERSION: v3.7.3
+  AGE_VERSION: v1.1.1
+  TALOSCTL_VERSION: v1.5.0
+  KUBECTL_VERSION: v1.28.0
+  KSWITCHER_VERSION: v1.0.0
+  KUBE_PS1_VERSION: v0.8.0
+  HELM_VERSION: latest
+  K9S_VERSION: v0.27.4
+
 tasks:
   default:
     desc: Install all the required tools and utilities.
@@ -25,14 +36,14 @@ tasks:
     desc: Install the sops CLI.
     dir: /tmp
     cmds:
-      - wget https://github.com/mozilla/sops/releases/download/v3.7.3/sops-v3.7.3.linux.amd64 -O sops
+      - wget https://github.com/mozilla/sops/releases/download/{{.SOPS_VERSION}}/sops-{{.SOPS_VERSION}}.linux.amd64 -O sops
       - sudo install -o root -g root sops /usr/local/bin/sops
 
   age:
-    desc: Install the sops CLI.
+    desc: Install the age CLI.
     dir: /tmp
     cmds:
-      - wget https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz -O age.tar.gz
+      - wget https://github.com/FiloSottile/age/releases/download/{{.AGE_VERSION}}/age-{{.AGE_VERSION}}-linux-amd64.tar.gz -O age.tar.gz
       - tar xvf age.tar.gz
       - sudo install -o root -g root age/age /usr/local/bin/age
       - sudo install -o root -g root age/age-keygen /usr/local/bin/age-keygen
@@ -41,7 +52,7 @@ tasks:
     desc: Install the talosctl CLI and set up bash completion.
     dir: /tmp
     cmds:
-      - wget https://github.com/siderolabs/talos/releases/download/v1.4.8/talosctl-linux-amd64 -O talosctl
+      - wget https://github.com/siderolabs/talos/releases/download/{{.TALOSCTL_VERSION}}/talosctl-linux-amd64 -O talosctl
       - sudo install -o root -g root talosctl /usr/local/bin/talosctl
       - talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl > /dev/null
 
@@ -49,22 +60,22 @@ tasks:
     desc: Install the kubectl CLI and set up bash completion.
     dir: /tmp
     cmds:
-      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - curl -LO "https://dl.k8s.io/release/{{.KUBECTL_VERSION}}/bin/linux/amd64/kubectl"
       - sudo install -o root -g root kubectl /usr/local/bin/kubectl
       - kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
   kswitcher:
-    desc: Install the kswitch CLI.
+    desc: Install the kswitcher CLI.
     dir: /tmp
     cmds:
-      - curl -fsSL https://raw.githubusercontent.com/mirceanton/kswitcher/v1.0.0/scripts/install.sh | sudo sh
+      - curl -fsSL https://raw.githubusercontent.com/mirceanton/kswitcher/{{.KSWITCHER_VERSION}}/scripts/install.sh | sudo sh
       - mkdir -p ~/.kube/configs
 
   kube-ps1:
     desc: Install the kube-ps1 shell prompt.
     dir: /tmp
     cmds:
-      - wget https://raw.githubusercontent.com/jonmosco/kube-ps1/v0.8.0/kube-ps1.sh
+      - wget https://raw.githubusercontent.com/jonmosco/kube-ps1/{{.KUBE_PS1_VERSION}}/kube-ps1.sh
       - mv kube-ps1.sh ~/.kube/kube-ps1.sh
       - cmd: |
           # Check if the lines are already present in ~/.bashrc
@@ -84,6 +95,6 @@ tasks:
     desc: Install the k9s CLI and set up bash completion.
     dir: /tmp
     cmds:
-      - wget https://github.com/derailed/k9s/releases/download/v0.27.4/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
+      - wget https://github.com/derailed/k9s/releases/download/{{.K9S_VERSION}}/k9s_Linux_amd64.tar.gz -O k9s.tar.gz
       - tar xvf k9s.tar.gz
       - sudo install -o root -g root k9s /usr/local/bin/k9s
