@@ -13,6 +13,9 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
+  depends_on:
+    - repositories
+    - cluster-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
