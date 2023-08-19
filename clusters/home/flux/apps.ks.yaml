@@ -13,7 +13,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  depends_on:
+  dependsOn:
     - repositories
     - cluster-config
   postBuild:
