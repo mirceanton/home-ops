@@ -16,12 +16,12 @@ tasks:
       - task: wait
 
   bootstrap:
-    desc: Install flux on the application cluster.
+    desc: Install flux on the home cluster.
     deps: [ hkc-k8s:import:config ]
     cmds:
       - task: flux-utils:bootstrap
         vars:
-          PATH: clusters/application/flux
+          PATH: clusters/home/flux
 
   reconcile:
     desc: Force flux to reconcile all kustomizations.
