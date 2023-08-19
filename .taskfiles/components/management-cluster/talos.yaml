@@ -52,9 +52,11 @@ tasks:
       - task: talos-utils:wait:node
         vars:
           NODE_IP: 10.0.10.11
+      - sleep 2
       - task: talos-utils:wait:node
         vars:
           NODE_IP: 10.0.10.12
+      - sleep 2
       - task: talos-utils:wait:node
         vars:
           NODE_IP: 10.0.10.13
