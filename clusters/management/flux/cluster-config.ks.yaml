@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: clusters/home/flux/discord-notifier
+  path: clusters/management/flux/cluster-config
   prune: true
   wait: true
   timeout: 10m0s

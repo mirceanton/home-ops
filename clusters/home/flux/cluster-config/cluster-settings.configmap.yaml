@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+data:
+  CLUSTER_NAME: home
+  CLUSTER_ID: 1
+
+  METALLB_POOL: 10.0.20.20-10.0.20.20
+
+  TIMEZONE: Europe/Bucharest
