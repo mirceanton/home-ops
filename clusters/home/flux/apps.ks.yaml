@@ -14,8 +14,8 @@ spec:
     kind: GitRepository
     name: flux-system
   dependsOn:
-    - repositories
-    - cluster-config
+    - name: repositories
+    - name: cluster-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
