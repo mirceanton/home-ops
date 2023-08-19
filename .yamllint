@@ -31,7 +31,8 @@ rules:
     ignore:
       - 'infra/**/*/talosconfig.yaml'
       - 'infra/**/*/base.yaml'
-      - '**/*/*.secret.yaml'
+      - 'infra/**/*/secrets.yaml'
+      - 'clusters/**/*/*.secret.yaml'
 
   # Ignore truthy for github workflows due to dummy trigger on the
   # 'on:' clause
