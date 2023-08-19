@@ -1,18 +1,18 @@
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
-kind: Kustomization
-metadata:
-  name: cert-manager
-  namespace: flux-system
-spec:
-  path: clusters/_base/apps/cert-manager
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# kind: Kustomization
+# metadata:
+#   name: cert-manager
+#   namespace: flux-system
+# spec:
+#   path: clusters/_base/apps/cert-manager
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
 
-  interval: 5m
-  retryInterval: 1m
-  timeout: 10m
+#   interval: 5m
+#   retryInterval: 1m
+#   timeout: 10m
 
-  prune: true
-  wait: true
+#   prune: true
+#   wait: true
