@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   path: clusters/_base/apps/cert-manager/app
+  targetNamespace: cert-manager
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,7 +25,8 @@ spec:
 #   name: cert-manager-issuers
 #   namespace: flux-system
 # spec:
-#   path: clusters/_base/apps/cert-manager/app
+#   path: clusters/_base/apps/cert-manager/issuers
+#   targetNamespace: cert-manager
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
