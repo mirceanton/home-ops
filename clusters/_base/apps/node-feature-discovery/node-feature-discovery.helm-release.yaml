@@ -32,4 +32,6 @@ spec:
   uninstall:
     keepHistory: false
 
-  values: {}
+  values:
+    master:
+      replicaCount: 3
