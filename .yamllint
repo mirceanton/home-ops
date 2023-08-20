@@ -9,6 +9,7 @@ ignore:
   # Ignore Flux generated files
   - clusters/**/*/gotk-sync.yaml
   - clusters/**/*/gotk-components.yaml
+  - clusters/_base/bootstrap/calico/calico.yaml
 
 rules:
   line-length: disable
