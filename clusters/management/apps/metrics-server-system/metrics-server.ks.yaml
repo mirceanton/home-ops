@@ -19,4 +19,4 @@ spec:
   wait: true
 
   dependsOn:
-    - name: metallb-config
+    - name: kubelet-serving-cert-approver-app
