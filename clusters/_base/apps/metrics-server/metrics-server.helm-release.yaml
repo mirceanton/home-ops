@@ -33,4 +33,5 @@ spec:
   uninstall:
     keepHistory: false
 
-  values: {}
+  values:
+    replicas: 3
