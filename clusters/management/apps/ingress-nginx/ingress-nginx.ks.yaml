@@ -11,12 +11,19 @@ spec:
     kind: GitRepository
     name: flux-system
 
-  interval: 5m
-  retryInterval: 1m
-  timeout: 10m
+  interval: ${KUSTOMIZATION_INTERVAL}
+  retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
+  timeout: ${KUSTOMIZATION_TIMEOUT}
 
   prune: true
   wait: true
 
   dependsOn:
     - name: metallb-config
+
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: Secret
+        name: cluster-secrets

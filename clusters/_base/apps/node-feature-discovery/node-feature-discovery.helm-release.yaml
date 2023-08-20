@@ -4,7 +4,7 @@ kind: HelmRelease
 metadata:
   name: node-feature-discovery
 spec:
-  interval: 15m
+  interval: ${HELMRELEASE_INTERVAL}
   chart:
     spec:
       chart: node-feature-discovery
@@ -13,21 +13,20 @@ spec:
         kind: HelmRepository
         name: node-feature-discovery
         namespace: flux-system
-      interval: 1m
 
   rollback:
-    timeout: 10m
+    timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
     recreate: true
     cleanupOnFail: true
 
   install:
     remediation:
-      retries: 3
+      retries: ${HELMRELEASE_INSTALL_RETRIES}
 
   upgrade:
     cleanupOnFail: true
     remediation:
-      retries: 3
+      retries: ${HELMRELEASE_UPGRADE_RETRIES}
 
   uninstall:
     keepHistory: false
