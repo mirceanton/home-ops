@@ -17,6 +17,3 @@ spec:
 
   prune: true
   wait: true
-
-  dependsOn:
-    - name: kubelet-serving-cert-approver
