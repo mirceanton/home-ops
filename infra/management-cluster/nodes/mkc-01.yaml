@@ -4,7 +4,7 @@ machine:
 
   network:
     interfaces:
-      - interface: enx7a1dc9fad3e1
+      - interface: enx3ef94e2e35ab
         dhcp: true
         vip:
           ip: 10.0.10.10
