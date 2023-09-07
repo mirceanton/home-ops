@@ -6,11 +6,13 @@ RUN apt update && apt upgrade -y && apt install git curl wget unzip sudo iproute
 # Clone this repository
 RUN mkdir /workspace && \
     cd /workspace && \
-    git clone https://github.com/mirceanton/home-ops && \
-    cd home-ops
+    git clone https://github.com/mirceanton/home-ops
+
+WORKDIR /workspace
 
 # Install taskfile
-RUN wget --no-check-certificate https://github.com/go-task/task/releases/download/v3.29.1/task_linux_amd64.deb && \
+RUN cd home-ops && \
+    wget --no-check-certificate https://github.com/go-task/task/releases/download/v3.29.1/task_linux_amd64.deb && \
     dpkg -i task_linux_amd64.deb
 
 # Install required tools
