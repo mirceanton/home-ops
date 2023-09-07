@@ -4,8 +4,10 @@ name: Build and Push Dev Docker Image to Docker Hub
 on:
   push:
     branches: [ "main" ]
+  pull_request: {}
   workflow_dispatch: {}
- 
+  tags: [ 'v*' ]
+
 env:
   REGISTRY: docker.io
   IMAGE_NAME: antonmircea/home-ops-dev
