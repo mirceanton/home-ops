@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./clusters/home/bootstrap
+  path: kubernetes/bootstrap
   prune: true
   sourceRef:
     kind: GitRepository
