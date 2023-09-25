@@ -10,7 +10,7 @@ spec:
   targetNamespace: cert-manager
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-ops-git-repo
 
   interval: ${KUSTOMIZATION_INTERVAL}
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
