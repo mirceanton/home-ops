@@ -36,6 +36,7 @@ spec:
       replicaCount: 3
 
     gc:
+      replicaCount: 3
       # ===========================================
       # Schedule the pods on controlplane nodes
       # ===========================================
