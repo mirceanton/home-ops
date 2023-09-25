@@ -33,7 +33,7 @@ spec:
 
   values:
     controller:
-      replicaCount: 2
+      replicaCount: 3
 
       extraEnvs:
         - name: TZ
@@ -53,6 +53,9 @@ spec:
       #   prometheusRule:
       #     enabled: false
 
+      # ===========================================
+      # Schedule the pods on controlplane nodes
+      # ===========================================
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -60,3 +63,16 @@ spec:
           labelSelector:
             matchLabels:
               app.kubernetes.io/instance: ingress-nginx
+
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+
+      affinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: In
+                values: [ "true" ]
