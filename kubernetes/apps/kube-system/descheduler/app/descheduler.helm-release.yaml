@@ -48,10 +48,12 @@ spec:
             podsHavingTooManyRestarts:
               podRestartThreshold: 5
               includingInitContainers: true
+
         RemovePodsViolatingTopologySpreadConstraint:
           enabled: true
           params:
             includeSoftConstraints: true
+
         PodLifeTime:
           enabled: true
           params:
@@ -60,7 +62,8 @@ spec:
                 - Pending
                 - PodInitializing
                 - ContainerCreating
-              maxPodLifeTimeSeconds: 3600 # 1h
+              maxPodLifeTimeSeconds: 3600  # 1h
+
         RemoveFailedPods:
           enabled: true
           params:
@@ -72,18 +75,23 @@ spec:
               includingInitContainers: true
               excludeOwnerKinds:
                 - Job
-              minPodLifetimeSeconds: 3600 # 1h
+              minPodLifetimeSeconds: 3600  # 1h
+
         RemoveDuplicates:
           enabled: true
+
         RemovePodsViolatingNodeTaints:
           enabled: true
+
         RemovePodsViolatingNodeAffinity:
           enabled: true
           params:
             nodeAffinityType:
               - requiredDuringSchedulingIgnoredDuringExecution
+
         RemovePodsViolatingInterPodAntiAffinity:
           enabled: true
+
         LowNodeUtilization:
           enabled: true
           params:
