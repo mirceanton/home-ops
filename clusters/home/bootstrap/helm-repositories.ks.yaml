@@ -8,7 +8,7 @@ spec:
   interval: 5m
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: home-ops-git-repo
   path: clusters/_base/repositories
   prune: true
   wait: true
