@@ -5,6 +5,7 @@ env:
   CLUSTER_NAME: home-cluster
   CLUSTER_ENDPOINT: 10.0.10.10
   KUBERNETES_VERSION: 1.28.2
+  SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
 
 includes:
   tools: .taskfiles/tools.yaml
