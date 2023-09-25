@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - home-ops.git-repository.yaml
+  - home-ops.ks.yaml
+
+secretGenerator:
+  - name: sops-age
+    namespace: flux-system
+    files:
+      - keys.txt

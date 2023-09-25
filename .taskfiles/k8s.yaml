@@ -28,3 +28,6 @@ tasks:
     desc: Install the core-components on the cluster.
     cmds:
       - helmfile apply
+      - cp $SOPS_AGE_KEY_FILE manifests/keys.txt
+      - kubectl apply -k manifests/
+      - rm manifests/keys.txt
