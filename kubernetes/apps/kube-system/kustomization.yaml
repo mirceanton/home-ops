@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - cilium/flux.ks.yaml
+  - coredns/flux.ks.yaml
+  - descheduler/flux.ks.yaml
+  - metrics-server/flux.ks.yaml
+  - node-feature-discovery/flux.ks.yaml
+  - reloader/flux.ks.yaml

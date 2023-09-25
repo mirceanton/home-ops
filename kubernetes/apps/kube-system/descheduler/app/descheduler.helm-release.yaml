@@ -1,0 +1,96 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: descheduler
+spec:
+  interval: ${HELMRELEASE_INTERVAL}
+  chart:
+    spec:
+      chart: descheduler
+      version: 0.28.0
+      sourceRef:
+        kind: HelmRepository
+        name: descheduler
+        namespace: flux-system
+
+  rollback:
+    timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
+    recreate: true
+    cleanupOnFail: true
+
+  install:
+    remediation:
+      retries: ${HELMRELEASE_INSTALL_RETRIES}
+
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: ${HELMRELEASE_UPGRADE_RETRIES}
+
+  uninstall:
+    keepHistory: false
+
+  values:
+    kind: Deployment
+    schedule: "*/5 * * * *"
+
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+
+    deschedulerPolicy:
+      strategies:
+        RemovePodsHavingTooManyRestarts:
+          enabled: true
+          params:
+            podsHavingTooManyRestarts:
+              podRestartThreshold: 5
+              includingInitContainers: true
+        RemovePodsViolatingTopologySpreadConstraint:
+          enabled: true
+          params:
+            includeSoftConstraints: true
+        PodLifeTime:
+          enabled: true
+          params:
+            podLifeTime:
+              states:
+                - Pending
+                - PodInitializing
+                - ContainerCreating
+              maxPodLifeTimeSeconds: 3600 # 1h
+        RemoveFailedPods:
+          enabled: true
+          params:
+            failedPods:
+              reasons:
+                - NodeShutdown
+                - ImagePullBackOff
+                - CreateContainerConfigError
+              includingInitContainers: true
+              excludeOwnerKinds:
+                - Job
+              minPodLifetimeSeconds: 3600 # 1h
+        RemoveDuplicates:
+          enabled: true
+        RemovePodsViolatingNodeTaints:
+          enabled: true
+        RemovePodsViolatingNodeAffinity:
+          enabled: true
+          params:
+            nodeAffinityType:
+              - requiredDuringSchedulingIgnoredDuringExecution
+        RemovePodsViolatingInterPodAntiAffinity:
+          enabled: true
+        LowNodeUtilization:
+          enabled: true
+          params:
+            nodeResourceUtilizationThresholds:
+              thresholds:
+                cpu: 35
+                memory: 35
+              targetThresholds:
+                cpu: 40
+                memory: 40

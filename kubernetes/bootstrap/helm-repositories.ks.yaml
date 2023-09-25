@@ -1,0 +1,31 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: helm-repositories
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+  path: kubernetes/repositories
+
+  interval: 5m
+  timeout: 10m0s
+  prune: true
+  wait: true
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+
+  dependsOn:
+    - name: cluster-config
+
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: Secret
+        name: cluster-secrets
