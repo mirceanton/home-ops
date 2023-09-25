@@ -7,6 +7,17 @@ includes:
     internal: true
 
 tasks:
+  reset:
+    desc: Reset all of the talos nodes.
+    cmds:
+      - cmd: |
+          talosctl reset --reboot --graceful=false --wipe-mode=all \
+            -n 10.0.10.21 \
+            -n 10.0.10.22 \
+            -n 10.0.10.11 \
+            -n 10.0.10.12 \
+            -n 10.0.10.13
+
   generate-config:
     desc: Generate the Talos machineconfig files.
     deps: [ task: sops:decrypt ]
