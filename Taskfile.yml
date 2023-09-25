@@ -12,8 +12,10 @@ includes:
   docs: .taskfiles/docs.yaml
   talos:
     taskfile: .taskfiles/talos.yaml
-    dir: infra/home-cluster
-  k8s: .taskfiles/k8s.yaml
+    dir: infra/home-cluster/talos
+  k8s:
+    taskfile: .taskfiles/k8s.yaml
+    dir: infra/home-cluster/kubernetes
 
 tasks:
   default:
