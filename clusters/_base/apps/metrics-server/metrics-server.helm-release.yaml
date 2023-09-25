@@ -33,3 +33,19 @@ spec:
 
   values:
     replicas: 3
+
+    # ===========================================
+    # Schedule the pods on controlplane nodes
+    # ===========================================
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: In
+              values: [ "true" ]
