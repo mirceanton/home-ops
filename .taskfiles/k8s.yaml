@@ -11,6 +11,7 @@ tasks:
     run: once
     cmds:
       - talosctl kubeconfig ~/.kube/configs/$CLUSTER_NAME.yaml --force
+      - kswitcher admin@$CLUSTER_NAME
 
   wait:
     desc: Wait for all of the cluster nodes to be in a ready state.
