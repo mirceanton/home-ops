@@ -2,11 +2,6 @@
 version: '3'
 
 tasks:
-  default:
-    silent: true
-    cmds:
-      - task -l
-
   bootstrap:
     desc: Start the Kubernetes bootstrap process.
     cmds: [ talosctl bootstrap ]

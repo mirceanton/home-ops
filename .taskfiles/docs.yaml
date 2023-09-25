@@ -5,11 +5,6 @@ env:
   DOCKER_IMAGE: squidfunk/mkdocs-material
 
 tasks:
-  default:
-    silent: true
-    cmds:
-      - task -l
-
   build:
     desc: Build the docs site.
     cmds:

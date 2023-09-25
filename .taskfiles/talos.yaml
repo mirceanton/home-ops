@@ -7,11 +7,6 @@ includes:
     internal: true
 
 tasks:
-  default:
-    silent: true
-    cmds:
-      - task -l
-
   generate-config:
     desc: Generate the Talos machineconfig files.
     deps: [ task: sops:decrypt ]
