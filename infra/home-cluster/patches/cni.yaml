@@ -1,4 +1,10 @@
 ---
+machine:
+  features:
+    kubePrism:
+      enabled: true
+      port: 7445
+
 cluster:
   network:
     cni:
