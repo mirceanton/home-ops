@@ -39,3 +39,4 @@ tasks:
       - task: k8s:bootstrap
       - task: k8s:kubeconfig
       - task: k8s:wait
+      - task: k8s:core-components
