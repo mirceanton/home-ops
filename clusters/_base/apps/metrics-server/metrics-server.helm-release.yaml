@@ -32,20 +32,12 @@ spec:
     keepHistory: false
 
   values:
-    replicas: 3
-
-    # ===========================================
-    # Schedule the pods on controlplane nodes
-    # ===========================================
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
-
-    affinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-            - key: node-role.kubernetes.io/control-plane
-              operator: In
-              values: [ "true" ]
+    replicas: 2
+    # Prevent 2 instances from being scheduled on the same node
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: metrics-server

@@ -33,7 +33,15 @@ spec:
 
   values:
     controller:
-      replicaCount: 3
+      replicaCount: 2
+      # Prevent 2 instances from being scheduled on the same node
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: ingress-nginx
 
       extraEnvs:
         - name: TZ
@@ -52,27 +60,3 @@ spec:
       #       any: true
       #   prometheusRule:
       #     enabled: false
-
-      # ===========================================
-      # Schedule the pods on controlplane nodes
-      # ===========================================
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/instance: ingress-nginx
-
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
-
-      affinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-              - key: node-role.kubernetes.io/control-plane
-                operator: In
-                values: [ "true" ]
