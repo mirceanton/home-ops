@@ -1,6 +1,11 @@
 ---
 version: '3'
 
+includes:
+  sops:
+    taskfile: sops.yaml
+    internal: true
+
 tasks:
   bootstrap:
     desc: Start the Kubernetes bootstrap process.
@@ -26,6 +31,7 @@ tasks:
 
   core-components:
     desc: Install the core-components on the cluster.
+    deps: [ task: sops:decrypt ]
     cmds:
       - helmfile apply
       - cp $SOPS_AGE_KEY_FILE manifests/keys.txt
