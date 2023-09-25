@@ -24,19 +24,7 @@ tasks:
       - NODE_IP=10.0.10.22 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
       - kubectl get nodes
 
-  flux:
-    desc: Install flux on the cluster.
-    preconditions:
-      - sh: test -f ~/.config/sops/age/keys.txt
-        msg: "No age key found at ~/.config/sops/age/keys.txt"
-    vars:
-      REPO: home-ops
-      OWNER: mirceanton
-      BRANCH:
-        sh: git branch --show-current
-      TIMEOUT: 15m
-      PATH: clusters/home/flux
+  core-components:
+    desc: Install the core-components on the cluster.
     cmds:
-      - kubectl create ns flux-system
-      - kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/mike/.config/sops/age/keys.txt
-      - flux bootstrap github --owner {{.OWNER}} --repository {{.REPO}} --branch {{.BRANCH}} --path {{.PATH}} --network-policy=false --timeout={{.TIMEOUT}} --personal
+      - helmfile apply
