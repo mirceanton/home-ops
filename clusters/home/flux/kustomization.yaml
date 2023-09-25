@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - flux-system/
   - cluster-config.ks.yaml
-  - repositories.ks.yaml
+  - helm-repositories.ks.yaml
   - apps.ks.yaml
