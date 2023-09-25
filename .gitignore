@@ -1,7 +1,8 @@
 # Ignore talos generated files
-controlplane.yaml
-worker.yaml
-talosconfig
+infra/**/*/controlplane.yaml
+infra/**/*/worker.yaml
+infra/**/*/talosconfig
+infra/**/*/secrets.yaml
 
 # Ignore "raw" kubernetes secrets
 clusters/**/*/*.secret.yaml
