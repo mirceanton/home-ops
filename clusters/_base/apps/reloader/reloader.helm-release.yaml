@@ -45,7 +45,7 @@ spec:
           operator: Exists
           effect: NoSchedule
 
-      nodeAffinity:
+      affinity:
         requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
