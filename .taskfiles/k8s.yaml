@@ -15,9 +15,12 @@ tasks:
   wait:
     desc: Wait for all of the cluster nodes to be in a ready state.
     cmds:
-      - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-endpoint.sh
-      - sleep 30
-      - kubectl wait --for condition=Ready nodes --all
+      - NODE_IP=10.0.10.11 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-ready.sh
+      - NODE_IP=10.0.10.12 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-ready.sh
+      - NODE_IP=10.0.10.13 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-ready.sh
+      - NODE_IP=10.0.10.21 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-ready.sh
+      - NODE_IP=10.0.10.22 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-ready.sh
+      - kubectl get nodes
 
   flux:
     desc: Install flux on the cluster.
