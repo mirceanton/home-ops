@@ -33,7 +33,7 @@ tasks:
       BRANCH:
         sh: git branch --show-current
       TIMEOUT: 15m
-      PATH: kubernetes/home
+      PATH: clusters/home
     cmds:
       - kubectl create ns flux-system
       - kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/mike/.config/sops/age/keys.txt
