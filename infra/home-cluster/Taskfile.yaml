@@ -1,0 +1,37 @@
+---
+version: '3'
+
+tasks:
+  generate:
+    description: Generate the Talos machine-config files.
+    cmds:
+      - cmd: |
+          talosctl gen config 10.0.10.10 https://k8s.infra.mirceanton.com:6443 \
+            --kubernetes-version 1.28.2 \
+            --with-secrets secrets.yaml \
+            --config-patch @patches/allow-controlplane-workloads.yaml \
+            --config-patch @patches/kubelet-certificates.yaml \
+            --config-patch @patches/interface-names.yaml \
+            --config-patch @patches/dhcp.yaml \
+            --config-patch @patches/cni.yaml \
+            --config-patch @patches/install-disk.yaml \
+            --config-patch-control-plane @patches/vip.yaml \
+            --output rendered/
+      - talosctl --talosconfig rendered/talosconfig config endpoint 10.0.10.11 10.0.10.12 10.0.10.13
+      - talosctl --talosconfig rendered/talosconfig config node 10.0.10.11
+      - mkdir -p ~/.talos
+      - rm ~/.talos/config
+      - cp rendered/talosconfig ~/.talos/config
+
+  clean:
+    description: Delete the rendered Talos configuration.
+    cmds: [ rm rendered/* ]
+
+  apply:
+    description: Push the rendered configuration to the Talos nodes.
+    cmds:
+      - talosctl apply --insecure -f rendered/controlplane.yaml -n 10.0.10.11
+      - talosctl apply --insecure -f rendered/controlplane.yaml -n 10.0.10.12
+      - talosctl apply --insecure -f rendered/controlplane.yaml -n 10.0.10.13
+      - talosctl apply --insecure -f rendered/worker.yaml -n 10.0.10.21
+      - talosctl apply --insecure -f rendered/worker.yaml -n 10.0.10.22

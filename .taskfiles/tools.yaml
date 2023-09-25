@@ -14,6 +14,11 @@ vars:
 
 tasks:
   default:
+    silent: true
+    cmds:
+      - task -l
+
+  all:
     desc: Install all the required tools and utilities.
     cmds:
       - task: flux

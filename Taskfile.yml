@@ -1,13 +1,19 @@
 ---
 version: '3'
 
+env:
+  CLUSTER_NAME: home-cluster
+  CLUSTER_ENDPOINT: 10.0.10.10
+  KUBERNETES_VERSION: 1.28.2
+
 includes:
   tools: .taskfiles/tools.yaml
   sops: .taskfiles/sops.yaml
   docs: .taskfiles/docs.yaml
-
-  mkc: .taskfiles/components/management-cluster
-  hkc: .taskfiles/components/home-cluster
+  talos:
+    taskfile: .taskfiles/talos.yaml
+    dir: infra/home-cluster
+  k8s: .taskfiles/k8s.yaml
 
 tasks:
   default:
@@ -16,21 +22,17 @@ tasks:
       - task -l
 
   delete-stuck-ns:
+    description: Delete all namespaces stuck in "terminating" state.
     cmds:
-      - |
-        #!/usr/bin/env bash
+      - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
 
-        function delete_namespace () {
-            echo "Deleting namespace $1"
-            kubectl get namespace $1 -o json > tmp.json
-            sed -i 's/"kubernetes"//g' tmp.json
-            kubectl replace --raw "/api/v1/namespaces/$1/finalize" -f ./tmp.json
-            rm ./tmp.json
-        }
-
-        TERMINATING_NS=$(kubectl get ns | awk '$2=="Terminating" {print $1}')
-
-        for ns in $TERMINATING_NS
-        do
-            delete_namespace $ns
-        done
+  cluster:
+    description: End to end Kubernetes cluster bootstrap
+    cmds:
+      - task: talos:generate-config
+      - task: talos:apply-config
+      - task: talos:talosconfig
+      - task: talos:wait
+      - task: k8s:bootstrap
+      - task: k8s:kubeconfig
+      - task: k8s:wait
