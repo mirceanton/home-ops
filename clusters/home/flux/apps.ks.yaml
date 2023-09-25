@@ -15,8 +15,8 @@ spec:
     name: flux-system
 
   dependsOn:
-    - name: repositories
     - name: cluster-config
+    - name: helm-repositories
 
   postBuild:
     substituteFrom:
