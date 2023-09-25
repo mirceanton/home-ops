@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: 4.7.1
+      version: 4.8.0
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
@@ -33,7 +33,7 @@ spec:
 
   values:
     controller:
-      replicaCount: 3
+      replicaCount: 2
 
       extraEnvs:
         - name: TZ
