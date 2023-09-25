@@ -33,6 +33,8 @@ spec:
 
   values:
     master:
-      replicaCount: 3
+      replicaCount: 2
+      tolerations: []
+      affinity: {}
     gc:
       replicaCount: 2
