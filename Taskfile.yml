@@ -32,6 +32,7 @@ tasks:
   cluster:create:
     description: End to end Kubernetes cluster bootstrap
     cmds:
+      - task: talos:delete-config
       - task: talos:generate-config
       - task: talos:apply-config
       - task: talos:talosconfig
