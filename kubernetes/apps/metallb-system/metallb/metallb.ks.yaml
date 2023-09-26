@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-metallb
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/metallb-syste/metallb/app
+  path: kubernetes/apps/metallb-system/metallb/app
   targetNamespace: metallb-system
 
   wait: true
@@ -34,7 +34,7 @@ metadata:
   name: cluster-apps-metallb-resources
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/metallb-syste/metallb/resources
+  path: kubernetes/apps/metallb-system/metallb/resources
   targetNamespace: metallb-system
 
   wait: true
