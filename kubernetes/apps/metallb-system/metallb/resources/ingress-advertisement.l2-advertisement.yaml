@@ -6,4 +6,4 @@ metadata:
   namespace: metallb-system
 spec:
   ipAddressPools:
-  - ingress-pool
+    - ingress-pool

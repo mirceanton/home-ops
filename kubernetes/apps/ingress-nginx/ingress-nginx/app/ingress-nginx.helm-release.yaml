@@ -69,13 +69,3 @@ spec:
       service:
         annotations:
           io.cilium/lb-ipam-ips: ${INGRESS_CIDR}
-
-      # metrics:
-      #   enabled: true
-      #   serviceMonitor:
-      #     enabled: true
-      #     namespace: networking
-      #     namespaceSelector:
-      #       any: true
-      #   prometheusRule:
-      #     enabled: false

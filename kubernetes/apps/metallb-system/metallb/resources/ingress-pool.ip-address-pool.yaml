@@ -6,4 +6,4 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - ${METALLB_INGRESS_POOL}
+    - ${METALLB_INGRESS_POOL}
