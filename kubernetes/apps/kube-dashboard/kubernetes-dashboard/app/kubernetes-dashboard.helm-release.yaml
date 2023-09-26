@@ -57,9 +57,9 @@ spec:
 
     pinnedCRDs: []
 
-    networkPolicy:
-      enabled: true
-      ingressDenyAll: true
-
     serviceMonitor:
       enabled: false
+
+    serviceAccount:
+      create: true
+      name: dashboard-admin
