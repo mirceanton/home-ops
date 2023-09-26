@@ -40,7 +40,7 @@ spec:
     kubeProxyReplacement: true
 
     operator:
-      replicas: 2
+      replicas: 3  # one replica on each controlplane node
 
       # Schedule pods on controlplane nodes
       tolerations:

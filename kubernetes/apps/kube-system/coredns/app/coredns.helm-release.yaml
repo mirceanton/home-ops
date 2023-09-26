@@ -34,7 +34,7 @@ spec:
 
   values:
     fullnameOverride: coredns
-    replicaCount: 2
+    replicaCount: 3  # one replica on each controlplane node
 
     # Allow scheduling on controlplane nodes
     tolerations:

@@ -34,31 +34,18 @@ spec:
     keepHistory: false
 
   values:
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
-
     adminUser:
       create: true
       username: admin
       createSecret: false
 
     ingress:
-      enabled: false
-      # className: internal
-      # hosts:
-      #   - host: gitops.cluster.infra.mirceanton.com
-      #     paths:
-      #       - path: /
-      #         pathType: Prefix
+      enabled: true
+      hosts:
+        - host: flux-dashboard.admin.home.mirceanton.com
+          paths:
+            - path: /
+              pathType: Prefix
 
     networkPolicy:
       create: true

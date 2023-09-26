@@ -46,19 +46,6 @@ spec:
       resourceName: "descheduler"
       resourceNamescape: "kube-system"
 
-    # Schedule pods on controlplane nodes
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: node-role.kubernetes.io/control-plane
-                  operator: Exists
-
     service:
       enabled: true
 
