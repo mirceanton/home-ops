@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: cilium
 spec:
-  interval: ${HELMRELEASE_INTERVAL}
   chart:
     spec:
       chart: cilium
@@ -15,20 +14,18 @@ spec:
         name: cilium
         namespace: flux-system
 
+  interval: ${HELMRELEASE_INTERVAL}
   rollback:
     timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
     recreate: true
     cleanupOnFail: true
-
   install:
     remediation:
       retries: ${HELMRELEASE_INSTALL_RETRIES}
-
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: ${HELMRELEASE_UPGRADE_RETRIES}
-
   uninstall:
     keepHistory: false
 
