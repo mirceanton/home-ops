@@ -10,6 +10,7 @@ spec:
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-apps-flux
+    - name: cluster-apps-ingress-nginx
 
   wait: true
   prune: false
