@@ -49,7 +49,7 @@ releases:
     wait: true
     needs:
       - kube-system/cilium
-    vales:
+    values:
       - installCRDs: true
 
         policies:
