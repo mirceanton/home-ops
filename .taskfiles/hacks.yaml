@@ -1,0 +1,8 @@
+---
+version: '3'
+
+tasks:
+  delete-stuck-ns:
+    description: Delete all namespaces stuck in "terminating" state.
+    cmds:
+      - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh

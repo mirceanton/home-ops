@@ -9,6 +9,7 @@ env:
 
 includes:
   tools: .taskfiles/tools.yaml
+  hacks: .taskfiles/hacks.yaml
   sops: .taskfiles/sops.yaml
   docs: .taskfiles/docs.yaml
   talos:
@@ -24,12 +25,11 @@ tasks:
     cmds:
       - task -l
 
-  delete-stuck-ns:
-    description: Delete all namespaces stuck in "terminating" state.
-    cmds:
-      - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
+  cluster:reset:
+    description: Reset the Talos cluster into maintenance state.
+    cmds: [ task talos:reset ]
 
-  cluster:
+  cluster:create:
     description: End to end Kubernetes cluster bootstrap
     cmds:
       - task: talos:generate-config
