@@ -17,6 +17,11 @@ spec:
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
   timeout: ${KUSTOMIZATION_TIMEOUT}
 
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+
   sourceRef:
     kind: GitRepository
     name: ${KUSTOMIZATION_GIT_SOURCE}
@@ -46,6 +51,11 @@ spec:
   interval: ${KUSTOMIZATION_INTERVAL}
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
   timeout: ${KUSTOMIZATION_TIMEOUT}
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
 
   sourceRef:
     kind: GitRepository
