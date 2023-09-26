@@ -6,4 +6,5 @@ resources:
   - ./namespace.yaml
   - ./flux/flux.ks.yaml
   - ./addons/addons.ks.yaml
+  - ./tf-controller/tf-controller.ks.yaml
   - ./weave-gitops/weave-gitops.ks.yaml
