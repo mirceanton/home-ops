@@ -33,6 +33,7 @@ spec:
     keepHistory: false
 
   values:
+    fullnameOverride: 'kubernetes-dashboard'
     replicaCount: 2
 
     # Schedule pods on controlplane nodes
