@@ -9,7 +9,7 @@ spec:
   path: ./kubernetes/apps/ingress-nginx/ingress-nginx/app
   targetNamespace: ingress-nginx
   dependsOn:
-    - name: cluster-apps-cilium-resources
+    - name: cluster-apps-metallb-resources
 
   wait: true
   prune: false
