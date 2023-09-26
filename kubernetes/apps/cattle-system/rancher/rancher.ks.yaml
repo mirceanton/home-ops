@@ -8,8 +8,8 @@ spec:
   path: kubernetes/apps/cattle-system/rancher/app
   targetNamespace: cattle-system
   dependsOn:
-    - name: cert-manager
-    - name: ingress-nginx
+    - name: cluster-apps-cert-manager
+    - name: cluster-apps-ingress-nginx
 
   wait: true
   prune: false
