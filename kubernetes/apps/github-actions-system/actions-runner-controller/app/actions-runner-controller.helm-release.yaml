@@ -30,16 +30,10 @@ spec:
     keepHistory: false
 
   values:
-    replicaCount: 2
-    enableLeaderElection: true
-
     syncPeriod: 1m
-
     logFormat: json
-
     authSecret:
       name: github-token-secret
-
     metrics:
       serviceMonitor:
         enabled: false
