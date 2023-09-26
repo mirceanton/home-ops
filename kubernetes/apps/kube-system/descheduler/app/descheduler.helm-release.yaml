@@ -33,9 +33,18 @@ spec:
     keepHistory: false
 
   values:
+    schedule: "*/5 * * * *"
+
     kind: Deployment
     replicas: 2
-    schedule: "*/5 * * * *"
+    leaderElection:
+      enabled: true
+      leaseDuration: 15s
+      renewDeadline: 10s
+      retryPeriod: 2s
+      resourceLock: "leases"
+      resourceName: "descheduler"
+      resourceNamescape: "kube-system"
 
     # Schedule pods on controlplane nodes
     tolerations:
