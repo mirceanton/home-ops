@@ -6,10 +6,10 @@ metadata:
   name: discord
   namespace: flux-system
 spec:
-  summary: "management cluster"
+  summary: ""
   providerRef:
     name: discord
-  eventSeverity: info
+  eventSeverity: error
   eventSources:
     - kind: GitRepository
       name: '*'
