@@ -66,6 +66,10 @@ spec:
         name: nginx
         default: true
 
+      service:
+        annotations:
+          io.cilium/lb-ipam-ips: ${INGRESS_CIDR}
+
       # metrics:
       #   enabled: true
       #   serviceMonitor:
@@ -75,10 +79,3 @@ spec:
       #       any: true
       #   prometheusRule:
       #     enabled: false
-
-      resources:
-        requests:
-          cpu: 100m
-          memory: 250Mi
-        limits:
-          memory: 500Mi

@@ -9,7 +9,7 @@ data:
   CLUSTER_NAME: home-cluster
   CLUSTER_DOMAIN: home.mirceanton.com
 
-  METALLB_POOL: 10.0.10.20-10.0.10.20
+  INGRESS_CIDR: 10.0.10.20/32
 
   TIMEZONE: Europe/Bucharest
 
