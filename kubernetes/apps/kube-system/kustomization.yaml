@@ -3,9 +3,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - cilium/flux.ks.yaml
-  - coredns/flux.ks.yaml
-  - descheduler/flux.ks.yaml
-  - metrics-server/flux.ks.yaml
-  - node-feature-discovery/flux.ks.yaml
-  - reloader/flux.ks.yaml
+  - cilium/cilium.ks.yaml
+  - coredns/coredns.ks.yaml
+  - descheduler/descheduler.ks.yaml
+  - metrics-server/metrics.ks.yaml
+  - node-feature-discovery/node-feature-discovery.ks.yaml
+  - reloader/reloader.ks.yaml
