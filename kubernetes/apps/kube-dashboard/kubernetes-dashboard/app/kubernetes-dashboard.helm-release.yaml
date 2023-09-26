@@ -9,10 +9,10 @@ spec:
   chart:
     spec:
       chart: kubernetes-dashboard
-      version: 0.9.2
+      version: 6.0.8
       sourceRef:
         kind: HelmRepository
-        name: banzaicloud-stable
+        name: kubernetes-dashboard
         namespace: flux-system
 
   rollback:
@@ -50,6 +50,15 @@ spec:
 
     ingress:
       enabled: true
-      path: /
+      paths: [ "/" ]
       hosts:
         - kube-dashboard.home.mirceanton.com
+
+    pinnedCRDs: []
+
+    networkPolicy:
+      enabled: true
+      ingressDenyAll: true
+
+    serviceMonitor:
+      enabled: false

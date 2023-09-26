@@ -3,8 +3,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: banzaicloud-stable
+  name: kubernetes-dashboard
   namespace: flux-system
 spec:
   interval: ${HELMREPOSITORY_INTERVAL}
-  url: https://kubernetes-charts.banzaicloud.com
+  url: https://kubernetes.github.io/dashboard/
