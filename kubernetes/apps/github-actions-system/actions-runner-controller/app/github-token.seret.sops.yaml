@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: github-token
+    namespace: github-actions-system
+data:
+    github_token: ENC[AES256_GCM,data:ys5gpFfHixUM9iR0D4b1cmNvaozxXGZGTbN/7NXsRXCDdtiyaqfskhGyV2QNb+wGrYpd0LdJgEf9lNTrbayXgQXlJ9SchONVs8R9bSGz3j39qI/GsVZZhF0LTEg9hN8446ogk50TRjF0zkSaSduPHwmJdX59PW2JP4FPwA==,iv:5BwWNSyvzUGf6CzfHMHQJb6smNeIFO/STyus/jX7rQA=,tag:mm+o6liSFrcrEtasX35Jiw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1z6la87sppenwcdcr7lqj8amf5e4x7dq9gzr739cwg5ve6vgj0d8s6cahdj
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBxSXdRWExKWWVzTzgxTXJ6
+            Y2c1Ykh5YXVFUDM2d3EyNFh0bmRPaUM5UjE0CnB0QUFsU1JBazMyYzJ6bUdJdFJ4
+            YUgydWEzekxqRHBrc0lWVHVYYTE1cnMKLS0tIGMwNmFndHdQTXovT1JzRVV5OWxa
+            UGk2ejF5Q1AwMFp0NDlqcWNteWM1MzQKzy8SWSjlWCUmpxU0exD1AzSc+ywp8t+3
+            M3oeoW4rYv0s83q83lG2TbK2cAK0QCvJrHFMXDBURkj6vIDHRQIPlQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2023-06-10T23:21:04Z"
+    mac: ENC[AES256_GCM,data:WbX5jttRW8rxWBdwIuTHFjz+/at5Kltth3Ekfo1o1BYjFfEQlPYAFP11Opol+JZeGVSO+0UOqcYxD2Eqv9mY6tJKT7kcs21NK0FlmTJiIa36naHy4GwJQ8V03HO57hUwdekruZcaohEY03cFumbv/XnQ670VQlRoDDKVZAyvqHo=,iv:Fy5d4/+CTOKozICrCgPRbiKX0xNafY/FodwcZ/9BYtE=,tag:YsPiWu+bu3zzv5QFARyWbw==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3
