@@ -6,3 +6,8 @@ tasks:
     description: Delete all namespaces stuck in "terminating" state.
     cmds:
       - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
+
+  get-dashboard-token:
+    description: Fetch and decode the token needed for the kubernetes dashboard authentication
+    cmds:
+      - kubectl get secret -n kube-dashboard dashboard-admin-sa-token -o=jsonpath='{.data.token}' | base64 -d
