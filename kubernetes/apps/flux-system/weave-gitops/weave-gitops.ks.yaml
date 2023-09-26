@@ -7,6 +7,9 @@ metadata:
   namespace: flux-system
 spec:
   path: ./kubernetes/apps/flux-system/weave-gitops/app
+  targetNamespace: flux-system
+  dependsOn:
+    - name: cluster-apps-flux
 
   wait: true
   prune: false
