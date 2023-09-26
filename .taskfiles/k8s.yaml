@@ -33,7 +33,8 @@ tasks:
     desc: Install the core-components on the cluster.
     deps: [ task: sops:decrypt ]
     cmds:
+      - kubectl apply -f cilium-namespace.yaml
       - helmfile apply
       - cp $SOPS_AGE_KEY_FILE manifests/keys.txt
-      - kubectl apply -k manifests/
+      - kubectl apply -k flux-manifests/
       - rm manifests/keys.txt

@@ -9,10 +9,9 @@ repositories:
 
 releases:
   - name: cilium
-    namespace: kube-system
+    namespace: cilium-system
     chart: cilium/cilium
     version: 1.14.2
-    wait: true
     values:
       - k8sServiceHost: localhost
       - k8sServicePort: 7445
@@ -32,9 +31,6 @@ releases:
     namespace: kube-system
     chart: coredns/coredns
     version: 1.26.0
-    needs:
-      - cilium
-    wait: true
     values:
       - service:
           clusterIP: 10.96.0.10
@@ -46,6 +42,3 @@ releases:
     namespace: flux-system
     chart: fluxcd-community/flux2
     version: 2.10.1
-    wait: true
-    needs:
-      - kube-system/cilium
