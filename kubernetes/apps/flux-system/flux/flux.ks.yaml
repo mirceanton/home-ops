@@ -7,6 +7,7 @@ metadata:
   namespace: flux-system
 spec:
   path: ./kubernetes/apps/flux-system/flux/app
+  targetNamespace: flux-system
 
   wait: true
   prune: true
