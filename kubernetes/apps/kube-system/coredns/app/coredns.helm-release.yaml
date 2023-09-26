@@ -28,7 +28,6 @@ spec:
       retries: ${HELMRELEASE_UPGRADE_RETRIES}
   uninstall:
     keepHistory: false
-    keepHistory: false
 
   values:
     fullnameOverride: coredns
