@@ -6,8 +6,8 @@ metadata:
   name: home-ops-git-repo
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 10m0s
   ref:
     branch: refactor
-  timeout: 60s
+  timeout: 3m
   url: https://github.com/mirceanton/home-ops
