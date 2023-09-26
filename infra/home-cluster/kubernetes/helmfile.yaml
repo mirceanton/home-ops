@@ -113,7 +113,7 @@ releases:
                       - key: node-role.kubernetes.io/control-plane
                         operator: Exists
 
-        notificationsController:
+        notificationController:
           serviceAccount:
             create: true
           tolerations:
