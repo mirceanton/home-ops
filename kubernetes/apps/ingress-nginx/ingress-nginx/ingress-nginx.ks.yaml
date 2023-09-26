@@ -8,8 +8,6 @@ metadata:
 spec:
   path: ./kubernetes/apps/ingress-nginx/ingress-nginx/app
   targetNamespace: ingress-nginx
-  dependsOn:
-    - cluster-apps-metallb-resources
 
   wait: true
   prune: false

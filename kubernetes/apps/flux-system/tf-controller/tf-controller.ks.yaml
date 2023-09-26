@@ -9,7 +9,7 @@ spec:
   path: ./kubernetes/apps/flux-system/tf-controller/app
   targetNamespace: flux-system
   dependsOn:
-    - cluster-apps-metallb-resources
+    - name: cluster-apps-flux
 
   wait: true
   prune: false

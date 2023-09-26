@@ -9,7 +9,7 @@ spec:
   path: ./kubernetes/apps/flux-system/addons/notifications/discord
   targetNamespace: flux-system
   dependsOn:
-    - cluster-apps-flux
+    - name: cluster-apps-flux
 
   wait: true
   prune: false
@@ -39,7 +39,7 @@ spec:
   path: ./kubernetes/apps/flux-system/addons/notifications/github
   targetNamespace: flux-system
   dependsOn:
-    - cluster-apps-flux
+    - name: cluster-apps-flux
 
   wait: true
   prune: false
