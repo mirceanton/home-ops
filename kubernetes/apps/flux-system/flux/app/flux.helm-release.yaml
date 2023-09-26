@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: fluxv2
+  name: flux
   namespace: flux-system
 spec:
   interval: ${HELMRELEASE_INTERVAL}
@@ -42,7 +42,7 @@ spec:
       logLevel: info
 
     policies:
-      create: false  # network policies were created during cluster bootstrap
+      create: true
 
     cli:
       tolerations:
@@ -59,7 +59,7 @@ spec:
 
     helmController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -74,7 +74,7 @@ spec:
 
     sourceController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -89,7 +89,7 @@ spec:
 
     kustomizeController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -104,7 +104,7 @@ spec:
 
     notificationsController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -119,7 +119,7 @@ spec:
 
     imageAutomationController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -134,7 +134,7 @@ spec:
 
     imageReflectionController:
       serviceAccount:
-        create: false  # serviceaccount was created during cluster bootstrap
+        create: true
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
