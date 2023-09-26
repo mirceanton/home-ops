@@ -34,7 +34,21 @@ spec:
 
   values:
     kind: Deployment
+    replicas: 2
     schedule: "*/5 * * * *"
+
+    # Schedule pods on controlplane nodes
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
 
     service:
       enabled: true

@@ -40,6 +40,9 @@ spec:
     kubeProxyReplacement: true
 
     operator:
+      replicas: 2
+
+      # Schedule pods on controlplane nodes
       tolerations:
         - key: node-role.kubernetes.io/control-plane
           operator: Exists
@@ -51,7 +54,6 @@ spec:
               - matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: Exists
-
     ipam:
       mode: kubernetes
 

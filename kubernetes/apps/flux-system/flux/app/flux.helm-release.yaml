@@ -27,6 +27,7 @@ spec:
 
   upgrade:
     cleanupOnFail: true
+    force: true
     remediation:
       retries: ${HELMRELEASE_UPGRADE_RETRIES}
 

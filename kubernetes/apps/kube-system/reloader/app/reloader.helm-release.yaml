@@ -40,6 +40,19 @@ spec:
       deployment:
         replicas: 2
 
+        # Schedule pods on controlplane nodes
+        tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+            effect: NoSchedule
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-role.kubernetes.io/control-plane
+                      operator: Exists
+
         # Prevent 2 instances from being scheduled on the same node
         topologySpreadConstraints:
           - maxSkew: 1
