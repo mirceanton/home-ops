@@ -61,5 +61,4 @@ spec:
       enabled: false
 
     serviceAccount:
-      create: true
-      name: dashboard-admin
+      create: false
