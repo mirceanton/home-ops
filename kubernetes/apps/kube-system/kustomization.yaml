@@ -6,6 +6,6 @@ resources:
   - cilium/cilium.ks.yaml
   - coredns/coredns.ks.yaml
   - descheduler/descheduler.ks.yaml
-  - metrics-server/metrics.ks.yaml
+  - metrics-server/metrics-server.ks.yaml
   - node-feature-discovery/node-feature-discovery.ks.yaml
   - reloader/reloader.ks.yaml
