@@ -36,6 +36,8 @@ metadata:
 spec:
   path: kubernetes/apps/metallb-system/metallb/resources
   targetNamespace: metallb-system
+  dependsOn:
+    - name: cluster-apps-metallb
 
   wait: true
   prune: false
