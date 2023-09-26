@@ -8,6 +8,8 @@ metadata:
 spec:
   path: ./kubernetes/apps/ingress-nginx/ingress-nginx/app
   targetNamespace: ingress-nginx
+  dependsOn:
+    - cluster-apps-cilium
 
   wait: true
   prune: false
