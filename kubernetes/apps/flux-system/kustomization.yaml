@@ -6,3 +6,4 @@ resources:
   - ./namespace.yaml
   - ./flux/flux.ks.yaml
   - ./addons/addons.ks.yaml
+  - ./weave-gitops/weave-gitops.ks.yaml
