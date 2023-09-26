@@ -30,9 +30,6 @@ spec:
   uninstall:
     keepHistory: false
 
-  uninstall:
-    keepHistory: false
-
   values:
     installCRDs: true
 
