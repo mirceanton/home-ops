@@ -1,0 +1,6 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://github.com/alex1989hu/kubelet-serving-cert-approver/blob/release-0.7/deploy/ha-install.yaml
