@@ -7,6 +7,8 @@ metadata:
 spec:
   path: kubernetes/apps/github-arc-system/actions-runner-controller/app
   targetNamespace: github-arc-system
+  dependsOn:
+    - cluster-apps-cert-manager
 
   wait: true
   prune: false
