@@ -27,6 +27,7 @@ tasks:
       - NODE_IP=10.0.10.13 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
       - NODE_IP=10.0.10.21 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
       - NODE_IP=10.0.10.22 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
+      - NODE_IP=10.0.10.23 bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
       - kubectl get nodes
 
   core-components:

@@ -54,6 +54,7 @@ tasks:
       - talosctl apply --insecure -f rendered/controlplane.yaml -n 10.0.10.13
       - talosctl apply --insecure -f rendered/worker.yaml -n 10.0.10.21
       - talosctl apply --insecure -f rendered/worker.yaml -n 10.0.10.22
+      - talosctl apply --insecure -f rendered/worker.yaml -n 10.0.10.23
 
   talosconfig:
     desc: Import the talosconfig file for the home cluster.
@@ -74,3 +75,4 @@ tasks:
       - NODE_IP=10.0.10.13 bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
       - NODE_IP=10.0.10.21 bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
       - NODE_IP=10.0.10.22 bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
+      - NODE_IP=10.0.10.23 bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
