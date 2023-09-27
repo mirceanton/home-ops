@@ -31,7 +31,7 @@ spec:
 
   values:
     master:
-      replicas: 3  # one replica on each controlplane node
+      replicas: 2
 
       # Schedule pods on controlplane nodes
       tolerations:
@@ -47,7 +47,7 @@ spec:
                     operator: Exists
 
     gc:
-      replicas: 3  # one replica on each controlplane node
+      replicas: 2
 
       # Schedule pods on controlplane nodes
       tolerations:
