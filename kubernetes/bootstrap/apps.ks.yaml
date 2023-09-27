@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
-  path: kubernetes/apps
+  path: kubernetes/demo
 
   interval: 5m
   timeout: 30m
