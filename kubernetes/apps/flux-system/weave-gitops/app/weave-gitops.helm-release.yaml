@@ -39,7 +39,7 @@ spec:
     ingress:
       enabled: true
       hosts:
-        - host: flux-dashboard.admin.home.mirceanton.com
+        - host: weave.admin.home.mirceanton.com
           paths:
             - path: /
               pathType: Prefix

@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kubelet-serving-cert-approver
+  namespace: kubelet-serving-cert-approver
+  labels:
+    app.kubernetes.io/instance: kubelet-serving-cert-approver
+    app.kubernetes.io/name: kubelet-serving-cert-approver
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: kubelet-serving-cert-approver
+      app.kubernetes.io/name: kubelet-serving-cert-approver
+  endpoints:
+  - interval: 60s
+    path: /metrics
+    port: metrics
+  namespaceSelector:
+    matchNames:
+    - kubelet-serving-cert-approver

@@ -29,6 +29,4 @@ spec:
   uninstall:
     keepHistory: false
 
-  values:
-    controller:
-      enabled: true
+  values: {}
