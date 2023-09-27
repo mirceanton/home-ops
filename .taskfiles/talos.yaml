@@ -14,6 +14,7 @@ tasks:
           talosctl reset --reboot --graceful=false --wipe-mode=all \
             -n 10.0.10.21 \
             -n 10.0.10.22 \
+            -n 10.0.10.23 \
             -n 10.0.10.11 \
             -n 10.0.10.12 \
             -n 10.0.10.13
