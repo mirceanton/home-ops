@@ -5,7 +5,7 @@ metadata:
   name: cluster-apps-github-arc
   namespace: flux-system
 spec:
-  path: kubernetes/apps/github-arc-system/actions-runner-controller/app
+  path: kubernetes/apps/actions-runner-controller/app
   targetNamespace: github-arc-system
   dependsOn:
     - name: cluster-apps-cert-manager

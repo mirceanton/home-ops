@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-descheduler
   namespace: flux-system
 spec:
-  path: kubernetes/apps/descheduler-system/descheduler/app
+  path: kubernetes/apps/descheduler/app
   targetNamespace: descheduler-system
   dependsOn: []
 

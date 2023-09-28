@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-metallb
   namespace: flux-system
 spec:
-  path: kubernetes/apps/metallb-system/metallb/app
+  path: kubernetes/apps/metallb/app
   targetNamespace: metallb-system
   dependsOn:
     - name: cluster-apps-flux

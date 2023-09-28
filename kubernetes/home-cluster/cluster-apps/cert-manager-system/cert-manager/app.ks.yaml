@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-cert-manager
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/cert-manager/cert-manager/app
+  path: ./kubernetes/apps/cert-manager/app
   targetNamespace: cert-manager-system
   dependsOn: []
 

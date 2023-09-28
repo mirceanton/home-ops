@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-ingress-nginx
   namespace: flux-system
 spec:
-  path: kubernetes/apps/ingress-nginx-system/ingress-nginx/app
+  path: kubernetes/apps/ingress-nginx/app
   targetNamespace: ingress-nginx-system
   dependsOn:
     - name: cluster-apps-flux

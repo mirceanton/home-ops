@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-node-feature-discovery
   namespace: flux-system
 spec:
-  path: kubernetes/apps/node-feature-discovery-system/node-feature-discovery/app
+  path: kubernetes/apps/node-feature-discovery/app
   targetNamespace: node-feature-discovery-system
   dependsOn:
     - name: cluster-apps-flux

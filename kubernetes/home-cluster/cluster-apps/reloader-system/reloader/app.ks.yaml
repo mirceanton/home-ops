@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-reloader
   namespace: flux-system
 spec:
-  path: kubernetes/apps/reloader-system/reloader/app
+  path: kubernetes/apps/reloader/app
   targetNamespace: reloader-system
   dependsOn:
     - name: cluster-apps-flux

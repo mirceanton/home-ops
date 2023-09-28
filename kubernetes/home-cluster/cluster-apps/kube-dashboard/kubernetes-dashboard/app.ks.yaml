@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-kube-dashboard
   namespace: flux-system
 spec:
-  path: kubernetes/apps/kube-dashboard/kubernetes-dashboard/app
+  path: kubernetes/apps/kubernetes-dashboard/app
   targetNamespace: kube-dashboard
   dependsOn:
     - name: cluster-apps-flux
