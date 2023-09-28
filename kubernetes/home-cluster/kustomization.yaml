@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./cluster-config.ks.yaml
   - ./cluster-infra.ks.yaml
-  # - ./cluster-apps.ks.yaml
+  - ./cluster-apps.ks.yaml
