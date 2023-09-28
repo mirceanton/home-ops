@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: node-feature-discovery
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:

@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: metallb
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:

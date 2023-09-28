@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:

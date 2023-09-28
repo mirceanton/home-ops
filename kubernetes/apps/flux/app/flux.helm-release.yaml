@@ -14,7 +14,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: fluxcd-community
-        namespace: flux-system
 
   rollback:
     timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}

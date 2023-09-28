@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: coredns
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:

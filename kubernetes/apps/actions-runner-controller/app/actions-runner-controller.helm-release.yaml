@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: actions-runner-controller
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:

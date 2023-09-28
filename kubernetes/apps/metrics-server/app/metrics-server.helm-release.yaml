@@ -12,7 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: metrics-server
-        namespace: flux-system
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:
