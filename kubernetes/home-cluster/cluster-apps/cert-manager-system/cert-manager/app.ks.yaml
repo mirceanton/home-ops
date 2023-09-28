@@ -1,28 +1,20 @@
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-github-arc
+  name: cluster-apps-cert-manager
   namespace: flux-system
 spec:
-  path: kubernetes/apps/github-arc-system/actions-runner-controller/app
-  targetNamespace: github-arc-system
-  dependsOn:
-    - name: cluster-apps-flux
-    - name: cluster-apps-coredns
-    - name: cluster-apps-cilium
-    - name: cluster-apps-cert-manager
+  path: ./kubernetes/apps/cert-manager/cert-manager/app
+  targetNamespace: cert-manager-system
+  dependsOn: []
 
   wait: true
   prune: false
   interval: ${KUSTOMIZATION_INTERVAL}
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
   timeout: ${KUSTOMIZATION_TIMEOUT}
-
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
 
   sourceRef:
     kind: GitRepository

@@ -8,10 +8,7 @@ metadata:
 spec:
   path: kubernetes/apps/descheduler-system/descheduler/app
   targetNamespace: descheduler-system
-  dependsOn:
-    - name: cluster-apps-flux
-    - name: cluster-apps-coredns
-    - name: cluster-apps-cilium
+  dependsOn: []
 
   wait: true
   prune: false
