@@ -36,11 +36,59 @@ spec:
 
   values:
     installCRDs: true
+    logLevel: info
+    policies:
+      create: true
 
-    metrics:
-      installCRDs: true
-      logLevel: info
+    helmController:
+      create: true
+      additionalArgs:
+        # increase the number of parallel reconciliations
+        - --concurrent=8
+        - --kube-api-qps=500
+        - --kube-api-burst=1000
+        - --requeue-dependency=5s
+        
+        # Enable drift detection
+        - --feature-gates=DetectDrift=true,CorrectDrift=false
+        
+        # Enable helm near OOM Detection
+        - --feature-gates=OOMWatch=true
+        - --oom-watch-memory-threshold=95
+        - --oom-watch-interval=500ms
+      resources:  # allow more resource usage since we increased the number of reconciliations
+        limits:
+          cpu: 2000m
+          memory: 2Gi
 
-      policies:
-        create: true
+    kustomizeController:
+      create: true
+      additionalArgs:  # increase the number of parallel reconciliations
+        - --concurrent=8
+        - --kube-api-qps=500
+        - --kube-api-burst=1000
+        - --requeue-dependency=5s
+      resources:  # allow more resource usage since we increased the number of reconciliations
+        limits:
+          cpu: 2000m
+          memory: 2Gi
 
+    sourceController:
+      create: true
+      additionalArgs:  # increase the number of parallel reconciliations
+        - --concurrent=8
+        - --kube-api-qps=500
+        - --kube-api-burst=1000
+        - --requeue-dependency=5s
+      resources:  # allow more resource usage since we increased the number of reconciliations
+        limits:
+          cpu: 2000m
+          memory: 2Gi
+
+    notificationController:
+      create: true
+
+    imageAutomationController:
+      create: false
+    imageReflectionController:
+      create: false

@@ -8,7 +8,10 @@ spec:
   path: kubernetes/apps/github-arc-system/actions-runner-controller/app
   targetNamespace: github-arc-system
   dependsOn:
-    - cluster-apps-cert-manager
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
+    - name: cluster-apps-cert-manager
 
   wait: true
   prune: false

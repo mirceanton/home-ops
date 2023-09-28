@@ -8,6 +8,10 @@ metadata:
 spec:
   path: kubernetes/apps/rook-system/rook-ceph/app
   targetNamespace: rook-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
 
   wait: true
   prune: false

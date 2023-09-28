@@ -8,6 +8,10 @@ metadata:
 spec:
   path: kubernetes/apps/kubelet-serving-cert-approver-system/kubelet-serving-cert-approver/app
   targetNamespace: kubelet-serving-cert-approver-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
 
   wait: true
   prune: false

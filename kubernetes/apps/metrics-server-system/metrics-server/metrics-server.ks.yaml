@@ -8,6 +8,11 @@ metadata:
 spec:
   path: kubernetes/apps/metrics-server-system/metrics-server/app
   targetNamespace: metrics-server-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
+    - name: cluster-apps-kscr
 
   wait: true
   prune: false

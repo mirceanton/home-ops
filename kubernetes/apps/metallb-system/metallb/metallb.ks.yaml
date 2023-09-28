@@ -8,6 +8,10 @@ metadata:
 spec:
   path: kubernetes/apps/metallb-system/metallb/app
   targetNamespace: metallb-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
 
   wait: true
   prune: false

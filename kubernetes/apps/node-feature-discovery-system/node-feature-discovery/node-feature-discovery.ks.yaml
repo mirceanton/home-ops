@@ -8,6 +8,10 @@ metadata:
 spec:
   path: kubernetes/apps/node-feature-discovery-system/node-feature-discovery/app
   targetNamespace: node-feature-discovery-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
 
   wait: true
   prune: false

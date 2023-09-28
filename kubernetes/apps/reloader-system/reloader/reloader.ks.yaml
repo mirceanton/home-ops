@@ -8,6 +8,10 @@ metadata:
 spec:
   path: kubernetes/apps/reloader-system/reloader/app
   targetNamespace: reloader-system
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-coredns
+    - name: cluster-apps-cilium
 
   wait: true
   prune: false
