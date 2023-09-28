@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-node-feature-discovery
+  name: cluster-apps-descheduler
   namespace: flux-system
 spec:
-  path: kubernetes/apps/node-feature-discovery/app
-  targetNamespace: node-feature-discovery-system
+  path: kubernetes/apps/descheduler
+  targetNamespace: descheduler-system
   dependsOn: []
 
   wait: true

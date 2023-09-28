@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-metallb
+  name: cluster-apps-kscr
   namespace: flux-system
 spec:
-  path: kubernetes/apps/metallb/app
-  targetNamespace: metallb-system
+  path: kubernetes/apps/kubelet-serving-cert-approver
+  targetNamespace: kubelet-serving-cert-approver-system
   dependsOn: []
 
   wait: true

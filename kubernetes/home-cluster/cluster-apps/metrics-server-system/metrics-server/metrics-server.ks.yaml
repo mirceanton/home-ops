@@ -3,24 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-infra-flux-notifications
+  name: cluster-apps-metrics-server
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/flux/notifications
-  targetNamespace: flux-system
+  path: kubernetes/apps/metrics-server
+  targetNamespace: metrics-server-system
   dependsOn:
-    - name: cluster-infra-flux
+    - name: cluster-apps-kscr
 
   wait: true
   prune: false
   interval: ${KUSTOMIZATION_INTERVAL}
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
   timeout: ${KUSTOMIZATION_TIMEOUT}
-
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
 
   sourceRef:
     kind: GitRepository

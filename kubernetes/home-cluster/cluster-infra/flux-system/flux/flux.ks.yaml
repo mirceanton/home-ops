@@ -6,7 +6,7 @@ metadata:
   name: cluster-infra-flux
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/flux/app
+  path: ./kubernetes/apps/flux
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-infra-cilium

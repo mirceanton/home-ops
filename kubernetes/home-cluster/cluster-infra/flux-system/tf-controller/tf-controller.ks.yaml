@@ -6,7 +6,7 @@ metadata:
   name: cluster-infra-tf-controller
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/tf-controller/app
+  path: ./kubernetes/apps/tf-controller
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-infra-flux

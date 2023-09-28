@@ -3,18 +3,24 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-cert-manager
+  name: cluster-apps-kube-dashboard
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/cert-manager/app
-  targetNamespace: cert-manager-system
-  dependsOn: []
+  path: kubernetes/apps/kubernetes-dashboard
+  targetNamespace: kube-dashboard
+  dependsOn:
+    - name: cluster-apps-ingress-nginx
 
   wait: true
   prune: false
   interval: ${KUSTOMIZATION_INTERVAL}
   retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
   timeout: ${KUSTOMIZATION_TIMEOUT}
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
 
   sourceRef:
     kind: GitRepository

@@ -6,7 +6,7 @@ metadata:
   name: cluster-infra-coredns
   namespace: flux-system
 spec:
-  path: kubernetes/apps/coredns/app
+  path: kubernetes/apps/coredns
   targetNamespace: kube-system
 
   wait: true

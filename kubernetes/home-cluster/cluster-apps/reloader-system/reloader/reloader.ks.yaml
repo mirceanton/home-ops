@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-descheduler
+  name: cluster-apps-reloader
   namespace: flux-system
 spec:
-  path: kubernetes/apps/descheduler/app
-  targetNamespace: descheduler-system
+  path: kubernetes/apps/reloader
+  targetNamespace: reloader-system
   dependsOn: []
 
   wait: true

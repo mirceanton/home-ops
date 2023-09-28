@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-kscr
+  name: cluster-apps-node-feature-discovery
   namespace: flux-system
 spec:
-  path: kubernetes/apps/kubelet-serving-cert-approver/app
-  targetNamespace: kubelet-serving-cert-approver-system
+  path: kubernetes/apps/node-feature-discovery
+  targetNamespace: node-feature-discovery-system
   dependsOn: []
 
   wait: true

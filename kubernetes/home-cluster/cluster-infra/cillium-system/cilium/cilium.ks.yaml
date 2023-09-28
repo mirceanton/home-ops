@@ -6,7 +6,7 @@ metadata:
   name: cluster-infra-cilium
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/cilium/app
+  path: ./kubernetes/apps/cilium
   targetNamespace: cilium-system
 
   wait: true
