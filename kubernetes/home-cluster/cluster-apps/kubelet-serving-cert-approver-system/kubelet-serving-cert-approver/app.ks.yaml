@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-kscr
   namespace: flux-system
 spec:
-  path: kubernetes/apps/kubelet-serving-cert-approver-system/kubelet-serving-cert-approver/app
+  path: kubernetes/apps/kubelet-serving-cert-approver/app
   targetNamespace: kubelet-serving-cert-approver-system
   dependsOn: []
 
