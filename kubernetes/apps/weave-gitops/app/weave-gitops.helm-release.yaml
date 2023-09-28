@@ -53,7 +53,7 @@ spec:
 
     rbac:  # allow manipulation of terraform objects (tf-controller)
       create: true
-      impersonationResourceNames: [ ${WEAVE_ADMIN_USER} ]
+      impersonationResourceNames: [ "${WEAVE_ADMIN_USER}" ]
       additionalRules:
         - apiGroups: [ "infra.contrib.fluxcd.io" ]
           resources: [ "terraforms" ]
