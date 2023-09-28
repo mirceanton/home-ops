@@ -30,6 +30,6 @@ spec:
 
   values:
     master:
-      replicas: 2
+      replicaCount: 2
     gc:
-      replicas: 2
+      replicaCount: 2
