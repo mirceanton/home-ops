@@ -6,7 +6,7 @@ metadata:
     name: github-token-secret
     namespace: flux-system
 stringData:
-    github_token: ${GITHUB_PAT}
+    token: ${GITHUB_PAT}
 
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/notification.toolkit.fluxcd.io/provider_v1beta2.json
