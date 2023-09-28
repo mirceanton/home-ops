@@ -12,7 +12,7 @@ spec:
       version: 0.15.1
       sourceRef:
         kind: HelmRepository
-        name: weaveworks
+        name: tf-controller
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:
