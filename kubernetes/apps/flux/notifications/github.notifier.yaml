@@ -1,6 +1,7 @@
 ---
 apiVersion: v1
 kind: Secret
+type: Opaque
 metadata:
     name: github-token-secret
     namespace: flux-system
