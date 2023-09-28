@@ -30,6 +30,7 @@ spec:
     keepHistory: false
 
   values:
+    operatorNamespace: rook-ceph-system
     ingress:
       dashboard:
         host:
