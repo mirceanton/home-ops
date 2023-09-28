@@ -4,7 +4,6 @@ kind: Secret
 type: Opaque
 metadata:
     name: github-token-secret
-    namespace: flux-system
 stringData:
     token: ${GITHUB_PAT}
 
@@ -14,7 +13,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Provider
 metadata:
   name: github
-  namespace: flux-system
 spec:
   type: github
   address: https://github.com/onedr0p/home-ops
@@ -28,7 +26,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
   name: github
-  namespace: flux-system
 spec:
   providerRef:
     name: github

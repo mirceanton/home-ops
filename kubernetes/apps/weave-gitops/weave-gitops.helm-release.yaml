@@ -34,7 +34,7 @@ spec:
 
     adminUser:
       create: true
-      createSecret: false
+      createSecret: true
       username: ${WEAVE_ADMIN_USER}
 
     ingress:

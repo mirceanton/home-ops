@@ -4,7 +4,6 @@ kind: Secret
 type: Opaque
 metadata:
     name: discord-url
-    namespace: flux-system
 stringData:
     address: ${DISCORD_WEBHOOK_URL}
 
@@ -14,7 +13,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Provider
 metadata:
   name: discord
-  namespace: flux-system
 spec:
   type: discord
   channel: notifs
@@ -27,7 +25,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
   name: discord
-  namespace: flux-system
 spec:
   summary: ""
   providerRef:
