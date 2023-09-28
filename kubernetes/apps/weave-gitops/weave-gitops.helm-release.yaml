@@ -39,6 +39,7 @@ spec:
 
     ingress:
       enabled: true
+      className: nginx
       hosts:
         - host: weave.admin.${CLUSTER_DOMAIN}
           paths:
