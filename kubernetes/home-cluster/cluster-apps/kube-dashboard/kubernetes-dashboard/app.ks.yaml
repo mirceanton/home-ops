@@ -9,9 +9,6 @@ spec:
   path: kubernetes/apps/kubernetes-dashboard/app
   targetNamespace: kube-dashboard
   dependsOn:
-    - name: cluster-apps-flux
-    - name: cluster-apps-coredns
-    - name: cluster-apps-cilium
     - name: cluster-apps-ingress-nginx
 
   wait: true

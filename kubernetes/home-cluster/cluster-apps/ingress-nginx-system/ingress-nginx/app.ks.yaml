@@ -9,9 +9,6 @@ spec:
   path: kubernetes/apps/ingress-nginx/app
   targetNamespace: ingress-nginx-system
   dependsOn:
-    - name: cluster-apps-flux
-    - name: cluster-apps-coredns
-    - name: cluster-apps-cilium
     - name: cluster-apps-metallb-resources
 
   wait: true
