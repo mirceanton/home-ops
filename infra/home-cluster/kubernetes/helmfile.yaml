@@ -42,3 +42,16 @@ releases:
     namespace: flux-system
     chart: fluxcd-community/flux2
     version: 2.10.1
+    values:
+      - helmController:
+          create: true
+      - kustomizeController:
+          create: true
+      - sourceController:
+          create: true
+      - notificationController:
+          create: true
+      - imageAutomationController:
+          create: false
+      - imageReflectionController:
+          create: false
