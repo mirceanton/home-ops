@@ -10,4 +10,9 @@ tasks:
   get-dashboard-token:
     description: Fetch and decode the token needed for the kubernetes dashboard authentication
     cmds:
-      - kubectl get secret -n kube-dashboard dashboard-admin-sa-token -o=jsonpath='{.data.token}' | base64 -d
+      - kubectl get secret dashboard-admin-sa-token -n kube-dashboard -o=jsonpath='{.data.token}' | base64 -d && echo ""
+
+  get-ceph-admin-password:
+    description: Fetch and decode the token needed for the kubernetes dashboard authentication
+    cmds:
+      - kubectl get secret rook-ceph-dashboard-password -n rook-ceph-system  -o=jsonpath='{.data.password}' | base64 -d && echo ""
