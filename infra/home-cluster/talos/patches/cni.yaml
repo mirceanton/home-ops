@@ -1,15 +1,7 @@
 ---
-machine:
-  features:
-    kubePrism:
-      enabled: true
-      port: 7445
-
 cluster:
   network:
     cni:
-      name: none
-  proxy:
-    disabled: true
-  coreDNS:
-    disabled: true
+      name: custom
+      urls:
+        - https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/calico.yaml
