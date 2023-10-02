@@ -5,7 +5,7 @@ on:
   pull_request: {}
 
 jobs:
-  lint-job:
+  flux-check-job:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
