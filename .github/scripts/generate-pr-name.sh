@@ -17,7 +17,7 @@ description="${description//_/ }"
 description="$(echo "$description" | awk '{ for(i=1;i<=NF;i++) $i= toupper(substr($i,1,1)) tolower(substr($i,2)); }1')"
 
 # Format the output
-output="(${topic}): ${description}"
+output="${topic}: ${description}"
 
 # Print the result
 echo "$output"
