@@ -12,10 +12,12 @@ includes:
   talos: ./talos.yaml
   k8s: ./k8s.yaml
   flux: ./flux.yaml
+  sops: ../sops.yaml
 
 tasks:
   cluster:create:
     desc: Bootstrap the application cluster end to end.
+    deps: [ sops:decrypt ]
     cmds:
       - task: talos:generate-config
       - task: talos:apply-config
