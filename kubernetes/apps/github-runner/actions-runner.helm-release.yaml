@@ -28,9 +28,9 @@ spec:
     keepHistory: false
 
   values:
-    githubConfigUrl: https://gihub.com/mirceanton/home-ops
+    githubConfigUrl: ${RUNNER_REPO_URL}
     githubConfigSecret:
       github_token: ${GITHUB_PAT}
 
-    minRunners: 2
-    maxRuners: 10
+    minRunners: ${RUNNER_MIN_REPLICAS}
+    maxRuners: ${RUNNER_MAX_REPLICAS}

@@ -5,6 +5,13 @@ metadata:
   name: cluster-apps-github-runners-home-ops
   namespace: flux-system
 spec:
-  path: kubernetes/apps/gha-runner
+  path: kubernetes/apps/github-runner
   targetNamespace: github-runners
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-github-arc
+
+  postBuild:
+    substitute:
+      RUNNER_REPO_URL: https://github.com/mirceanton/home-ops
+      RUNNER_MIN_REPLICAS: "2"
+      RUNNER_MAX_REPLICAS: "10"
