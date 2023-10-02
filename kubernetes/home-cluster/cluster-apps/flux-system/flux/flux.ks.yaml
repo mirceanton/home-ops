@@ -19,7 +19,7 @@ spec:
     - patch: |
         - op: add
           path: /spec/template/spec/containers/0/args/-
-          value: --concurrent=10
+          value: --concurrent=32
         - op: add
           path: /spec/template/spec/containers/0/args/-
           value: --kube-api-qps=500
@@ -44,8 +44,8 @@ spec:
                 - name: manager
                   resources:
                     limits:
-                      cpu: 2000m
-                      memory: 2Gi
+                      cpu: 4000m
+                      memory: 4Gi
       target:
         kind: Deployment
         name: (kustomize-controller|helm-controller|source-controller)
