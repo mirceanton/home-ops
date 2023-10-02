@@ -4,7 +4,7 @@ name: Sync Labels
 on:
   workflow_dispatch:
   push:
-    branches: [ "feat/workflow_auto_label_prs" ]
+    branches: [ "main" ]
     paths: [ ".github/labels.yaml" ]
 
 jobs:
