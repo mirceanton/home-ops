@@ -1,0 +1,28 @@
+---
+# =================================================================================================
+# Area labels
+# =================================================================================================
+- name: area/github
+  color: "000000"
+  description: >-
+    Changes made in the github directory
+
+- name: area/kubernetes
+  color: "3970e4"
+  description: >-
+    Changes made in the kubernetes directory
+
+- name: area/scripts
+  color: "72ccf3"
+  description: >-
+    Changes made in the hack directory
+
+- name: area/infrastructure
+  color: "ffffff"
+  description: >-
+    Changes made in the infrastructure directory
+
+- name: area/docs
+  color: "72ccf3"
+  description: >-
+    Changes made in the hack directory
