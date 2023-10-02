@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-apps-coredns
   namespace: flux-system
+  labels:
+    home.mirceanton.com/ks-group: system
 spec:
   path: kubernetes/apps/coredns
   targetNamespace: kube-system
