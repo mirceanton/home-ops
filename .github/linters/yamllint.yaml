@@ -1,18 +1,27 @@
 ---
 extends: default
+
 ignore:
   # Ignore SOPS encrypted files
   - '*.sops.yaml'
   - '*.sops.yml'
+
+  # Ignore python virtual environments
   - .venv/**
+
+  # Ignore flux specific files
   - clusters/**/*/gotk-sync.yaml
   - clusters/**/*/gotk-components.yaml
   - clusters/_base/bootstrap/calico/calico.yaml
+
 rules:
-  line-length: disable
+  line-length:
+    max: 120
+
   braces:
     level: warning
     max-spaces-inside: 1
+
   brackets:
     level: warning
     max-spaces-inside: 1
