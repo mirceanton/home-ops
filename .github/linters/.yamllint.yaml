@@ -6,6 +6,8 @@ ignore:
   - '*.sops.yaml'
   - '*.sops.yml'
 
+  - '.venv/**'
+
   - 'clusters/**/*/gotk-sync.yaml'
   - 'clusters/**/*/gotk-components.yaml'
   - 'clusters/_base/bootstrap/calico/calico.yaml'
