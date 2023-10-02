@@ -9,10 +9,12 @@ ignore:
   # Ignore python virtual environments
   - .venv/**
 
-  # Ignore flux specific files
-  - clusters/**/*/gotk-sync.yaml
-  - clusters/**/*/gotk-components.yaml
-  - clusters/_base/bootstrap/calico/calico.yaml
+  # Ignore FluxCD specific files
+  - gotk-sync.yaml
+  - gotk-components.yaml
+
+  # Ignore Talos specific files
+  - secrets.yaml
 
 rules:
   line-length:
