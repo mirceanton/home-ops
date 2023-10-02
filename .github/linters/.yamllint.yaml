@@ -1,0 +1,42 @@
+---
+extends: default
+
+ignore:
+  # Ignore SOPS encrypted files
+  - '*.sops.yaml'
+  - '*.sops.yml'
+
+  - 'clusters/**/*/gotk-sync.yaml'
+  - 'clusters/**/*/gotk-components.yaml'
+  - 'clusters/_base/bootstrap/calico/calico.yaml'
+
+rules:
+  line-length: disable
+  braces:
+    level: warning
+    max-spaces-inside: 1
+  brackets:
+    level: warning
+    max-spaces-inside: 1
+
+  # Ignore indentation on the talosconfig base file since it is sops decrypted so
+  # there's not much to do about it. it is generated automatically
+  indentation:
+    ignore:
+      - 'infra/**/*/base.yaml'
+
+  # Ignore document start on sops decrypted files since there's not much
+  # to do about it. they are generated
+  document-start:
+    ignore:
+      - 'infra/**/*/talosconfig.yaml'
+      - 'infra/**/*/base.yaml'
+      - 'infra/**/*/secrets.yaml'
+      - 'clusters/**/*/*.secret.yaml'
+
+  # Ignore truthy for github workflows due to dummy trigger on the
+  # 'on:' clause
+  truthy:
+    ignore:
+      - .github/workflows/*.yml
+      - .github/workflows/*.yaml
