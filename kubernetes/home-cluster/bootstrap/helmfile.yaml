@@ -1,0 +1,79 @@
+---
+repositories:
+  - name: cilium
+    url: https://helm.cilium.io/
+  - name: coredns
+    url: https://coredns.github.io/helm/
+  - name: fluxcd-community
+    url: https://fluxcd-community.github.io/helm-charts
+
+releases:
+  - name: cilium
+    namespace: cilium-system
+    chart: cilium/cilium
+    version: 1.14.2
+    wait: true
+    hooks:
+      - events: [ "preapply" ]
+        command: kubectl
+        args:
+          - "apply"
+          - "-k"
+          - "cilium-manifests/"
+    values:
+      - k8sServiceHost: localhost
+        k8sServicePort: 7445
+        kubeProxyReplacement: true
+        ipam:
+          mode: kubernetes
+        securityContext:
+          capabilities:
+            ciliumAgent: [ CHOWN, KILL, NET_ADMIN, NET_RAW, IPC_LOCK, SYS_ADMIN, SYS_RESOURCE, DAC_OVERRIDE, FOWNER, SETGID, SETUID ]
+            cleanCiliumState: [ NET_ADMIN, SYS_ADMIN, SYS_RESOURCE ]
+        cgroup:
+          autoMount:
+            enabled: false
+          hostRoot: /sys/fs/cgroup
+
+  - name: coredns
+    namespace: kube-system
+    chart: coredns/coredns
+    version: 1.26.0
+    wait: true
+    needs:
+      - cilium-system/cilium
+    values:
+      - service:
+          clusterIP: 10.96.0.10
+          clusterIPs:
+            - 10.96.0.10
+          name: coredns
+
+  - name: flux
+    namespace: flux-system
+    chart: fluxcd-community/flux2
+    version: 2.10.1
+    wait: true
+    needs:
+      - kube-system/coredns
+      - cilium-system/cilium
+    hooks:
+      - events: [ "postsync" ]
+        command: kubectl
+        args:
+          - "apply"
+          - "-k"
+          - "flux-manifests/"
+    values:
+      - helmController:
+          create: true
+      - kustomizeController:
+          create: true
+      - sourceController:
+          create: true
+      - notificationController:
+          create: true
+      - imageAutomationController:
+          create: false
+      - imageReflectionController:
+          create: false
