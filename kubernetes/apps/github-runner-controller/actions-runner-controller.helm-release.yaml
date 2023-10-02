@@ -10,7 +10,7 @@ spec:
       version: 0.6.1
       sourceRef:
         kind: HelmRepository
-        name: gha-runner-scale-set-controller
+        name: actions-runner-controller-charts
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:
