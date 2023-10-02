@@ -5,6 +5,8 @@ cluster:
       name: none
   proxy:
     disabled: true
+  coreDNS:
+    disabled: true
 
 machine:
   features:
