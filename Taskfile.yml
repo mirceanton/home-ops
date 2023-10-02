@@ -9,8 +9,9 @@ includes:
   sops: .taskfiles/sops.yaml
   docs: .taskfiles/docs.yaml
 
-  mkc: .taskfiles/components/management-cluster
-  akc: .taskfiles/components/application-cluster
+  hkc:
+    taskfile: .taskfiles/components/home-cluster
+    dir: infra/home-cluster
 
 tasks:
   default:
