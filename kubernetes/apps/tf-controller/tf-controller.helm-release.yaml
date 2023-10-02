@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tf-controller
+  namespace: flux-system
+spec:
+  chart:
+    spec:
+      chart: tf-controller
+      version: 0.15.1
+      sourceRef:
+        kind: HelmRepository
+        name: tf-controller
+
+  interval: ${HELMRELEASE_INTERVAL}
+  rollback:
+    timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
+    recreate: true
+    cleanupOnFail: true
+  install:
+    remediation:
+      retries: ${HELMRELEASE_INSTALL_RETRIES}
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: ${HELMRELEASE_UPGRADE_RETRIES}
+  uninstall:
+    keepHistory: false
+
+  values:
+    installCRDs: true
+
