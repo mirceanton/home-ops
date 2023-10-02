@@ -1,0 +1,18 @@
+---
+area/github:
+  - ".github/**/*"
+
+area/kubernetes:
+  - "clusters/**/*"
+
+area/scripts:
+  - "scripts/**/*"
+  - ".taskfiles/**/*"
+  - Taskfile.yml
+
+area/infrastructure:
+  - "infra/**/*"
+
+area/docs:
+  - "docs/**/*"
+  - mkdocs.yml
