@@ -6,3 +6,5 @@ infra/**/*/talosconfig
 clusters/**/*/*.secret.yaml
 
 site/
+
+.venv/
