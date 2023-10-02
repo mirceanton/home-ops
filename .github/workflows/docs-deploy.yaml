@@ -15,25 +15,31 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout the Repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v4
+      - name: Set up python
+        uses: actions/setup-python@v4
         with:
           python-version: 3.x
 
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - name: Configure caching
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
 
-      - uses: actions/cache@v3
+      - name: Load cache
+        uses: actions/cache@v3
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
 
-      - run: pip install mkdocs-material
+      - name: Install pip dependencies
+        run: pip install mkdocs-material
 
-      - run: cp README.md docs/README.md
+      - name: Import repo readme as docs homepage
+        run: cp README.md docs/README.md
 
-      - run: mkdocs gh-deploy --force
+      - name: Deploy mkdocs site
+        run: mkdocs gh-deploy --force
