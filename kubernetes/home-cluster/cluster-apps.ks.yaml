@@ -35,12 +35,12 @@ spec:
     # Inject dependency on flux for all other Kustomizations -> flux is synced FIRST!!
     - patch: |
         - op: add
-          path: /spec/dependsOn/0/name/-
-          value: cluster-apps-flux
+          path: /spec/dependsOn/0/-
+          value: { name: cluster-apps-flux }
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
-        labelSelector: synchronization.flux.priority/critical notin (true)
+        name: notin (cluster-apps-flux)
 
     # Apply the home-ops git repo as a sourceRef on all Kustomization
     - patch: |-
