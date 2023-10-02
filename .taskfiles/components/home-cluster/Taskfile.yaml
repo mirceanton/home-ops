@@ -13,7 +13,7 @@ includes:
   talos:
     taskfile: ./talos.yaml
     dir: ../../../infra/home-cluster
-  k8s: 
+  k8s:
     taskfile: ./k8s.yaml
     dir: ../../../kubernetes/home-cluster/bootstrap
 

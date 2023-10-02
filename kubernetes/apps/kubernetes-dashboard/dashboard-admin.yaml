@@ -10,8 +10,8 @@ kind: ClusterRoleBinding
 metadata:
   name: dashboard-admin-binding
 subjects:
-- kind: ServiceAccount
-  name: dashboard-admin
+  - kind: ServiceAccount
+    name: dashboard-admin
 roleRef:
   kind: ClusterRole
   name: cluster-admin
