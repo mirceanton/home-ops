@@ -8,7 +8,7 @@ metadata:
   labels:
     synchronization.flux.priority/critical: true
 spec:
-  path: kubernetes/home-cluster/cluster-infra/flux-system/flux/addons
+  path: kubernetes/home-cluster/cluster-apps/flux-system/flux/addons
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-infra-flux
