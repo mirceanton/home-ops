@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   path: kubernetes/apps/github-runner
-  targetNamespace: github-arc-system
+  targetNamespace: github-runners
   dependsOn:
     - name: github-arc
 
