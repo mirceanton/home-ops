@@ -4,3 +4,6 @@ infra/**/*/rendered/*
 
 # MkDocs Generated Files
 site/
+
+# Python Virtual Environment
+.venv/*
