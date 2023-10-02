@@ -1,4 +1,4 @@
-# Talos Cluster
+# Home Cluster | Talos Cluster
 
 This directory holds:
 
