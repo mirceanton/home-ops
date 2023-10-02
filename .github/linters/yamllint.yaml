@@ -46,4 +46,6 @@ rules:
   # Ignore truthy for github workflows due to dummy trigger on the
   # 'on:' clause
   truthy:
-    ignore: [.github/workflows/*.yml, .github/workflows/*.yaml]
+    ignore:
+      - .github/workflows/*.yml
+      - .github/workflows/*.yaml
