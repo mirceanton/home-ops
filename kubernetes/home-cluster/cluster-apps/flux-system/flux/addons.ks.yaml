@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-infra-flux-notifications
+  name: cluster-apps-flux-notifications
   namespace: flux-system
   labels:
     synchronization.flux.priority/critical: true
@@ -11,4 +11,4 @@ spec:
   path: kubernetes/home-cluster/cluster-apps/flux-system/flux/addons
   targetNamespace: flux-system
   dependsOn:
-    - name: cluster-infra-flux
+    - name: cluster-apps-flux
