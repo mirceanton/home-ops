@@ -62,9 +62,8 @@ markdown_extensions:
       auto_title: true
       anchor_linenums: true
       pygments_lang_class: true
-      anchor_linenums: true
       line_spans: __span
-  - pymdownx.superfences 
+  - pymdownx.superfences
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
