@@ -1,8 +1,8 @@
 ---
-name: Automatically create PRs and assign myself as reviewer
+name: Create PR
 
 on:
-  create
+  create: {}
 
 permissions:
   pull-requests: write
