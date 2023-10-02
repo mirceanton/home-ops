@@ -1,0 +1,9 @@
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: ${NAME}-deployment
+spec:
+  template:
+    spec:
+      repository: ${REPO}

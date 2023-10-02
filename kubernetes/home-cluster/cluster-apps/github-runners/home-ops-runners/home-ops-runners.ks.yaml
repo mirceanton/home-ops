@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: home-ops-runners
+  namespace: flux-system
+spec:
+  path: kubernetes/apps/github-runner
+  targetNamespace: github-arc-system
+  dependsOn:
+    - name: github-arc
+
+  postBuild:
+    substitute:
+      NAME: home-ops-runner
+      REPO: mirceanton/home-ops
+      MIN_REPLICAS: 2
+      MAX_REPLICAS: 10
