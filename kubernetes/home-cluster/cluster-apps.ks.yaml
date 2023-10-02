@@ -78,3 +78,30 @@ spec:
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
+
+    # Set intervals for all Kustomizations
+    - patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          interval: ${KUSTOMIZATION_INTERVAL}
+          retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
+          timeout: ${KUSTOMIZATION_TIMEOUT}
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+
+    # Set wait and prune to true for all Kustomizations (can override through ns labels)
+    - patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          wait: true
+          prune: true
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization

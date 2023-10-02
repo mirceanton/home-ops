@@ -9,20 +9,3 @@ spec:
   path: kubernetes/apps/reloader
   targetNamespace: reloader-system
   dependsOn: []
-
-  wait: true
-  prune: false
-  interval: ${KUSTOMIZATION_INTERVAL}
-  retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
-  timeout: ${KUSTOMIZATION_TIMEOUT}
-
-  sourceRef:
-    kind: GitRepository
-    name: ${KUSTOMIZATION_GIT_SOURCE}
-
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-settings
-      - kind: Secret
-        name: cluster-secrets
