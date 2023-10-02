@@ -17,7 +17,7 @@ jobs:
       - name: Automatically Generate The PR Name
         id: generate_name
         run: |
-          output=$(bash .github/scripts/generate_pr_name.sh)
+          output=$(bash .github/scripts/generate-pr-name.sh)
           echo "pr_name=$output" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
