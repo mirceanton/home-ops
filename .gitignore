@@ -7,3 +7,6 @@ site/
 
 # Python Virtual Environment
 .venv/*
+
+# Ignore Unencrypted Kubernetes Secrets
+kubernetes/**/*.secret.yaml
