@@ -12,5 +12,8 @@ jobs:
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4.1.0
 
       - name: Make sure the branch set for the flux sync is "main"
+        env:
+          FILE: kubernetes/home-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
+          BRANCH: "main"
         run: >
-          cat kubernetes/home-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml | grep -q "branch: main"
+          cat $FILE | grep -q "branch: $BRANCH"
