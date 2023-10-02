@@ -5,13 +5,11 @@ env:
   SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
 
 includes:
+  docs: .taskfiles/docs.yaml
   tools: .taskfiles/tools.yaml
   sops: .taskfiles/sops.yaml
-  docs: .taskfiles/docs.yaml
 
-  hkc:
-    taskfile: .taskfiles/components/home-cluster
-    dir: infra/home-cluster
+  hkc: .taskfiles/components/home-cluster
 
 tasks:
   default:

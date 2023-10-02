@@ -13,6 +13,11 @@ tasks:
       - talosctl kubeconfig ~/.kube/configs/{{.CLUSTER_NAME}}.yaml --force
       - kswitcher admin@{{.CLUSTER_NAME}}
 
+  core-components:
+    desc: Install the core components on the Kubernetes cluster.
+    cmds:
+      - helmfile apply
+
   wait:
     desc: Wait for all of the cluster nodes to be in a ready state.
     cmds:
