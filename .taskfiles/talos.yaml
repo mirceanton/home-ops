@@ -40,7 +40,7 @@ tasks:
 
   delete-config:
     desc: Delete the Talos machineconfig files.
-    cmds: [ rm rendered/* ]
+    cmds: [ rm -f rendered/* ]
 
   apply-config:
     desc: Bootstrap talos on the home cluster nodes.
