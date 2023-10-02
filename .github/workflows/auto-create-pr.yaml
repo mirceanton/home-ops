@@ -1,0 +1,40 @@
+---
+name: Automatically create PRs and assign myself as reviewer
+
+on:
+  create
+
+permissions:
+  pull-requests: write
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v3
+
+      - name: Automatically Generate The PR Name
+        id: generate_name
+        run: |
+          output=$(bash .github/scripts/generate-pr-name.sh)
+          echo "pr_name=$output" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Show The Generated Name
+        run: |
+          echo "PR Name: ${{ steps.generate_name.outputs.pr_name }}"
+
+      - name: Create pull request
+        id: open-pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create \
+            --base main \
+            --title "${{ steps.generate_name.outputs.pr_name }}" \
+            --body-file ".github/PULL_REQUEST_TEMPLATE.md" \
+            --assignee "mirceanton" \
+            --reviewer "mirceanton" \
+            --draft
