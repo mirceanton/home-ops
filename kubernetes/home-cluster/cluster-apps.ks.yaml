@@ -41,14 +41,7 @@ spec:
       target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
-    - patch: |
-        - op: replace
-          path: /spec/dependsOn
-          value: []
-      target:
-        group: kustomize.toolkit.fluxcd.io
-        kind: Kustomization
-        name: cluster-apps-flux
+        labelSelector: synchronization.flux.priority/critical notin (true)
 
     # Apply the home-ops git repo as a sourceRef on all Kustomization
     - patch: |-
