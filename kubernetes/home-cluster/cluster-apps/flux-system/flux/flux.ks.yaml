@@ -6,6 +6,8 @@ kind: Kustomization
 metadata:
   name: cluster-infra-flux
   namespace: flux-system
+  labels:
+    synchronization.flux.priority/critical: true
 spec:
   path: ./kubernetes/apps/flux
   targetNamespace: flux-system

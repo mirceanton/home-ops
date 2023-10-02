@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-infra-flux-notifications
   namespace: flux-system
+  labels:
+    synchronization.flux.priority/critical: true
 spec:
   path: kubernetes/home-cluster/cluster-infra/flux-system/flux/addons
   targetNamespace: flux-system

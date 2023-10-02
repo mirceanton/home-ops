@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-infra-weave-gitops
   namespace: flux-system
+  labels:
+    synchronization.flux.priority/critical: true
 spec:
   path: ./kubernetes/apps/weave-gitops
   targetNamespace: flux-system

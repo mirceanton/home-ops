@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-infra-tf-controller
   namespace: flux-system
+  labels:
+    synchronization.flux.priority/critical: true
 spec:
   path: ./kubernetes/apps/tf-controller
   targetNamespace: flux-system
