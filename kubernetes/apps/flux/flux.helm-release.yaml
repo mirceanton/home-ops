@@ -37,7 +37,7 @@ spec:
     installCRDs: true
     logLevel: info
     policies:
-      create: true
+      create: false
 
     helmController:
       create: true
