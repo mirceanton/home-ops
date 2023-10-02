@@ -9,7 +9,6 @@ spec:
   path: kubernetes/home-cluster/cluster-apps
   dependsOn:
     - name: cluster-config
-    - name: cluster-infra
 
   wait: true
   prune: true
