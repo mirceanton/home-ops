@@ -7,11 +7,11 @@ metadata:
 spec:
   chart:
     spec:
-      chart: coredns
-      version: 1.26.0
+      chart: kubelet-csr-approver
+      version: 1.0.5
       sourceRef:
         kind: HelmRepository
-        name: coredns
+        name: postfinance
 
   interval: ${HELMRELEASE_INTERVAL}
   rollback:
