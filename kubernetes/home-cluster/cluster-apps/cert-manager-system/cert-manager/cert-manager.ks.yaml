@@ -9,4 +9,3 @@ spec:
   path: kubernetes/apps/cert-manager
   targetNamespace: cert-manager-system
   dependsOn: []
-
