@@ -5,8 +5,6 @@ kind: Kustomization
 metadata:
   name: cluster-apps-tf-controller
   namespace: flux-system
-  labels:
-    synchronization.flux.priority/critical: true
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/flux-system/tf-controller
   targetNamespace: flux-system
