@@ -2,10 +2,16 @@
 name: Lint Job
 
 on:
-  pull_request: {}
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - ready_for_review
 
 jobs:
   yamllint-job:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     container:
       image: python:3.11.4-alpine3.18
@@ -20,6 +26,7 @@ jobs:
         run: yamllint -c .github/linters/yamllint.yaml .
 
   helmfile-lint-job:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/helmfile/helmfile:v0.156.0

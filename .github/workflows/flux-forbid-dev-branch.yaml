@@ -2,10 +2,16 @@
 name: Check Flux Sync Branch
 
 on:
-  pull_request: {}
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+    - ready_for_review
 
 jobs:
   flux-check-job:
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
