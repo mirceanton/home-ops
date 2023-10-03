@@ -37,12 +37,48 @@ spec:
     installCRDs: true
     logLevel: info
     policies:
-      create: false
+      create: true
 
     helmController:
       create: true
+      container:
+        additionalArgs:
+          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
+          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
+          - --concurrent=32
+          - --kube-api-qps=500
+          - --kube-api-burst=1000
+          - --requeue-dependency=5s
+
+          # Enable drift detection for HelmReleases and set the log level to debug
+          # https://fluxcd.io/flux/components/helm/helmreleases/#drift-detection
+          - --feature-gates=DetectDrift=true,CorrectDrift=false
+
+          # Enable Helm near OOM detection
+          # https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-helm-near-oom-detection
+          - --feature-gates=OOMWatch=true
+          - --oom-watch-memory-threshold=95
+          - --oom-watch-interval=500ms
+      resources:
+        limits:
+          cpu: 4000m
+          memory: 4Gi
+
     kustomizeController:
       create: true
+      container:
+        additionalArgs:
+          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
+          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
+          - --concurrent=16
+          - --kube-api-qps=500
+          - --kube-api-burst=1000
+          - --requeue-dependency=5s
+      resources:
+        limits:
+          cpu: 2000m
+          memory: 2Gi
+
     sourceController:
       create: true
     notificationController:
@@ -52,3 +88,32 @@ spec:
       create: false
     imageReflectionController:
       create: false
+
+  # yamllint disable rule:line-length
+  postRenderers:
+    # Enable notifications for 3rd party Flux controllers such as tf-controller
+    # https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-notifications-for-third-party-controllers
+    - patch: |
+        - op: add
+          path: /spec/versions/1/schema/openAPIV3Schema/properties/spec/properties/eventSources/items/properties/kind/enum/-
+          value: Terraform
+      target:
+        kind: CustomResourceDefinition
+        name: alerts.notification.toolkit.fluxcd.io
+    - patch: |
+        - op: add
+          path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/resources/items/properties/kind/enum/-
+          value: Terraform
+      target:
+        kind: CustomResourceDefinition
+        name: receivers.notification.toolkit.fluxcd.io
+    - patch: |
+        - op: add
+          path: /rules/-
+          value:
+            apiGroups: ["infra.contrib.fluxcd.io"]
+            resources: ["*"]
+            verbs: ["*"]
+      target:
+        kind: ClusterRole
+        name: crd-controller-flux-system
