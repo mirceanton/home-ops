@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: flux-system
+  name: cluster-settings
+data:
+  CLUSTER_ID: '0'
+  CLUSTER_NAME: home-cluster
+  CLUSTER_DOMAIN: home.mirceanton.com
+  CLUSTER_APPS_BASE_DIR: ./kubernetes/apps
+
+  INGRESS_POOL: 10.0.10.20-10.0.10.20
+
+  TIMEZONE: Europe/Bucharest
+
+  HELMRELEASE_INTERVAL: 30m
+  HELMRELEASE_ROLLBACK_TIMEOUT: 15m
+  HELMRELEASE_INSTALL_RETRIES: "5"
+  HELMRELEASE_UPGRADE_RETRIES: "5"
+
+  HELMREPOSITORY_INTERVAL: 30m
+
+  KUSTOMIZATION_INTERVAL: 30m
+  KUSTOMIZATION_RETRY_INTERVAL: 1m
+  KUSTOMIZATION_TIMEOUT: 15m
+

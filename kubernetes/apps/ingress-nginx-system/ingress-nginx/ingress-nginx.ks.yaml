@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-ingress-nginx
+  namespace: flux-system
+spec:
+  path: ${CLUSTER_APPS_BASE_DIR}/ingress-nginx-system/ingress-nginx/app
+  targetNamespace: ingress-nginx-system
+  dependsOn:
+    - name: cluster-apps-metallb-resources
