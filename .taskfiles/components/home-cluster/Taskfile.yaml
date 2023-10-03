@@ -44,10 +44,20 @@ tasks:
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
       - task: talos:delete-config
 
-  cluster:shutdown:
+  cluster:shutdown:all:
     desc: Shutdown all Talos nodes.
+    cmds:
+      - task: cluster:shutdown:workers
+      - task: cluster:shutdown:controlplane
+
+  cluster:shutdown:workers:
+    desc: Shutdown all Talos worker nodes.
     cmds:
       - for: { var: WORKER_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
+
+  cluster:shutdown:controlplane:
+    desc: Shutdown all Talos controlplane nodes.
+    cmds:
       - for: { var: CONTROLPLANE_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
