@@ -30,6 +30,7 @@ spec:
 
   values:
     providerRegex: ^(cluster-)$
+    bypassDnsResolution: true
 
     replicaCount: 2
     leaderElection: true
