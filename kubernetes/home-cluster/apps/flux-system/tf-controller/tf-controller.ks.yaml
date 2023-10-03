@@ -10,3 +10,12 @@ spec:
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-apps-flux
+
+  wait: true
+  prune: true
+  interval: ${KUSTOMIZATION_INTERVAL}
+  retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
+  timeout: ${KUSTOMIZATION_TIMEOUT}
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
