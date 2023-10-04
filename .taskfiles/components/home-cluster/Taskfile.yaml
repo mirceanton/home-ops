@@ -37,6 +37,7 @@ tasks:
 
   cluster:reset:
     desc: Reset all of the talos nodes.
+    prompt: This will destroy the cluster... Are you sure you want to continue?
     cmds:
       - for: { var: WORKER_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
@@ -57,6 +58,7 @@ tasks:
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
 
   cluster:shutdown:controlplane:
+    prompt: This will turn off the controlplane nodes, making the API server inaccessible... Are you sure you want to continue?
     desc: Shutdown all Talos controlplane nodes.
     cmds:
       - for: { var: CONTROLPLANE_NODES }
