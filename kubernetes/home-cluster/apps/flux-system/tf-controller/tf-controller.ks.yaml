@@ -6,16 +6,7 @@ metadata:
   name: cluster-apps-tf-controller
   namespace: flux-system
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/tf-controller
+  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/tf-controller/app
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-apps-flux
-
-  wait: true
-  prune: true
-  interval: ${KUSTOMIZATION_INTERVAL}
-  retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
-  timeout: ${KUSTOMIZATION_TIMEOUT}
-  sourceRef:
-    kind: GitRepository
-    name: home-ops-git-repo

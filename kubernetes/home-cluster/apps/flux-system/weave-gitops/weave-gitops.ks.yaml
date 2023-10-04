@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-weave-gitops
   namespace: flux-system
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/weave-gitops
+  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/weave-gitops/app
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-apps-flux
