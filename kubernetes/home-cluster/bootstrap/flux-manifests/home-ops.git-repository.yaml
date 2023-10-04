@@ -8,6 +8,6 @@ metadata:
 spec:
   interval: 10m0s
   ref:
-    branch: refactor/single_cluster
+    branch: main
   timeout: 3m
   url: https://github.com/mirceanton/home-ops
