@@ -1,0 +1,10 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./namespace.yaml
+  - ./coredns/coredns.ks.yaml
+  - ./kubelet-csr-approver/kubelet-csr-approver.ks.yaml
+  - ./kubernetes-dashboard/kubernetes-dashboard.ks.yaml
+  - ./metrics-server/metrics-server.ks.yaml

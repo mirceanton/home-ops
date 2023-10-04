@@ -1,10 +1,12 @@
-infra/**/*/base.yaml
+# Talos Generated Configuration Files
 infra/**/*/secrets.yaml
-infra/**/*/talosconfig.yaml
-infra/**/*/talosconfig
+infra/**/*/rendered/*
 
-clusters/**/*/*.secret.yaml
-
+# MkDocs Generated Files
 site/
 
-.venv/
+# Python Virtual Environment
+.venv/*
+
+# Ignore Unencrypted Kubernetes Secrets
+kubernetes/**/*.secret.yaml

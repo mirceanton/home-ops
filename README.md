@@ -12,20 +12,20 @@
 
 ## 📖 Overview
 
-This is a monorepo for my homelab infrastructure automation. I try to adhere (as much as I reasonably can 😅) to Infrastructure as Code (IaC) and GitOps practices using the tools like `Ansible`, `Terraform`, `Kubernetes`, `Flux`, `Renovate` and `GitHub Actions`.
+This is a monorepo for my homelab infrastructure automation. I try to adhere (as much as I reasonably can 😅) to Infrastructure as Code (IaC) and GitOps practices using the tools like `Terraform`, `Kubernetes`, `FluxCD`, `Renovate` and `GitHub Actions`.
 
 ### Directories
 
 ```sh
 📁 .taskfiles           # Holds all of the "modules" for my Taskfile automation
-📁 clusters             # Holds one sub-directory per cluster in my homelab
-├─📁 _common            # Commonly used workloads, deployed across all of the clusters
-├─📁 management         # Management Cluster Flux Repo
-└─📁 home               # Home Cluster Flux Repo
 📁 docs                 # MkDocs Documentation Source
 📁 infra                # Infrastructure Automation, structured per-element
-├─📁 home-cluster       # Talos Configuration for the home cluster
-├─📁 management-cluster # Talos Configuration for the management cluster
+└─📁 home-cluster       # Talos Configuration for the home cluster
+📁 kubernetes           # Kubernetes cluster(s) definitions
+├─📁 apps               # Apps deployed in the k8s cluster, grouped by namespce
+├─📁 bootstrap          # Minimal set of deployments to get the cluster up and running with Flux
+└─📁 cluster-config     # Flux variables for the cluster
+📁 scripts              # Various scripts used for automation, generally called within tasks
 ```
 
 ## ⭐ Stargazers

@@ -68,7 +68,8 @@ tasks:
       - mv kube-ps1.sh ~/.kube/kube-ps1.sh
       - cmd: |
           # Check if the lines are already present in ~/.bashrc
-          if ! grep -Fxq ". ~/.kube/kube-ps1.sh" ~/.bashrc || ! grep -Fxq "PS1='[\u@\h \W \$(kube_ps1)]\$ '" ~/.bashrc; then
+          if ! grep -Fxq ". ~/.kube/kube-ps1.sh" ~/.bashrc || ! grep -Fxq "PS1='[\u@\h \W \$(kube_ps1)]\$ '" ~/.bashrc;
+          then
             # Add the lines to ~/.bashrc if not already present
             echo -e "\n. ~/.kube/kube-ps1.sh" >> ~/.bashrc
             echo -e "PS1='\$(kube_ps1)] \W \$ '" >> ~/.bashrc
