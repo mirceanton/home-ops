@@ -63,7 +63,7 @@ spec:
           # Set wait and prune for all Kustomizations (can override through ns labels)
           wait: false
           prune: true
-          
+
           # Set intervals for all Kustomizations
           interval: ${KUSTOMIZATION_INTERVAL}
           retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
