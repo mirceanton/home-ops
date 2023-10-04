@@ -5,5 +5,4 @@ kind: HelmRepository
 metadata:
   name: fluxcd-community
 spec:
-  interval: ${HELMREPOSITORY_INTERVAL}
   url: https://fluxcd-community.github.io/helm-charts

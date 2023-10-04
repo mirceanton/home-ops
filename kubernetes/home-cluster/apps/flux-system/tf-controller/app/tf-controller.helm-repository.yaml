@@ -5,5 +5,4 @@ kind: HelmRepository
 metadata:
   name: tf-controller
 spec:
-  interval: ${HELMREPOSITORY_INTERVAL}
   url: https://weaveworks.github.io/tf-controller/

@@ -6,5 +6,4 @@ metadata:
   name: weaveworks
 spec:
   type: oci
-  interval: ${HELMREPOSITORY_INTERVAL}
   url: oci://ghcr.io/weaveworks/charts

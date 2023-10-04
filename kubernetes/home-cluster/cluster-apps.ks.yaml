@@ -71,6 +71,17 @@ spec:
 
           patches:
             - target:
+                group: source.toolkit.fluxcd.io
+                kind: HelmRepository
+              patch: |-
+                apiVersion: source.toolkit.fluxcd.io/v1beta2
+                kind: HelmRepository
+                metadata:
+                  name: not-used
+                spec:
+                  interval: ${HELMREPOSITORY_INTERVAL}
+
+            - target:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
               patch: |-

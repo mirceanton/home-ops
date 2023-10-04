@@ -5,5 +5,4 @@ kind: HelmRepository
 metadata:
   name: jetstack
 spec:
-  interval: ${HELMREPOSITORY_INTERVAL}
   url: https://charts.jetstack.io

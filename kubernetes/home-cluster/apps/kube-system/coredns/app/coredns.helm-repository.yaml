@@ -5,5 +5,4 @@ kind: HelmRepository
 metadata:
   name: coredns
 spec:
-  interval: ${HELMREPOSITORY_INTERVAL}
   url: https://coredns.github.io/helm
