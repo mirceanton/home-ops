@@ -18,10 +18,6 @@ includes:
     dir: ../../../kubernetes/home-cluster/bootstrap
 
 tasks:
-  test:
-    cmds:
-      - echo "{{.ROOT_DIR}}"
-
   cluster:create:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
