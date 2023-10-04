@@ -1,0 +1,25 @@
+---
+name: Check pip packages
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - requirements.txt
+
+jobs:
+  check-pip-install:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11.4-alpine3.18
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4.1.0
+
+      - name: Make sure the package installation does not fail
+        run: pip3 install -r requirements.txt
