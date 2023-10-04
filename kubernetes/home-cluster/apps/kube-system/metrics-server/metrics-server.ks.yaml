@@ -9,4 +9,4 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-system/metrics-server/app
   targetNamespace: kube-system
   dependsOn:
-    - name: cluster-apps-kscr
+    - name: cluster-apps-kubelet-csr-approver
