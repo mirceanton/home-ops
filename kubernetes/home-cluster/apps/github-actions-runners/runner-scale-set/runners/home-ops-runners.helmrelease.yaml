@@ -22,7 +22,7 @@ spec:
       github_token: ${GITHUB_PAT}
 
     containerMode:
-      type: dind
+      type: kubernetes
 
     template:
       containers:
