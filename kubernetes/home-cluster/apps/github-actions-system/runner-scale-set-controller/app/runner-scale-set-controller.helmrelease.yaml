@@ -11,6 +11,5 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: actions-runner-controller
-        namespace: flux-system
   values:
     replicaCount: 2
