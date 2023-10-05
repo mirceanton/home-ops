@@ -1,0 +1,19 @@
+---
+version: '3'
+
+tasks:
+  delete-stuck-ns:
+    desc: Delete all namespaces that are stuck in a terminating state.
+    cmds:
+      - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
+
+  get-rook-admin-password:
+    desc: Fetch and decode the rook admin password.
+    silent: true
+    vars:
+      CEPH_ADMIN_PASS:
+        sh: |
+          kubectl get secret rook-ceph-dashboard-password \
+            --namespace rook-ceph-system \
+            -o jsonpath="{['data']['password']}" | base64 --decode
+    cmds: [ 'echo "(ceph) admin : {{.CEPH_ADMIN_PASS}}"' ]

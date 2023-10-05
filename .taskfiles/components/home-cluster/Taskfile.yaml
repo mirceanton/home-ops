@@ -22,6 +22,7 @@ tasks:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
     cmds:
+      - task: talos:delete-config
       - task: talos:generate-config
       - task: talos:apply-config
       - task: talos:talosconfig
