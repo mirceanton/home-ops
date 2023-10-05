@@ -19,7 +19,7 @@ spec:
 
     githubConfigUrl: https://github.com/mirceanton/home-ops
     githubConfigSecret:
-      githubToken: ${GITHUB_PAT}
+      github_token: ${GITHUB_PAT}
 
     containerMode:
       type: dind
