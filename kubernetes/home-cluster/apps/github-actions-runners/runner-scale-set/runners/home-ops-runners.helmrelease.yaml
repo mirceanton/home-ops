@@ -1,0 +1,32 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ci-home-ops-runners
+spec:
+  chart:
+    spec:
+      chart: gha-runner-scale-set
+      version: 0.6.1
+      sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller
+
+  values:
+    runnerScaleSetName: arc-runner-set-home-ops
+    minRunners: 3
+    maxRunners: 10
+
+    githubConfigUrl: https://github.com/mirceanton/home-ops
+    githubConfigSecret:
+      githubToken: ${GITHUB_PAT}
+
+    containerMode:
+      type: dind
+
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/onedr0p/github-actions-runner:rolling@sha256:b0a925c6fa8a19f943ee2b99c7eb3b671a36750e4ed8d84722115e01c49db827
+
