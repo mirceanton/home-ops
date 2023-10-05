@@ -37,7 +37,7 @@ spec:
 
     ingress:
       enabled: true
-      paths: [ "/" ]
+      ingressClassName: nginx
       hosts:
         - k8s-dash.admin.${CLUSTER_DOMAIN}
 
