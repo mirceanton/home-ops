@@ -39,7 +39,7 @@ spec:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - k8s-dash.admin.${CLUSTER_DOMAIN}
+        - kubernetes.admin.${CLUSTER_DOMAIN}
 
     pinnedCRDs: []
 
