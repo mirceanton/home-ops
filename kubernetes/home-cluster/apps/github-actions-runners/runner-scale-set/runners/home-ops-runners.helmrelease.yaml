@@ -14,8 +14,8 @@ spec:
 
   values:
     runnerScaleSetName: arc-runner-set-home-ops
-    minRunners: 2
-    maxRunners: 5
+    minRunners: 5
+    maxRunners: 10
 
     githubConfigUrl: https://github.com/mirceanton/home-ops
     githubConfigSecret:
