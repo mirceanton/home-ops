@@ -20,3 +20,11 @@ spec:
     githubConfigUrl: https://github.com/mirceanton/home-ops
     githubConfigSecret:
       github_token: ${GITHUB_PAT}
+
+    containerMode:
+      type: dind
+
+    template:
+      containers:
+        - name: runner
+          image: ghcr.io/onedr0p/github-actions-runner:2.309.0
