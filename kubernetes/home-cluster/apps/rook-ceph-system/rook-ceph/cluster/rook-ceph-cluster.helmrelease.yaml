@@ -47,7 +47,7 @@ spec:
           # override the default behavior.
           - name: pg_autoscaler
             enabled: true
-          
+
           # This enables the rook module.
           - name: rook
             enabled: true
