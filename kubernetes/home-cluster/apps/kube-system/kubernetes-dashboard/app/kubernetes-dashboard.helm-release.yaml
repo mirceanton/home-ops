@@ -37,9 +37,13 @@ spec:
 
     ingress:
       enabled: true
-      paths: [ "/" ]
+
+      className: nginx
+      annotations:
+        kubernetes.io/ingress.class: nginx
+
       hosts:
-        - k8s-dash.admin.${CLUSTER_DOMAIN}
+        - kubernetes.admin.${CLUSTER_DOMAIN}
 
     pinnedCRDs: []
 
