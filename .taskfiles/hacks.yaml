@@ -1,0 +1,8 @@
+---
+version: '3'
+
+tasks:
+  get-rook-admin-password:
+    desc: Fetch and decode the rook admin password.
+    cmds:
+      - kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
