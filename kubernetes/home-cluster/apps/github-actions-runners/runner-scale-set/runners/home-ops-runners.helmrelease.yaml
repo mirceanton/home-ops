@@ -25,6 +25,6 @@ spec:
       type: dind
 
     template:
-        containers:
-          - name: runner
-            image: ghcr.io/onedr0p/github-actions-runner:rolling@sha256:b0a925c6fa8a19f943ee2b99c7eb3b671a36750e4ed8d84722115e01c49db827
+      containers:
+        - name: runner
+          image: ghcr.io/onedr0p/github-actions-runner:2.309.0
