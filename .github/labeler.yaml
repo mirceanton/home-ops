@@ -3,7 +3,7 @@ area/github:
   - ".github/**/*"
 
 area/kubernetes:
-  - "clusters/**/*"
+  - "kubernetes/**/*"
 
 area/scripts:
   - "scripts/**/*"
