@@ -23,6 +23,11 @@ spec:
 
     containerMode:
       type: kubernetes
+      kubernetesModeWorkVolumeClaim:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
 
     template:
       containers:
