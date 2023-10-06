@@ -17,6 +17,8 @@ spec:
       image:
         # -- Overrides the Docker registry globally for all images
         registry: null
+      dnsService: coreDNS
+      dnsNamespace: kube-system
 
     # -- Image pull secrets for Docker images
     imagePullSecrets: []
