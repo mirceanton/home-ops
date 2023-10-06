@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./kube-prometheus/kube-prometheus.ks.yaml
+  - ./grafana/grafana.ks.yaml
+  - ./loki/loki.ks.yaml
