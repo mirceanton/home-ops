@@ -1,0 +1,75 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus
+      version: 8.21.2
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami-kube-prometheus
+
+  values:
+    operator:
+      enabled: true
+      logLevel: info
+      logFormat: logfmt
+
+    prometheus:
+      enabled: true
+      replicaCount: 2
+      shards: 2
+      logLevel: info
+      logFormat: logfmt
+
+      persistence:
+        enabled: true
+        storageClass: ceph-block
+        accessModes: [ "ReadWriteOnce" ]
+        size: 8Gi
+
+      ingress:
+        enabled: true
+        hostname: prometheus.admin.${CLUSTER_DOMAIN}
+        path: '/'
+        ingressClassName: nginx
+        tls: false
+
+      # Prevent 2 instances from being scheduled on the same node
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: kube-prometheus
+
+    alertmanager:
+      enabled: true
+      replicaCount: 2
+      logLevel: info
+      logFormat: logfmt
+
+      persistence:
+        enabled: true
+        storageClass: ceph-block
+        accessModes: [ "ReadWriteOnce" ]
+        size: 8Gi
+
+      ingress:
+        enabled: true
+        hostname: alermanager.admin.${CLUSTER_DOMAIN}
+        path: '/'
+        ingressClassName: nginx
+        tls: false
+
+    exporters:
+      node-exporter:
+        enabled: true
+      kube-state-metrics:
+        enabled: true
+      kubelet:
+        enabled: true
