@@ -1,0 +1,13 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: alertmanager-datasource
+spec:
+  datasource:
+    name: Alertmanager
+    type: alertmanager
+    access: proxy
+    url: 
+    jsonData:
+      timeInterval: 5s
+      tlsSkipVerify: true

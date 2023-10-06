@@ -1,0 +1,22 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: nginx-folder
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: NGINX
+
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: nginx-dashboard
+spec:
+  folder: NGINX
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json"

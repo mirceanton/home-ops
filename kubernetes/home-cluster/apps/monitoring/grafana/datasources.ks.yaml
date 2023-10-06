@@ -3,11 +3,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-grafana
+  name: cluster-apps-grafana-datasources
   namespace: flux-system
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/monitoring/grafana/app
+  path: ${CLUSTER_APPS_BASE_DIR}/monitoring/grafana/datasources
   targetNamespace: monitoring
   dependsOn:
-    - name: cluster-apps-rook-ceph-cluster
-    - name: cluster-apps-kube-prometheus-stack
+    - name: cluster-apps-grafana

@@ -1,0 +1,24 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: node-exporter-folder
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  title: Node Exporter
+
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: node-exporter-dashboard
+spec:
+  folder: Node Exporter
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  grafanaCom:
+    id: 1860  # https://grafana.com/grafana/dashboards/1860?tab=revisions
+    revision: 31
