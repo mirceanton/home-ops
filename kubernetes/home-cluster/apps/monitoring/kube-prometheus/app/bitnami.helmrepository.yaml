@@ -3,7 +3,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: bitnami-kube-prometheus
+  name: bitnami
 spec:
-  type: oci
-  url: oci://registry-1.docker.io/bitnamicharts/kube-prometheus
+  url: https://charts.bitnami.com/bitnami
