@@ -5,7 +5,10 @@ kind: Kustomization
 metadata:
   name: cluster-apps-github-actions-controller
   namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: ci-apps
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/github-actions-system/runner-scale-set-controller/app
   targetNamespace: github-actions-system
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-cert-manager

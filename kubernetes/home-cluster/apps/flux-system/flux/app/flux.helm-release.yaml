@@ -6,7 +6,6 @@ metadata:
   name: flux
   namespace: flux-system
 spec:
-  interval: ${HELMRELEASE_INTERVAL}
   chart:
     spec:
       chart: flux2
@@ -15,23 +14,9 @@ spec:
         kind: HelmRepository
         name: fluxcd-community
 
-  rollback:
-    timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
-    recreate: true
-    cleanupOnFail: true
-
-  install:
-    remediation:
-      retries: ${HELMRELEASE_INSTALL_RETRIES}
-
   upgrade:
     cleanupOnFail: false
-    disableWait: true
-    remediation:
-      retries: ${HELMRELEASE_UPGRADE_RETRIES}
-
-  uninstall:
-    keepHistory: false
+    disableWait: true  # this is important!!! it won't work without it
 
   values:
     installCRDs: true
