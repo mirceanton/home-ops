@@ -7,17 +7,6 @@ tasks:
     cmds:
       - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
 
-  get-rook-admin-password:
-    desc: Fetch and decode the rook dashboard admin password.
-    silent: true
-    vars:
-      CEPH_ADMIN_PASS:
-        sh: |
-          kubectl get secret rook-ceph-dashboard-password \
-            --namespace rook-ceph-system \
-            -o jsonpath="{['data']['password']}" | base64 --decode
-    cmds: [ 'echo "(ceph) admin : {{.CEPH_ADMIN_PASS}}"' ]
-
   get-kubedash-token:
     desc: Fetch and decode the Kubernetes dashboard token.
     silent: true
