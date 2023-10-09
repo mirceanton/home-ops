@@ -32,6 +32,10 @@ spec:
         name: cluster-secrets
 
   patches:
+    # ====================================================================
+    # Inject shared snippets into all Kustomizations 
+    # -> source repo, variable substitution, decription etc.
+    # ====================================================================
     - target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
@@ -69,6 +73,18 @@ spec:
           retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
           timeout: ${KUSTOMIZATION_TIMEOUT}
 
+    # ====================================================================
+    # Inject interval into all HelmRepository objects
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
           patches:
             - target:
                 group: source.toolkit.fluxcd.io
@@ -81,6 +97,20 @@ spec:
                 spec:
                   interval: ${HELMREPOSITORY_INTERVAL}
 
+    # ====================================================================
+    # Inject shared snippets into all HelmRelease objects
+    # -> interval, rollback timeout etc.
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          patches:
             - target:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
@@ -104,3 +134,54 @@ spec:
                       retries: ${HELMRELEASE_UPGRADE_RETRIES}
                   uninstall:
                     keepHistory: false
+
+    # ====================================================================
+    # Simulate Kustomization Groups: all system apps depend on flux
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: home-ops.mirceanton.com/group=system-apps
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          dependsOn:
+            - name: cluster-apps-flux
+            - name: cluster-apps-flux-addons
+
+    # ====================================================================
+    # Simulate Kustomization Groups: all admin apps depend on ingress and certs
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: home-ops.mirceanton.com/group=admin-apps
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          dependsOn:
+            - name: cluster-apps-ingress-nginx
+            - name: cluster-apps-cert-manager-issuers
+
+    # ====================================================================
+    # Simulate Kustomization Groups: group all services that need an ip to 
+    # depend on metallb so they can get one assigned
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: home-ops.mirceanton.com/needs-ip=true
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
+          dependsOn:
+            - name: cluster-apps-metallb-resources

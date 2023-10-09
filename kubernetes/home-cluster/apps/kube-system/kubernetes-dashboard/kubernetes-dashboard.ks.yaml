@@ -5,9 +5,9 @@ kind: Kustomization
 metadata:
   name: cluster-apps-kube-dashboard
   namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: admin-apps
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-system/kubernetes-dashboard/app
   targetNamespace: kube-system
-  dependsOn:
-    - name: cluster-apps-ingress-nginx
-    - name: cluster-apps-cert-manager-issuers
+  dependsOn: []
