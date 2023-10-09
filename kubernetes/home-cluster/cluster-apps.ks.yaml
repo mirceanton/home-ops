@@ -150,7 +150,7 @@ spec:
     - target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
-        labelSelector: home-ops.mirceanton.com/needs-ip=true
+        labelSelector: home-ops.mirceanton.com/requires-ip=true
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
