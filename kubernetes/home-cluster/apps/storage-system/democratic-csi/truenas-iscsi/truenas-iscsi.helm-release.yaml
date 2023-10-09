@@ -99,7 +99,7 @@ spec:
               zpool: /usr/local/sbin/zpool
               sudo: /usr/local/bin/sudo
               chroot: /usr/sbin/chroot
-          datasetParentName: tank/Homelab/HomeCluster/iscso/volumes
+          datasetParentName: tank/Homelab/HomeCluster/iscsi/volumes
           detachedSnapshotsDatasetParentName: tank/Homelab/HomeCluster/iscsi/snapshots
           zvolCompression: inherit
           zvolDedup: off
