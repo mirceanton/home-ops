@@ -8,4 +8,6 @@ metadata:
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-system/kubernetes-dashboard/app
   targetNamespace: kube-system
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-ingress-nginx
+    - name: cluster-apps-cert-manager-issuers

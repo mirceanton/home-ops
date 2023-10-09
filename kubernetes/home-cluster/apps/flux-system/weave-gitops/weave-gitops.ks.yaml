@@ -9,4 +9,5 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/flux-system/weave-gitops/app
   targetNamespace: flux-system
   dependsOn:
-    - name: cluster-apps-flux
+    - name: cluster-apps-ingress-nginx
+    - name: cluster-apps-cert-manager-issuers

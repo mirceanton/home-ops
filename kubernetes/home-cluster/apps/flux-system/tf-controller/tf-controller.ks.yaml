@@ -10,3 +10,4 @@ spec:
   targetNamespace: flux-system
   dependsOn:
     - name: cluster-apps-flux
+    - name: cluster-apps-flux-addons
