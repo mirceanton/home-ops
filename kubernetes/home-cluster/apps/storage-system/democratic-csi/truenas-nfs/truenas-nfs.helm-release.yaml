@@ -24,7 +24,7 @@ spec:
     # add note here about volume expansion requirements
     storageClasses:
     - name: truenas-nfs
-      defaultClass: false
+      defaultClass: true
       reclaimPolicy: Delete
       volumeBindingMode: Immediate
       allowVolumeExpansion: true
