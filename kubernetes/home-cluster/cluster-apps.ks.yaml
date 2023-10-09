@@ -61,7 +61,7 @@ spec:
               name: sops-age
 
           # Set wait and prune for all Kustomizations (can override through ns labels)
-          wait: false
+          wait: true
           prune: true
 
           # Set intervals for all Kustomizations
