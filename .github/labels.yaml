@@ -36,8 +36,3 @@
 - name: app/system
   color: "FF00FF"
   description: An issue that involves deploying a new system application to the cluster.
-
-- name: investigation needed
-  color: "696969"
-  description: An issue that needs some more investigation before being implemented.
-  
