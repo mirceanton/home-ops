@@ -14,6 +14,9 @@ spec:
         kind: HelmRepository
         name: fluxcd-community
 
+  upgrade:
+    disableWait: true  # this is important!!! it won't work without it
+
   values:
     installCRDs: true
     logLevel: info
