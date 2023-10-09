@@ -139,3 +139,16 @@ spec:
           path: /spec/dependsOn/-
           value:
             name: cluster-apps-cert-manager-issuers
+
+    # ====================================================================
+    # Simulate Kustomization Groups: apps that need IPs for their LB Svc
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: home-ops.mirceanton.com/needs=ip
+      patch: |
+        - op: add
+          path: /spec/dependsOn/-
+          value:
+            name: cluster-apps-metallb-resources
