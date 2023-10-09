@@ -1,0 +1,97 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: democratic-csi-truenas-nfs
+spec:
+  chart:
+    spec:
+      chart: democratic-csi
+      version: 0.14.1
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi
+
+  values:
+    controller:
+      enabled: true
+      replicaCount: 2
+
+    csiDriver:
+      # should be globally unique for a given cluster
+      name: "truenas.nfs"
+
+    # add note here about volume expansion requirements
+    storageClasses:
+    - name: truenas-nfs
+      defaultClass: false
+      reclaimPolicy: Delete
+      volumeBindingMode: Immediate
+      allowVolumeExpansion: true
+      parameters:
+        fsType: nfs
+
+        # if true, volumes created from other snapshots will be
+        # zfs send/received instead of zfs cloned
+        # detachedVolumesFromSnapshots: "false"
+
+        # if true, volumes created from other volumes will be
+        # zfs send/received instead of zfs cloned
+        # detachedVolumesFromVolumes: "false"
+
+      mountOptions:
+        - noatime
+        - nfsvers=3
+      secrets:
+        provisioner-secret:
+        controller-publish-secret:
+        node-stage-secret:
+        node-publish-secret:
+        controller-expand-secret:
+
+    # if your cluster supports snapshots you may enable below
+    volumeSnapshotClasses: []
+    #- name: freenas-nfs-csi
+    #  parameters:
+    #  # if true, snapshots will be created with zfs send/receive
+    #  # detachedSnapshots: "false"
+    #  secrets:
+    #    snapshotter-secret:
+
+    driver:
+      config:
+        driver: freenas-nfs
+        instance_id:
+        httpConnection:
+          protocol: http
+          host: 10.0.10.245
+          port: 80
+          username: sa_hkc
+          password: test123
+          allowInsecure: true
+        sshConnection:
+          host: 10.0.10.245
+          port: 22
+          username: sa_hkc
+          password: test123
+            #      privateKey: |
+            #        -----BEGIN RSA PRIVATE KEY-----
+            #        ...
+            #        -----END RSA PRIVATE KEY-----
+        zfs:
+          datasetParentName: tank/Homelab/HomeCluster/nfs/volumes
+          detachedSnapshotsDatasetParentName: tank/Homelab/HomeCluster/nfs/snapshots
+          datasetEnableQuotas: true
+          datasetEnableReservation: false
+          datasetPermissionsMode: "0777"
+          datasetPermissionsUser: sa_hkc
+          datasetPermissionsGroup: HomeLab
+        nfs:
+          shareHost: 10.0.10.245
+          shareAlldirs: false
+          shareAllowedHosts: []
+          shareAllowedNetworks: []
+          shareMaprootUser: root
+          shareMaprootGroup: wheel
+          shareMapallUser: ""
+          shareMapallGroup: ""
