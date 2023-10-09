@@ -1,13 +1,13 @@
 ---
 # =================================================================================================
-# Area labels
+# Area labels - Pull Requests
 # =================================================================================================
 - name: area/github
   color: "000000"  # github black
   description: Changes made in the github directory
 
 - name: area/kubernetes
-  color: "3970e4"  # kubernetes blue
+  color: "3970E4"  # kubernetes blue
   description: Changes made in the kubernetes directory
 
 - name: area/scripts
@@ -19,5 +19,20 @@
   description: Changes made in the infrastructure directory
 
 - name: area/docs
-  color: "ffffff"
+  color: "FFFFFF"
   description: Changes made in the docs directory
+
+# =================================================================================================
+# App Labels - Issues
+# =================================================================================================
+- name: app/user
+  color: "FFFF00"
+  description: An issue that involves deploying a new user-facing application to the cluster.
+
+- name: app/admin
+  color: "00FFFF"
+  description: An issue that involves deploying a new admin-facing application to the cluster.
+
+- name: app/system
+  color: "FF00FF"
+  description: An issue that involves deploying a new system application to the cluster.
