@@ -33,7 +33,7 @@ spec:
 
   patches:
     # ====================================================================
-    # Inject shared snippets into all Kustomizations 
+    # Inject shared snippets into all Kustomizations
     # -> source repo, variable substitution, decription etc.
     # ====================================================================
     - target:
@@ -170,7 +170,7 @@ spec:
             - name: cluster-apps-cert-manager-issuers
 
     # ====================================================================
-    # Simulate Kustomization Groups: group all services that need an ip to 
+    # Simulate Kustomization Groups: group all services that need an ip to
     # depend on metallb so they can get one assigned
     # ====================================================================
     - target:
