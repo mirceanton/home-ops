@@ -15,6 +15,7 @@ spec:
         name: fluxcd-community
 
   upgrade:
+    cleanupOnFail: false
     disableWait: true  # this is important!!! it won't work without it
 
   values:
