@@ -33,6 +33,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          git config --global --add safe.directory /__w/home-ops/home-ops
           gh pr create \
             --base main \
             --title "${{ steps.generate_name.outputs.pr_name }}" \
