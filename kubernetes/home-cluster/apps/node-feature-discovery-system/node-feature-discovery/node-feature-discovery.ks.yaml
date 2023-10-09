@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-apps-node-feature-discovery
   namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: system-apps
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/node-feature-discovery-system/node-feature-discovery/app
   targetNamespace: node-feature-discovery-system

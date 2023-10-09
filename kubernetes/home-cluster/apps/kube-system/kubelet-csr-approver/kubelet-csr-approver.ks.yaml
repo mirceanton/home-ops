@@ -5,6 +5,8 @@ kind: Kustomization
 metadata:
   name: cluster-apps-kubelet-csr-approver
   namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: system-apps
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-system/kubelet-csr-approver/app
   targetNamespace: kube-system
