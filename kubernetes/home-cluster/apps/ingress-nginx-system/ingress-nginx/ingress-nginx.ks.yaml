@@ -7,8 +7,8 @@ metadata:
   namespace: flux-system
   labels:
     home-ops.mirceanton.com/group: system-apps
-    home-ops.mirceanton.com/requires-ip: ip
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/ingress-nginx-system/ingress-nginx/app
   targetNamespace: ingress-nginx-system
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-metallb-resources  # needs ip for loadbalancer service
