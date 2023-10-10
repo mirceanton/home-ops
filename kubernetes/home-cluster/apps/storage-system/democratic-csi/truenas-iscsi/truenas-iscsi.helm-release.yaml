@@ -13,116 +13,175 @@ spec:
         name: democratic-csi
 
   values:
-    node:
-      hostPID: true
-      driver:
-        extraEnv:
-          - name: ISCSIADM_HOST_STRATEGY
-            value: nsenter
-          - name: ISCSIADM_HOST_PATH
-            value: /usr/local/sbin/iscsiadm
-        iscsiDirHostPath: /usr/local/etc/iscsi
-        iscsiDirHostPathType: ""
-
-    controller:
-      enabled: true
-      replicaCount: 2
-
-    csiDriver:
-      # should be globally unique for a given cluster
-      name: "truenas.iscsi"
-
-    # add note here about volume expansion requirements
-    storageClasses:
-      - name: truenas-iscsi
-        defaultClass: false
-        reclaimPolicy: Delete
-        volumeBindingMode: Immediate
-        allowVolumeExpansion: true
-        parameters:
-          fsType: ext4
-
-          # if true, volumes created from other snapshots will be
-          # zfs send/received instead of zfs cloned
-          # detachedVolumesFromSnapshots: "false"
-
-          # if true, volumes created from other volumes will be
-          # zfs send/received instead of zfs cloned
-          # detachedVolumesFromVolumes: "false"
-
-        mountOptions: []
-        secrets:
-          provisioner-secret:
-          controller-publish-secret:
-          node-stage-secret:
-            #  # any arbitrary iscsiadm entries can be add by creating keys starting with node-db.<entry.name>
-            #  # if doing CHAP
-            #  node-db.node.session.auth.authmethod: CHAP
-            #  node-db.node.session.auth.username: foo
-            #  node-db.node.session.auth.password: bar
-            #  # if doing mutual CHAP
-            #  node-db.node.session.auth.username_in: baz
-            #  node-db.node.session.auth.password_in: bar
-          node-publish-secret:
-          controller-expand-secret:
-
-    # if your cluster supports snapshots you may enable below
-    volumeSnapshotClasses: []
-    #- name: freenas-iscsi-csi
-    #  parameters:
-    #  # if true, snapshots will be created with zfs send/receive
-    #  # detachedSnapshots: "false"
-    #  secrets:
-    #    snapshotter-secret:
-
     driver:
       config:
         driver: freenas-iscsi
-        instance_id:
+
         httpConnection:
-          protocol: http
-          host: 10.0.10.245
-          port: 80
-          username: sa_hkc
-          password: test123
+          protocol: https
+          host: ${TRUENAS_IP}
+          port: 443
+          apiKey: ${TRUENAS_API_KEY}
           allowInsecure: true
           apiVersion: 2
+
         sshConnection:
-          host: 10.0.10.245
+          host: ${TRUENAS_IP}
           port: 22
-          username: sa_hkc
-          password: test123
+          username: ${TRUENAS_K8S_USER}
+          password: ${TRUENAS_K8S_PASS}
+
         zfs:
+          datasetParentName: ${TRUENAS_ISCSI_ROOT}/volumes
+          detachedSnapshotsDatasetParentName: ${TRUENAS_ISCSI_ROOT}/snapshots
+          zvolCompression: lz4
+          zvolDedup: off
+          zvolEnableReservation: false
+          zvolBlocksize: 4k
           cli:
+            sudoEnabled: true
             paths:
               zfs: /usr/local/sbin/zfs
               zpool: /usr/local/sbin/zpool
               sudo: /usr/local/bin/sudo
               chroot: /usr/sbin/chroot
-          datasetParentName: tank/Homelab/HomeCluster/iscsi/volumes
-          detachedSnapshotsDatasetParentName: tank/Homelab/HomeCluster/iscsi/snapshots
-          zvolCompression: inherit
-          zvolDedup: off
-          zvolEnableReservation: false
-          zvolBlocksize: 64K
+
         iscsi:
-          targetPortal: "10.0.10.245:3260"
-          interface:
+          targetPortal: "${TRUENAS_IP}:3260"
           namePrefix: csi-
           nameSuffix: "-cluster"
           targetGroups:
-            # get the correct ID from the "portal" section in the UI
             - targetGroupPortalGroup: 2
-              # get the correct ID from the "initiators" section in the UI
               targetGroupInitiatorGroup: 2
-              # None, CHAP, or CHAP Mutual
               targetGroupAuthType: None
-              # get the correct ID from the "Authorized Access" section of the UI
-              # only required if using Chap
-              targetGroupAuthGroup:
           extentInsecureTpc: true
           extentXenCompat: false
           extentDisablePhysicalBlocksize: true
-          extentBlocksize: 4096  # 512, 1024, 2048, or 4096
-          extentRpm: "7200"  # "" (let FreeNAS decide, currently defaults to SSD), Unknown, SSD, 5400, 7200, 10000, 15000
+          extentBlocksize: 4k
+          extentRpm: 7200
           extentAvailThreshold: 0
+
+    # https://kubernetes-csi.github.io/docs/csi-driver-object.html
+    # create the kubernetes CSIDriver
+    csiDriver:
+      enabled: true
+      name: "org.democratic-csi.iscsi"
+      version: 1.5.0
+      attachRequired: true
+      podInfoOnMount: true
+
+    controller:
+      enabled: true
+      rbac:
+        enabled: true
+      replicaCount: 2
+      hostNetwork: false
+      hostIPC: false
+      strategy: deployment
+
+      # https://kubernetes-csi.github.io/docs/external-attacher.html
+      externalAttacher:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-attacher:v4.3.0
+
+      # https://kubernetes-csi.github.io/docs/external-provisioner.html
+      externalProvisioner:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-provisioner:v3.5.0
+
+      # https://kubernetes-csi.github.io/docs/external-resizer.html
+      externalResizer:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-resizer:v1.8.0
+
+      # https://kubernetes-csi.github.io/docs/external-snapshotter.html
+      externalSnapshotter:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-snapshotter:v6.2.2
+
+      # https://github.com/kubernetes-csi/external-health-monitor
+      externalHealthMonitorController:
+        enabled: false
+        image: registry.k8s.io/sig-storage/csi-external-health-monitor-controller:v0.9.0
+
+      livenessProbe:
+        enabled: true
+
+      # democratic-csi controller
+      driver:
+        enabled: true
+        image: docker.io/democraticcsi/democratic-csi:latest
+        imagePullPolicy: IfNotPresent
+        logLevel: debug
+
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - SYS_ADMIN
+          privileged: true
+
+    node:
+      enabled: true
+      rbac:
+        enabled: true
+      hostNetwork: true
+      hostAliases: []
+      hostIPC: true
+      hostPID: true
+      kubeletHostPath: /var/lib/kubelet
+
+      livenessProbe:
+        enabled: true
+
+      cleanup:
+        image: docker.io/busybox:1.32.0
+
+      # democratic-csi node
+      driver:
+        enabled: true
+        image: docker.io/democraticcsi/democratic-csi:latest
+        imagePullPolicy: IfNotPresent
+        logLevel: debug
+        localtimeHostPath: /etc/localtime
+      
+        iscsiDirHostPath: /usr/local/etc/iscsi
+        iscsiDirHostPathType: ""
+
+        extraEnv:
+          - name: ISCSIADM_HOST_STRATEGY
+            value: nsenter
+          - name: ISCSIADM_HOST_PATH
+            value: /usr/local/sbin/iscsiadm
+
+
+      # https://kubernetes-csi.github.io/docs/node-driver-registrar.html
+      driverRegistrar:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.8.0
+
+    storageClasses:
+      - name: truenas-iscsi
+        defaultClass: true
+        reclaimPolicy: Delete
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          fsType: ext4
+        mountOptions: []
+        secrets:
+          provisioner-secret:
+          controller-publish-secret:
+          node-stage-secret:
+          node-publish-secret:
+          controller-expand-secret:
+
+    volumeSnapshotClasses: []
+
+    # https://github.com/democratic-csi/csi-grpc-proxy
+    csiProxy:
+      enabled: true
+      image: docker.io/democraticcsi/csi-grpc-proxy:v0.5.3
+
+    # Configure a pod security policy to allow privileged pods
+    enablePSP: false

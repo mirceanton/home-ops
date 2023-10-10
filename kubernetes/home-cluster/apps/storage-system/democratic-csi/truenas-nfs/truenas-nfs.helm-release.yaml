@@ -13,81 +13,41 @@ spec:
         name: democratic-csi
 
   values:
-    controller:
-      enabled: true
-      replicaCount: 2
-
-    csiDriver:
-      # should be globally unique for a given cluster
-      name: "truenas.nfs"
-
-    # add note here about volume expansion requirements
-    storageClasses:
-    - name: truenas-nfs
-      defaultClass: true
-      reclaimPolicy: Delete
-      volumeBindingMode: Immediate
-      allowVolumeExpansion: true
-      parameters:
-        fsType: nfs
-
-        # if true, volumes created from other snapshots will be
-        # zfs send/received instead of zfs cloned
-        # detachedVolumesFromSnapshots: "false"
-
-        # if true, volumes created from other volumes will be
-        # zfs send/received instead of zfs cloned
-        # detachedVolumesFromVolumes: "false"
-
-      mountOptions:
-        - noatime
-        - nfsvers=3
-      secrets:
-        provisioner-secret:
-        controller-publish-secret:
-        node-stage-secret:
-        node-publish-secret:
-        controller-expand-secret:
-
-    # if your cluster supports snapshots you may enable below
-    volumeSnapshotClasses: []
-    #- name: freenas-nfs-csi
-    #  parameters:
-    #  # if true, snapshots will be created with zfs send/receive
-    #  # detachedSnapshots: "false"
-    #  secrets:
-    #    snapshotter-secret:
-
     driver:
       config:
         driver: freenas-nfs
-        instance_id:
+
         httpConnection:
-          protocol: http
-          host: 10.0.10.245
-          port: 80
-          username: sa_hkc
-          password: test123
+          protocol: https
+          host: ${TRUENAS_IP}
+          port: 443
+          apiKey: ${TRUENAS_API_KEY}
           allowInsecure: true
+          apiVersion: 2
+
         sshConnection:
-          host: 10.0.10.245
+          host: ${TRUENAS_IP}
           port: 22
-          username: sa_hkc
-          password: test123
-            #      privateKey: |
-            #        -----BEGIN RSA PRIVATE KEY-----
-            #        ...
-            #        -----END RSA PRIVATE KEY-----
+          username: ${TRUENAS_K8S_USER}
+          password: ${TRUENAS_K8S_PASS}
+
         zfs:
-          datasetParentName: tank/Homelab/HomeCluster/nfs/volumes
-          detachedSnapshotsDatasetParentName: tank/Homelab/HomeCluster/nfs/snapshots
-          datasetEnableQuotas: true
-          datasetEnableReservation: false
+          datasetParentName: ${TRUENAS_NFS_ROOT}/volumes
+          detachedSnapshotsDatasetParentName: ${TRUENAS_NFS_ROOT}/snapshots
+          zvolEnableReservation: false
           datasetPermissionsMode: "0777"
-          datasetPermissionsUser: sa_hkc
-          datasetPermissionsGroup: HomeLab
+          datasetPermissionsUser: 0
+          datasetPermissionsGroup: 0
+          cli:
+            sudoEnabled: true
+            paths:
+              zfs: /usr/local/sbin/zfs
+              zpool: /usr/local/sbin/zpool
+              sudo: /usr/local/bin/sudo
+              chroot: /usr/sbin/chroot
+
         nfs:
-          shareHost: 10.0.10.245
+          shareHost: ${TRUENAS_IP}
           shareAlldirs: false
           shareAllowedHosts: []
           shareAllowedNetworks: []
@@ -95,3 +55,122 @@ spec:
           shareMaprootGroup: wheel
           shareMapallUser: ""
           shareMapallGroup: ""
+
+    # https://kubernetes-csi.github.io/docs/csi-driver-object.html
+    # create the kubernetes CSIDriver
+    csiDriver:
+      enabled: true
+      name: "org.democratic-csi.nfs"
+      version: 1.5.0
+      attachRequired: true
+      podInfoOnMount: true
+
+    controller:
+      enabled: true
+      rbac:
+        enabled: true
+      replicaCount: 2
+      hostNetwork: false
+      hostIPC: false
+      strategy: deployment
+
+      # https://kubernetes-csi.github.io/docs/external-attacher.html
+      externalAttacher:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-attacher:v4.3.0
+
+      # https://kubernetes-csi.github.io/docs/external-provisioner.html
+      externalProvisioner:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-provisioner:v3.5.0
+
+      # https://kubernetes-csi.github.io/docs/external-resizer.html
+      externalResizer:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-resizer:v1.8.0
+
+      # https://kubernetes-csi.github.io/docs/external-snapshotter.html
+      externalSnapshotter:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-snapshotter:v6.2.2
+
+      # https://github.com/kubernetes-csi/external-health-monitor
+      externalHealthMonitorController:
+        enabled: false
+        image: registry.k8s.io/sig-storage/csi-external-health-monitor-controller:v0.9.0
+
+      livenessProbe:
+        enabled: true
+
+      # democratic-csi controller
+      driver:
+        enabled: true
+        image: docker.io/democraticcsi/democratic-csi:latest
+        imagePullPolicy: IfNotPresent
+        logLevel: info
+
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            add:
+            - SYS_ADMIN
+          privileged: true
+
+    node:
+      enabled: true
+      rbac:
+        enabled: true
+      hostNetwork: true
+      hostAliases: []
+      hostIPC: true
+      hostPID: true
+      kubeletHostPath: /var/lib/kubelet
+
+      livenessProbe:
+        enabled: true
+
+      cleanup:
+        image: docker.io/busybox:1.32.0
+
+      # democratic-csi node
+      driver:
+        enabled: true
+        image: docker.io/democraticcsi/democratic-csi:latest
+        imagePullPolicy: IfNotPresent
+        logLevel: info
+        localtimeHostPath: /etc/localtime
+
+      # https://kubernetes-csi.github.io/docs/node-driver-registrar.html
+      driverRegistrar:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.8.0
+
+
+    # add note here about volume expansion requirements
+    storageClasses:
+        - name: truenas-nfs
+          defaultClass: false
+          reclaimPolicy: Delete
+          volumeBindingMode: Immediate
+          allowVolumeExpansion: true
+          parameters:
+            fsType: nfs
+          mountOptions:
+            - noatime
+            - nfsvers=4
+          secrets:
+            provisioner-secret:
+            controller-publish-secret:
+            node-stage-secret:
+            node-publish-secret:
+            controller-expand-secret:
+
+    volumeSnapshotClasses: []
+
+    # https://github.com/democratic-csi/csi-grpc-proxy
+    csiProxy:
+      enabled: true
+      image: docker.io/democraticcsi/csi-grpc-proxy:v0.5.3
+
+    # Configure a pod security policy to allow privileged pods
+    enablePSP: false
