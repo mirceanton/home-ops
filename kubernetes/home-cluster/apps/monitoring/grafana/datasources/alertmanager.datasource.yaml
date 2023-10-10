@@ -3,6 +3,9 @@ kind: GrafanaDatasource
 metadata:
   name: alertmanager-datasource
 spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
   datasource:
     name: Alertmanager
     type: alertmanager
