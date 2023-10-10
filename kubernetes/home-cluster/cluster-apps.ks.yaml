@@ -152,3 +152,20 @@ spec:
           path: /spec/dependsOn/-
           value:
             name: cluster-apps-metallb-resources
+
+    # ====================================================================
+    # Simulate Kustomization Groups: apps that need IPs for their LB Svc
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: home-ops.mirceanton.com/needs=storage
+      patch: |
+        - op: add
+          path: /spec/dependsOn/-
+          value:
+            name: cluster-apps-democratic-csi-iscsi
+        - op: add
+          path: /spec/dependsOn/-
+          value:
+            name: cluster-apps-democratic-csi-nfs
