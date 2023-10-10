@@ -53,7 +53,8 @@ spec:
     grafana:
       enabled: true
       replicaCount: 1
-
+      labels:
+        dashboards: "grafana"
       ## Configure the ingress resource that allows you to access the
       ## Grafana web. Set up the URL
       ## Ref: https://kubernetes.io/docs/user-guide/ingress/
