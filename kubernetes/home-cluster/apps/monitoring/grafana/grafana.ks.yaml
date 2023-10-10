@@ -5,9 +5,11 @@ kind: Kustomization
 metadata:
   name: cluster-apps-grafana
   namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: admin-apps
+    home-ops.mirceanton.com/needs: storage
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/monitoring/grafana/app
   targetNamespace: monitoring
   dependsOn:
-    - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-kube-prometheus-stack
