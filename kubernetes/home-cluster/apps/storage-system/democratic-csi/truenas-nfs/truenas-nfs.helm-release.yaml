@@ -112,8 +112,7 @@ spec:
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
-            add:
-            - SYS_ADMIN
+            add: [ SYS_ADMIN ]
           privileged: true
 
     node:
@@ -148,22 +147,22 @@ spec:
 
     # add note here about volume expansion requirements
     storageClasses:
-        - name: truenas-nfs
-          defaultClass: false
-          reclaimPolicy: Delete
-          volumeBindingMode: Immediate
-          allowVolumeExpansion: true
-          parameters:
-            fsType: nfs
-          mountOptions:
-            - noatime
-            - nfsvers=4
-          secrets:
-            provisioner-secret:
-            controller-publish-secret:
-            node-stage-secret:
-            node-publish-secret:
-            controller-expand-secret:
+      - name: truenas-nfs
+        defaultClass: false
+        reclaimPolicy: Delete
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          fsType: nfs
+        mountOptions:
+          - noatime
+          - nfsvers=4
+        secrets:
+          provisioner-secret:
+          controller-publish-secret:
+          node-stage-secret:
+          node-publish-secret:
+          controller-expand-secret:
 
     volumeSnapshotClasses: []
 

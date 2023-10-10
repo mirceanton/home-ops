@@ -35,7 +35,7 @@ spec:
           datasetParentName: ${TRUENAS_ISCSI_ROOT}/volumes
           detachedSnapshotsDatasetParentName: ${TRUENAS_ISCSI_ROOT}/snapshots
           zvolCompression: lz4
-          zvolDedup: off
+          zvolDedup: 'off'
           zvolEnableReservation: false
           zvolBlocksize: 4k
           cli:
@@ -117,8 +117,7 @@ spec:
         securityContext:
           allowPrivilegeEscalation: true
           capabilities:
-            add:
-            - SYS_ADMIN
+            add: [ SYS_ADMIN ]
           privileged: true
 
     node:
@@ -144,7 +143,7 @@ spec:
         imagePullPolicy: IfNotPresent
         logLevel: debug
         localtimeHostPath: /etc/localtime
-      
+
         iscsiDirHostPath: /usr/local/etc/iscsi
         iscsiDirHostPathType: ""
 
