@@ -86,7 +86,6 @@ spec:
           emptyDir: {}
         enableStatefulSetAutoDeletePVC: false
         size: 10Gi
-        storageClass: ceph-block
         selector: null
 
     # Configuration for the read pod(s)
@@ -95,7 +94,6 @@ spec:
       persistence:
         enableStatefulSetAutoDeletePVC: true
         size: 10Gi
-        storageClass: ceph-block
         selector: null
 
     # Configuration for the backend pod(s)
@@ -107,7 +105,6 @@ spec:
           emptyDir: {}
         enableStatefulSetAutoDeletePVC: true
         size: 10Gi
-        storageClass: ceph-block
 
     # Use either this ingress or the gateway, but not both at once.
     ingress:
