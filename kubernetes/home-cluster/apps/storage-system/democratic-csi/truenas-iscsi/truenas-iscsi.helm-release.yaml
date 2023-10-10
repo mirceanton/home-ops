@@ -37,7 +37,7 @@ spec:
           zvolCompression: lz4
           zvolDedup: 'off'
           zvolEnableReservation: false
-          zvolBlocksize: 4k
+          zvolBlocksize: 512
           cli:
             sudoEnabled: true
             paths:
@@ -57,7 +57,7 @@ spec:
           extentInsecureTpc: true
           extentXenCompat: false
           extentDisablePhysicalBlocksize: true
-          extentBlocksize: 4k
+          extentBlocksize: 512
           extentRpm: 7200
           extentAvailThreshold: 0
 
