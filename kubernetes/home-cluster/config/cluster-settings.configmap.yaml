@@ -14,6 +14,10 @@ data:
 
   TIMEZONE: Europe/Bucharest
 
+  TRUENAS_IP: 10.0.10.245
+  TRUENAS_NFS_ROOT: tank/Homelab/HomeCluster/nfs
+  TRUENAS_ISCSI_ROOT: tank/Homelab/HomeCluster/iscsi
+
   HELMRELEASE_INTERVAL: 30m
   HELMRELEASE_ROLLBACK_TIMEOUT: 15m
   HELMRELEASE_INSTALL_RETRIES: "5"
