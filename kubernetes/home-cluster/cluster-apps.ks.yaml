@@ -9,6 +9,7 @@ spec:
   path: kubernetes/home-cluster/apps
   dependsOn:
     - name: cluster-config
+    - name: cluster-crds
 
   wait: true
   prune: true
