@@ -13,22 +13,7 @@ spec:
         kind: HelmRepository
         name: jetstack
 
-  values:
-    installCRDs: true
-
-    replicaCount: 2
-    webhook:
-      replicaCount: 2
-    cainjector:
-      replicaCount: 2
-
-    extraArgs:
-      - --dns01-recursive-nameservers=1.1.1.1:53,9.9.9.9:53
-      - --dns01-recursive-nameservers-only
-      - --enable-certificate-owner-ref
-
-    podDnsPolicy: "None"
-    podDnsConfig:
-      nameservers:
-        - "1.1.1.1"
-        - "9.9.9.9"
+  valuesFrom:
+    - kind: ConfigMap
+      name: cert-manager-helm-values
+      valuesKey: values.yaml
