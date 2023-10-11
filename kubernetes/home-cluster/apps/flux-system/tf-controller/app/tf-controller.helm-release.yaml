@@ -14,5 +14,7 @@ spec:
         kind: HelmRepository
         name: tf-controller
 
-  values:
-    installCRDs: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: tf-controller-helm-values
+      valuesKey: values.yaml

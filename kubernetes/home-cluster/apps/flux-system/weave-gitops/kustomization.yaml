@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./weaveworks.helm-repository.yaml
+  - ./weave-gitops.helm-release.yaml
+  - ./cluster-user-auth.safe-secret.yaml
+
+configMapGenerator:
+  - name: weave-gitops-helm-values
+    files:
+      - values.yaml=./config/values.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true

@@ -18,58 +18,7 @@ spec:
     cleanupOnFail: false
     disableWait: true  # this is important!!! it won't work without it
 
-  values:
-    installCRDs: true
-    logLevel: info
-    policies:
-      create: true
-
-    helmController:
-      create: true
-      container:
-        additionalArgs:
-          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
-          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
-          - --concurrent=32
-          - --kube-api-qps=500
-          - --kube-api-burst=1000
-          - --requeue-dependency=5s
-
-          # Enable drift detection for HelmReleases and set the log level to debug
-          # https://fluxcd.io/flux/components/helm/helmreleases/#drift-detection
-          - --feature-gates=DetectDrift=true,CorrectDrift=false
-
-          # Enable Helm near OOM detection
-          # https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-helm-near-oom-detection
-          - --feature-gates=OOMWatch=true
-          - --oom-watch-memory-threshold=95
-          - --oom-watch-interval=500ms
-      resources:
-        limits:
-          cpu: 4000m
-          memory: 4Gi
-
-    kustomizeController:
-      create: true
-      container:
-        additionalArgs:
-          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
-          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
-          - --concurrent=16
-          - --kube-api-qps=500
-          - --kube-api-burst=1000
-          - --requeue-dependency=5s
-      resources:
-        limits:
-          cpu: 2000m
-          memory: 2Gi
-
-    sourceController:
-      create: true
-    notificationController:
-      create: true
-
-    imageAutomationController:
-      create: false
-    imageReflectionController:
-      create: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: flux-helm-values
+      valuesKey: values.yaml
