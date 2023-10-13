@@ -2,6 +2,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+metadata:
+  name: grafana-crds
 resources:
   # Grafana Operator CRDs
   - https://raw.githubusercontent.com/grafana-operator/grafana-operator/v5.4.1/deploy/kustomize/base/crds.yaml
