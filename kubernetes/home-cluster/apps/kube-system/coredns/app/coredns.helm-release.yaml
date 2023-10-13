@@ -15,13 +15,50 @@ spec:
 
   values:
     fullnameOverride: coredns
-    replicaCount: 3  # one replica on each controlplane node
 
-    # Allow scheduling on controlplane nodes
-    tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
+
+    ## ================================================================================================
+    ## COREDNS DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    image:
+      repository: coredns/coredns
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+    replicaCount: 3
+
+    deployment:
+      enabled: true
+      annotations:
+        reloader.stakater.com/auto: "true"
+
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 25%
+
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    isClusterService: true
+    serviceType: "ClusterIP"
+    service:
+      name: coredns
+      clusterIP: 10.96.0.10
+      clusterIPs: [ 10.96.0.10 ]
+
+    rbac:
+      create: true
+      pspEnable: false
+    serviceAccount:
+      create: true
+
+    # Node labels for pod assignment
+    nodeSelector: {}
 
     # Prefer controlplane nodes
     affinity:
@@ -32,6 +69,12 @@ spec:
                 - key: node-role.kubernetes.io/control-plane
                   operator: Exists
 
+    # Allow scheduling on controlplane nodes
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+
     # Prevent 2 pods on the same node
     topologySpreadConstraints:
       - maxSkew: 1
@@ -39,21 +82,14 @@ spec:
         whenUnsatisfiable: DoNotSchedule
         labelSelector:
           matchLabels:
-            app.kubernetes.io/instance: coredns
+            app.kubernetes.io/name: coredns
 
-    service:
-      name: coredns
-      clusterIP: 10.96.0.10
-      clusterIPs: [ 10.96.0.10 ]
 
-    serviceAccount:
-      create: true
-
-    # Annotate for auto-reloading if configmap changed
-    deployment:
-      annotations:
-        reloader.stakater.com/auto: "true"
-
+    ## ================================================================================================
+    ## COREDNS APP SETTINGS
+    ## ================================================================================================
+    # Default zone is what Kubernetes recommends:
+    # https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/#coredns-configmap-options
     servers:
       - zones:
           - zone: .
@@ -82,3 +118,19 @@ spec:
           - name: loop
           - name: reload
           - name: loadbalance
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    prometheus:
+      service:
+        enabled: true
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9153"
+      monitor:
+        enabled: true
+        additionalLabels: {}
+        namespace: ""
+        interval: ""

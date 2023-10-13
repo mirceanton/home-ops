@@ -14,7 +14,53 @@ spec:
         name: metrics-server
 
   values:
+    image:
+      repository: registry.k8s.io/metrics-server/metrics-server
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## METRICS SERVER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     replicas: 2
+
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+
+    rbac:
+      create: true
+      pspEnabled: false
+    serviceAccount:
+      create: true
+
+    # Node labels for pod assignment
+    nodeSelector: {}
+
+    # Allow scheduling on controlplane nodes
+    tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Equal"
+        value: ""
+        effect: "NoSchedule"
+    # Prefer scheduling on controlplane nodes
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
 
     # Prevent 2 instances from being scheduled on the same node
     topologySpreadConstraints:
@@ -23,4 +69,19 @@ spec:
         whenUnsatisfiable: DoNotSchedule
         labelSelector:
           matchLabels:
-            app.kubernetes.io/instance: metrics-server
+            app.kubernetes.io/name: metrics-server
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metrics:
+      enabled: true
+
+    serviceMonitor:
+      enabled: true
+      additionalLabels: {}
+      interval: 1m
+      scrapeTimeout: 10s
+      metricRelabelings: []
+      relabelings: []

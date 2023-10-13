@@ -12,4 +12,54 @@ spec:
         kind: HelmRepository
         name: actions-runner-controller
   values:
+    ## ================================================================================================
+    ## CONTROLLER APP SETTINGS
+    ## ================================================================================================
+    flags:
+      logLevel: "debug"  # "debug", "info", "warn", "error".
+      logFormat: "text"  # "text", "json"
+      updateStrategy: "immediate"
+
+
+    ## ================================================================================================
+    ## CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     replicaCount: 2
+    image:
+      repository: "ghcr.io/actions/gha-runner-scale-set-controller"
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    serviceAccount:
+      create: true
+
+    podSecurityContext:
+      fsGroup: 2000
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metrics:
+      controllerManagerAddr: ":8080"
+      listenerAddr: ":8080"
+      listenerEndpoint: "/metrics"

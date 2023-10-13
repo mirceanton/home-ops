@@ -14,13 +14,54 @@ spec:
         name: postfinance
 
   values:
+    ## ================================================================================================
+    ## KUBELET CSR APPROVER APP SETTINGS
+    ## ================================================================================================
+    # Required configuration item
     providerRegex: ^(cluster-)$
+    # optional, permits to bypass dns resolution checks. default: false
     bypassDnsResolution: true
+    # number of DNS SAN names allowed in a certificate request. defaults to 1
+    allowedDnsNames: 1
+    # optional, permits ignoring CSRs with another Username than `system:node:...`
+    ignoreNonSystemNode: false
+    # set this parameter to true to ignore mismatching DNS name and hostname
+    bypassHostnameCheck: false
+    # optional, list of IP (IPv4, IPv6) subnets that are allowed to submit CSRs
+    providerIpPrefixes:
+      - 10.0.10.0/24
 
-    replicaCount: 2
+    # logging level ranges from -5 (Fatal) to 10 (Verbose). default level is 0
+    loggingLevel: 0
+
+    ## ================================================================================================
+    ## KUBELET CSR APPROVER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     leaderElection: true
-
+    replicas: 2
     namespace: kube-system
+
+    image:
+      repository: ghcr.io/postfinance/kubelet-csr-approver
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    rbac:
+      manage: true
+    serviceAccount:
+      create: true
+
+    resources:
+      requests:
+        memory: 64Mi
+        cpu: 100m
+      limits:
+        memory: 128Mi
+        cpu: 500m
+
+
+    # Node labels for pod assignment
+    nodeSelector: {}
 
     # Allow scheduling on controlplane nodes
     tolerations:
@@ -45,3 +86,20 @@ spec:
         labelSelector:
           matchLabels:
             app.kubernetes.io/instance: coredns
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metrics:
+      enable: true
+      serviceType: ClusterIP
+      port: 8080
+      annotations: {}
+      serviceMonitor:
+        enabled: true
+        additionalLabels: {}
+        interval: 1m
+        scrapeTimeout: 10s
+        metricRelabelings: []
+        relabelings: []

@@ -13,18 +13,44 @@ spec:
         name: actions-runner-controller
 
   values:
-    runnerScaleSetName: arc-runner-set-home-ops
-    minRunners: 5
-    maxRunners: 10
-
     githubConfigUrl: https://github.com/mirceanton/home-ops
     githubConfigSecret:
       github_token: ${GITHUB_PAT}
 
+    # proxy:
+    #   http:
+    #     url: http://proxy.com:1234
+    #     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+    #   https:
+    #     url: http://proxy.com:1234
+    #     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+    #   noProxy:
+    #     - example.com
+    #     - example.org
+
+    runnerScaleSetName: arc-runner-set-home-ops
+    minRunners: 5
+    maxRunners: 10
+
+    ## Container mode is an object that provides out-of-box configuration
     containerMode:
       type: dind
 
+    ## template is the PodSpec for each listener Pod
+    ## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+    listenerTemplate:
+      spec:
+        containers:
+        - name: listener
+          securityContext:
+            runAsUser: 1000
+
+
+    ## template is the PodSpec for each runner Pod
+    ## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
     template:
-      containers:
-        - name: runner
-          image: ghcr.io/onedr0p/github-actions-runner:2.309.0
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/actions/actions-runner:latest
+            command: ["/home/runner/run.sh"]
