@@ -14,25 +14,54 @@ spec:
         name: descheduler
 
   values:
-    schedule: "*/5 * * * *"
+    image:
+      repository: registry.k8s.io/descheduler/descheduler
+      pullPolicy: IfNotPresent
+      # tag: ""
+    imagePullSecrets: []
 
-    kind: Deployment
+
+    ## ================================================================================================
+    ## DESCHEDULER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    kind: Deployment  # CronJob or Deployment
     replicas: 2
-    leaderElection:
+    leaderElection:  # needed if replicas >1
       enabled: true
       leaseDuration: 15s
       renewDeadline: 10s
       retryPeriod: 2s
-      resourceLock: "leases"
-      resourceName: "descheduler"
-      resourceNamescape: "kube-system"
+      resourceLock: leases
+      resourceName: descheduler
+      resourceNamescape: descheduler-system
+
+    # Required when running as a Deployment
+    deschedulingInterval: 2m
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+    affinity: {}
+    tolerations: []
+
+    rbac:
+      create: true
+
+    serviceAccount:
+      create: true
+      annotations: {}
 
     service:
       enabled: true
 
-    serviceMonitor:
-      enabled: false
-
+    ## ================================================================================================
+    ## MONITORING PARAMETERS
+    ## ================================================================================================
     deschedulerPolicy:
       strategies:
         RemovePodsHavingTooManyRestarts:
@@ -95,3 +124,20 @@ spec:
               targetThresholds:
                 cpu: 40
                 memory: 40
+
+
+    ## ================================================================================================
+    ## MONITORING PARAMETERS
+    ## ================================================================================================
+    serviceMonitor:
+      enabled: true
+      # namespace: ""
+      additionalLabels: {}
+      interval: ""
+      honorLabels: true
+      insecureSkipVerify: true
+      metricRelabelings:
+        - action: keep
+          regex: 'descheduler_(build_info|pods_evicted)'
+          sourceLabels: [__name__]
+      relabelings: []

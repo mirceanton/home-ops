@@ -14,13 +14,38 @@ spec:
         name: node-feature-discovery
 
   values:
+    image:
+      repository: registry.k8s.io/nfd/node-feature-discovery
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## MASTER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     master:
       replicaCount: 2
-      # Schedule pods on controlplane nodes
+
+      serviceAccount:
+        create: true
+      rbac:
+        create: true
+
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+      nodeSelector: {}
+      # Allow scheduling on controlplane nodes
       tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Equal"
+          value: ""
+          effect: "NoSchedule"
+      # Prefer scheduling on controlplane nodes
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -29,13 +54,61 @@ spec:
                   - key: node-role.kubernetes.io/control-plane
                     operator: Exists
 
+
+    ## ================================================================================================
+    ## WORKER DAEMONSET PARAMETERS
+    ## ================================================================================================
+    worker:
+      metricsPort: 8081
+
+      serviceAccount:
+        create: true
+      rbac:
+        create: true
+
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+
+    ## ================================================================================================
+    ## TOPOLOGY UPDATER DEPLOYMENT PARAMETERS  --  DISABLED
+    ## ================================================================================================
+    topologyUpdater:
+      enable: false
+
+
+    ## ================================================================================================
+    ## GARBAGE COLLECTOR DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     gc:
+      enable: true
       replicaCount: 2
-      # Schedule pods on controlplane nodes
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          operator: Exists
-          effect: NoSchedule
+      interval: 1h
+
+      serviceAccount:
+        create: true
+      rbac:
+        create: true
+
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+      nodeSelector: {}
+      # Prefer scheduling on controlplane nodes
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -43,3 +116,25 @@ spec:
               - matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: Exists
+      # Allow scheduling on controlplane nodes
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Equal"
+          value: ""
+          effect: "NoSchedule"
+
+
+    ## ================================================================================================
+    ## Enable encryption for worker <--> master comms
+    ## ================================================================================================
+    tls:
+      enable: true
+      certManager: true
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    prometheus:
+      enable: true
+      labels: {}

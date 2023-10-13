@@ -15,12 +15,36 @@ spec:
 
   values:
     fullnameOverride: reloader
-    reloader:
-      enableHA: true
 
+    global:
+      imagePullSecrets: []
+
+    reloader:
+      ## ================================================================================================
+      ## RELOADER APPLICATION SETTINGS
+      ## ================================================================================================
+      autoReloadAll: false
+      ignoreSecrets: false
+      ignoreConfigMaps: false
+      reloadOnCreate: false
+      syncAfterRestart: false
+
+      # reloadStrategy: default # Set to default, env-vars or annotations
+      # ignoreNamespaces: "" # Comma separated list of namespaces to ignore
+      # namespaceSelector: "" # Comma separated list of k8s label selectors for namespaces selection
+      # resourceLabelSelector: "" # Comma separated list of k8s label selectors for configmap/secret selection
+
+      logFormat: json
+      watchGlobally: true
+
+
+      ## ================================================================================================
+      ## RELOADER DEPLOYMENT PARAMETERS
+      ## ================================================================================================
+      # Set to true to enable leadership election allowing you to run multiple replicas
+      enableHA: true
       deployment:
         replicas: 2
-
         # Prevent 2 instances from being scheduled on the same node
         topologySpreadConstraints:
           - maxSkew: 1
@@ -29,3 +53,91 @@ spec:
             labelSelector:
               matchLabels:
                 app: reloader-reloader
+        affinity: {}
+        tolerations: []
+
+        image:
+          name: ghcr.io/stakater/reloader
+          tag: v1.0.43
+          pullPolicy: IfNotPresent
+
+        # Support for extra environment variables for alerting
+        env:
+          secret:
+            ALERT_ON_RELOAD: true
+            ALERT_SINK: webhook
+            ALERT_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+            ALERT_ADDITIONAL_INFO: home-cluster
+
+
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 512Mi
+
+      rbac:
+        enabled: true
+        labels: {}
+
+      serviceAccount:
+        create: true
+
+      ## ================================================================================================
+      ## MONITORING
+      ## ================================================================================================
+      podMonitor:
+        enabled: true
+        # Set the namespace the podMonitor should be deployed
+        # namespace: monitoring
+
+        # Fallback to the prometheus default unless specified
+        interval: 10s
+
+        ## scheme: HTTP scheme to use for scraping. Can be used with `tlsConfig` for example if using istio mTLS.
+        scheme: HTTP
+
+        # Fallback to the prometheus default unless specified
+        timeout: 30s
+
+        ## Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
+        ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+        labels: {}
+
+        ## Used to pass annotations that are used by the Prometheus installed in your cluster to select Service Monitors to work with
+        ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+        annotations: {}
+
+        # Retain the job and instance labels of the metrics pushed to the Pushgateway
+        # [Scraping Pushgateway](https://github.com/prometheus/pushgateway#configure-the-pushgateway-as-a-target-to-scrape)
+        honorLabels: true
+
+        ## Metric relabel configs to apply to samples before ingestion.
+        ## [Metric Relabeling](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs)
+        metricRelabelings:
+          - action: keep
+            regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+            sourceLabels: [__name__]
+
+        ## Relabel configs to apply to samples before ingestion.
+        ## [Relabeling](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config)
+        relabelings: []
+        # - sourceLabels: [__meta_kubernetes_pod_node_name]
+        #   separator: ;
+        #   regex: ^(.*)$
+        #   targetLabel: nodename
+        #   replacement: $1
+        #   action: replace
+
+
+      ## ================================================================================================
+      ## NETWORK POLICIES
+      ## ================================================================================================
+      netpol:
+        enabled: false
+        from: []
+        # - podSelector:
+        #     matchLabels:
+        #       app.kubernetes.io/name: prometheus

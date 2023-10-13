@@ -13,4 +13,164 @@ spec:
         kind: HelmRepository
         name: metallb
 
-  values: {}
+  values:
+    imagePullSecrets: []
+
+    crds:
+      enabled: true
+      validationFailurePolicy: Fail
+
+    rbac:
+      create: true
+
+    ## ================================================================================================
+    ## CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    controller:
+      enabled: true
+      logLevel: info  # `all`, `debug`, `info`, `warn`, `error` or `none`
+      image:
+        repository: quay.io/metallb/controller
+        pullPolicy: IfNotPresent
+      serviceAccount:
+        create: true
+
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+    ## ================================================================================================
+    ## SPEAKERS DAEMONSET PARAMETERS
+    ## ================================================================================================
+    speaker:
+      enabled: true
+      logLevel: info  # `all`, `debug`, `info`, `warn`, `error` or `none`
+
+      image:
+        repository: quay.io/metallb/speaker
+        pullPolicy: IfNotPresent
+
+      tolerateMaster: true
+
+      serviceAccount:
+        create: true
+
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+      reloader:
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+      frr:
+        enabled: true
+        metricsPort: 7473
+
+        image:
+          repository: quay.io/frrouting/frr
+          pullPolicy: IfNotPresent
+
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+      frrMetrics:
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    prometheus:
+      # Prometheus Operator PodMonitors
+      podMonitor:
+        enabled: true
+        jobLabel: "app.kubernetes.io/name"
+        # interval:
+        # metric relabel configs to apply to samples before ingestion.
+        metricRelabelings: []
+        # - action: keep
+        #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+        #   sourceLabels: [__name__]
+        # relabel configs to apply to samples before ingestion.
+        relabelings: []
+        # - sourceLabels: [__meta_kubernetes_pod_node_name]
+        #   separator: ;
+        #   regex: ^(.*)$
+        #   target_label: nodename
+        #   replacement: $1
+        #   action: replace
+
+      # Prometheus Operator alertmanager alerts
+      prometheusRule:
+        enabled: true
+
+        # MetalLBStaleConfig
+        staleConfig:
+          enabled: true
+          labels:
+            severity: warning
+
+        # MetalLBConfigNotLoaded
+        configNotLoaded:
+          enabled: true
+          labels:
+            severity: warning
+
+        # MetalLBAddressPoolExhausted
+        addressPoolExhausted:
+          enabled: true
+          labels:
+            severity: alert
+
+        addressPoolUsage:
+          enabled: true
+          thresholds:
+            - percent: 75
+              labels:
+                severity: warning
+            - percent: 85
+              labels:
+                severity: warning
+            - percent: 95
+              labels:
+                severity: alert
+
+        # MetalLBBGPSessionDown
+        bgpSessionDown:
+          enabled: true
+          labels:
+            severity: alert
+
