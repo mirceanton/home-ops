@@ -7,7 +7,8 @@ metadata:
   namespace: flux-system
 spec:
   path: kubernetes/home-cluster/crds
-  dependsOn: []
+  dependsOn:
+    - name: cluster-config
 
   wait: true
   prune: true
