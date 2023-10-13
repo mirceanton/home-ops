@@ -64,7 +64,7 @@ spec:
         # Support for extra environment variables for alerting
         env:
           secret:
-            ALERT_ON_RELOAD: true
+            ALERT_ON_RELOAD: "true"
             ALERT_SINK: webhook
             ALERT_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
             ALERT_ADDITIONAL_INFO: home-cluster
