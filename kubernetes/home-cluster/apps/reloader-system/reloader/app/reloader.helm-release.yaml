@@ -97,7 +97,7 @@ spec:
         interval: 10s
 
         ## scheme: HTTP scheme to use for scraping. Can be used with `tlsConfig` for example if using istio mTLS.
-        scheme: HTTP
+        scheme: http
 
         # Fallback to the prometheus default unless specified
         timeout: 30s
