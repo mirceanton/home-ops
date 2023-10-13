@@ -6,7 +6,7 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      dashboards: "grafana"
+      app.kubernetes.io/name: grafana-operator
   title: NGINX
 
 ---
@@ -18,5 +18,5 @@ spec:
   folder: NGINX
   instanceSelector:
     matchLabels:
-      dashboards: "grafana"
+      app.kubernetes.io/name: grafana-operator
   url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/grafana/dashboards/nginx.json"

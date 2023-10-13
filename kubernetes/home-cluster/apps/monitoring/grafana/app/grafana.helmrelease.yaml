@@ -7,54 +7,48 @@ spec:
   chart:
     spec:
       chart: grafana-operator
-      version: 3.4.7
+      version: 3.4.8
       sourceRef:
         kind: HelmRepository
         name: bitnami
 
   values:
-    ## Global Docker image parameters
     global:
       imageRegistry: ""
       imagePullSecrets: []
 
-    ## Grafana Operator parameters
+    ## ================================================================================================
+    ## This all configuration for the Grafana Operator.
+    ## Ref: https://github.com/integr8ly/grafana-operator/blob/master/documentation/README.md
+    ## Ref: https://github.com/integr8ly/grafana-operator/blob/master/pkg/controller/model/constants.go
+    ## ================================================================================================
     operator:
       enabled: true
       replicaCount: 2
-
+      ## @param operator.topologySpreadConstraints Topology Spread Constraints for pod assignment
+      ## https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
       topologySpreadConstraints: []
 
-      ## @param operator.updateStrategy.type Set up update strategy for Grafana Operator installation.
-      ## Set to Recreate if you use persistent volume that cannot be mounted by more than one pods to make sure the pods is destroyed first.
-      ## Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-      updateStrategy:
-        type: Recreate
-
-      ## This enabled leader election for the operator and creates a Role for the leader election.
-      leaderElect: true
-
-      rbac:
-        create: true
-      serviceAccount:
-        create: true
-        automountServiceAccountToken: true
-
+      ## Prometheus Operator service monitors
       prometheus:
-        ## Prometheus Operator service monitors
         serviceMonitor:
           enabled: true
-          namespace: monitoring
-          jobLabel: app.kubernetes.io/name
-          interval: ""
-          scrapeTimeout: ""
+          honorLabels: true
 
+    ## ================================================================================================
     ## Grafana parameters
+    ## ================================================================================================
     grafana:
       enabled: true
+      ## @param grafana.replicaCount Specify the amount of replicas running
+      ## Ref: https://github.com/integr8ly/grafana-operator/blob/master/documentation/deploy_grafana.md#configuring-the-deployment
+      ## NOTE: Number of replicas. If more than one is selected, a shared database should be configured.
       replicaCount: 1
+
+      ## @param grafana.labels Add additional labels to the grafana deployment, service and ingress resources
       labels:
         dashboards: "grafana"
+
       ## Configure the ingress resource that allows you to access the
       ## Grafana web. Set up the URL
       ## Ref: https://kubernetes.io/docs/user-guide/ingress/
@@ -62,14 +56,51 @@ spec:
       ingress:
         enabled: true
         ingressClassName: nginx
-        host: grafana.admin.${CLUSTER_DOMAIN}
+        host: grafana.admin.home.mirceanton.com
         path: /
-        # tls: false
-        # tlsSecret: grafana.local-tls
 
       ## Enable persistence using Persistent Volume Claims
       ## Ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
       persistence:
         enabled: true
-        accessModes: [ "ReadWriteOnce" ]
-        size: 10Gi
+        accessModes: [ ReadWriteOnce ]
+        size: 16Gi
+
+      ## @param grafana.config [object] grafana.ini configuration for the instance for this to configure please look at upstream docs
+      ## This is the configuration from the grafana pod itself. Every toml section is a root key
+      ## Ref: https://grafana.com/docs/grafana/latest/administration/configuration/
+      config:
+        server:
+          root_url: https://grafana.admin.home.mirceanton.com
+        log:
+          mode: "console"
+          level: "warn"
+        database:
+          wal: "true"
+        analytics:
+          reporting_enabled: "false"
+          check_for_updates: "false"
+        security:
+          # ## Grafana Admin credentials, if omitted they will be admin:<random_pass>
+          # admin_user:
+          # admin_password:
+          #
+          # ## OIDC configuration
+          # ##
+          # auth:
+          #   disable_login_form: "false"
+          #   disable_signout_menu: "false"
+          # auth.generic_oauth:
+          #   enabled: "true"
+          #   client_id: grafana
+          #   client_secret: a391df94-dd1f-46d6-b3ab-60e90f23e8a2
+          #   scopes: profile email
+          #   auth_url: https://keycloak.example.com/auth/realms/master/protocol/openid-connect/auth
+          #   token_url: https://keycloak.example.com/auth/realms/master/protocol/openid-connect/token
+          #   api_url: https://keycloak.example.com/auth/realms/master/protocol/openid-connect/userinfo
+          #   ## Automatic role handling with OIDC
+          #   ##
+          #   # role_attribute_path: contains(groups[*], 'platform-readonly') && 'Viewer' || contains(groups[*], 'platform-admin') && 'Admin' || contains(groups[*], 'platform-emergency') && 'Admin' || contains(groups[*], 'customer-poweruser') && 'Admin' || contains(groups[*], 'customer-collaborator') && 'Editor' || contains(groups[*], 'customer-readonly') && 'Viewer'
+          #   # allowed_domains: example.com
+          #   allow_sign_up: "True"
+          disable_gravatar: "false"

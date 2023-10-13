@@ -5,12 +5,12 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      dashboards: "grafana"
+      app.kubernetes.io/name: grafana-operator
   datasource:
     name: Prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus-service:9090
+    url: http://kube-prometheus-prometheus:9090
     isDefault: true
     jsonData:
       timeInterval: 5s

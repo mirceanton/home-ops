@@ -5,12 +5,12 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      dashboards: "grafana"
+      app.kubernetes.io/name: grafana-operator
   datasource:
     name: Alertmanager
     type: alertmanager
     access: proxy
-    url: 
+    url: http://kube-prometheus-alertmanager:9093
     jsonData:
       timeInterval: 5s
       tlsSkipVerify: true
