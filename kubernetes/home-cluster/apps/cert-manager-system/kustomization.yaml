@@ -6,4 +6,3 @@ resources:
   - ./namespace.yaml
   - ./cert-manager/app.ks.yaml
   - ./cert-manager/issuers.ks.yaml
-  - ./cert-manager/monitoring.ks.yaml
