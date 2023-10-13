@@ -114,6 +114,9 @@ spec:
     ## MONITORING
     ## ================================================================================================
     prometheus:
+      serviceAccount: metallb-prom-sa
+      namespace: metallb-system
+
       # Prometheus Operator PodMonitors
       podMonitor:
         enabled: true
