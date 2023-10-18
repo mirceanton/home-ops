@@ -75,8 +75,6 @@ spec:
     ingress:
       enabled: true
       className: nginx
-      annotations:
-        kubernetes.io/ingress.class: nginx
       hosts:
         - kubernetes.admin.${CLUSTER_DOMAIN}
 
