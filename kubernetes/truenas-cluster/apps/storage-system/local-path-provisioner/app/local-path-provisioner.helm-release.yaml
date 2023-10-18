@@ -13,26 +13,17 @@ spec:
         name: local-path-provisioner
 
   values:
-    replicaCount: 1
-
     image:
       repository: rancher/local-path-provisioner
       tag: v0.0.24
       pullPolicy: IfNotPresent
-
-    helperImage:
-      repository: busybox
-      tag: latest
-
     imagePullSecrets: []
 
-    ## For creating the StorageClass automatically:
-    storageClass:
-      create: true
-      provisionerName: rancher.io/local-path
-      defaultClass: true
-      name: local-path
-      reclaimPolicy: Delete
+
+    ## ================================================================================================
+    ## Local Path Provisioner Settings
+    ## ================================================================================================
+    replicaCount: 1
 
     nodePathMap:
       - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
@@ -46,15 +37,20 @@ spec:
         cpu: 100m
         memory: 128Mi
 
-    nodeSelector: {}
-    affinity: {}
-    tolerations: []
-
     # Number of provisioner worker threads to call provision/delete simultaneously.
     workerThreads: "'4'"
-
     # Number of retries of failed volume provisioning. 0 means retry indefinitely.
     provisioningRetryCount: "'15'"
-
     # Number of retries of failed volume deletion. 0 means retry indefinitely.
     deletionRetryCount: "'15'"
+
+
+    ## ================================================================================================
+    ## Storage Class Settings
+    ## ================================================================================================
+    storageClass:
+      create: true
+      provisionerName: rancher.io/local-path
+      defaultClass: true
+      name: local-path
+      reclaimPolicy: Delete

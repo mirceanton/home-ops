@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -13,4 +14,42 @@ spec:
         name: metrics-server
 
   values:
+    image:
+      repository: registry.k8s.io/metrics-server/metrics-server
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## METRICS SERVER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     replicas: 1
+
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 200m
+        memory: 200Mi
+
+    rbac:
+      create: true
+      pspEnabled: false
+    serviceAccount:
+      create: true
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metrics:
+      enabled: false
+
+    serviceMonitor:
+      enabled: false

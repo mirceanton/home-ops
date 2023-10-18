@@ -16,3 +16,51 @@ spec:
 
   values:
     installCRDs: true
+    logLevel: info
+    logEncoding: json  # 'json' or 'console'
+
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## CONTROLLER DEPLOYMENT PARAMTERS
+    ## ================================================================================================
+    replicaCount: 1
+    image:
+      repository: ghcr.io/weaveworks/tf-controller
+      pullPolicy: IfNotPresent
+
+    resources:
+      limits:
+        cpu: 200m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+
+    # The event address the address of the Flux Notification Controller
+    # -- Argument for `--events-addr` (Controller).
+    eventsAddress: http://notification-controller.flux-system.svc.cluster.local./
+
+    #  Kube API QPS indicates the maximum queries-per-second of requests sent to the Kubernetes API, defaults to 50.
+    kubeAPIQPS: 50
+
+    #  Burst indicates the maximum burst queries-per-second of requests sent to the Kubernetes API, defaults to 100.
+    kubeAPIBurst: 100
+
+    #  AllowBreakTheGlass allows the controller to break the glass and modify Terraform states when the sync loop is broken.
+    allowBreakTheGlass: false
+
+
+    ## ================================================================================================
+    ## RUNNER DEPLOYMENT PARAMTERS
+    ## ================================================================================================
+    runner:
+      image:
+        repository: ghcr.io/weaveworks/tf-runner
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metrics:
+      enabled: false

@@ -15,90 +15,74 @@ spec:
 
   values:
     fullnameOverride: 'kubernetes-dashboard'
-    image:
-      repository: kubernetesui/dashboard
-      pullPolicy: IfNotPresent
-      pullSecrets: []
 
-    ## Number of replicas
-    replicaCount: 1
-
-    ## Additional container arguments
-    extraArgs:
-      - --enable-skip-login
-      - --system-banner="Welcome to TrueNAS K8S Cluster"
-
-    ## SecurityContext to be added to kubernetes dashboard pods
-    securityContext:
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-
-    ## SecurityContext defaults for the kubernetes dashboard container and metrics scraper container
-    containerSecurityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      runAsUser: 1001
-      runAsGroup: 2001
-      capabilities:
-        drop: ["ALL"]
-
-    ## Pod resource requests & limits
-    resources:
-      requests:
-        cpu: 100m
-        memory: 100Mi
-      limits:
-        cpu: 500m
-        memory: 250Mi
-
-    ## Serve application over HTTP without TLS
-    protocolHttp: false
-
-    service:
-      type: ClusterIP
-      externalPort: 443
-      annotations: {}
-      labels: {}
-      clusterServiceLabel:
-        enabled: true
-        key: "kubernetes.io/cluster-service"
-
-    ingress:
-      enabled: true
-      className: nginx
-      hosts:
-        - kubernetes.admin.${CLUSTER_DOMAIN}
-      paths:
-        - /
-      # tls:
-      #   - secretName: kubernetes-dashboard-tls
-      #     hosts:
-      #       - kubernetes-dashboard.domain.com
-
+    ## ================================================================================================
+    ## KUBERNETES DASHBOARD APPLICATION SETTINGS
+    ## ================================================================================================
     # Global dashboard settings
     settings:
-      ## Cluster name that appears in the browser window title if it is set
       clusterName: TrueNAS Cluster
-      itemsPerPage: 10
-      logsAutoRefreshTimeInterval: 5
-      resourceAutoRefreshTimeInterval: 5
+      itemsPerPage: 30
+      logsAutoRefreshTimeInterval: 3
+      resourceAutoRefreshTimeInterval: 3
       disableAccessDeniedNotifications: false
 
     ## Pinned CRDs that will be displayed in dashboard's menu
     pinnedCRDs: []
 
-    ## Metrics Scraper
-    metricsScraper:
-      enabled: false
+    ## Serve application over HTTP without TLS
+    protocolHttp: false
+
+
+    ## ================================================================================================
+    ## KUBERNETES DASHBOARD DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    replicaCount: 1
+
+    image:
+      repository: kubernetesui/dashboard
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+    extraArgs:
+      - --enable-skip-login
+      - --system-banner="Welcome to TrueNAS Kubernetes Cluster"
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+      limits:
+        cpu: 200m
+        memory: 400Mi
+
+    service:
+      type: ClusterIP
+      externalPort: 443
+      clusterServiceLabel:
+        enabled: true
+        key: "kubernetes.io/cluster-service"
 
     rbac:
       create: true
       clusterRoleMetrics: true
-      clusterReadOnlyRole: false
-
     serviceAccount:
       create: true
+
+
+    ## ================================================================================================
+    ## NETWORK POLICIES
+    ## ================================================================================================
+    networkPolicy:
+      enabled: false
+      ingressDenyAll: false
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    metricsScraper:
+      enabled: false
 
     serviceMonitor:
       enabled: false
