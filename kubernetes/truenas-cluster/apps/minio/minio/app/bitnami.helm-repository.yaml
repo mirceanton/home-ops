@@ -2,6 +2,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: minio
+  name: bitnami
 spec:
-  url: https://helm.min.io/
+  url: https://charts.bitnami.com/bitnami

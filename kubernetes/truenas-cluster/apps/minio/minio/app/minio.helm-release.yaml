@@ -8,131 +8,129 @@ spec:
   chart:
     spec:
       chart: minio
-      version: 8.0.10
+      version: 12.8.15
       sourceRef:
         kind: HelmRepository
-        name: minio
+        name: bitnami
 
   values:
-    ## ================================================================================================
-    ## Images configurations
-    ## ================================================================================================
-    imagePullSecrets: []
+    ## @section Global parameters
+    global:
+      imageRegistry: ""
+      imagePullSecrets: []
+      storageClass: ""
 
+    ## @section MinIO parameters
     image:
-      repository: minio/minio
-      tag: RELEASE.2021-02-14T04-01-33Z
-      pullPolicy: IfNotPresent
+      repository: bitnami/minio
+      # tag: 2023.10.16-debian-11-r0
+      # digest: ""
 
-    ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
-    ## client used to create a default bucket).
-    mcImage:
-      repository: minio/mc
-      tag: RELEASE.2021-02-14T04-28-06Z
-      pullPolicy: IfNotPresent
+    clientImage:
+      repository: bitnami/minio-client
+      # tag: 2023.10.14-debian-11-r0
+      # digest: ""
 
-    ## Set default image, imageTag, and imagePullPolicy for the `jq` (the JSON
-    ## process used to create secret for prometheus ServiceMonitor).
-    helmKubectlJqImage:
-      repository: bskim45/helm-kubectl-jq
-      tag: 3.1.0
-      pullPolicy: IfNotPresent
-
-    ## ================================================================================================
-    ## MinIO Deployment Settings
-    ## ================================================================================================
-    ## minio server mode, i.e. standalone or distributed.
-    ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+    ## @param mode MinIO server mode (`standalone` or `distributed`)
+    ## ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
     mode: standalone
 
-    ## Configure resource requests and limits
-    ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-    resources:
-      requests:
-        memory: 4Gi
-      limits:
-        memory: 8Gi
+    ## MinIO&reg; authentication parameters
+    auth:
+      rootUser: admin
+      existingSecret: ""
 
-    ## Expose the Minio service to be accessed from outside the cluster (LoadBalancer service).
-    ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
-    ## ref: http://kubernetes.io/docs/user-guide/services/
-    service:
-      type: ClusterIP
-      clusterIP: ~
-      port: 9000
-      nodePort: 32000
-      externalIPs: []
-      annotations: {}
+    ## @param defaultBuckets Comma, semi-colon or space separated list of buckets to create at initialization (only in standalone mode)
+    defaultBuckets: "home-cluster-velero"
 
+    ## @param disableWebUI Disable MinIO&reg; Web UI
+    ## ref: https://github.com/minio/minio/tree/master/docs/config/#browser
+    disableWebUI: false
 
-    ## ================================================================================================
-    ## Persistence
-    ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-    ## ================================================================================================
-    persistence:
-      enabled: true
-      storageClass: ""
-      accessMode: ReadWriteOnce
-      size: 50Gi
-
-
-    ## ================================================================================================
-    ## Ingress
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-    ## ================================================================================================
-    ingress:
-      enabled: true
-      path: /
-      hosts:
-        - minio.${CLUSTER_DOMAIN}
-      tls: []
-
-    ## TLS Settings for Minio
+    ## Enable tls in front of MinIO&reg; containers.
     tls:
       enabled: false
 
+    deployment:
+      updateStrategy:
+        type: Recreate
 
-    ## ================================================================================================
-    ## Bucket Creation
-    ## ================================================================================================
-    defaultBucket:
+    ## MinIO&reg; provisioning
+    provisioning:
       enabled: false
 
-    buckets:
-      - name: home-cluster-backup
-        policy: none
+    resources:
+      limits:
+        cpu: 4
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
 
-    makeBucketJob:
-      podAnnotations:
-      annotations:
-      securityContext:
-        enabled: false
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-      resources:
-        requests:
-          memory: 128Mi
+    ## @section Traffic exposure parameters
+    ## MinIO Service properties
+    service:
+      type: ClusterIP
+      ports:
+        api: 9000
+        console: 9001
+
+    ## Configure the ingress resource that allows you to access the
+    ## MinIO Console. Set up the URL
+    ## ref: https://kubernetes.io/docs/user-guide/ingress/
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hostname: minio.${CLUSTER_DOMAIN}
+      path: /
+      pathType: ImplementationSpecific
+      servicePort: minio-console
+
+    ## Configure the ingress resource that allows you to access the
+    ## MinIO API. Set up the URL
+    ## ref: https://kubernetes.io/docs/user-guide/ingress/
+    ##
+    apiIngress:
+      enabled: true
+      ingressClassName: nginx
+      hostname: minio-api.${CLUSTER_DOMAIN}
+      path: /
+      pathType: ImplementationSpecific
+      servicePort: minio-api
 
 
-    ## ================================================================================================
-    ## Network Policies
-    ## ================================================================================================
+    ## NetworkPolicy parameters
     networkPolicy:
       enabled: false
-      allowExternal: true
 
 
-    ## ================================================================================================
-    ## Service Account
-    ## ================================================================================================
+    ## @section Persistence parameters
+    ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+    persistence:
+      enabled: true
+      mountPath: /bitnami/minio/data
+      accessModes: [ ReadWriteOnce ]
+      size: 20Gi
+      annotations: {}
+
+    ## @section Volume Permissions parameters
+    volumePermissions:
+      enabled: false
+
+    ## RBAC parameters
     serviceAccount:
       create: true
+      automountServiceAccountToken: true
 
 
-    ## ================================================================================================
-    ## Monitoring
-    ## ================================================================================================
+    ## Pod Disruption Budget configuration -- only for distributed mode.
+    pdb:
+      create: false
+
+    ## Metrics parameters
     metrics:
       serviceMonitor:
+        enabled: false
+      ## Prometheus Operator PrometheusRule configuration
+      prometheusRule:
         enabled: false
