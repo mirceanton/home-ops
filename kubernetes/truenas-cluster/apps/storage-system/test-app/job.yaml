@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fio-job
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: test-volume
+          persistentVolumeClaim:
+            claimName: test-volume-claim
+      containers:
+        - name: fio
+          image: nixery.dev/shell/fio
+          args:
+            - fio
+            - --name=benchtest
+            - --size=800m
+            - --filename=/volume/test
+            - --direct=1
+            - --rw=randrw
+            - --ioengine=libaio
+            - --bs=4k
+            - --iodepth=16
+            - --numjobs=8
+            - --time_based
+            - --runtime=60
+          volumeMounts:
+            - mountPath: "/volume"
+              name: test-volume
