@@ -21,7 +21,7 @@ spec:
     ## ================================================================================================
     controller:
       kind: Deployment
-      replicaCount: 2
+      replicaCount: 1
 
       image:
         registry: registry.k8s.io
