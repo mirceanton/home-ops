@@ -6,3 +6,4 @@ resources:
   - ./namespace.yaml
   - ./flux/flux.ks.yaml
   - ./flux/addons.ks.yaml
+  - ./tf-controller/tf-controller.ks.yaml
