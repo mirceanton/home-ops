@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  chart:
+    spec:
+      chart: flux2
+      version: 2.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: fluxcd-community
+
+  upgrade:
+    cleanupOnFail: false
+    disableWait: true  # this is important!!! it won't work without it
+
+  values:
+    installCRDs: true
+    logLevel: info
+    policies:
+      create: false
+
+    helmController:
+      create: true
+    kustomizeController:
+      create: true
+    sourceController:
+      create: true
+    notificationController:
+      create: true
+    imageAutomationController:
+      create: false
+    imageReflectionController:
+      create: false
