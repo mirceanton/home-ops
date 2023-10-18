@@ -21,7 +21,7 @@ spec:
     ## ================================================================================================
     controller:
       kind: Deployment
-      replicaCount: 1
+      replicaCount: 2
 
       image:
         registry: registry.k8s.io
@@ -38,12 +38,6 @@ spec:
         name: nginx
         enabled: true
         default: true
-
-      # -- The update strategy to apply to the Deployment or DaemonSet
-      updateStrategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxUnavailable: 1
 
       # -- Node labels for controller pod assignment
       nodeSelector:
