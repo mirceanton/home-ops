@@ -69,6 +69,16 @@ spec:
     serviceAccount:
       create: true
 
+    ## ================================================================================================
+    ## INGRESS
+    ## ================================================================================================
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        kubernetes.io/ingress.class: nginx
+      hosts:
+        - kubernetes.admin.${CLUSTER_DOMAIN}
 
     ## ================================================================================================
     ## NETWORK POLICIES
@@ -76,7 +86,6 @@ spec:
     networkPolicy:
       enabled: false
       ingressDenyAll: false
-
 
     ## ================================================================================================
     ## MONITORING
