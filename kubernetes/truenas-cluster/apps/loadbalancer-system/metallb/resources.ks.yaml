@@ -5,7 +5,7 @@ metadata:
   name: cluster-apps-metallb-resources
   namespace: flux-system
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/metallb-system/metallb/resources
-  targetNamespace: metallb-system
+  path: ${CLUSTER_APPS_BASE_DIR}/loadbalancer-system/metallb/resources
+  targetNamespace: loadbalancer-system
   dependsOn:
     - name: cluster-apps-metallb
