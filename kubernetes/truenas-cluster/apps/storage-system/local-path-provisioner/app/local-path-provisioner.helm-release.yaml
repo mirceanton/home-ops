@@ -36,8 +36,7 @@ spec:
 
     nodePathMap:
       - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
-        paths:
-          - /dev/sdb
+        paths: [ /var/mnt/local-path-provisioner ]
 
     resources:
       limits:
@@ -52,10 +51,10 @@ spec:
     tolerations: []
 
     # Number of provisioner worker threads to call provision/delete simultaneously.
-    workerThreads: "4"
+    workerThreads: "'4'"
 
     # Number of retries of failed volume provisioning. 0 means retry indefinitely.
-    provisioningRetryCount: "15"
+    provisioningRetryCount: "'15'"
 
     # Number of retries of failed volume deletion. 0 means retry indefinitely.
-    deletionRetryCount: "15"
+    deletionRetryCount: "'15'"
