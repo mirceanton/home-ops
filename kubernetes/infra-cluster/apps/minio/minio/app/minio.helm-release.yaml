@@ -14,50 +14,37 @@ spec:
         name: bitnami
 
   values:
-    ## @section Global parameters
     global:
       imageRegistry: ""
       imagePullSecrets: []
       storageClass: ""
 
-    ## @section MinIO parameters
-    image:
-      repository: bitnami/minio
-      # tag: 2023.10.16-debian-11-r0
-      # digest: ""
-
-    clientImage:
-      repository: bitnami/minio-client
-      # tag: 2023.10.14-debian-11-r0
-      # digest: ""
-
+    ## ================================================================================================
+    ## Minio App Settings
+    ## ================================================================================================
     ## @param mode MinIO server mode (`standalone` or `distributed`)
     ## ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
     mode: standalone
 
-    ## MinIO&reg; authentication parameters
+    ## MinIO authentication parameters
     auth:
-      rootUser: admin
-      existingSecret: ""
+      rootUser: ${MINIO_ADMIN_USER}
+      rootPassword: ${MINIO_ADMIN_PASS}
+
+    ## @param disableWebUI Disable MinIO Web UI
+    ## ref: https://github.com/minio/minio/tree/master/docs/config/#browser
+    disableWebUI: false
 
     ## @param defaultBuckets Comma, semi-colon or space separated list of buckets to create at initialization (only in standalone mode)
     defaultBuckets: "home-cluster-velero"
 
-    ## @param disableWebUI Disable MinIO&reg; Web UI
-    ## ref: https://github.com/minio/minio/tree/master/docs/config/#browser
-    disableWebUI: false
 
-    ## Enable tls in front of MinIO&reg; containers.
-    tls:
-      enabled: false
-
+    ## ================================================================================================
+    ## MinIO Deployment parameters
+    ## ================================================================================================
     deployment:
       updateStrategy:
         type: Recreate
-
-    ## MinIO&reg; provisioning
-    provisioning:
-      enabled: false
 
     resources:
       limits:
@@ -67,17 +54,11 @@ spec:
         cpu: 1
         memory: 1Gi
 
-    ## @section Traffic exposure parameters
-    ## MinIO Service properties
-    service:
-      type: ClusterIP
-      ports:
-        api: 9000
-        console: 9001
 
-    ## Configure the ingress resource that allows you to access the
-    ## MinIO Console. Set up the URL
-    ## ref: https://kubernetes.io/docs/user-guide/ingress/
+    ## ================================================================================================
+    ## Ingress parameters
+    ## ================================================================================================
+    ## MinIO Console ingress
     ingress:
       enabled: true
       ingressClassName: nginx
@@ -86,10 +67,7 @@ spec:
       pathType: ImplementationSpecific
       servicePort: minio-console
 
-    ## Configure the ingress resource that allows you to access the
-    ## MinIO API. Set up the URL
-    ## ref: https://kubernetes.io/docs/user-guide/ingress/
-    ##
+    ## MinIO API Ingress
     apiIngress:
       enabled: true
       ingressClassName: nginx
@@ -98,39 +76,42 @@ spec:
       pathType: ImplementationSpecific
       servicePort: minio-api
 
+    ## MinIO Service properties
+    service:
+      type: ClusterIP
+      ports:
+        api: 9000
+        console: 9001
 
+
+    ## ================================================================================================
     ## NetworkPolicy parameters
+    ## ================================================================================================
     networkPolicy:
       enabled: false
 
 
-    ## @section Persistence parameters
-    ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+    ## ================================================================================================
+    ## Persistence parameters -> use iscsi share from TrueNAS
+    ## ================================================================================================
     persistence:
       enabled: true
-      mountPath: /bitnami/minio/data
-      accessModes: [ ReadWriteOnce ]
-      size: 20Gi
-      annotations: {}
+      existingClaim: minio-iscsi-pvc
 
-    ## @section Volume Permissions parameters
-    volumePermissions:
-      enabled: false
 
+    ## ================================================================================================
     ## RBAC parameters
+    ## ================================================================================================
     serviceAccount:
       create: true
       automountServiceAccountToken: true
 
 
-    ## Pod Disruption Budget configuration -- only for distributed mode.
-    pdb:
-      create: false
-
-    ## Metrics parameters
+    ## ================================================================================================
+    ## Monitoring
+    ## ================================================================================================
     metrics:
       serviceMonitor:
         enabled: false
-      ## Prometheus Operator PrometheusRule configuration
       prometheusRule:
         enabled: false
