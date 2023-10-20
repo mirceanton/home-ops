@@ -4,6 +4,7 @@ kind: PersistentVolume
 metadata:
   name: minio-iscsi-pv
 spec:
+  storageClassName: manual
   accessModes: [ ReadWriteOnce ]
   capacity:
     storage: 100Gi
@@ -21,6 +22,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: minio-iscsi-pvc
 spec:
+  storageClassName: manual
   accessModes: [ ReadWriteOnce ]
   resources:
     requests:
