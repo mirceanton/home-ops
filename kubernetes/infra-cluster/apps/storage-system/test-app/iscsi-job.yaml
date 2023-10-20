@@ -1,27 +1,20 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: test-volume-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: fio-job
+  name: fio-job-iscsi
 spec:
   template:
     spec:
       restartPolicy: Never
       volumes:
         - name: test-volume
-          persistentVolumeClaim:
-            claimName: test-volume-claim
+          iscsi:
+            targetPortal: 10.0.10.245:3260
+            iqn: iqn.2023-04.com.mirceanton.iscsi:truenas:infra-cluster-minio
+            lun: 0
+            fsType: ext4
+            readOnly: false
       containers:
         - name: fio
           image: nixery.dev/shell/fio
