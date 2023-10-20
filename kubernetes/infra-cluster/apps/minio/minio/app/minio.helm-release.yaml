@@ -62,26 +62,20 @@ spec:
     ingress:
       enabled: true
       ingressClassName: nginx
+      servicePort: minio-console
       hostname: minio.${CLUSTER_DOMAIN}
       path: /
-      pathType: ImplementationSpecific
-      servicePort: minio-console
+      extraHosts:
+        - name: console.minio.${CLUSTER_DOMAIN}
+          path: /
 
     ## MinIO API Ingress
     apiIngress:
       enabled: true
       ingressClassName: nginx
-      hostname: minio-api.${CLUSTER_DOMAIN}
-      path: /
-      pathType: ImplementationSpecific
       servicePort: minio-api
-
-    ## MinIO Service properties
-    service:
-      type: ClusterIP
-      ports:
-        api: 9000
-        console: 9001
+      hostname: api.minio.${CLUSTER_DOMAIN}
+      path: /
 
 
     ## ================================================================================================
