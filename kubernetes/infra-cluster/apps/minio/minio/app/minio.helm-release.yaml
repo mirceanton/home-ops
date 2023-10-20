@@ -69,8 +69,11 @@ spec:
         - name: console.minio.${CLUSTER_DOMAIN}
           path: /
       annotations:
-        nginx.org/client-max-body-size: "1024m"
-        nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+        nginx.ingress.kubernetes.io/proxy-body-size: 10240m
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          chunked_transfer_encoding off;
 
     ## MinIO API Ingress
     apiIngress:
@@ -79,6 +82,12 @@ spec:
       servicePort: minio-api
       hostname: api.minio.${CLUSTER_DOMAIN}
       path: /
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+        nginx.ingress.kubernetes.io/proxy-body-size: 10240m
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          chunked_transfer_encoding off;
 
 
     ## ================================================================================================
