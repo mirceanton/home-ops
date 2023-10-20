@@ -26,7 +26,7 @@ tasks:
     cmds: [ rm -f rendered/* ]
 
   apply-config:
-    desc: Bootstrap talos on the truenas cluster nodes.
+    desc: Bootstrap talos on the infra cluster nodes.
     preconditions:
       - sh: test -f rendered/controlplane.yaml
         msg: "Talos controlplane configuration was not rendered."
@@ -39,7 +39,7 @@ tasks:
         cmd: talosctl apply --insecure -f rendered/worker.yaml -n {{.ITEM}}
 
   talosconfig:
-    desc: Import the talosconfig file for the truenas cluster.
+    desc: Import the talosconfig file for the infra cluster.
     preconditions:
       - sh: test -f rendered/talosconfig
         msg: "Talosconfig file was not rendered."

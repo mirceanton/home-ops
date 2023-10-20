@@ -11,7 +11,7 @@ includes:
   sops: .taskfiles/sops.yaml
 
   hkc: .taskfiles/components/home-cluster
-  truenas: .taskfiles/components/truenas-cluster
+  infra: .taskfiles/components/infra-cluster
 
 tasks:
   default:

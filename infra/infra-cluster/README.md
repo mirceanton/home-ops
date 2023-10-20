@@ -1,4 +1,4 @@
-# TrueNAS Cluster | Talos Cluster
+# Infra Cluster | Talos Cluster
 
 This directory holds:
 
@@ -10,11 +10,11 @@ This directory holds:
 - To automatically bootstrap the Talos cluster and then Kubernetes on top of that and import the kubeconfig file:
 
     ```bash
-    task truenas:cluster:create
+    task infra:cluster:create
     ```
 
 - To reset the Talos cluster back to the original state:
 
     ```bash
-    task truenas:cluster:reset
+    task infra:cluster:reset
     ```

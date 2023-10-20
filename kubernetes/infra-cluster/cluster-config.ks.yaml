@@ -6,7 +6,7 @@ metadata:
   name: cluster-config
   namespace: flux-system
 spec:
-  path: kubernetes/truenas-cluster/config
+  path: kubernetes/infra-cluster/config
   dependsOn: []
 
   wait: true

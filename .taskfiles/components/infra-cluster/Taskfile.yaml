@@ -2,7 +2,7 @@
 version: '3'
 
 vars:
-  CLUSTER_NAME: truenas-cluster
+  CLUSTER_NAME: infra-cluster
   CONTROLPLANE_NODES: 10.0.10.91
   WORKER_NODES: ""
   KUBERNETES_ENDPOINT: 10.0.10.90
@@ -12,10 +12,10 @@ includes:
   sops: ../../sops.yaml
   talos:
     taskfile: ./talos.yaml
-    dir: ../../../infra/truenas-cluster
+    dir: ../../../infra/infra-cluster
   k8s:
     taskfile: ./k8s.yaml
-    dir: ../../../kubernetes/truenas-cluster/bootstrap
+    dir: ../../../kubernetes/infra-cluster/bootstrap
 
 tasks:
   cluster:create:
