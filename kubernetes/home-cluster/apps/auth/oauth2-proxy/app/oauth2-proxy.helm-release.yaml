@@ -1,0 +1,69 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: 6.18.0
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy
+
+  values:
+    image:
+      repository: quay.io/oauth2-proxy/oauth2-proxy
+      pullPolicy: "IfNotPresent"
+    imagePullSecrets: []
+
+    replicaCount: 2
+
+    ingress:
+      enabled: true
+      className: nginx
+      path: /oauth2
+      hosts:
+        - ${CLUSTER_DOMAIN}
+
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+
+    extraArgs:
+      client-id: oauth2-proxy
+      client-secret: "dVSI4DfhK5Vmj3naqFl4g6E4UJyXekAZ"
+      email-domain: '*'
+      insecure-oidc-allow-unverified-email: "true"
+      login-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/auth
+      oidc-issuer-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod
+      pass-access-token: "true"
+      pass-authorization-header: "true"
+      pass-user-headers: "true"
+      profile-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/userinfo
+      provider: oidc
+      provider-display-name: Keycloak
+      real-client-ip-header: X-Forwarded-For
+      redeem-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/token
+      scope: openid email profile
+      set-authorization-header: "true"
+      set-xauthrequest: "true"
+      validate-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/userinfo
+      ssl-insecure-skip-verify: true
+
+      cookie-csrf-per-request: true
+      cookie-csrf-expire: 5m
+
+    # Configure the session storage type, between cookie and redis
+    sessionStorage:
+      type: cookie
+
+
+    metrics:
+      enabled: false
