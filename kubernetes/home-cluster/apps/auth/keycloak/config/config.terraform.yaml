@@ -8,15 +8,18 @@ spec:
   interval: 1m
   approvePlan: auto
   path: kubernetes/home-cluster/apps/auth/keycloak/config/terraform
+
   sourceRef:
     kind: GitRepository
-    name: helloworld
+    name: home-ops-git-repo
     namespace: flux-system
+
   varsFrom:
-  - kind: ConfigMap
-    name: cluster-config
-    varsKeys:
-    - nodeCount
-    - instanceType
-  - kind: Secret
-    name: cluster-creds
+    - kind: ConfigMap
+      name: keycloak-config-connection
+    - kind: Secret
+      name: keycloak-config-oauth2-proxy-client
+    - kind: Secret
+      name: keycloak-config-smtp
+    - kind: Secret
+      name: keycloak-admin-creds
