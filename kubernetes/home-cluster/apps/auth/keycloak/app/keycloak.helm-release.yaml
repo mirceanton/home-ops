@@ -24,7 +24,7 @@ spec:
     auth:
       adminUser: admin
       existingSecret: keycloak-admin-creds
-      passwordSecretKey: keycloak_admin_pass
+      passwordSecretKey: keycloak_password
 
     proxy: reencrypt
     tls:
