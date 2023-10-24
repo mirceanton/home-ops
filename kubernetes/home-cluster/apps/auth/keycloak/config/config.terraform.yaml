@@ -25,7 +25,7 @@ kind: Terraform
 metadata:
   name: keycloak-config
 spec:
-  interval: 1m
+  interval: 30m
   approvePlan: auto
   path: kubernetes/home-cluster/apps/auth/keycloak/config/terraform
 
