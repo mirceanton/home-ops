@@ -15,6 +15,7 @@ spec:
 
   values:
     controller:
+      allowSnippetAnnotations: true
       replicaCount: 2
 
       # Prevent 2 instances from being scheduled on the same node
