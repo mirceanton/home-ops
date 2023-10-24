@@ -5,21 +5,21 @@ metadata:
   name: oauth2-proxy-configfile
 data:
   oauth2_proxy.cfg: |
-    provider = "keycloak_oidc"
+    provider = "keycloak-oidc"
     provider_display_name = "Keycloak"
 
     ssl_insecure_skip_verify = "true"
     reverse_proxy = "true"
     scope = "openid"
 
-    allowed_role = "Visitor"
+    allowed_roles = [ "Visitor" ]
     oidc_issuer_url = "https://auth.${CLUSTER_DOMAIN}/keycloak/realms/home"
     redirect_url = "https://auth.${CLUSTER_DOMAIN}/oauth2/callback"
     code_challenge_method = "S256"
-    email_domains = [ '*' ]
+    email_domains = [ "*" ]
 
-    whitelist_domain = '.mirceanton.com'
-    cookie_domain = '.mirceanton.com'
+    whitelist_domains = [ ".mirceanton.com" ]
+    cookie_domaisn = [ ".mirceanton.com" ]
     cookie_name = "_oauth2_proxy"
     cookie_refresh = "1m"
     cookie_csrf_expire = "5m"
