@@ -13,19 +13,40 @@ spec:
         name: oauth2-proxy
 
   values:
+    ## ================================================================================================
+    ## Application Configuration
+    ## ================================================================================================
+    config:
+      existingConfig: oauth2-proxy-configfile
+
+    extraEnv:
+      - name: OAUTH2_PROXY_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: keycloak-config-oauth2-proxy-client
+            key: oauth2_proxy_client_id
+      - name: OAUTH2_PROXY_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: keycloak-config-oauth2-proxy-client
+            key: oauth2_proxy_client_secret
+
+      - name: OAUTH2_PROXY_COOKIE_SECRET
+        valueFrom:
+          configMapKeyRef:
+            name: oauth2-proxy-cookie-secret
+            key: cookie-secret
+
+
+    ## ================================================================================================
+    ## Deployment Configuration Parameters
+    ## ================================================================================================
     image:
       repository: quay.io/oauth2-proxy/oauth2-proxy
       pullPolicy: "IfNotPresent"
     imagePullSecrets: []
 
     replicaCount: 2
-
-    ingress:
-      enabled: true
-      className: nginx
-      path: /oauth2
-      hosts:
-        - ${CLUSTER_DOMAIN}
 
     resources:
       limits:
@@ -36,34 +57,28 @@ spec:
         memory: 256Mi
 
 
-    extraArgs:
-      client-id: oauth2-proxy
-      client-secret: "dVSI4DfhK5Vmj3naqFl4g6E4UJyXekAZ"
-      email-domain: '*'
-      insecure-oidc-allow-unverified-email: "true"
-      login-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/auth
-      oidc-issuer-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod
-      pass-access-token: "true"
-      pass-authorization-header: "true"
-      pass-user-headers: "true"
-      profile-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/userinfo
-      provider: oidc
-      provider-display-name: Keycloak
-      real-client-ip-header: X-Forwarded-For
-      redeem-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/token
-      scope: openid email profile
-      set-authorization-header: "true"
-      set-xauthrequest: "true"
-      validate-url: http://${CLUSTER_DOMAIN}/keycloak/realms/prod/protocol/openid-connect/userinfo
-      ssl-insecure-skip-verify: true
+    ## ================================================================================================
+    ## Traffic Exposure Parameters
+    ## ================================================================================================
+    ingress:
+      enabled: true
+      className: nginx
+      path: /oauth2
+      hosts:
+        - auth.${CLUSTER_DOMAIN}
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
 
-      cookie-csrf-per-request: true
-      cookie-csrf-expire: 5m
-
-    # Configure the session storage type, between cookie and redis
-    sessionStorage:
-      type: cookie
+    service:
+      type: ClusterIP
+      portNumber: 80
+      appProtocol: http
+      annotations: {}
 
 
+    ## ================================================================================================
+    ## Monitoring Parameters
+    ## ================================================================================================
     metrics:
       enabled: false
