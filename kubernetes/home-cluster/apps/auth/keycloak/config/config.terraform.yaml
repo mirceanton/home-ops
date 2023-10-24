@@ -2,12 +2,11 @@
 apiVersion: infra.contrib.fluxcd.io/v1
 kind: Terraform
 metadata:
-  name: helloworld
-  namespace: flux-system
+  name: keycloak-config
 spec:
   interval: 1m
   approvePlan: auto
-  path: kubernetes/home-cluster/apps/auth/keycloak/config/terraform
+  path: ${CLUSTER_APPS_BASE_DIR}/auth/keycloak/config/terraform
 
   sourceRef:
     kind: GitRepository
