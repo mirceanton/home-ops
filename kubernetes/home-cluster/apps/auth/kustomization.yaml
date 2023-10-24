@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - keycloak/
-  # - oauth2-proxy/
+  - oauth2-proxy/
