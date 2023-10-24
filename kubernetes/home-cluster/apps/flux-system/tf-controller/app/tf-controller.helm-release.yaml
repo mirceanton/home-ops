@@ -16,3 +16,7 @@ spec:
 
   values:
     installCRDs: true
+    # replicaCount: 2
+    serviceAccount:
+      allowedNamespaces:
+        - auth
