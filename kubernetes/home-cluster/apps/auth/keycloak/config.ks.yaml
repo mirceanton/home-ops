@@ -10,4 +10,5 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/auth/keycloak/config
   targetNamespace: auth
   dependsOn:
+    - name: cluster-apps-tf-controller
     - name: cluster-apps-keycloak
