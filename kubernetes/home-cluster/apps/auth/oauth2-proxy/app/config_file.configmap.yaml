@@ -19,7 +19,7 @@ data:
     email_domains = [ "*" ]
 
     whitelist_domains = [ ".mirceanton.com" ]
-    cookie_domaisn = [ ".mirceanton.com" ]
+    cookie_domains = [ ".mirceanton.com" ]
     cookie_name = "_oauth2_proxy"
     cookie_refresh = "1m"
     cookie_csrf_expire = "5m"
