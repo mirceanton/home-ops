@@ -55,8 +55,16 @@ spec:
 
     ingress:
       enabled: true
-      # Kubernetes Dashboard Ingress annotations
+      className: nginx
+      paths: [ "/" ]
+      hosts:
+        - kube-dashboard.${CLUSTER_DOMAIN}
+      tls:
+        - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
+          hosts:
+          - kube-dashboard.${CLUSTER_DOMAIN}
       annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
         nginx.ingress.kubernetes.io/auth-response-headers: Authorization
@@ -70,11 +78,6 @@ spec:
               ngx.header["Set-Cookie"] = "name_1=" .. ngx.var.name_upstream_1 .. ngx.var.auth_cookie:match("(; .*)")
             end
           }
-      className: nginx
-      paths: [ "/" ]
-      hosts:
-        - kube-dashboard.${CLUSTER_DOMAIN}
-
 
     rbac:
       create: true
