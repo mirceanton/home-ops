@@ -108,3 +108,4 @@ spec:
       auth:
         username: keycloak
         database: keycloak
+        existingSecret: keycloak-postgres-creds
