@@ -1,0 +1,9 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-keycloak-kubernetes-rbac
+  namespace: flux-system
+spec:
+  path: ${CLUSTER_APPS_BASE_DIR}/auth/keycloak/kubernetes-rbac
+  dependsOn: []

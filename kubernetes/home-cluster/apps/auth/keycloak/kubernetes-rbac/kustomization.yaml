@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - role-admin.yaml
+  - role-reader.yaml
+  - role-developer.yaml
+  - dev-namespaces/

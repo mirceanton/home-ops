@@ -1,0 +1,13 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: keycloak-developer-role-binding
+subjects:
+  - kind: Group
+    name: keycloak:developer
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: ns-read-only
+  apiGroup: rbac.authorization.k8s.io
