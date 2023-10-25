@@ -4,7 +4,7 @@ data "keycloak_realm" "master" {
 
 
 resource "keycloak_openid_client" "kubernetes-client" {
-  realm_id      = keycloak_realm.master.id
+  realm_id      = data.keycloak_realm.master.id
   client_id     = var.kubernetes_client_id
   client_secret = var.kubernetes_client_secret
 
@@ -24,7 +24,7 @@ resource "keycloak_openid_client" "kubernetes-client" {
 
 
 resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_client_role_mapper" {
-  realm_id = keycloak_realm.master.id
+  realm_id = data.keycloak_realm.master.id
 
   name                = "groups"
   client_id           = keycloak_openid_client.kubernetes-client.id
@@ -39,21 +39,21 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_cli
 
 
 resource "keycloak_role" "kubernetes-admin_role" {
-  realm_id    = keycloak_realm.master.id
+  realm_id    = data.keycloak_realm.master.id
   client_id   = keycloak_client.kubernetes-client.id
   name        = "admin"
   description = "Kubernetes Administrator"
 }
 
 resource "keycloak_role" "kubernetes-developer_role" {
-  realm_id    = keycloak_realm.master.id
+  realm_id    = data.keycloak_realm.master.id
   client_id   = keycloak_client.kubernetes-client.id
   name        = "developer"
   description = "Kubernetes Developer"
 }
 
 resource "keycloak_role" "kubernetes-reader_role" {
-  realm_id    = keycloak_realm.master.id
+  realm_id    = data.keycloak_realm.master.id
   client_id   = keycloak_client.kubernetes-client.id
   name        = "reader"
   description = "Kubernetes Reader"
