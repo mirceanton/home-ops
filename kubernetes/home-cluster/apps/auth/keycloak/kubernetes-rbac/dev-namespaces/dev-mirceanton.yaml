@@ -8,7 +8,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: keycloak-developer-role-binding
+  name: keycloak-developer-dev-mirceanton-rolebinding
   namespace: dev-mirceanton
 subjects:
   - kind: Group
