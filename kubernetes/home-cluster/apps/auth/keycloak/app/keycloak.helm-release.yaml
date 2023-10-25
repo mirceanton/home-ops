@@ -41,7 +41,7 @@ spec:
     ## Keycloak logging configuration
     logging:
       output: json  # default, json
-      level: DEBUG  # FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL, OFF
+      level: INFO  # FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL, OFF
 
 
     ## ================================================================================================
@@ -65,6 +65,16 @@ spec:
         cpu: 100m
         memory: 500Mi
 
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: [ "ALL" ]
+      seccompProfile:
+        type: RuntimeDefault
+
+
     ## ================================================================================================
     ## Keycloak ingress parameters
     ## ================================================================================================
@@ -77,6 +87,9 @@ spec:
       annotations:
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        cert-manager.io/cluster-issuer: "letsencrypt-production"
+      tls: true
+
 
     ## ================================================================================================
     ## Network Policy Configuration
@@ -106,6 +119,6 @@ spec:
       enabled: true
       architecture: standalone
       auth:
-        username: keycloak
-        database: keycloak
+        username: bn_keycloak
+        database: bitnami_keycloak
         existingSecret: keycloak-postgres-creds
