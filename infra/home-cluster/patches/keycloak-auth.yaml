@@ -1,0 +1,9 @@
+---
+cluster:
+  apiServer:
+    extraArgs:
+      oidc-client-id: kubernetes
+      oidc-groups-claim: groups
+      oidc-groups-prefix: 'keycloak:'
+      oidc-issuer-url: https://auth.home.mirceanton.com/keycloak/realms/master
+      oidc-username-claim: email
