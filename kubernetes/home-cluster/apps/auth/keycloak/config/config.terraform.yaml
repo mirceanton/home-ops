@@ -40,6 +40,8 @@ spec:
     - kind: Secret
       name: keycloak-config-oauth2-proxy-client
     - kind: Secret
+      name: keycloak-config-kubernetes-client
+    - kind: Secret
       name: keycloak-config-smtp
     - kind: Secret
       name: keycloak-admin-creds

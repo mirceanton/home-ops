@@ -58,6 +58,7 @@ resource "keycloak_realm" "home" {
   }
 }
 
+
 resource "keycloak_role" "home_visitor" {
   realm_id    = keycloak_realm.home.id
   name        = "Visitor"

@@ -58,6 +58,16 @@ variable "smtp_from_name" {
   description = "The display name associated with the sender's email address in email notifications."
 }
 
+variable "kubernetes_client_secret" {
+  type        = string
+  description = "The client secret associated with the Kubernertes client for authentication."
+}
+
+variable "kubernetes_client_id" {
+  type        = string
+  description = "The client ID associated with the Kubernetes client for authentication."
+}
+
 variable "oauth2_proxy_client_secret" {
   type        = string
   description = "The client secret associated with the OAuth2 proxy client for authentication."
@@ -66,9 +76,4 @@ variable "oauth2_proxy_client_secret" {
 variable "oauth2_proxy_client_id" {
   type        = string
   description = "The client ID associated with the OAuth2 proxy client for authentication."
-}
-
-variable "oauth2_proxy_client_name" {
-  type        = string
-  description = "The name or identifier of the OAuth2 proxy client within the system."
 }
