@@ -11,14 +11,3 @@ tasks:
     desc: Show a list of all of the docker images running in the cluster.
     cmds:
       - python3 {{.ROOT_DIR}}/scripts/get-all-docker-images-running-in-cluster.py
-
-  get-kubedash-token:
-    desc: Fetch and decode the Kubernetes dashboard token.
-    silent: true
-    vars:
-      DASHBOARD_ADMIN_TOKEN:
-        sh: |
-          kubectl get secret dashboard-admin-sa-token \
-            --namespace kube-system \
-            -o jsonpath="{['data']['token']}" | base64 --decode
-    cmds: [ 'echo "(kube dash) {{.DASHBOARD_ADMIN_TOKEN}}"' ]
