@@ -1,0 +1,94 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-dashboard
+spec:
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      version: 6.0.8
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-dashboard
+
+  values:
+    fullnameOverride: 'kubernetes-dashboard'
+    replicaCount: 2
+
+    image:
+      repository: kubernetesui/dashboard
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+
+    ## Additional container arguments
+    extraArgs:
+      - --enable-skip-login
+      - --system-banner="Welcome to Kubernetes - Home Cluster"
+
+    # Global dashboard settings
+    settings:
+      clusterName: Home Cluster
+      itemsPerPage: 10
+      logsAutoRefreshTimeInterval: 5
+      resourceAutoRefreshTimeInterval: 5
+      disableAccessDeniedNotifications: false
+
+    ## Pinned CRDs that will be displayed in dashboard's menu
+    pinnedCRDs: []
+
+    ## Serve application over HTTP without TLS
+    protocolHttp: false
+
+
+    ## Pod resource requests & limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 2
+        memory: 400Mi
+
+
+    ingress:
+      enabled: true
+      # Kubernetes Dashboard Ingress annotations
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+        nginx.ingress.kubernetes.io/auth-signin: https://auth.home.mirceanton.com/oauth2/start?rd=$escaped_request_uri
+        nginx.ingress.kubernetes.io/auth-url: https://auth.home.mirceanton.com/oauth2/auth
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          auth_request_set $name_upstream_1 $upstream_cookie_name_1;
+
+          access_by_lua_block {
+            if ngx.var.name_upstream_1 ~= "" then
+              ngx.header["Set-Cookie"] = "name_1=" .. ngx.var.name_upstream_1 .. ngx.var.auth_cookie:match("(; .*)")
+            end
+          }
+      className: nginx
+      paths: [ "/" ]
+      hosts:
+        - kube-dashboard.${CLUSTER_DOMAIN}
+
+
+    rbac:
+      create: true
+      clusterRoleMetrics: true
+      clusterReadOnlyRole: false
+
+    serviceAccount:
+      create: true
+
+    networkPolicy:
+      enabled: false
+      ingressDenyAll: false
+
+    serviceMonitor:
+      enabled: false
+      labels: {}
+      annotations: {}
