@@ -1,3 +1,6 @@
+# =================================================================================================
+# OpenID Client
+# =================================================================================================
 resource "keycloak_openid_client" "oauth2-proxy_client" {
   realm_id      = keycloak_realm.home.id
   client_id     = var.oauth2_proxy_client_id
@@ -17,6 +20,9 @@ resource "keycloak_openid_client" "oauth2-proxy_client" {
 }
 
 
+# =================================================================================================
+# OpenID Client Audience Mapper
+# =================================================================================================
 resource "keycloak_openid_audience_protocol_mapper" "oauth2-proxy_audience-mapper" {
   realm_id                 = keycloak_realm.home.id
   client_id                = keycloak_openid_client.oauth2-proxy_client.id

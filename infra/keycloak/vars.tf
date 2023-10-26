@@ -1,10 +1,15 @@
+# =================================================================================================
+# Keycloak Connection Vars
+# =================================================================================================
 variable "keycloak_client_id" {
   type        = string
+  default = "admin-cli"
   description = "The client ID for the Keycloak client that will interact with the resources."
 }
 
 variable "keycloak_username" {
   type        = string
+  default = "admin"
   description = "The username or service account used to authenticate and interact with Keycloak."
 }
 
@@ -18,6 +23,10 @@ variable "keycloak_url" {
   description = "The URL or endpoint of the Keycloak server for authentication and resource management."
 }
 
+
+# =================================================================================================
+# SMTP Configuration Vars
+# =================================================================================================
 variable "smtp_host" {
   type        = string
   description = "The hostname or IP address of the SMTP server used for sending email notifications."
@@ -58,6 +67,10 @@ variable "smtp_from_name" {
   description = "The display name associated with the sender's email address in email notifications."
 }
 
+
+# =================================================================================================
+# Kubernetes OIDC Client Vars
+# =================================================================================================
 variable "kubernetes_client_secret" {
   type        = string
   description = "The client secret associated with the Kubernertes client for authentication."
@@ -68,6 +81,10 @@ variable "kubernetes_client_id" {
   description = "The client ID associated with the Kubernetes client for authentication."
 }
 
+
+# =================================================================================================
+# OAUth2 Proxy OIDC Client Vars
+# =================================================================================================
 variable "oauth2_proxy_client_secret" {
   type        = string
   description = "The client secret associated with the OAuth2 proxy client for authentication."
