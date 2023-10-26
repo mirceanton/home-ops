@@ -6,4 +6,4 @@ metadata:
 data:
     keycloak_client_id: admin-cli
     keycloak_username: admin
-    keycloak_url: https://auth.home.mirceanton.com/keycloak
+    keycloak_url: https://auth.home.mirceaanton.com/keycloak

@@ -19,3 +19,4 @@ spec:
         selector:
           dnsZones:
             - "mirceanton.com"
+            - "mirceaanton.com"

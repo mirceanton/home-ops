@@ -6,5 +6,5 @@ cluster:
       oidc-groups-claim: groups
       oidc-groups-prefix: keycloak_
       oidc-username-prefix: keycloak_
-      oidc-issuer-url: https://auth.home.mirceanton.com/keycloak/realms/home
-      oidc-username-claim: preferred_username
+      oidc-issuer-url: https://auth.home.mirceaanton.com/keycloak/realms/home
+      oidc-username-claim: email
