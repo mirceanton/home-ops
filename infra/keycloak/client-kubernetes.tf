@@ -28,7 +28,7 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_cli
   realm_id = keycloak_realm.home.id
 
   name                = "groups"
-  client_id           = keycloak_openid_client.kubernetes-client.client_id
+  client_id           = keycloak_openid_client.kubernetes-client.id
   client_role_prefix  = ""
   multivalued         = true
   claim_name          = "groups"
