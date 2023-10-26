@@ -17,25 +17,8 @@ spec:
     ## Application Configuration
     ## ================================================================================================
     config:
+      existingSecret: oauth2-proxy-secrets
       existingConfig: oauth2-proxy-configfile
-
-    extraEnv:
-      - name: OAUTH2_PROXY_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-config-oauth2-proxy-client
-            key: oauth2_proxy_client_id
-      - name: OAUTH2_PROXY_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: keycloak-config-oauth2-proxy-client
-            key: oauth2_proxy_client_secret
-
-      - name: OAUTH2_PROXY_COOKIE_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: oauth2-proxy-cookie-secret
-            key: cookie-secret
 
 
     ## ================================================================================================
