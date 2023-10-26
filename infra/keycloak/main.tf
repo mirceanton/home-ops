@@ -12,4 +12,5 @@ provider "keycloak" {
   username                 = var.keycloak_username
   password                 = var.keycloak_password
   url                      = var.keycloak_url
+  tls_insecure_skip_verify = true
 }
