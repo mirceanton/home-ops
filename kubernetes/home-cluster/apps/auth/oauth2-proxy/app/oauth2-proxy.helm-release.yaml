@@ -52,7 +52,7 @@ spec:
       annotations:
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
-        cert-manager.io/cluster-issuer: "letsencrypt-production"
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
       tls:
         - secretName: auth.${CLUSTER_DOMAIN}-tls
           hosts:
