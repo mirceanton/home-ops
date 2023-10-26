@@ -17,10 +17,17 @@ spec:
     - kind: ConfigMap
       name: keycloak-config-connection
     - kind: Secret
-      name: keycloak-config-oauth2-proxy-client
-    - kind: Secret
-      name: keycloak-config-kubernetes-client
+      name: keycloak-admin-creds
+
     - kind: Secret
       name: keycloak-config-smtp
+
     - kind: Secret
-      name: keycloak-admin-creds
+      name: keycloak-config-kubernetes-client
+
+    - kind: Secret
+      name: keycloak-config-oauth2-proxy-client
+      varsKeys:
+        - client-id:oauth2_proxy_client_id
+        - client-name:oauth2_proxy_client_name
+        - client-secret:oauth2_proxy_client_secret
