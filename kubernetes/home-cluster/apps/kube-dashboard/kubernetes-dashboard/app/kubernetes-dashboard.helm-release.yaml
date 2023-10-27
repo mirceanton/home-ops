@@ -26,7 +26,6 @@ spec:
     ## Additional container arguments
     extraArgs:
       - --enable-skip-login
-      - --system-banner="Welcome to Kubernetes - Home Cluster"
 
     # Global dashboard settings
     settings:
