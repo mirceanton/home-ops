@@ -32,7 +32,8 @@ spec:
     imagePullSecrets: []
 
     deploymentAnnotations:
-      configmap.reloader.stakater.com/reload: "oauth2-proxy-configfile,oauth2-proxy-secrets"
+      configmap.reloader.stakater.com/reload: "oauth2-proxy-configfile"
+      secret.reloader.stakater.com/reload: "oauth2-proxy-secrets"
 
     resources:
       limits:
