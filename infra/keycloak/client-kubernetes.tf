@@ -24,6 +24,7 @@ resource "keycloak_openid_client" "kubernetes-client" {
 # =================================================================================================
 # OpenID Client Mappers
 # =================================================================================================
+# This mapper is used for the kubernetes apiserver integration
 resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_client_role_mapper" {
   realm_id = keycloak_realm.home.id
   client_id           = keycloak_openid_client.kubernetes-client.id
@@ -39,6 +40,7 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_cli
   add_to_userinfo     = true
 }
 
+# This mapper is needed for the oauth2 proxy integration
 resource "keycloak_openid_audience_protocol_mapper" "kubernetes-audience_mapper" {
   realm_id                 = keycloak_realm.home.id
   client_id                = keycloak_openid_client.kubernetes-client.id
@@ -57,13 +59,6 @@ resource "keycloak_role" "kubernetes-admin_role" {
   client_id   = keycloak_openid_client.kubernetes-client.id
   name        = "admin"
   description = "Kubernetes Administrator"
-}
-
-resource "keycloak_role" "kubernetes-developer_role" {
-  realm_id    = keycloak_realm.home.id
-  client_id   = keycloak_openid_client.kubernetes-client.id
-  name        = "developer"
-  description = "Kubernetes Developer"
 }
 
 resource "keycloak_role" "kubernetes-reader_role" {

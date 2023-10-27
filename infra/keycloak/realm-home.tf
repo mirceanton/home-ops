@@ -60,19 +60,3 @@ resource "keycloak_realm" "home" {
     }
   }
 }
-
-
-# =================================================================================================
-# Realm Roles
-# =================================================================================================
-resource "keycloak_role" "home_visitor" {
-  realm_id    = keycloak_realm.home.id
-  name        = "Visitor"
-  description = "Regular User"
-}
-
-resource "keycloak_role" "home_admin" {
-  realm_id    = keycloak_realm.home.id
-  name        = "Admin"
-  description = "Admin User"
-}

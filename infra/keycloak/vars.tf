@@ -80,17 +80,3 @@ variable "kubernetes_client_id" {
   type        = string
   description = "The client ID associated with the Kubernetes client for authentication."
 }
-
-
-# =================================================================================================
-# OAUth2 Proxy OIDC Client Vars
-# =================================================================================================
-variable "oauth2_proxy_client_secret" {
-  type        = string
-  description = "The client secret associated with the OAuth2 proxy client for authentication."
-}
-
-variable "oauth2_proxy_client_id" {
-  type        = string
-  description = "The client ID associated with the OAuth2 proxy client for authentication."
-}

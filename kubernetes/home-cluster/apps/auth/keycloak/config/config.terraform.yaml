@@ -24,10 +24,6 @@ spec:
 
     - kind: Secret
       name: keycloak-config-kubernetes-client
-
-    - kind: Secret
-      name: keycloak-config-oauth2-proxy-client
       varsKeys:
-        - client-id:oauth2_proxy_client_id
-        - client-name:oauth2_proxy_client_name
-        - client-secret:oauth2_proxy_client_secret
+        - client-id:kubernetes_client_id
+        - client-secret:kubernetes_client_secret

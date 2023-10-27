@@ -12,7 +12,6 @@ data:
     reverse_proxy = "true"
     scope = "openid"
 
-    allowed_roles = [ "Visitor" ]
     oidc_issuer_url = "https://auth.${CLUSTER_DOMAIN}/keycloak/realms/home"
     redirect_url = "https://auth.${CLUSTER_DOMAIN}/oauth2/callback"
     code_challenge_method = "S256"
