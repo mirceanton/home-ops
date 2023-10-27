@@ -15,29 +15,38 @@ spec:
         name: weaveworks
 
   values:
+    ## ================================================================================================
+    ## Application Configuration
+    ## ================================================================================================
+    logLevel: info
+    envVars:
+      - name: WEAVE_GITOPS_FEATURE_TENANCY
+        value: "true"
+      - name: WEAVE_GITOPS_FEATURE_CLUSTER
+        value: "false"
+      - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+        value: "Login with Keycloak"
+
+
+    ## ================================================================================================
+    ## Deployment Configuration Parameters
+    ## ================================================================================================
     replicaCount: 2
+    image:
+      repository: ghcr.io/weaveworks/wego-app
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
 
-    adminUser:
-      create: true
-      createSecret: false
-      username: ${WEAVE_ADMIN_USER}
+    resources:
+      limits:
+        cpu: 250m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
 
-    ingress:
-      enabled: true
-      className: nginx
-      hosts:
-        - host: weave.admin.${CLUSTER_DOMAIN}
-          paths:
-            - path: /
-              pathType: Prefix
-
-    networkPolicy:
-      create: true
-
-    metrics:
-      enabled: false
-
-    rbac:  # allow manipulation of terraform objects (tf-controller)
+    # allow manipulation of terraform objects (tf-controller)
+    rbac:
       create: true
       impersonationResourceNames: [ "${WEAVE_ADMIN_USER}" ]
       additionalRules:
@@ -45,5 +54,33 @@ spec:
           resources: [ "terraforms" ]
           verbs: [ "get", "list", "patch" ]
 
-    podAnnotations:  # annotate pod to be re-created if the auth secret changes
-      secret.reloader.stakater.com/reload: cluster-user-auth
+
+    ## ================================================================================================
+    ## Traffic Exposure Parameters
+    ## ================================================================================================
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+      hosts:
+        - host: gitops.${CLUSTER_DOMAIN}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: gitops.${CLUSTER_DOMAIN}-tls
+          hosts:
+          - gitops.${CLUSTER_DOMAIN}
+
+    networkPolicy:
+      create: true
+
+
+    ## ================================================================================================
+    ## Monitoring Parameters
+    ## ================================================================================================
+    metrics:
+      enabled: false
