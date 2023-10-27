@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - role-admin.yaml
   - role-reader.yaml
-  - role-developer.yaml
   - dev-namespaces/
