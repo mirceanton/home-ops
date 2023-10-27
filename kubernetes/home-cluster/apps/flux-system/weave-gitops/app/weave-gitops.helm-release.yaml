@@ -27,6 +27,11 @@ spec:
       - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
         value: "Login with Keycloak"
 
+    additionalArgs:
+      - --auth-methods=[oidc]
+      - --oidc-group-prefix=keycloak_
+      - --oidc-groups-claim=groups
+
 
     ## ================================================================================================
     ## Deployment Configuration Parameters
