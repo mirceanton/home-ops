@@ -18,8 +18,8 @@ data:
     code_challenge_method = "S256"
     email_domains = [ "*" ]
 
-    whitelist_domains = [ ".mirceanton.com" ]
-    cookie_domains = [ ".mirceanton.com" ]
+    whitelist_domains = [ ".mirceanton.com", "mirceanton.com", ".mirceaanton.com", ".mirceaanton.com" ]
+    cookie_domains = [ ".mirceanton.com", "mirceanton.com", ".mirceaanton.com", ".mirceaanton.com" ]
     cookie_name = "_oauth2_proxy"
     cookie_refresh = "1m"
     cookie_csrf_expire = "5m"
