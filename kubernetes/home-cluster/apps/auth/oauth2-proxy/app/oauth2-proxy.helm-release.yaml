@@ -24,12 +24,15 @@ spec:
     ## ================================================================================================
     ## Deployment Configuration Parameters
     ## ================================================================================================
+    replicaCount: 2
+
     image:
       repository: quay.io/oauth2-proxy/oauth2-proxy
       pullPolicy: "IfNotPresent"
     imagePullSecrets: []
 
-    replicaCount: 2
+    deploymentAnnotations:
+      configmap.reloader.stakater.com/reload: "oauth2-proxy-configfile,oauth2-proxy-secrets"
 
     resources:
       limits:
