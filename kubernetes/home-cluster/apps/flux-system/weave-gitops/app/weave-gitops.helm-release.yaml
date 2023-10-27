@@ -27,10 +27,12 @@ spec:
       - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
         value: "Login with Keycloak"
 
-    additionalArgs:
-      - --auth-methods=[oidc]
-      - --oidc-group-prefix=keycloak_
-      - --oidc-groups-claim=groups
+    adminUser:
+      create: true
+      createClusterRole: true
+      createSecret: true
+      username: admin
+      passwordHash: $2a$10$D2OkhEYbDULI8TfUVQqG0OGr/3t9kjX9fHhSHknNY6/FVzrf0STfW
 
 
     ## ================================================================================================
@@ -53,7 +55,7 @@ spec:
     # allow manipulation of terraform objects (tf-controller)
     rbac:
       create: true
-      impersonationResourceNames: [ "${WEAVE_ADMIN_USER}" ]
+      impersonationResourceNames: [ admin ]
       additionalRules:
         - apiGroups: [ "infra.contrib.fluxcd.io" ]
           resources: [ "terraforms" ]
