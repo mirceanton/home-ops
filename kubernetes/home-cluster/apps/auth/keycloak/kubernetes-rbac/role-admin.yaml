@@ -5,7 +5,7 @@ metadata:
   name: keycloak-admin-role-binding
 subjects:
   - kind: Group
-    name: keycloak:admin
+    name: keycloak_admin
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole

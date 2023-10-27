@@ -5,9 +5,9 @@ metadata:
   name: keycloak-reader-role-binding
 subjects:
   - kind: Group
-    name: keycloak:reader
+    name: keycloak_reader
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: ns-read-only
+  name: view
   apiGroup: rbac.authorization.k8s.io
