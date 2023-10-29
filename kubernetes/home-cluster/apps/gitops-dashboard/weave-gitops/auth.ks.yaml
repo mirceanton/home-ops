@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -8,8 +7,8 @@ metadata:
   labels:
     home-ops.mirceanton.com/group: admin-apps
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/weave-gitops/auth
-  targetNamespace: flux-system
+  path: ${CLUSTER_APPS_BASE_DIR}/gitops-dashboard/weave-gitops/auth
+  targetNamespace: gitops-dashboard
   dependsOn:
     - name: cluster-apps-keycloak-config
     - name: cluster-apps-weave-gitops
