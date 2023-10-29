@@ -7,6 +7,6 @@ metadata:
   labels:
     home-ops.mirceanton.com/group: system-apps
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/terraform-system/tf-controller/app
-  targetNamespace: terraform-system
+  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/tf-controller/app
+  targetNamespace: flux-system
   dependsOn: []
