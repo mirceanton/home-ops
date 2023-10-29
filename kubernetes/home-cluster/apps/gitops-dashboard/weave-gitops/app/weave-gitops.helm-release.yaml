@@ -17,7 +17,7 @@ spec:
     ## ================================================================================================
     ## Application Configuration
     ## ================================================================================================
-    logLevel: info
+    logLevel: debug
     envVars:
       - name: WEAVE_GITOPS_FEATURE_TENANCY
         value: "true"
@@ -31,7 +31,7 @@ spec:
       createClusterRole: true
       createSecret: true
       username: admin
-      passwordHash: "$2a$10$MXQjjjU/XVZFM4tzIC8UpOdyT45EEihBUrLOeuO16kEww2ATuiXLi"
+      passwordHash: "$2a$10$GbXrHvmiSFjwno0P1FWRPuJN7XjcJ0ZPOIdKQ5hZkI/ZQRBTEU35q"
 
 
     ## ================================================================================================
