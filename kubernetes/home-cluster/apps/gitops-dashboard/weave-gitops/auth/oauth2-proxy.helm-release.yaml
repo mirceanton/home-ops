@@ -74,8 +74,49 @@ spec:
     ## ================================================================================================
     redis:
       enabled: true
+      image:
+        repository: bitnami/redis
+        pullPolicy: IfNotPresent
+
+      ## @param architecture Redis architecture.
+      ## Allowed values: `standalone` or `replication`
+      architecture: replication
+
+      ## Redis&reg; Authentication parameters
+      ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
+      auth:
+        enabled: true
+        sentinel: true
+        existingSecret: oauth2-proxy-redis-creds
+        existingSecretPasswordKey: redis-password
+        ## Mount credentials as files instead of using an environment variable
+        usePasswordFiles: false
+
+
+      ## @section Redis&reg; master configuration parameters
+      master:
+        count: 1
+        kind: StatefulSet
+        resources:
+          limits: {}
+          requests: {}
+        persistence:
+          enabled: false
+
+      ## @section Redis replicas configuration parameters
+      replica:
+        replicaCount: 3
+        resources:
+          limits: {}
+          requests: {}
+        persistence:
+          enabled: false
+
     sessionStorage:
       type: redis
+      redis:
+        existingSecret: oauth2-proxy-redis-creds
+        passwordKey: redis-password
 
     ## ================================================================================================
     ## Monitoring Parameters
