@@ -11,4 +11,4 @@ spec:
   targetNamespace: kube-dashboard
   dependsOn:
     - name: cluster-apps-keycloak-config
-    - name: cluster-apps-kubernetes-dashboard
+    - name: cluster-apps-kube-dashboard
