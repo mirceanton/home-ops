@@ -27,9 +27,11 @@ spec:
         value: "false"
 
     adminUser:
-      create: false
-      createClusterRole: false
-      createSecret: false
+      create: true
+      createClusterRole: true
+      createSecret: true
+      username: admin
+      passwordHash: "$2a$10$MXQjjjU/XVZFM4tzIC8UpOdyT45EEihBUrLOeuO16kEww2ATuiXLi"
 
 
     ## ================================================================================================
