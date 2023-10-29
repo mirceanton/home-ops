@@ -36,7 +36,15 @@ spec:
       disableAccessDeniedNotifications: false
 
     ## Pinned CRDs that will be displayed in dashboard's menu
-    pinnedCRDs: []
+    pinnedCRDs:
+      - kind: customresourcedefinition
+        name: terraforms.infra.contrib.fluxcd.io
+        displayName: Terraforms
+        namespaced: true
+      - kind: customresourcedefinition
+        name: kustomizations.kustomize.toolkit.fluxcd.io
+        displayName: Kustomization
+        namespaced: true
 
     ## Serve application over HTTP without TLS
     protocolHttp: false
@@ -67,8 +75,9 @@ spec:
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
         nginx.ingress.kubernetes.io/auth-response-headers: Authorization
-        nginx.ingress.kubernetes.io/auth-signin: https://kube-dashboard.${CLUSTER_DOMAIN}/oauth2/start?rd=https%3A%2F%2F$host$escaped_request_uri
-        nginx.ingress.kubernetes.io/auth-url: https://kube-dashboard.${CLUSTER_DOMAIN}/oauth2/auth
+        nginx.ingress.kubernetes.io/auth-signin: https://$host/oauth2/start?rd=$escaped_request_uri
+        nginx.ingress.kubernetes.io/auth-url: https://$host/oauth2/auth
+        nginx.ingress.kubernetes.io/enable-cors: "true"
 
     rbac:
       create: true

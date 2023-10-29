@@ -57,6 +57,7 @@ spec:
         cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
       tls:
         - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
           hosts:
