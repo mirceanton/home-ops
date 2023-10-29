@@ -1,0 +1,76 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: 6.18.0
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy
+
+  values:
+    ## ================================================================================================
+    ## Application Configuration
+    ## ================================================================================================
+    config:
+      existingSecret: oauth2-proxy-kubedash-secrets
+      existingConfig: oauth2-proxy-kubedash-configfile
+
+
+    ## ================================================================================================
+    ## Deployment Configuration Parameters
+    ## ================================================================================================
+    replicaCount: 2
+
+    image:
+      repository: quay.io/oauth2-proxy/oauth2-proxy
+      pullPolicy: "IfNotPresent"
+    imagePullSecrets: []
+
+    deploymentAnnotations:
+      configmap.reloader.stakater.com/reload: "oauth2-proxy-kubedash-configfile"
+      secret.reloader.stakater.com/reload: "oauth2-proxy-kubedash-secrets"
+
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+
+    ## ================================================================================================
+    ## Traffic Exposure Parameters
+    ## ================================================================================================
+    ingress:
+      enabled: true
+      className: nginx
+      path: /oauth2
+      hosts:
+        - kube-dashboard.${CLUSTER_DOMAIN}
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+      tls:
+        - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
+          hosts:
+          - kube-dashboard.${CLUSTER_DOMAIN}
+
+    service:
+      type: ClusterIP
+      portNumber: 80
+      appProtocol: http
+      annotations: {}
+
+
+    ## ================================================================================================
+    ## Monitoring Parameters
+    ## ================================================================================================
+    metrics:
+      enabled: false
