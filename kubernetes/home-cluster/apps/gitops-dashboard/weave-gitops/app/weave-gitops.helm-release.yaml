@@ -18,20 +18,10 @@ spec:
     ## Application Configuration
     ## ================================================================================================
     logLevel: debug
-    envVars:
-      - name: WEAVE_GITOPS_FEATURE_TENANCY
-        value: "true"
-      - name: WEAVE_GITOPS_FEATURE_CLUSTER
-        value: "false"
-      - name: WEAVE_GITOPS_AUTH_ENABLED
-        value: "false"
-
     adminUser:
       create: true
-      createClusterRole: true
-      createSecret: true
+      passwordHash: $2a$10$l5JEHJDc7NtlSNK.ui2pwO4qP07VoaDSy.T38bqZIx0b7L.u8Liie
       username: admin
-      passwordHash: "$2a$10$GbXrHvmiSFjwno0P1FWRPuJN7XjcJ0ZPOIdKQ5hZkI/ZQRBTEU35q"
 
 
     ## ================================================================================================
