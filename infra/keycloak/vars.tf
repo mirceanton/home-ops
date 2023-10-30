@@ -3,13 +3,13 @@
 # =================================================================================================
 variable "keycloak_client_id" {
   type        = string
-  default = "admin-cli"
+  default     = "admin-cli"
   description = "The client ID for the Keycloak client that will interact with the resources."
 }
 
 variable "keycloak_username" {
   type        = string
-  default = "admin"
+  default     = "admin"
   description = "The username or service account used to authenticate and interact with Keycloak."
 }
 
@@ -79,4 +79,17 @@ variable "kubernetes_client_secret" {
 variable "kubernetes_client_id" {
   type        = string
   description = "The client ID associated with the Kubernetes client for authentication."
+}
+
+# =================================================================================================
+# Weave GitOps OIDC Client Vars
+# =================================================================================================
+variable "weave_gitops_client_secret" {
+  type        = string
+  description = "The client secret associated with the Weave GitOps client for authentication."
+}
+
+variable "weave_gitops_client_id" {
+  type        = string
+  description = "The client ID associated with the Weave GitOps client for authentication."
 }
