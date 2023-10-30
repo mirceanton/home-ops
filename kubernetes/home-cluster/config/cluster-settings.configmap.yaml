@@ -8,7 +8,7 @@ data:
   CLUSTER_ID: '1'
   CLUSTER_NAME: home-cluster
   CLUSTER_DOMAIN: home.mirceaanton.com
-  CLUSTER_ENVIRONMENT: production  # staging, production -> selects letsencrypt cluster issuer
+  CLUSTER_ENVIRONMENT: staging  # staging, production -> selects letsencrypt cluster issuer
   CLUSTER_APPS_BASE_DIR: ./kubernetes/home-cluster/apps
 
   INGRESS_POOL: 10.0.10.20-10.0.10.20
