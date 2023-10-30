@@ -13,10 +13,10 @@ resource "keycloak_openid_client" "kubernetes-client" {
   standard_flow_enabled                     = true
   implicit_flow_enabled                     = false
   oauth2_device_authorization_grant_enabled = false
-  direct_access_grants_enabled              = false
+  direct_access_grants_enabled              = true
   service_accounts_enabled                  = false
 
-  access_type         = "CONFIDENTIAL"
+  access_type         = "PUBLIC"
   valid_redirect_uris = ["*"]
 }
 
@@ -29,11 +29,11 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_cli
   realm_id = keycloak_realm.home.id
   client_id           = keycloak_openid_client.kubernetes-client.id
 
-  name                = "groups"
+  name                = "k8s_groups"
   client_id_for_role_mappings = keycloak_openid_client.kubernetes-client.client_id
   client_role_prefix  = ""
   multivalued         = true
-  claim_name          = "groups"
+  claim_name          = "k8s_groups"
   claim_value_type    = "String"
   add_to_id_token     = true
   add_to_access_token = true
