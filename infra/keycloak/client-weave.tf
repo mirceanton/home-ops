@@ -49,10 +49,3 @@ resource "keycloak_role" "weave-admin" {
   name        = "wego-admin"
   description = "GitOps ReadWrite Role"
 }
-
-resource "keycloak_role" "weave-reader" {
-  realm_id    = keycloak_realm.home.id
-  client_id   = keycloak_openid_client.weave-gitops.id
-  name        = "wego-reader"
-  description = "GitOps ReadOnly Role"
-}
