@@ -27,3 +27,9 @@ spec:
       varsKeys:
         - client-id:kubernetes_client_id
         - client-secret:kubernetes_client_secret
+
+    - kind: Secret
+      name: keycloak-config-weave-gitops-client
+      varsKeys:
+        - client-id:weave_gitops_client_id
+        - client-secret:weave_gitops_client_secret
