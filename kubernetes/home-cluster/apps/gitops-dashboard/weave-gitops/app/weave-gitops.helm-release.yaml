@@ -71,7 +71,7 @@ spec:
           - gitops.${CLUSTER_DOMAIN}
 
     networkPolicy:
-      create: true
+      create: false
 
 
     ## ================================================================================================
