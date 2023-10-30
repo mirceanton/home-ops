@@ -22,6 +22,9 @@ spec:
       create: true
       passwordHash: $2a$10$BtzO1iqgbgv3J4z68USPpOSUlGd6oWf1PxHYA16rHFc/3jwkCiPx6
       username: gitops-admin
+    envVars:
+      - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+        value: "Login with Keycloak"
 
 
     ## ================================================================================================
