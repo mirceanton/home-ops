@@ -1,7 +1,7 @@
 # =================================================================================================
 # OpenID Client
 # =================================================================================================
-resource "keycloak_openid_client" "kubernetes-client" {
+resource "keycloak_openid_client" "kubernetes" {
   realm_id      = keycloak_realm.home.id
   client_id     = var.kubernetes_client_id
   client_secret = var.kubernetes_client_secret
@@ -24,28 +24,26 @@ resource "keycloak_openid_client" "kubernetes-client" {
 # =================================================================================================
 # OpenID Client Mappers
 # =================================================================================================
-# This mapper is used for the kubernetes apiserver integration
-resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_client_role_mapper" {
-  realm_id = keycloak_realm.home.id
-  client_id           = keycloak_openid_client.kubernetes-client.id
+resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-apiserver-mapper" {
+  realm_id  = keycloak_realm.home.id
+  client_id = keycloak_openid_client.kubernetes.id
 
-  name                = "groups"
-  client_id_for_role_mappings = keycloak_openid_client.kubernetes-client.client_id
-  client_role_prefix  = ""
-  multivalued         = true
-  claim_name          = "groups"
-  claim_value_type    = "String"
-  add_to_id_token     = true
-  add_to_access_token = true
-  add_to_userinfo     = true
+  name                        = "groups"
+  client_id_for_role_mappings = keycloak_openid_client.kubernetes.client_id
+  client_role_prefix          = ""
+  multivalued                 = true
+  claim_name                  = "groups"
+  claim_value_type            = "String"
+  add_to_id_token             = true
+  add_to_access_token         = true
+  add_to_userinfo             = true
 }
 
-# This mapper is needed for the oauth2 proxy integration
-resource "keycloak_openid_audience_protocol_mapper" "kubernetes-audience_mapper" {
+resource "keycloak_openid_audience_protocol_mapper" "kubernetes-dashboard-mapper" {
   realm_id                 = keycloak_realm.home.id
-  client_id                = keycloak_openid_client.kubernetes-client.id
+  client_id                = keycloak_openid_client.kubernetes.id
   name                     = "aud-mapper-oauth2-proxy"
-  included_client_audience = keycloak_openid_client.kubernetes-client.client_id
+  included_client_audience = keycloak_openid_client.kubernetes.client_id
   add_to_id_token          = true
   add_to_access_token      = true
 }
@@ -54,16 +52,16 @@ resource "keycloak_openid_audience_protocol_mapper" "kubernetes-audience_mapper"
 # =================================================================================================
 # OpenID Client Roles
 # =================================================================================================
-resource "keycloak_role" "kubernetes-admin_role" {
+resource "keycloak_role" "kubernetes-admin" {
   realm_id    = keycloak_realm.home.id
-  client_id   = keycloak_openid_client.kubernetes-client.id
+  client_id   = keycloak_openid_client.kubernetes.id
   name        = "admin"
   description = "Kubernetes Administrator"
 }
 
-resource "keycloak_role" "kubernetes-reader_role" {
+resource "keycloak_role" "kubernetes-reader" {
   realm_id    = keycloak_realm.home.id
-  client_id   = keycloak_openid_client.kubernetes-client.id
+  client_id   = keycloak_openid_client.kubernetes.id
   name        = "reader"
   description = "Kubernetes Reader"
 }
