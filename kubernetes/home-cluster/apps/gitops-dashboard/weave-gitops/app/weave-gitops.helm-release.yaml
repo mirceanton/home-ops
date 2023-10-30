@@ -35,7 +35,7 @@ spec:
     ## ================================================================================================
     ## Deployment Configuration Parameters
     ## ================================================================================================
-    replicaCount: 2
+    replicaCount: 1
     image:
       repository: ghcr.io/weaveworks/wego-app
       pullPolicy: IfNotPresent
