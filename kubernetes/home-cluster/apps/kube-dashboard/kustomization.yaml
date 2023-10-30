@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - kubernetes-dashboard/
+  - oauth2-proxy/
