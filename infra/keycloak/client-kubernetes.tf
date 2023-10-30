@@ -29,11 +29,11 @@ resource "keycloak_openid_user_client_role_protocol_mapper" "kubernetes-user_cli
   realm_id = keycloak_realm.home.id
   client_id           = keycloak_openid_client.kubernetes-client.id
 
-  name                = "k8s_groups"
+  name                = "groups"
   client_id_for_role_mappings = keycloak_openid_client.kubernetes-client.client_id
   client_role_prefix  = ""
   multivalued         = true
-  claim_name          = "k8s_groups"
+  claim_name          = "groups"
   claim_value_type    = "String"
   add_to_id_token     = true
   add_to_access_token = true
