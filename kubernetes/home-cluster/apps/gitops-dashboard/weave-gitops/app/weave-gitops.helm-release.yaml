@@ -17,7 +17,7 @@ spec:
     ## ================================================================================================
     ## Application Configuration
     ## ================================================================================================
-    logLevel: debug
+    logLevel: info
     adminUser:
       create: true
       createClusterRole: true
@@ -35,7 +35,7 @@ spec:
     ## ================================================================================================
     ## Deployment Configuration Parameters
     ## ================================================================================================
-    replicaCount: 1
+    replicaCount: 2
     image:
       repository: ghcr.io/weaveworks/wego-app
       pullPolicy: IfNotPresent
