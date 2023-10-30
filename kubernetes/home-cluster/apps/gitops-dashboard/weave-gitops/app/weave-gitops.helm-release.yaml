@@ -19,7 +19,10 @@ spec:
     ## ================================================================================================
     logLevel: debug
     adminUser:
-      create: false
+      create: true
+      createClusterRole: true
+      createSecret: false  # created manually
+      username: gitops-admin  # this should match the value specified in the cluster-user-auth secret
     envVars:
       - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
         value: "Login with Keycloak"
