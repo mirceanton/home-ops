@@ -46,6 +46,9 @@ spec:
         cpu: 100m
         memory: 128Mi
 
+    annotations:
+      secret.reloader.stakater.com/reload: "cluster-user-auth,oidc-auth"
+
     # allow manipulation of terraform objects (tf-controller)
     rbac:
       create: true
