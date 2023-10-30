@@ -17,8 +17,8 @@ spec:
     ## Application Configuration
     ## ================================================================================================
     config:
-      existingSecret: oauth2-proxy-kubedash-secrets
-      existingConfig: oauth2-proxy-kubedash-configfile
+      existingSecret: oauth2-proxy-secrets
+      existingConfig: oauth2-proxy-configfile
 
 
     ## ================================================================================================
@@ -32,8 +32,8 @@ spec:
     imagePullSecrets: []
 
     deploymentAnnotations:
-      configmap.reloader.stakater.com/reload: "oauth2-proxy-kubedash-configfile"
-      secret.reloader.stakater.com/reload: "oauth2-proxy-kubedash-secrets"
+      configmap.reloader.stakater.com/reload: "oauth2-proxy-configfile"
+      secret.reloader.stakater.com/reload: "oauth2-proxy-secrets"
 
     resources:
       limits:
@@ -52,16 +52,16 @@ spec:
       className: nginx
       path: /oauth2
       hosts:
-        - kube-dashboard.${CLUSTER_DOMAIN}
+        - auth.${CLUSTER_DOMAIN}
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
         nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
         nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
         nginx.ingress.kubernetes.io/enable-cors: "true"
       tls:
-        - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
+        - secretName: auth.${CLUSTER_DOMAIN}-tls
           hosts:
-          - kube-dashboard.${CLUSTER_DOMAIN}
+          - auth.${CLUSTER_DOMAIN}
 
     service:
       type: ClusterIP

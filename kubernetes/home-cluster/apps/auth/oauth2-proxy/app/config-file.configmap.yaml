@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: oauth2-proxy-kubedash-configfile
+  name: oauth2-proxy-configfile
 data:
   oauth2_proxy.cfg: |
     provider = "keycloak-oidc"
@@ -12,7 +12,7 @@ data:
     scope = "openid"
 
     oidc_issuer_url = "https://auth.${CLUSTER_DOMAIN}/keycloak/realms/home"
-    redirect_url = "https://kube-dashboard.${CLUSTER_DOMAIN}/oauth2/callback"
+    redirect_url = "https://auth.${CLUSTER_DOMAIN}/oauth2/callback"
     code_challenge_method = "S256"
     email_domains = [ "*" ]
 
