@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   - app.ks.yaml
   - config.ks.yaml
-  - kubernetes-rbac.ks.yaml
