@@ -20,8 +20,8 @@ spec:
     logLevel: debug
     adminUser:
       create: true
-      passwordHash: $2a$10$l5JEHJDc7NtlSNK.ui2pwO4qP07VoaDSy.T38bqZIx0b7L.u8Liie
-      username: admin
+      passwordHash: $2a$10$BtzO1iqgbgv3J4z68USPpOSUlGd6oWf1PxHYA16rHFc/3jwkCiPx6
+      username: gitops-admin
 
 
     ## ================================================================================================
