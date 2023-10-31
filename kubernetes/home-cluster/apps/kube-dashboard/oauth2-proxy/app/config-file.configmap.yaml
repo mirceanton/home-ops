@@ -11,7 +11,7 @@ data:
     reverse_proxy = "true"
     scope = "openid"
 
-    oidc_issuer_url = "https://auth.${CLUSTER_DOMAIN}/keycloak/realms/home"
+    oidc_issuer_url = "https://keycloak-headless.auth.svc.cluster.local./realms/home"
     redirect_url = "https://kube-dashboard.${CLUSTER_DOMAIN}/oauth2/callback"
     code_challenge_method = "S256"
     email_domains = [ "*" ]
