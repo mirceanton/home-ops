@@ -1,0 +1,59 @@
+---
+version: '3'
+
+tasks:
+  generate-config:
+    desc: Generate the Talos machineconfig files.
+    cmds:
+      - cmd: |
+          talosctl gen config {{.CLUSTER_NAME}} https://{{.KUBERNETES_ENDPOINT}}:6443 \
+            --kubernetes-version {{.KUBERNETES_VERSION}} \
+            --with-secrets secrets.yaml \
+            --config-patch @patches/allow-controlplane-workloads.yaml \
+            --config-patch @patches/kubelet-certificate-rotation.yaml \
+            --config-patch @patches/interface-names.yaml \
+            --config-patch @patches/dhcp.yaml \
+            --config-patch @patches/cni.yaml \
+            --config-patch @patches/install-disk.yaml \
+            --config-patch @patches/extra-disks.yaml \
+            --config-patch @patches/system-extensions.yaml \
+            --config-patch-control-plane @patches/controlplane-vip.yaml \
+            --output rendered/
+      - talosctl --talosconfig rendered/talosconfig config endpoint {{.CONTROLPLANE_NODES}}
+      - talosctl --talosconfig rendered/talosconfig config node {{(split " " .CONTROLPLANE_NODES)._0}}
+
+  delete-config:
+    desc: Delete the Talos machineconfig files.
+    cmds: [ rm -f rendered/* ]
+
+  apply-config:
+    desc: Bootstrap talos on the infra cluster nodes.
+    preconditions:
+      - sh: test -f rendered/controlplane.yaml
+        msg: "Talos controlplane configuration was not rendered."
+      - sh: test -f rendered/worker.yaml
+        msg: "Talos worker configuration was not rendered."
+    cmds:
+      - for: { var: CONTROLPLANE_NODES }
+        cmd: talosctl apply --insecure -f rendered/controlplane.yaml -n {{.ITEM}}
+      - for: { var: WORKER_NODES }
+        cmd: talosctl apply --insecure -f rendered/worker.yaml -n {{.ITEM}}
+
+  talosconfig:
+    desc: Import the talosconfig file for the infra cluster.
+    preconditions:
+      - sh: test -f rendered/talosconfig
+        msg: "Talosconfig file was not rendered."
+    cmds:
+      - mkdir -p ~/.talos
+      - rm ~/.talos/config
+      - cp rendered/talosconfig ~/.talos/config
+
+  wait:
+    desc: Wait for the talos cluster to be up and running.
+    deps: [ task: talosconfig ]
+    cmds:
+      - for: { var: CONTROLPLANE_NODES }
+        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
+      - for: { var: WORKER_NODES }
+        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh

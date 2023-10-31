@@ -5,18 +5,18 @@ metadata:
   namespace: flux-system
   name: cluster-settings
 data:
-  CLUSTER_ID: '1'
-  CLUSTER_NAME: home-cluster
-  CLUSTER_DOMAIN: home.mirceanton.com
-  CLUSTER_APPS_BASE_DIR: ./kubernetes/home-cluster/apps
+  CLUSTER_ID: '0'
+  CLUSTER_NAME: infra-cluster
+  CLUSTER_DOMAIN: infra.mirceanton.com
+  CLUSTER_ENVIRONMENT: staging  # staging, production -> selects letsencrypt cluster issuer
+  CLUSTER_APPS_BASE_DIR: ./kubernetes/infra-cluster/apps
 
-  INGRESS_POOL: 10.0.10.20-10.0.10.20
+  INGRESS_POOL: 10.0.10.90-10.0.10.90
 
   TIMEZONE: Europe/Bucharest
 
   TRUENAS_IP: 10.0.10.245
-  TRUENAS_NFS_ROOT: tank/Homelab/HomeCluster/nfs
-  TRUENAS_ISCSI_ROOT: tank/Homelab/HomeCluster/iscsi
+  MINIO_NFS_PATH: tank/Homelab/InfraCluster/minio
 
   HELMRELEASE_INTERVAL: 30m
   HELMRELEASE_ROLLBACK_TIMEOUT: 15m

@@ -1,0 +1,7 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: ingress-nginx
+spec:
+  url: https://kubernetes.github.io/ingress-nginx
