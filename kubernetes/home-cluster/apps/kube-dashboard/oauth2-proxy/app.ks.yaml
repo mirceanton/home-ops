@@ -8,6 +8,6 @@ metadata:
     home-ops.mirceanton.com/group: admin-apps
 spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-dashboard/oauth2-proxy/app
-  targetNamespace: auth
+  targetNamespace: kube-dashboard
   dependsOn:
     - name: cluster-apps-keycloak-config
