@@ -8,6 +8,6 @@ metadata:
 spec:
   interval: 10m0s
   ref:
-    branch: main
+    branch: feat/initialize_kubernetes_cluster_on_truenas
   timeout: 3m
   url: https://github.com/mirceanton/home-ops
