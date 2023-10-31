@@ -14,8 +14,19 @@ spec:
         name: rancher-stable
 
   values:
-    hostname: rancher.${CLUSTER_DOMAIN}
     replicas: 1
+
+    hostname: rancher.${CLUSTER_DOMAIN}
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      includeDefaultExtraAnnotations: true
+      extraAnnotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+      tls:
+        - secretName: rancher.${CLUSTER_DOMAIN}-tls
+          hosts:
+            - rancher.${CLUSTER_DOMAIN}
 
     # Set a bootstrap password. If leave empty, a random password will be generated.
     bootstrapPassword: ${RANCHER_BOOTSTRAP_PASSWORD}
