@@ -79,7 +79,7 @@ spec:
       tls:
         - secretName: gitops.${CLUSTER_DOMAIN}-tls
           hosts:
-          - gitops.${CLUSTER_DOMAIN}
+            - gitops.${CLUSTER_DOMAIN}
 
     networkPolicy:
       create: false

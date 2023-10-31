@@ -2,27 +2,27 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: keycloak-wego-reader-group-read-resources
+  name: keycload-admin-group-read-resources
   namespace: gitops-dashboard
 subjects:
   - kind: Group
-    name: wego-reader
+    name: wego-admin
     namespace: gitops-dashboard
 roleRef:
   kind: Role
-  name: view
+  name: wego-admin-role
   apiGroup: rbac.authorization.k8s.io
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: keycloak-wego-reader-group-read-resources-cr
+  name: keycload-admin-group-read-resources-cr
 subjects:
-- kind: Group
-  name: wego-reader
-  apiGroup: rbac.authorization.k8s.io
+  - kind: Group
+    name: wego-admin
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: view
+  name: wego-admin-cluster-role
   apiGroup: rbac.authorization.k8s.io

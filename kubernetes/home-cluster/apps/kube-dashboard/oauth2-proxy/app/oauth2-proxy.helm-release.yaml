@@ -61,7 +61,7 @@ spec:
       tls:
         - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
           hosts:
-          - kube-dashboard.${CLUSTER_DOMAIN}
+            - kube-dashboard.${CLUSTER_DOMAIN}
 
     service:
       type: ClusterIP
