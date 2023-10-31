@@ -1,0 +1,66 @@
+---
+version: '3'
+
+vars:
+  CLUSTER_NAME: infra-cluster
+  CONTROLPLANE_NODES: 10.0.10.91
+  WORKER_NODES: ""
+  KUBERNETES_ENDPOINT: 10.0.10.90
+  KUBERNETES_VERSION: 1.26.9
+
+includes:
+  sops: ../../sops.yaml
+  talos:
+    taskfile: ./talos.yaml
+    dir: ../../../infra/infra-cluster
+  k8s:
+    taskfile: ./k8s.yaml
+    dir: ../../../kubernetes/infra-cluster/bootstrap
+
+tasks:
+  cluster:create:
+    desc: Bootstrap the application cluster end to end.
+    deps: [ sops:decrypt ]
+    cmds:
+      - task: talos:delete-config
+      - task: talos:generate-config
+      - task: talos:apply-config
+      - task: talos:talosconfig
+      - task: talos:wait
+      - task: k8s:bootstrap
+      - task: k8s:kubeconfig
+      - task: k8s:wait
+      - task: k8s:core-components
+
+  cluster:reset:
+    desc: Reset all of the talos nodes.
+    prompt: >
+      This will destroy the cluster...
+      Are you sure you want to continue?
+    cmds:
+      - for: { var: WORKER_NODES }
+        cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
+      - for: { var: CONTROLPLANE_NODES }
+        cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
+      - task: talos:delete-config
+
+  cluster:shutdown:all:
+    desc: Shutdown all Talos nodes.
+    cmds:
+      - task: cluster:shutdown:workers
+      - task: cluster:shutdown:controlplane
+
+  cluster:shutdown:workers:
+    desc: Shutdown all Talos worker nodes.
+    cmds:
+      - for: { var: WORKER_NODES }
+        cmd: talosctl shutdown --wait=false -n {{.ITEM}}
+
+  cluster:shutdown:controlplane:
+    prompt: >
+      This will turn off the controlplane nodes, making the API server inaccessible...
+      Are you sure you want to continue?
+    desc: Shutdown all Talos controlplane nodes.
+    cmds:
+      - for: { var: CONTROLPLANE_NODES }
+        cmd: talosctl shutdown --wait=false -n {{.ITEM}}

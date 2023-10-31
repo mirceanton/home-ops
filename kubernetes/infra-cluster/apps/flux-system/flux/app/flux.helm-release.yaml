@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  chart:
+    spec:
+      chart: flux2
+      version: 2.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: fluxcd-community
+
+  upgrade:
+    cleanupOnFail: false
+    disableWait: true  # this is important!!! it won't work without it
+
+  values:
+    installCRDs: true
+    logLevel: info
+
+    # Contents of pod imagePullSecret in format: 'name=[secretName]'
+    # applied to all controllers
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## FLUX-CLI POD PARAMETERS
+    ## ================================================================================================
+    cli:
+      image: ghcr.io/fluxcd/flux-cli
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+
+    ## ================================================================================================
+    ## HELM CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    helmController:
+      create: true
+      image: ghcr.io/fluxcd/helm-controller
+
+    ## ================================================================================================
+    ## KUSTOMIZE CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    kustomizeController:
+      create: true
+      image: ghcr.io/fluxcd/kustomize-controller
+
+
+    ## ================================================================================================
+    ## NOTIFICATION CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    notificationController:
+      create: true
+      image: ghcr.io/fluxcd/notification-controller
+
+
+    ## ================================================================================================
+    ## SOURCE CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    sourceController:
+      create: true
+      image: ghcr.io/fluxcd/source-controller
+
+
+    ## ================================================================================================
+    ## IMAGE AUTOMATION CONTROLLER PARAMETERS  --  DISABLED
+    ## ================================================================================================
+    imageAutomationController:
+      create: false
+
+
+    ## ================================================================================================
+    ## IMAGE REFLECTION CONTROLLER PARAMETERS  --  DISABLED
+    ## ================================================================================================
+    imageReflectionController:
+      create: false
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    prometheus:
+      podMonitor:
+        create: false
+
+
+    ## ================================================================================================
+    ## Network Policies
+    ## ================================================================================================
+    policies:
+      create: false

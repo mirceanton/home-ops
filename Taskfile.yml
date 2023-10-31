@@ -11,6 +11,7 @@ includes:
   sops: .taskfiles/sops.yaml
 
   hkc: .taskfiles/components/home-cluster
+  infra: .taskfiles/components/infra-cluster
 
 tasks:
   default:
