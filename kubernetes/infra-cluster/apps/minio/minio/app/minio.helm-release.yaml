@@ -36,7 +36,7 @@ spec:
     disableWebUI: false
 
     ## @param defaultBuckets Comma, semi-colon or space separated list of buckets to create at initialization (only in standalone mode)
-    defaultBuckets: "home-cluster-velero"
+    defaultBuckets: ""
 
 
     ## ================================================================================================
@@ -80,6 +80,9 @@ spec:
       servicePort: minio-api
       hostname: api.minio.${CLUSTER_DOMAIN}
       path: /
+      extraHosts:
+        - name: s3.minio.${CLUSTER_DOMAIN}
+          path: /
       annotations:
         nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
         nginx.ingress.kubernetes.io/proxy-body-size: 10240m
