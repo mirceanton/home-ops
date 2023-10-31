@@ -61,36 +61,46 @@ spec:
     ## MinIO Console ingress
     ingress:
       enabled: true
-      tls: true
       ingressClassName: nginx
-      servicePort: minio-console
-      hostname: minio.${CLUSTER_DOMAIN}
-      path: /
-      extraHosts:
-        - name: console.minio.${CLUSTER_DOMAIN}
-          path: /
+
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
         nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
         nginx.ingress.kubernetes.io/proxy-body-size: 10240m
         nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
 
+      hostname: minio.${CLUSTER_DOMAIN}
+      tls: true
+
+      extraHosts:
+        - name: console.minio.${CLUSTER_DOMAIN}
+          path: /
+      extraTls:
+        - hosts:
+            - console.minio.${CLUSTER_DOMAIN}
+          secretName: console.minio.${CLUSTER_DOMAIN}-tls
+
     ## MinIO API Ingress
     apiIngress:
       enabled: true
-      tls: true
       ingressClassName: nginx
-      servicePort: minio-api
-      hostname: api.minio.${CLUSTER_DOMAIN}
-      path: /
-      extraHosts:
-        - name: s3.minio.${CLUSTER_DOMAIN}
-          path: /
+
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
         nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
         nginx.ingress.kubernetes.io/proxy-body-size: 10240m
         nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+
+      hostname: api.minio.${CLUSTER_DOMAIN}
+      tls: true
+
+      extraHosts:
+        - name: s3.minio.${CLUSTER_DOMAIN}
+          path: /
+      extraTls:
+        - hosts:
+            - s3.minio.${CLUSTER_DOMAIN}
+          secretName: s3.minio.${CLUSTER_DOMAIN}-tls
 
 
     ## ================================================================================================
