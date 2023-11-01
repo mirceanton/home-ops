@@ -16,7 +16,7 @@ resource "keycloak_openid_client" "kubernetes" {
   direct_access_grants_enabled              = true
   service_accounts_enabled                  = false
 
-  access_type         = "PUBLIC"
+  access_type         = "CONFIDENTIAL"
   root_url = "https://kube-dashboard.${var.cluster_domain}"
   valid_redirect_uris = [
     "https://kube-dashboard.${var.cluster_domain}/oauth2/callback"
