@@ -43,6 +43,35 @@ spec:
         cpu: 100m
         memory: 256Mi
 
+    sessionStorage:
+      type: redis
+      redis:
+        existingSecret: oauth2-redis-creds
+        passwordKey: redis-password
+        clientType: standalone
+        standalone:
+          connectionUrl: "redis://redis:3389"
+
+
+    redis:
+      enabled: true
+      image:
+        registry: docker.io
+        repository: bitnami/redis
+        pullPolicy: IfNorPresent
+        pullSecrets: []
+      architecture: standalone
+      auth:
+        enabled: true
+        existingSecret: oauth2-redis-creds
+        existingSecretPasswordKey: redis-password
+      resources:
+        limits:
+          cpu: 250m
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 256Mi
 
     ## ================================================================================================
     ## Traffic Exposure Parameters
