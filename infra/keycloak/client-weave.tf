@@ -17,7 +17,10 @@ resource "keycloak_openid_client" "weave-gitops" {
   service_accounts_enabled                  = false
 
   access_type         = "CONFIDENTIAL"
-  valid_redirect_uris = ["*"]
+  root_url = "https://gitops.${var.cluster_domain}"
+  valid_redirect_uris = [
+    "https://gitos.${var.cluster_domain}/oauth2/callback"
+  ]
 }
 
 
