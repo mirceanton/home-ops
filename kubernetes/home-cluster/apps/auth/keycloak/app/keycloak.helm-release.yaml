@@ -47,7 +47,7 @@ spec:
     ## ================================================================================================
     ## Keycloak Deployment Parameters
     ## ================================================================================================
-    replicaCount: 1
+    replicaCount: 2
     image:
       repository: bitnami/keycloak
       pullPolicy: IfNotPresent
