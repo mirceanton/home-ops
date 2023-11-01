@@ -19,7 +19,8 @@ resource "keycloak_openid_client" "kubernetes" {
   access_type = "CONFIDENTIAL"
   root_url    = "https://kube-dashboard.${var.cluster_domain}"
   valid_redirect_uris = [
-    "https://kube-dashboard.${var.cluster_domain}/oauth2/callback"
+    "https://kube-dashboard.${var.cluster_domain}/oauth2/callback", # kube dashboard oauth redirect
+    "http://localhost:18000"                                        # kube apiserver oidc redirect
   ]
 }
 
