@@ -17,3 +17,8 @@ provider "routeros" {
 resource "routeros_system_identity" "identity" {
   name = "homebase"
 }
+
+resource "routeros_dns" "dns-server" {
+  allow_remote_requests = true
+  servers               = "1.1.1.1,8.8.8.8"
+}
