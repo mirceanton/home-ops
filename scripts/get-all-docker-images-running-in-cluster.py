@@ -1,7 +1,7 @@
 from kubernetes import client, config
 from tabulate import tabulate
 
-def get_container_image_usage_with_unique_namespaces():
+def get_container_image_list():
     # Load the Kubernetes configuration from the default location or a kubeconfig file
     config.load_kube_config()
 
@@ -39,11 +39,11 @@ def get_container_image_usage_with_unique_namespaces():
     return image_usage
 
 if __name__ == "__main__":
-    container_image_usage_with_unique_namespaces = get_container_image_usage_with_unique_namespaces()
+    container_images_dict = get_container_image_list()
 
     # Sort the images based on count in descending order
     sorted_images = sorted(
-        container_image_usage_with_unique_namespaces.items(),
+        container_images_dict.items(),
         key=lambda item: item[1]['usage_count'],
         reverse=True
     )
