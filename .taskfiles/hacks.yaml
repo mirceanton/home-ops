@@ -10,7 +10,7 @@ tasks:
   list-docker-images:
     desc: Show a list of all of the docker images running in the cluster.
     cmds:
-      - bash {{.ROOT_DIR}}/scripts/get-all-docker-images-running-in-cluster.sh
+      - python3 {{.ROOT_DIR}}/scripts/get-all-docker-images-running-in-cluster.py
 
   get-kubedash-token:
     desc: Fetch and decode the Kubernetes dashboard token.
