@@ -12,4 +12,4 @@ tasks:
     desc: Decrypt all sops files in this repository.
     run: once
     cmds:
-      - bash {{.ROOT_DIR}}/scripts/sops-decrypt-all.sh
+      - bash {{.ROOT_DIR}}/scripts/sops-decrypt-all.sh {{.CLI_ARGS}}
