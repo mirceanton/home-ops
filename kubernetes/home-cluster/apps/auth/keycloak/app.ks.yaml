@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-keycloak
+  namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: admin-apps
+spec:
+  path: ${CLUSTER_APPS_BASE_DIR}/auth/keycloak/app
+  targetNamespace: auth
+  dependsOn:
+    - name: cluster-apps-democratic-csi-iscsi

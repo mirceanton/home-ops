@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: weave-gitops
+spec:
+  chart:
+    spec:
+      chart: weave-gitops
+      version: 4.0.33
+      sourceRef:
+        kind: HelmRepository
+        name: weaveworks
+
+  values:
+    ## ================================================================================================
+    ## Application Configuration
+    ## ================================================================================================
+    logLevel: info
+    adminUser:
+      create: true
+      createClusterRole: true
+      createSecret: false  # created manually
+      username: gitops-admin  # this should match the value specified in the cluster-user-auth secret
+    envVars:
+      - name: WEAVE_GITOPS_FEATURE_OIDC_BUTTON_LABEL
+        value: "Login with Keycloak"
+      - name: WEAVE_GITOPS_FEATURE_TENANCY
+        value: "true"
+      - name: WEAVE_GITOPS_FEATURE_CLUSTER
+        value: "false"
+
+
+    ## ================================================================================================
+    ## Deployment Configuration Parameters
+    ## ================================================================================================
+    replicaCount: 1
+    image:
+      repository: ghcr.io/weaveworks/wego-app
+      pullPolicy: IfNotPresent
+    imagePullSecrets: []
+
+    resources:
+      limits:
+        cpu: 250m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    annotations:
+      secret.reloader.stakater.com/reload: "cluster-user-auth,oidc-auth"
+
+    # allow manipulation of terraform objects (tf-controller)
+    rbac:
+      create: true
+      additionalRules:
+        - apiGroups: [ "infra.contrib.fluxcd.io" ]
+          resources: [ "terraforms" ]
+          verbs: [ "get", "list", "patch" ]
+
+
+    ## ================================================================================================
+    ## Traffic Exposure Parameters
+    ## ================================================================================================
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+      hosts:
+        - host: gitops.${CLUSTER_DOMAIN}
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: gitops.${CLUSTER_DOMAIN}-tls
+          hosts:
+            - gitops.${CLUSTER_DOMAIN}
+
+    networkPolicy:
+      create: false
+
+
+    ## ================================================================================================
+    ## Monitoring Parameters
+    ## ================================================================================================
+    metrics:
+      enabled: false

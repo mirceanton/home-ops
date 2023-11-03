@@ -21,23 +21,39 @@ spec:
   values:
     installCRDs: true
     logLevel: info
-    policies:
-      create: true
 
+    # Contents of pod imagePullSecret in format: 'name=[secretName]'
+    # applied to all controllers
+    imagePullSecrets: []
+
+    ## ================================================================================================
+    ## FLUX-CLI POD PARAMETERS
+    ## ================================================================================================
+    cli:
+      image: ghcr.io/fluxcd/flux-cli
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+
+    ## ================================================================================================
+    ## HELM CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     helmController:
       create: true
+      image: ghcr.io/fluxcd/helm-controller
       container:
         additionalArgs:
-          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
-          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
-          - --concurrent=32
-          - --kube-api-qps=500
-          - --kube-api-burst=1000
-          - --requeue-dependency=5s
+          # # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
+          # # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
+          # - --concurrent=32
+          # - --kube-api-qps=500
+          # - --kube-api-burst=1000
+          # - --requeue-dependency=5s
 
           # Enable drift detection for HelmReleases and set the log level to debug
           # https://fluxcd.io/flux/components/helm/helmreleases/#drift-detection
-          - --feature-gates=DetectDrift=true,CorrectDrift=false
+          - --feature-gates=DetectDrift=true,CorrectDrift=true
 
           # Enable Helm near OOM detection
           # https://fluxcd.io/flux/cheatsheets/bootstrap/#enable-helm-near-oom-detection
@@ -48,28 +64,122 @@ spec:
         limits:
           cpu: 4000m
           memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
 
+    ## ================================================================================================
+    ## KUSTOMIZE CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     kustomizeController:
       create: true
-      container:
-        additionalArgs:
-          # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
-          # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
-          - --concurrent=16
-          - --kube-api-qps=500
-          - --kube-api-burst=1000
-          - --requeue-dependency=5s
+      image: ghcr.io/fluxcd/kustomize-controller
+      # container:
+      #   additionalArgs:
+      #     # Increase the number of reconciliations that can be performed in parallel and bump the resources limits
+      #     # https://fluxcd.io/flux/cheatsheets/bootstrap/#increase-the-number-of-workers
+      #     - --concurrent=16
+      #     - --kube-api-qps=500
+      #     - --kube-api-burst=1000
+      #     - --requeue-dependency=5s
       resources:
         limits:
           cpu: 2000m
           memory: 2Gi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
 
-    sourceController:
-      create: true
+
+    ## ================================================================================================
+    ## NOTIFICATION CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
     notificationController:
       create: true
+      image: ghcr.io/fluxcd/notification-controller
+      container:
+        additionalArgs: []
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
 
+
+    ## ================================================================================================
+    ## SOURCE CONTROLLER DEPLOYMENT PARAMETERS
+    ## ================================================================================================
+    sourceController:
+      create: true
+      image: ghcr.io/fluxcd/source-controller
+      container:
+        additionalArgs: []
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      nodeSelector: {}
+      affinity: {}
+      tolerations: []
+
+
+    ## ================================================================================================
+    ## IMAGE AUTOMATION CONTROLLER PARAMETERS  --  DISABLED
+    ## ================================================================================================
     imageAutomationController:
       create: false
+
+
+    ## ================================================================================================
+    ## IMAGE REFLECTION CONTROLLER PARAMETERS  --  DISABLED
+    ## ================================================================================================
     imageReflectionController:
       create: false
+
+
+    ## ================================================================================================
+    ## MONITORING
+    ## ================================================================================================
+    prometheus:
+      podMonitor:
+        create: false
+        podMetricsEndpoints:
+          - port: http-prom
+            relabelings:
+              # https://github.com/prometheus-operator/prometheus-operator/issues/4816
+              - sourceLabels: [__meta_kubernetes_pod_phase]
+                action: keep
+                regex: Running
+
+
+    ## ================================================================================================
+    ## Network Policies
+    ## ================================================================================================
+    policies:
+      create: true
