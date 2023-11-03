@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: keycloak-config-connection
+data:
+    keycloak_client_id: admin-cli
+    keycloak_username: admin
+    keycloak_url: https://auth.${CLUSTER_DOMAIN}/keycloak

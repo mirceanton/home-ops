@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-dashboard
+spec:
+  chart:
+    spec:
+      chart: kubernetes-dashboard
+      version: 6.0.8
+      sourceRef:
+        kind: HelmRepository
+        name: kubernetes-dashboard
+
+  values:
+    fullnameOverride: 'kubernetes-dashboard'
+    replicaCount: 2
+
+    image:
+      repository: kubernetesui/dashboard
+      pullPolicy: IfNotPresent
+      pullSecrets: []
+
+
+    ## Additional container arguments
+    extraArgs:
+      - --enable-skip-login
+
+    # Global dashboard settings
+    settings:
+      clusterName: Home Cluster
+      itemsPerPage: 10
+      logsAutoRefreshTimeInterval: 5
+      resourceAutoRefreshTimeInterval: 5
+      disableAccessDeniedNotifications: false
+
+    ## Pinned CRDs that will be displayed in dashboard's menu
+    pinnedCRDs:
+      - kind: customresourcedefinition
+        name: terraforms.infra.contrib.fluxcd.io
+        displayName: Terraforms
+        namespaced: true
+      - kind: customresourcedefinition
+        name: kustomizations.kustomize.toolkit.fluxcd.io
+        displayName: Kustomization
+        namespaced: true
+
+    ## Serve application over HTTP without TLS
+    protocolHttp: false
+
+
+    ## Pod resource requests & limits
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 2
+        memory: 400Mi
+
+
+    ingress:
+      enabled: true
+      className: nginx
+      paths: [ "/" ]
+      hosts:
+        - kube-dashboard.${CLUSTER_DOMAIN}
+      tls:
+        - secretName: kube-dashboard.${CLUSTER_DOMAIN}-tls
+          hosts:
+            - kube-dashboard.${CLUSTER_DOMAIN}
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+        nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "512k"
+        nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+        nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+        nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+
+    rbac:
+      create: true
+      clusterRoleMetrics: true
+      clusterReadOnlyRole: false
+
+    serviceAccount:
+      create: true
+
+    networkPolicy:
+      enabled: false
+      ingressDenyAll: false
+
+    serviceMonitor:
+      enabled: false
+      labels: {}
+      annotations: {}
