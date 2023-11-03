@@ -60,7 +60,7 @@ spec:
         existingSecret: oauth2-redis-creds
         existingSecretPasswordKey: redis-password
       master:
-        count: 1
+        count: 3
         persistence:
           enabled: false
       replica:
