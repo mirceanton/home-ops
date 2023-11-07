@@ -6,6 +6,9 @@ ignore:
   - '*.sops.yaml'
   - '*.sops.yml'
 
+  # Ignore raw secret files
+  - '*.secret.yaml'
+
   # Ignore python virtual environments
   - '.venv/**'
 

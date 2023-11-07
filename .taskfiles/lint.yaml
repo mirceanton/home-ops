@@ -1,0 +1,20 @@
+---
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - yaml
+      - terraform
+
+  yaml:
+    desc: Run yamllint using the custom config.
+    cmds:
+      - yamllint -c .github/linters/yamllint.yaml .
+
+  terraform:
+    desc: Validate all terraform files for proper formatting.
+    env:
+      DIR: infra
+    cmds:
+      - bash scripts/terraform-lint.sh
