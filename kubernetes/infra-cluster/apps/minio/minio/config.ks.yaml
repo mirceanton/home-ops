@@ -1,0 +1,11 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-minio-config
+  namespace: flux-system
+spec:
+  path: ${CLUSTER_APPS_BASE_DIR}/minio/minio/config
+  targetNamespace: minio
+  dependsOn:
+    - name: cluster-apps-minio
