@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: minio
-      version: 12.8.15
+      version: 12.8.19
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -30,13 +30,6 @@ spec:
     auth:
       rootUser: ${MINIO_ADMIN_USER}
       rootPassword: ${MINIO_ADMIN_PASS}
-
-    ## @param disableWebUI Disable MinIO Web UI
-    ## ref: https://github.com/minio/minio/tree/master/docs/config/#browser
-    disableWebUI: false
-
-    ## @param defaultBuckets Comma, semi-colon or space separated list of buckets to create at initialization (only in standalone mode)
-    defaultBuckets: ""
 
 
     ## ================================================================================================
@@ -116,14 +109,6 @@ spec:
     persistence:
       enabled: true
       existingClaim: minio-iscsi-pvc
-
-
-    ## ================================================================================================
-    ## RBAC parameters
-    ## ================================================================================================
-    serviceAccount:
-      create: true
-      automountServiceAccountToken: true
 
 
     ## ================================================================================================
