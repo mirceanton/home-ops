@@ -5,9 +5,10 @@ tasks:
   generate-config:
     desc: Generate the Talos machineconfig files.
     cmds:
+      - pwd
       - cmd: |
-          talosctl gen config {{.CLUSTER_NAME}} https://{{.KUBERNETES_ENDPOINT}}:6443 \
-            --kubernetes-version {{.KUBERNETES_VERSION}} \
+          talosctl gen config {{.HOME_CLUSTER_NAME}} https://{{.HOME_KUBERNETES_ENDPOINT}}:6443 \
+            --kubernetes-version {{.HOME_KUBERNETES_VERSION}} \
             --with-secrets secrets.yaml \
             --config-patch @patches/allow-controlplane-workloads.yaml \
             --config-patch @patches/kubelet-certificate-rotation.yaml \
@@ -19,8 +20,8 @@ tasks:
             --config-patch-control-plane @patches/controlplane-vip.yaml \
             --config-patch-control-plane @patches/keycloak-auth.yaml \
             --output rendered/
-      - talosctl --talosconfig rendered/talosconfig config endpoint {{.CONTROLPLANE_NODES}}
-      - talosctl --talosconfig rendered/talosconfig config node {{(split " " .CONTROLPLANE_NODES)._0}}
+      - talosctl --talosconfig rendered/talosconfig config endpoint {{.HOME_CONTROLPLANE_NODES}}
+      - talosctl --talosconfig rendered/talosconfig config node {{(split " " .HOME_CONTROLPLANE_NODES)._0}}
 
   delete-config:
     desc: Delete the Talos machineconfig files.
@@ -34,9 +35,9 @@ tasks:
       - sh: test -f rendered/worker.yaml
         msg: "Talos worker configuration was not rendered."
     cmds:
-      - for: { var: CONTROLPLANE_NODES }
+      - for: { var: HOME_CONTROLPLANE_NODES }
         cmd: talosctl apply --insecure -f rendered/controlplane.yaml -n {{.ITEM}}
-      - for: { var: WORKER_NODES }
+      - for: { var: HOME_WORKER_NODES }
         cmd: talosctl apply --insecure -f rendered/worker.yaml -n {{.ITEM}}
 
   talosconfig:
@@ -47,13 +48,14 @@ tasks:
     cmds:
       - mkdir -p ~/.talos
       - rm ~/.talos/config
+      - pwd
       - cp rendered/talosconfig ~/.talos/config
 
   wait:
     desc: Wait for the talos cluster to be up and running.
     deps: [ task: talosconfig ]
     cmds:
-      - for: { var: CONTROLPLANE_NODES }
+      - for: { var: HOME_CONTROLPLANE_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
-      - for: { var: WORKER_NODES }
+      - for: { var: HOME_WORKER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
