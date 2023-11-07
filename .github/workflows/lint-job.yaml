@@ -48,12 +48,7 @@ jobs:
       - name: Checkout the Repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4.1.0
 
-      - name: Check if `terraform fmt` finds anything in the keycloak config
+      - name: Lint all terraform files under `./infra/`
         env:
-          DIR: infra/keycloak
-        run: cd $DIR && [ $(terraform fmt | wc -l) -eq 0 ] && exit 0 || exit 1
-
-      - name: Check if `terraform fmt` finds anything in minio config
-        env:
-          DIR: infra/minio
-        run: cd $DIR && [ $(terraform fmt | wc -l) -eq 0 ] && exit 0 || exit 1
+          DIR: infra
+        run: bash scripts/terraform-lint.sh
