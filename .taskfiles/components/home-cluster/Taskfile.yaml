@@ -2,11 +2,11 @@
 version: '3'
 
 vars:
-  CLUSTER_NAME: home-cluster
-  CONTROLPLANE_NODES: 10.0.10.11 10.0.10.12 10.0.10.13
-  WORKER_NODES: 10.0.10.21 10.0.10.22 10.0.10.23
-  KUBERNETES_ENDPOINT: 10.0.10.10
-  KUBERNETES_VERSION: 1.28.2
+  HOME_CLUSTER_NAME: home-cluster
+  HOME_CONTROLPLANE_NODES: 10.0.10.11 10.0.10.12 10.0.10.13
+  HOME_WORKER_NODES: 10.0.10.21 10.0.10.22 10.0.10.23
+  HOME_KUBERNETES_ENDPOINT: 10.0.10.10
+  HOME_KUBERNETES_VERSION: 1.28.2
 
 includes:
   sops: ../../sops.yaml
@@ -38,9 +38,9 @@ tasks:
       This will destroy the cluster...
       Are you sure you want to continue?
     cmds:
-      - for: { var: WORKER_NODES }
+      - for: { var: HOME_WORKER_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
-      - for: { var: CONTROLPLANE_NODES }
+      - for: { var: HOME_CONTROLPLANE_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
       - task: talos:delete-config
 
@@ -53,7 +53,7 @@ tasks:
   cluster:shutdown:workers:
     desc: Shutdown all Talos worker nodes.
     cmds:
-      - for: { var: WORKER_NODES }
+      - for: { var: HOME_WORKER_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
 
   cluster:shutdown:controlplane:
@@ -62,5 +62,5 @@ tasks:
       Are you sure you want to continue?
     desc: Shutdown all Talos controlplane nodes.
     cmds:
-      - for: { var: CONTROLPLANE_NODES }
+      - for: { var: HOME_CONTROLPLANE_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
