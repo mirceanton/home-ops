@@ -25,20 +25,6 @@ jobs:
       - name: Run yamllint
         run: yamllint -c .github/linters/yamllint.yaml .
 
-  helmfile-lint-job:
-    if: ${{ !github.event.pull_request.draft }}
-    runs-on: [ "arc-runner-set-home-ops" ]
-    container:
-      image: ghcr.io/helmfile/helmfile:v0.156.0
-    steps:
-      - name: Checkout the Repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4.1.0
-
-      - name: Lint the helmfile used to bootstrap the cluster(s)
-        env:
-          DIR: kubernetes/home-cluster/bootstrap
-        run: cd $DIR && helmfile lint
-
   terraform-lint-job:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: [ "arc-runner-set-home-ops" ]
