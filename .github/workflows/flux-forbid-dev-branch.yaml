@@ -19,7 +19,7 @@ jobs:
 
       - name: Make sure the branch set for the flux sync is "main"
         env:
-          FILE: kubernetes/home-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
           BRANCH: "main"
         run: >
-          cat $FILE | grep -q "branch: $BRANCH"
+          grep -q "branch: $BRANCH" ./kubernetes/home-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
+          grep -q "branch: $BRANCH" ./kubernetes/infra-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
