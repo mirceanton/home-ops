@@ -1,0 +1,121 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: minio
+spec:
+  chart:
+    spec:
+      chart: minio
+      version: 12.8.19
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+
+  values:
+    global:
+      imageRegistry: ""
+      imagePullSecrets: []
+      storageClass: ""
+
+    ## ================================================================================================
+    ## Minio App Settings
+    ## ================================================================================================
+    ## @param mode MinIO server mode (`standalone` or `distributed`)
+    ## ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+    mode: standalone
+
+    ## MinIO authentication parameters
+    auth:
+      rootUser: ${MINIO_ADMIN_USER}
+      rootPassword: ${MINIO_ADMIN_PASS}
+
+
+    ## ================================================================================================
+    ## MinIO Deployment parameters
+    ## ================================================================================================
+    deployment:
+      updateStrategy:
+        type: Recreate
+
+    resources:
+      limits:
+        cpu: 4
+        memory: 6Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+
+
+    ## ================================================================================================
+    ## Ingress parameters
+    ## ================================================================================================
+    ## MinIO Console ingress
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+        nginx.ingress.kubernetes.io/proxy-body-size: 10240m
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+
+      hostname: minio.${CLUSTER_DOMAIN}
+      tls: true
+
+      extraHosts:
+        - name: console.minio.${CLUSTER_DOMAIN}
+          path: /
+      extraTls:
+        - hosts:
+            - console.minio.${CLUSTER_DOMAIN}
+          secretName: console.minio.${CLUSTER_DOMAIN}-tls
+
+    ## MinIO API Ingress
+    apiIngress:
+      enabled: true
+      ingressClassName: nginx
+
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-${CLUSTER_ENVIRONMENT}"
+        nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+        nginx.ingress.kubernetes.io/proxy-body-size: 10240m
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+
+      hostname: api.minio.${CLUSTER_DOMAIN}
+      tls: true
+
+      extraHosts:
+        - name: s3.minio.${CLUSTER_DOMAIN}
+          path: /
+      extraTls:
+        - hosts:
+            - s3.minio.${CLUSTER_DOMAIN}
+          secretName: s3.minio.${CLUSTER_DOMAIN}-tls
+
+
+    ## ================================================================================================
+    ## NetworkPolicy parameters
+    ## ================================================================================================
+    networkPolicy:
+      enabled: false
+
+
+    ## ================================================================================================
+    ## Persistence parameters -> use iscsi share from TrueNAS
+    ## ================================================================================================
+    persistence:
+      enabled: true
+      existingClaim: minio-iscsi-pvc
+
+
+    ## ================================================================================================
+    ## Monitoring
+    ## ================================================================================================
+    metrics:
+      serviceMonitor:
+        enabled: false
+      prometheusRule:
+        enabled: false
