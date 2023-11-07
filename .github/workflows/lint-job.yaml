@@ -28,11 +28,16 @@ jobs:
   terraform-lint-job:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: [ "arc-runner-set-home-ops" ]
-    container:
-      image: hashicorp/terraform
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4.1.0
+
+      - name: Install terraform
+        run:
+          apt install wget unzip -y &&
+          wget https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip &&
+          unzip terraform_1.6.3_linux_amd64.zip && 
+          mv terraform /usr/local/bin
 
       - name: Lint all terraform files under `./infra/`
         env:
