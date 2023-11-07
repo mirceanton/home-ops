@@ -55,6 +55,9 @@ RUN wget https://raw.githubusercontent.com/mirceanton/kswitcher/${KSWITCHER_VERS
 ## ================================================================================================
 FROM python:3.9.18-bookworm
 
+COPY requirements.txt ./
+RUN pip3 install -r requirements.txt
+
 # Copy binaries from the previous images to the Python image
 COPY --from=terraform /bin/terraform /usr/local/bin/terraform
 COPY --from=talosctl /talosctl /usr/local/bin/talosctl
@@ -69,7 +72,5 @@ COPY --from=age /bin/age /usr/local/bin/age
 COPY --from=age /bin/age-keygen /usr/local/bin/age-keygen
 COPY --from=kswitcher /bin/kswitcher /usr/local/bin/kswitcher
 
-COPY requirements.txt ./
-RUN pip3 install -r requirements.txt
 
 ENTRYPOINT /bin/bash
