@@ -8,7 +8,7 @@ resource "minio_iam_user" "volsync_user" {
   force_destroy = true
   tags = {
     cluster = "home-cluster"
-    app = "restic"
+    app     = "restic"
   }
 }
 
