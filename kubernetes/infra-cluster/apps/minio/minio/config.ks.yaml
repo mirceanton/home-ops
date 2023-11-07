@@ -8,4 +8,4 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/minio/minio/config
   targetNamespace: minio
   dependsOn:
-    - cluster-apps-minio
+    - name: cluster-apps-minio
