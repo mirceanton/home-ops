@@ -20,7 +20,7 @@ resource "keycloak_openid_client" "kubernetes" {
   root_url    = "https://kube-dashboard.${var.cluster_domain}"
   valid_redirect_uris = [
     "https://kube-dashboard.${var.cluster_domain}/oauth2/callback", # kube dashboard oauth redirect
-    "http://localhost:*"                                        # kube apiserver oidc redirect
+    "http://localhost:*"                                            # kube apiserver oidc redirect
   ]
 }
 
