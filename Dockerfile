@@ -96,7 +96,7 @@ RUN terraform -install-autocomplete
 
 # Install talosctl and set up bash completion
 COPY --from=talosctl /talosctl /usr/local/bin/talosctl
-RUN talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl.bash
+RUN talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl.bash > /dev/null
 
 # Install taskfile and set up bash completion
 COPY --from=taskfile /bin/task /usr/local/bin/task
@@ -104,19 +104,19 @@ COPY --from=taskfile /task_completion.bash /etc/bash_completion.d/task.bash
 
 # Install kubectl and set up bash completion
 COPY --from=kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
-RUN kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl.bash
+RUN kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl.bash > /dev/null
 
 # Install helm and set up bash completion
 COPY --from=helm /bin/helm /usr/local/bin/helm
-RUN helm completion bash | sudo tee /etc/bash_completion.d/helm.bash
+RUN helm completion bash | sudo tee /etc/bash_completion.d/helm.bash > /dev/null
 
 # Install helmfile and set up bash completion
 COPY --from=helmfile /usr/local/bin/helmfile /usr/local/bin/helmfile
-RUN helmfile completion bash | sudo tee /etc/bash_completion.d/helmfile.bash
+RUN helmfile completion bash | sudo tee /etc/bash_completion.d/helmfile.bash > /dev/null
 
 # Install flux and set up bash completion
 COPY --from=flux /usr/local/bin/flux /usr/local/bin/flux
-RUN flux completion bash | sudo tee /etc/bash_completion.d/flux.bash
+RUN flux completion bash | sudo tee /etc/bash_completion.d/flux.bash > /dev/null
 
 WORKDIR /workspace
 ENTRYPOINT sleep infinity
