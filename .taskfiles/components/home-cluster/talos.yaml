@@ -5,7 +5,6 @@ tasks:
   generate-config:
     desc: Generate the Talos machineconfig files.
     cmds:
-      - pwd
       - cmd: |
           talosctl gen config {{.HOME_CLUSTER_NAME}} https://{{.HOME_KUBERNETES_ENDPOINT}}:6443 \
             --kubernetes-version {{.HOME_KUBERNETES_VERSION}} \
@@ -48,7 +47,6 @@ tasks:
     cmds:
       - mkdir -p ~/.talos
       - rm ~/.talos/config
-      - pwd
       - cp rendered/talosconfig ~/.talos/config
 
   wait:
