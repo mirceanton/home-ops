@@ -8,7 +8,6 @@ includes:
   docs: .taskfiles/docs.yaml
   hack: .taskfiles/hacks.yaml
   lint: .taskfiles/lint.yaml
-  tools: .taskfiles/tools.yaml
   sops: .taskfiles/sops.yaml
 
   home: .taskfiles/components/home-cluster

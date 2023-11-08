@@ -46,7 +46,7 @@ tasks:
         msg: "Talosconfig file was not rendered."
     cmds:
       - mkdir -p ~/.talos
-      - rm ~/.talos/config
+      - rm -f ~/.talos/config
       - cp rendered/talosconfig ~/.talos/config
 
   wait:
