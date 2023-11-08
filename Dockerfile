@@ -12,7 +12,7 @@ ARG KSWITCHER_VERSION=v1.0.0
 ARG AGE_VERSION=v1.1.1
 ARG TASKFILE_VERSION=v3.31.0
 ARG HELMFILE_VERSION=v0.158.1
-
+ARG DOCKER_VERSION=24.0.7-cli
 
 
 ## ================================================================================================
@@ -25,6 +25,7 @@ FROM fluxcd/flux-cli:${FLUX_VERSION} as flux
 FROM bitnami/kubectl:${KUBECTL_VERSION} as kubectl
 FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
 FROM ghcr.io/helmfile/helmfile:${HELMFILE_VERSION} as helmfile
+FROM docker:${DOCKER_VERSION} as docker
 
 ## ================================================================================================
 # Build stages for other utilities
@@ -119,6 +120,11 @@ RUN helmfile completion bash | sudo tee /etc/bash_completion.d/helmfile.bash > /
 # Install flux and set up bash completion
 COPY --from=flux /usr/local/bin/flux /usr/local/bin/flux
 RUN flux completion bash | sudo tee /etc/bash_completion.d/flux.bash > /dev/null
+
+# Install Docker
+COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
+COPY --from=docker /usr/local/bin/docker-compose /usr/local/bin/docker-compose
+
 
 WORKDIR /workspace
 ENTRYPOINT sleep infinity
