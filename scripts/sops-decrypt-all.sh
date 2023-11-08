@@ -36,7 +36,7 @@ find . -regextype egrep -regex "\.\/.+\/.*.sops.yaml" -type f | while IFS= read 
                 mv "$decrypted_temp" "$decrypted_file"
                 echo -e "${RED}File replaced with the decrypted content: $decrypted_file${NC}"
             else
-                echo -e "${RED}Changes detected. Use -f or --force flag to overwrite.${NC}"
+                echo -e "${RED}Changes detected. Use -f or --force flag to overwrite $file${NC}"
             fi
         fi
         
