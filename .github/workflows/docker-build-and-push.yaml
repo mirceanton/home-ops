@@ -24,7 +24,7 @@ jobs:
 
       - name: Build and Push
         env:
-         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
           CURRENT_DATE=$(date -u +'%Y.%m')
