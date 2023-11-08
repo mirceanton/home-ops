@@ -8,9 +8,6 @@ on:
     paths:
       - Dockerfile
 
-env:
-  IMAGE_NAME: gitops-toolkit
-
 jobs:
   build:
     runs-on: [ "arc-runner-set-home-ops" ]
@@ -39,8 +36,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME
-            ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+            ${{ secrets.DOCKER_USERNAME }}/gitops-toolkit
+            ghcr.io/${{ github.repository_owner }}/gitops-toolkit
           tags: |
             type=schedule
             type=sha
