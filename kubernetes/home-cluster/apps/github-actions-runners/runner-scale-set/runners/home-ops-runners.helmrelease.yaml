@@ -21,6 +21,9 @@ spec:
     githubConfigSecret:
       github_token: ${GITHUB_PAT}
 
+    containerMode:
+      type: dind
+
     template:
       spec:
         containers:
