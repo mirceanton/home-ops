@@ -39,8 +39,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_USERNAME }}/$image_name
-            ghcr.io/${{ github.repository_owner }}/$image_name
+            ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME
+            ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           tags: |
             type=schedule
             type=sha
