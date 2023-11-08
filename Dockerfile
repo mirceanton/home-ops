@@ -51,7 +51,8 @@ RUN wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz && \
 
 FROM alpine as kswitcher
 ARG KSWITCHER_VERSION
-RUN wget https://raw.githubusercontent.com/mirceanton/kswitcher/${KSWITCHER_VERSION}/src/kswitcher.py -O /bin/kswitcher
+RUN wget https://raw.githubusercontent.com/mirceanton/kswitcher/${KSWITCHER_VERSION}/src/kswitcher.py -O /bin/kswitcher && \
+    chmod +x /bin/kswitcher
 
 ## ================================================================================================
 ## Main image
