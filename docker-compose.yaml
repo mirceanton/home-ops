@@ -1,0 +1,10 @@
+---
+version: '3'
+
+services:
+  devbox:
+    build: .
+    volumes:
+      - .:/workspace
+      - /home/mike/.config/sops/age/keys.txt:/home/mike/.config/sops/age/keys.txt
+    network_mode: "host"
