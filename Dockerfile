@@ -127,4 +127,4 @@ COPY --from=docker /usr/local/bin/docker-compose /usr/local/bin/docker-compose
 
 
 WORKDIR /workspace
-ENTRYPOINT sleep infinity
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]

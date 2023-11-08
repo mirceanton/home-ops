@@ -4,6 +4,7 @@ version: '3'
 services:
   devbox:
     build: .
+    command: [ "sleep infinity" ]
     volumes:
       - .:/workspace
       - /home/mike/.config/sops/age/keys.txt:/home/mike/.config/sops/age/keys.txt
