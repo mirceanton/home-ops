@@ -1,3 +1,4 @@
+---
 name: Docker Build and Publish
 
 on:
@@ -11,7 +12,7 @@ env:
   IMAGE_NAME: gitops-toolkit
 
 jobs:
-  build-and-publish-ghcr:
+  build-and-publish:
     runs-on: [ "arc-runner-set-home-ops" ]
 
     steps:
