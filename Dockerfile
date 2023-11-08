@@ -60,12 +60,13 @@ FROM python:3.12.0-bookworm AS workspace
 ARG UID=1000
 ARG GID=1000
 ARG USERNAME=mike
+ENV EDITOR=vim
 
 # Install `sudo` and configure bash completion
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
-    sudo bash-completion
+    sudo bash-completion #EDITOR
 RUN mkdir -p /etc/bash_completion.d
 
 # Create user with sudo privileges
