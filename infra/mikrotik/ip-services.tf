@@ -29,3 +29,10 @@ resource "routeros_ip_service" "disabled" {
   port     = each.value
   disabled = true
 }
+
+resource "routeros_ip_service" "enabled" {
+  for_each = local.enable_service
+  numbers  = each.key
+  port     = each.value
+  disabled = false
+}
