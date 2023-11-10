@@ -15,7 +15,7 @@ provider "routeros" {
 }
 
 resource "routeros_system_identity" "identity" {
-  name = "homebase"
+  name = "MikroTik-RB5009"
 }
 
 resource "routeros_dns" "dns-server" {
