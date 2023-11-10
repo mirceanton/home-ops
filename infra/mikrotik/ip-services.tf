@@ -4,12 +4,13 @@ locals {
   enable_service  = { "winbox" = 8291 }
 }
 
-resource "routeros_system_certificate" "tls_cert" {
-  name        = "tls-cert"
-  common_name = "Mikrotik Router"
+resource "routeros_system_certificate" "webfig_cert" {
+  name        = "webfig"
+  common_name = split("/",routeros_ip_address.lan_address.address)[0]
+  country = "RO"
   days_valid  = 3650
-  key_usage   = ["key-cert-sign", "crl-sign", "digital-signature", "key-agreement", "tls-server"]
   key_size    = "prime256v1"
+  key_usage   = ["key-cert-sign", "crl-sign", "digital-signature", "key-agreement", "tls-server"]
   sign {
   }
 }
@@ -18,7 +19,7 @@ resource "routeros_ip_service" "tls" {
   for_each    = local.tls_service
   numbers     = each.key
   port        = each.value
-  certificate = routeros_system_certificate.tls_cert.name
+  certificate = routeros_system_certificate.webfig_cert.name
   tls_version = "only-1.2"
   disabled    = false
 }
