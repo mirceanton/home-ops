@@ -33,3 +33,9 @@ resource "routeros_ip_dhcp_server" "lan_dhcp" {
   name             = "lan_dhcp"
   client_mac_limit = 1
 }
+
+
+resource "routeros_ip_dhcp_server_lease" "desktop_pc_lease" {
+  address     = "192.168.69.69"
+  mac_address = "48:21:0B:50:EE:C2"
+}
