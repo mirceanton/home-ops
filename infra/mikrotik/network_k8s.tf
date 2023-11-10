@@ -6,7 +6,7 @@ resource "routeros_interface_bridge" "k8s_bridge" {
 resource "routeros_ip_address" "k8s_address" {
   address   = "10.0.10.1/24"
   interface = routeros_interface_bridge.k8s_bridge.name
-  network   = "10.0.10.1"
+  network   = "10.0.10.0"
 }
 
 resource "routeros_interface_bridge_port" "k8s_bridge_port" {
