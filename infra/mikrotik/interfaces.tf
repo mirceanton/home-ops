@@ -1,11 +1,11 @@
-resource "routeros_interface_ethernet" "ether1" {
+resource "routeros_interface_ethernet" "lan_iface" {
   factory_name = "ether1"
   name         = "ether1"
-  comment      = "Desktop"
+  comment      = "LAN"
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether2" {
+resource "routeros_interface_ethernet" "k8s_iface" {
   factory_name = "ether2"
   name         = "ether2"
   comment      = "K8S"
@@ -40,14 +40,14 @@ resource "routeros_interface_ethernet" "ether6" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether7" {
+resource "routeros_interface_ethernet" "iot_iface" {
   factory_name = "ether7"
   name         = "ether7"
   comment      = "IOT"
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether8" {
+resource "routeros_interface_ethernet" "wan_iface" {
   factory_name = "ether8"
   name         = "ether8"
   comment      = "WAN"

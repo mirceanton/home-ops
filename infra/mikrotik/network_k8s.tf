@@ -11,7 +11,7 @@ resource "routeros_ip_address" "k8s_address" {
 
 resource "routeros_interface_bridge_port" "k8s_bridge_port" {
   bridge    = routeros_interface_bridge.k8s_bridge.name
-  interface = "ether2"
+  interface = routeros_interface_ethernet.k8s_iface.name
   pvid      = "1"
 }
 

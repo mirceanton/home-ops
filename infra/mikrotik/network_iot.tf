@@ -11,7 +11,7 @@ resource "routeros_ip_address" "iot_address" {
 
 resource "routeros_interface_bridge_port" "iot_bridge_port" {
   bridge    = routeros_interface_bridge.iot_bridge.name
-  interface = "ether7"
+  interface = routeros_interface_ethernet.iot_iface.name
   pvid      = "1"
 }
 

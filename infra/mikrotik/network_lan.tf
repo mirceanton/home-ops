@@ -11,7 +11,7 @@ resource "routeros_ip_address" "lan_address" {
 
 resource "routeros_interface_bridge_port" "lan_bridge_port" {
   bridge    = routeros_interface_bridge.lan_bridge.name
-  interface = "ether1"
+  interface = routeros_interface_ethernet.lan_iface.name
   pvid      = "1"
 }
 
