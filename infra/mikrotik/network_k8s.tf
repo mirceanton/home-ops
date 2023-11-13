@@ -46,6 +46,11 @@ resource "routeros_ip_pool" "k8s_dhcp_pool" {
 ## ================================================================================================
 ## Static DHCP Leases
 ## ================================================================================================
+resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
+  address     = "10.0.10.2"
+  mac_address = "00:EE:AB:28:1C:81"
+  comment     = "Cisco SG350-10"
+}
 # TODO: Lease for hkc-01
 # TODO: Lease for hkc-02
 # TODO: Lease for hkc-03
