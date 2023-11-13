@@ -34,5 +34,9 @@ resource "routeros_ip_dhcp_server" "iot_dhcp" {
   client_mac_limit = 1
 }
 
-# TODO: Lease for AP
-# TODO: Lease for HASS
+
+resource "routeros_ip_dhcp_server_lease" "homeassistant_lease" {
+  address     = "172.16.69.9"
+  mac_address = "00:1E:06:42:C7:73"
+  comment = "HomeAssistant"
+}
