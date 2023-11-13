@@ -48,7 +48,7 @@ resource "routeros_ip_dhcp_server_lease" "tplink_ap_lease" {
 }
 
 resource "routeros_ip_dhcp_server_lease" "tplink_ap_lease" {
-  address     = "172.16.69.2"
+  address     = "172.16.69.250"
   mac_address = "4A:C6:B6:F9:57:CD"
   comment = "Mircea S23"
 }
