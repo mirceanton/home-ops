@@ -1,3 +1,6 @@
+## ================================================================================================
+## Bridge Network Configuration
+## ================================================================================================
 resource "routeros_interface_bridge" "k8s_bridge" {
   name           = "brK8S"
   vlan_filtering = true
@@ -15,11 +18,15 @@ resource "routeros_interface_bridge_port" "k8s_bridge_port" {
   pvid      = "1"
 }
 
-resource "routeros_ip_pool" "k8s_dhcp_pool" {
-  name = "k8s_dhcp_pool"
-  ranges = [
-    "10.0.10.190-10.0.10.199"
-  ]
+
+## ================================================================================================
+## DHCP Server Config
+## ================================================================================================
+resource "routeros_ip_dhcp_server" "k8s_dhcp" {
+  address_pool     = routeros_ip_pool.k8s_dhcp_pool.name
+  interface        = routeros_interface_bridge.k8s_bridge.name
+  name             = "k8s_dhcp"
+  client_mac_limit = 1
 }
 resource "routeros_ip_dhcp_server_network" "k8s_dhcp_network" {
   address    = "10.0.10.0/24"
@@ -27,13 +34,18 @@ resource "routeros_ip_dhcp_server_network" "k8s_dhcp_network" {
   dns_server = split("/", routeros_ip_address.k8s_address.address)[0]
   domain     = "k8s.mirceanton.com"
 }
-resource "routeros_ip_dhcp_server" "k8s_dhcp" {
-  address_pool     = routeros_ip_pool.k8s_dhcp_pool.name
-  interface        = routeros_interface_bridge.k8s_bridge.name
-  name             = "k8s_dhcp"
-  client_mac_limit = 1
+
+resource "routeros_ip_pool" "k8s_dhcp_pool" {
+  name = "k8s_dhcp_pool"
+  ranges = [
+    "10.0.10.190-10.0.10.199"
+  ]
 }
 
+
+## ================================================================================================
+## Static DHCP Leases
+## ================================================================================================
 # TODO: Lease for hkc-01
 # TODO: Lease for hkc-02
 # TODO: Lease for hkc-03
