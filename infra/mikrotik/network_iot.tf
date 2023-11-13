@@ -40,3 +40,9 @@ resource "routeros_ip_dhcp_server_lease" "homeassistant_lease" {
   mac_address = "00:1E:06:42:C7:73"
   comment = "HomeAssistant"
 }
+
+resource "routeros_ip_dhcp_server_lease" "tplink_ap_lease" {
+  address     = "172.16.69.2"
+  mac_address = "EC:08:6B:46:52:D8"
+  comment = "TP-Link AC750 AP"
+}
