@@ -47,11 +47,23 @@ resource "routeros_ip_pool" "mgmt_dhcp_pool" {
 ## ================================================================================================
 ## Static DHCP Leases
 ## ================================================================================================
+resource "routeros_ip_dhcp_server_lease" "truenas_mgmt_lease" {
+  address     = "10.10.1.245"
+  mac_address = "70:4D:7B:2D:87:C9"
+  server = routeros_ip_dhcp_server.mgmt_dhcp.name
+  comment     = "TrueNAS"
+}
 resource "routeros_ip_dhcp_server_lease" "bingus_mgmt_lease" {
   address     = "10.10.1.50"
   mac_address = "E0:D5:5E:24:A1:E4"
   server = routeros_ip_dhcp_server.mgmt_dhcp.name
   comment     = "Bingus"
+}
+resource "routeros_ip_dhcp_server_lease" "win10man_mgmt_lease" {
+  address     = "10.10.1.100"
+  mac_address = "4E:55:9E:C0:D3:41"
+  server = routeros_ip_dhcp_server.mgmt_dhcp.name
+  comment     = "Windows 10 Management RDP"
 }
 
 resource "routeros_ip_dhcp_server_lease" "minisforum_mgmt_lease" {
