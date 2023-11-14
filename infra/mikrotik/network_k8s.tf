@@ -53,7 +53,7 @@ resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
   comment     = "Cisco SG350-10"
 }
 
-resource "routeros_ip_dhcp_server_lease" "hkc_01_lease" {
+resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_lease" {
   address     = "10.0.10.11"
   mac_address = "70:85:C2:58:8D:31"
   server = routeros_ip_dhcp_server.k8s_dhcp.name
