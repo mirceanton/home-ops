@@ -52,6 +52,12 @@ resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
   server = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "Cisco SG350-10"
 }
+resource "routeros_ip_dhcp_server_lease" "truenas_k8s_lease" {
+  address     = "10.0.10.245"
+  mac_address = "00:1B:21:86:4F:CF"
+  server = routeros_ip_dhcp_server.k8s_dhcp.name
+  comment     = "TrueNAS"
+}
 
 resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_lease" {
   address     = "10.0.10.11"
