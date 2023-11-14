@@ -49,17 +49,20 @@ resource "routeros_ip_pool" "k8s_dhcp_pool" {
 resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
   address     = "10.0.10.2"
   mac_address = "00:EE:AB:28:1C:81"
+  server = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "Cisco SG350-10"
 }
 
 resource "routeros_ip_dhcp_server_lease" "hkc_01_lease" {
   address     = "10.0.10.11"
   mac_address = "70:85:C2:58:8D:31"
+  server = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "2U server"
 }
-resource "routeros_ip_dhcp_server_lease" "hkc_02_lease" {
+resource "routeros_ip_dhcp_server_lease" "minisforum_k8s_lease" {
   address     = "10.0.10.12"
   mac_address = "1C:83:41:32:55:97"
+  server = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "MinisForum"
 }
 

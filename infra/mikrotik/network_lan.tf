@@ -50,5 +50,6 @@ resource "routeros_ip_pool" "lan_dhcp_pool" {
 resource "routeros_ip_dhcp_server_lease" "desktop_pc_lease" {
   address     = "192.168.69.69"
   mac_address = "48:21:0B:50:EE:C2"
+  server = routeros_ip_dhcp_server.lan_dhcp.name
   comment     = "Desktop Intel NUC"
 }
