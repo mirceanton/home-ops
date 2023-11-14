@@ -15,7 +15,7 @@ resource "routeros_interface_ethernet" "k8s_iface" {
 resource "routeros_interface_ethernet" "ether3" {
   factory_name = "ether3"
   name         = "ether3"
-  comment      = "MinisForum"
+  comment      = "N/A"
   l2mtu        = 1514
 }
 
@@ -33,7 +33,7 @@ resource "routeros_interface_ethernet" "ether5" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether6" {
+resource "routeros_interface_ethernet" "mgmt_iface" {
   factory_name = "ether6"
   name         = "ether6"
   comment      = "N/A"
