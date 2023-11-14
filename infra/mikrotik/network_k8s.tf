@@ -51,8 +51,18 @@ resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
   mac_address = "00:EE:AB:28:1C:81"
   comment     = "Cisco SG350-10"
 }
-# TODO: Lease for hkc-01
-# TODO: Lease for hkc-02
+
+resource "routeros_ip_dhcp_server_lease" "hkc_01_lease" {
+  address     = "10.0.10.11"
+  mac_address = "70:85:C2:58:8D:31"
+  comment     = "2U server"
+}
+resource "routeros_ip_dhcp_server_lease" "hkc_02_lease" {
+  address     = "10.0.10.12"
+  mac_address = "1C:83:41:32:55:97"
+  comment     = "MinisForum"
+}
+
 # TODO: Lease for hkc-03
 # TODO: Lease for infra-01
 # TODO: Lease for storage server
