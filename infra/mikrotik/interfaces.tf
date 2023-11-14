@@ -19,17 +19,17 @@ resource "routeros_interface_ethernet" "ether3" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether4" {
+resource "routeros_interface_ethernet" "bingus_lan_iface" {
   factory_name = "ether4"
   name         = "ether4"
-  comment      = "N/A"
+  comment      = "Bingus LAN"
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether5" {
+resource "routeros_interface_ethernet" "truenas_lan_iface" {
   factory_name = "ether5"
   name         = "ether5"
-  comment      = "N/A"
+  comment      = "TrueNAS LAN"
   l2mtu        = 1514
 }
 
