@@ -75,3 +75,28 @@ resource "routeros_ip_dhcp_server_lease" "minisforum_k8s_lease" {
 # TODO: Lease for hkc-03
 # TODO: Lease for infra-01
 # TODO: Lease for storage server
+
+
+
+## Firewall
+resource "routeros_ip_firewall_filter" "block_k8s_to_lan_rule" {
+  action      = "drop"
+  chain       = "forward"
+  src_address = routeros_ip_dhcp_server_network.k8s_dhcp_network.address
+  dst_address = routeros_ip_dhcp_server_network.lan_dhcp_network.address
+  comment = "Block all traffic from K8S to LAN"
+}
+resource "routeros_ip_firewall_filter" "block_k8s_to_iot_rule" {
+  action      = "drop"
+  chain       = "forward"
+  src_address = routeros_ip_dhcp_server_network.k8s_dhcp_network.address
+  dst_address = routeros_ip_dhcp_server_network.iot_dhcp_network.address
+  comment = "Block all traffic from K8S to IOT"
+}
+resource "routeros_ip_firewall_filter" "block_k8s_to_mgmt_rule" {
+  action      = "drop"
+  chain       = "forward"
+  src_address = routeros_ip_dhcp_server_network.k8s_dhcp_network.address
+  dst_address = routeros_ip_dhcp_server_network.mgmt_dhcp_network.address
+  comment = "Block all traffic from K8S to MGMT"
+}
