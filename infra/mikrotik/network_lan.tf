@@ -17,6 +17,16 @@ resource "routeros_interface_bridge_port" "lan_bridge_port" {
   interface = routeros_interface_ethernet.lan_iface.name
   pvid      = "1"
 }
+resource "routeros_interface_bridge_port" "truenas_lan_bridge_port" {
+  bridge    = routeros_interface_bridge.lan_bridge.name
+  interface = routeros_interface_ethernet.truenas_lan_iface.name
+  pvid      = "1"
+}
+resource "routeros_interface_bridge_port" "bingus_lan_bridge_port" {
+  bridge    = routeros_interface_bridge.lan_bridge.name
+  interface = routeros_interface_ethernet.bingus_lan_iface.name
+  pvid      = "1"
+}
 
 
 ## ================================================================================================
@@ -52,4 +62,10 @@ resource "routeros_ip_dhcp_server_lease" "desktop_pc_lease" {
   mac_address = "48:21:0B:50:EE:C2"
   server = routeros_ip_dhcp_server.lan_dhcp.name
   comment     = "Desktop Intel NUC"
+}
+resource "routeros_ip_dhcp_server_lease" "truenas_lan_lease" {
+  address     = "192.168.69.245"
+  mac_address = "00:1B:21:86:4F:CE"
+  server = routeros_ip_dhcp_server.lan_dhcp.name
+  comment     = "TrueNAS"
 }
