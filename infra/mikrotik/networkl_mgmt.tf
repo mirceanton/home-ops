@@ -47,10 +47,27 @@ resource "routeros_ip_pool" "mgmt_dhcp_pool" {
 ## ================================================================================================
 ## Static DHCP Leases
 ## ================================================================================================
+resource "routeros_ip_dhcp_server_lease" "bingus_mgmt_lease" {
+  address     = "10.10.1.50"
+  mac_address = "E0:D5:5E:24:A1:E4"
+  server = routeros_ip_dhcp_server.mgmt_dhcp.name
+  comment     = "Bingus"
+}
+
+resource "routeros_ip_dhcp_server_lease" "minisforum_mgmt_lease" {
+  address     = "10.10.1.12"
+  mac_address = "D0:37:45:6F:22:29"
+  server = routeros_ip_dhcp_server.mgmt_dhcp.name
+  comment     = "MinisForum"
+}
+resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_mgmt_lease" {
+  address     = "10.10.1.11"
+  mac_address = "70:85:C2:58:8D:31"
+  server = routeros_ip_dhcp_server.mgmt_dhcp.name
+  comment     = "2U Server"
+}
+
 # TODO: static lease for truenas
-# TODO: static lease for hkc-01
-# TODO: static lease for hkc-02
 # TODO: static lease for hkc-03
 # TODO: static lease for utils
-# TODO: static lease for lab server
 # TODO: static lease for pikvm
