@@ -16,16 +16,19 @@ resource "routeros_interface_bridge_port" "lan_bridge_port" {
   bridge    = routeros_interface_bridge.lan_bridge.name
   interface = routeros_interface_ethernet.lan_iface.name
   pvid      = "1"
+  comment   = routeros_interface_ethernet.lan_iface.comment
 }
 resource "routeros_interface_bridge_port" "truenas_lan_bridge_port" {
   bridge    = routeros_interface_bridge.lan_bridge.name
   interface = routeros_interface_ethernet.truenas_lan_iface.name
   pvid      = "1"
+  comment   = routeros_interface_ethernet.truenas_lan_iface.comment
 }
 resource "routeros_interface_bridge_port" "bingus_lan_bridge_port" {
   bridge    = routeros_interface_bridge.lan_bridge.name
   interface = routeros_interface_ethernet.bingus_lan_iface.name
   pvid      = "1"
+  comment   = routeros_interface_ethernet.bingus_lan_iface.comment
 }
 
 
@@ -60,12 +63,12 @@ resource "routeros_ip_pool" "lan_dhcp_pool" {
 resource "routeros_ip_dhcp_server_lease" "desktop_pc_lease" {
   address     = "192.168.69.69"
   mac_address = "A8:A1:59:71:8B:B0"
-  server = routeros_ip_dhcp_server.lan_dhcp.name
+  server      = routeros_ip_dhcp_server.lan_dhcp.name
   comment     = "NotANUC"
 }
 resource "routeros_ip_dhcp_server_lease" "truenas_lan_lease" {
   address     = "192.168.69.245"
   mac_address = "00:1B:21:26:96:67"
-  server = routeros_ip_dhcp_server.lan_dhcp.name
+  server      = routeros_ip_dhcp_server.lan_dhcp.name
   comment     = "TrueNAS"
 }

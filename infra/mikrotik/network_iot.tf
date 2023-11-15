@@ -16,6 +16,7 @@ resource "routeros_interface_bridge_port" "iot_bridge_port" {
   bridge    = routeros_interface_bridge.iot_bridge.name
   interface = routeros_interface_ethernet.iot_iface.name
   pvid      = "1"
+  comment   = routeros_interface_ethernet.iot_iface.comment
 }
 
 
@@ -50,20 +51,20 @@ resource "routeros_ip_pool" "iot_dhcp_pool" {
 resource "routeros_ip_dhcp_server_lease" "homeassistant_lease" {
   address     = "172.16.69.9"
   mac_address = "00:1E:06:42:C7:73"
-  server = routeros_ip_dhcp_server.iot_dhcp.name
+  server      = routeros_ip_dhcp_server.iot_dhcp.name
   comment     = "HomeAssistant"
 }
 
 resource "routeros_ip_dhcp_server_lease" "tplink_ap_lease" {
   address     = "172.16.69.2"
   mac_address = "EC:08:6B:46:52:D8"
-  server = routeros_ip_dhcp_server.iot_dhcp.name
+  server      = routeros_ip_dhcp_server.iot_dhcp.name
   comment     = "TP-Link AC750 AP"
 }
 
 resource "routeros_ip_dhcp_server_lease" "mircea_s23_lease" {
   address     = "172.16.69.250"
   mac_address = "4A:C6:B6:F9:57:CD"
-  server = routeros_ip_dhcp_server.iot_dhcp.name
+  server      = routeros_ip_dhcp_server.iot_dhcp.name
   comment     = "Mircea S23"
 }

@@ -16,6 +16,7 @@ resource "routeros_interface_bridge_port" "k8s_bridge_port" {
   bridge    = routeros_interface_bridge.k8s_bridge.name
   interface = routeros_interface_ethernet.k8s_iface.name
   pvid      = "1"
+  comment   = routeros_interface_ethernet.k8s_iface.comment
 }
 
 
@@ -49,26 +50,26 @@ resource "routeros_ip_pool" "k8s_dhcp_pool" {
 resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
   address     = "10.0.10.2"
   mac_address = "00:EE:AB:28:1C:81"
-  server = routeros_ip_dhcp_server.k8s_dhcp.name
+  server      = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "Cisco SG350-10"
 }
 resource "routeros_ip_dhcp_server_lease" "truenas_k8s_lease" {
   address     = "10.0.10.245"
   mac_address = "00:1B:21:86:4F:CF"
-  server = routeros_ip_dhcp_server.k8s_dhcp.name
+  server      = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "TrueNAS"
 }
 
 resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_lease" {
   address     = "10.0.10.11"
   mac_address = "68:05:CA:C2:AD:FA"
-  server = routeros_ip_dhcp_server.k8s_dhcp.name
+  server      = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "2U server"
 }
 resource "routeros_ip_dhcp_server_lease" "hkc_02_k8s_lease" {
   address     = "10.0.10.12"
   mac_address = "1C:83:41:32:55:97"
-  server = routeros_ip_dhcp_server.k8s_dhcp.name
+  server      = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "MinisForum"
 }
 
