@@ -36,7 +36,7 @@ resource "routeros_interface_ethernet" "truenas_lan_iface" {
 resource "routeros_interface_ethernet" "mgmt_iface" {
   factory_name = "ether6"
   name         = "ether6"
-  comment      = "N/A"
+  comment      = "MGMT"
   l2mtu        = 1514
 }
 
