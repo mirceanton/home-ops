@@ -13,7 +13,7 @@ tasks:
   apply-config:
     desc: Bootstrap talos on the home cluster nodes.
     preconditions:
-      - sh: test -f clusterconfig/talosconfig.yaml
+      - sh: test -f clusterconfig/talosconfig
         msg: Talos configuration was not rendered.
     cmds:
       - for: { var: HOME_CLUSTER_CP_NODES }

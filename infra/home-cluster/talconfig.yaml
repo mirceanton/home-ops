@@ -1,6 +1,6 @@
 ---
 clusterName: ${HOME_CLUSTER_NAME}
-endpoint: https://${HOME_KUBERNETES_ENDPOINT}:6443
+endpoint: https://10.0.10.10:6443
 domain: home.mirceanton.com
 
 talosVersion: v1.5.5
@@ -9,7 +9,6 @@ allowSchedulingOnControlPlanes: true
 
 patches:
   - "@patches/cni.yaml"
-  - "@patches/interface-names.yaml"
   - "@patches/kubelet-certificate-rotation.yaml"
 
 worker:
@@ -24,10 +23,12 @@ nodes:
     controlPlane: true
     ipAddress: 10.0.10.11
     networkInterfaces:
-      - interface: enp0s31f6
+      - interface: eth7085C2588D31
+        dhcp: true
+      - interface: eth6805CAC2ADFA
         dhcp: true
         vip:
-          ip: ${HOME_KUBERNETES_ENDPOINT}
+          ip: 10.0.10.10
     installDisk: /dev/nvme0n1
     nodeLabels:
       system: "2U"
@@ -42,10 +43,12 @@ nodes:
     controlPlane: true
     ipAddress: 10.0.10.12
     networkInterfaces:
-      - interface: enp2s0
+      - interface: ethD037456F2229
+        dhcp: true
+      - interface: eth1C8341325597
         dhcp: true
         vip:
-          ip: ${HOME_KUBERNETES_ENDPOINT}
+          ip: 10.0.10.10
     installDisk: /dev/nvme0n1
     nodeLabels:
       system: "MinisForum"

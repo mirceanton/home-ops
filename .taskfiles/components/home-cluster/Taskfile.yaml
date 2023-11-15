@@ -3,9 +3,8 @@ version: '3'
 
 env:
   HOME_CLUSTER_NAME: home-cluster
-  HOME_CLUSTER_CP_NODES: hkc-01.home.k8s.mirceanton.com hkc-02.home.k8s.mirceanton.com
+  HOME_CLUSTER_CP_NODES: hkc-02.home.k8s.mirceanton.com
   HOME_CLUSTER_WKR_NODES: ""
-  HOME_KUBERNETES_ENDPOINT: home.k8s.mirceanton.com
 
 includes:
   sops: ../../sops.yaml
