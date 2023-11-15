@@ -5,6 +5,13 @@ terraform {
       version = "1.23.0"
     }
   }
+  cloud {
+    organization = "mirceanton"
+
+    workspaces {
+      name = "Mikrotik"
+    }
+  }
 }
 
 provider "routeros" {
