@@ -66,20 +66,25 @@ resource "routeros_ip_dhcp_server_lease" "win10man_mgmt_lease" {
   comment     = "Windows 10 Management RDP"
 }
 
-resource "routeros_ip_dhcp_server_lease" "minisforum_mgmt_lease" {
-  address     = "10.10.1.12"
-  mac_address = "D0:37:45:6F:22:29"
-  server = routeros_ip_dhcp_server.mgmt_dhcp.name
-  comment     = "MinisForum"
-}
-resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_mgmt_lease" {
-  address     = "10.10.1.11"
-  mac_address = "70:85:C2:58:8D:31"
-  server = routeros_ip_dhcp_server.mgmt_dhcp.name
-  comment     = "2U Server"
-}
+# resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_mgmt_lease" {
+#   address     = "10.10.1.11"
+#   mac_address = "70:85:C2:58:8D:31"
+#   server = routeros_ip_dhcp_server.mgmt_dhcp.name
+#   comment     = "2U Server"
+# }
+# resource "routeros_ip_dhcp_server_lease" "hkc_02_k8s_mgmt_lease" {
+#   address     = "10.10.1.12"
+#   mac_address = "D0:37:45:6F:22:29"
+#   server = routeros_ip_dhcp_server.mgmt_dhcp.name
+#   comment     = "MinisForum"
+# }
+# resource "routeros_ip_dhcp_server_lease" "hkc_02_k8s_mgmt_lease" {
+#   address     = "10.10.1.12"
+#   mac_address = "D0:37:45:6F:22:29"
+#   server = routeros_ip_dhcp_server.mgmt_dhcp.name
+#   comment     = "MinisForum"
+# }
 
-# TODO: static lease for truenas
 # TODO: static lease for hkc-03
 # TODO: static lease for utils
 # TODO: static lease for pikvm

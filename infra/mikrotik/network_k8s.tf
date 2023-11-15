@@ -65,7 +65,7 @@ resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_lease" {
   server = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "2U server"
 }
-resource "routeros_ip_dhcp_server_lease" "minisforum_k8s_lease" {
+resource "routeros_ip_dhcp_server_lease" "hkc_02_k8s_lease" {
   address     = "10.0.10.12"
   mac_address = "1C:83:41:32:55:97"
   server = routeros_ip_dhcp_server.k8s_dhcp.name
