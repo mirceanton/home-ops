@@ -51,7 +51,7 @@ For terraform to be able to connecto to our router and manage it, we need to cre
 
 ### Step 4. Import previously created objects into the Terraform state
 
-#### Importing the bridges:
+#### Importing the bridges
 
 On Mikrotik, run the following command to print the IDs of the bridges:
 
@@ -89,7 +89,7 @@ Based on the example output, the ID of our dhcp client on the WAN interface is `
 terraform import routeros_ip_dhcp_client.wan_dhcp "*1"
 ```
 
-#### Importing the LAN IP address:
+#### Importing the LAN IP address
 
 On Mikrotik, run the following command to print the ID of the client:
 
