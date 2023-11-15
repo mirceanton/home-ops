@@ -13,6 +13,7 @@ ARG AGE_VERSION=v1.1.1
 ARG TASKFILE_VERSION=v3.31.0
 ARG HELMFILE_VERSION=v0.158.1
 ARG DOCKER_VERSION=24.0.7-cli
+ARG TALHELPER_VERSION=v1.14.0
 
 
 ## ================================================================================================
@@ -55,6 +56,12 @@ ARG KSWITCHER_VERSION
 RUN wget https://raw.githubusercontent.com/mirceanton/kswitcher/${KSWITCHER_VERSION}/src/kswitcher.py -O /bin/kswitcher && \
     chmod +x /bin/kswitcher
 
+FROM alpine as talhelper
+ARG TALHELPER_VERSION
+RUN wget https://github.com/budimanjojo/talhelper/releases/download/${TALHELPER_VERSION}/talhelper_linux_amd64.tar.gz -O talhelper.tar.gz && \
+    tar xvf talhelper.tar.gz && \
+	mv talhelper /bin/talhelper
+
 ## ================================================================================================
 ## Main image
 ## ================================================================================================
@@ -74,7 +81,8 @@ RUN mkdir -p /etc/bash_completion.d
 # Create user with sudo privileges
 RUN groupadd --gid ${GID} ${USERNAME} && \
     useradd --uid ${UID} --gid ${GID} --groups sudo --create-home --shell /bin/bash ${USERNAME}
-# Disable sudo password
+
+# Enable passwordless sudo :kek:
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Set active user
@@ -100,6 +108,10 @@ RUN terraform -install-autocomplete
 # Install talosctl and set up bash completion
 COPY --from=talosctl /talosctl /usr/local/bin/talosctl
 RUN talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl.bash > /dev/null
+
+# Install talhelper and set up bash completion
+COPY --from=talhelper /bin/talhelper /usr/local/bin/talhelper
+RUN talhelper completion bash | sudo tee /etc/bash_completion.d/talhelper.bash > /dev/null
 
 # Install taskfile and set up bash completion
 COPY --from=taskfile /bin/task /usr/local/bin/task
