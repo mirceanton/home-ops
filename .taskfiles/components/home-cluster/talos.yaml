@@ -4,56 +4,38 @@ version: '3'
 tasks:
   generate-config:
     desc: Generate the Talos machineconfig files.
-    cmds:
-      - cmd: |
-          talosctl gen config {{.HOME_CLUSTER_NAME}} https://{{.HOME_KUBERNETES_ENDPOINT}}:6443 \
-            --kubernetes-version {{.HOME_KUBERNETES_VERSION}} \
-            --with-secrets secrets.yaml \
-            --config-patch @patches/allow-controlplane-workloads.yaml \
-            --config-patch @patches/kubelet-certificate-rotation.yaml \
-            --config-patch @patches/interface-names.yaml \
-            --config-patch @patches/dhcp.yaml \
-            --config-patch @patches/cni.yaml \
-            --config-patch @patches/install-disk.yaml \
-            --config-patch @patches/system-extensions.yaml \
-            --config-patch-control-plane @patches/controlplane-vip.yaml \
-            --config-patch-control-plane @patches/keycloak-auth.yaml \
-            --output rendered/
-      - talosctl --talosconfig rendered/talosconfig config endpoint {{.HOME_CONTROLPLANE_NODES}}
-      - talosctl --talosconfig rendered/talosconfig config node {{(split " " .HOME_CONTROLPLANE_NODES)._0}}
+    cmds: [ talhelper genconfig ]
 
   delete-config:
     desc: Delete the Talos machineconfig files.
-    cmds: [ rm -f rendered/* ]
+    cmds: [ rm -f clusterconfig/* ]
 
   apply-config:
     desc: Bootstrap talos on the home cluster nodes.
     preconditions:
-      - sh: test -f rendered/controlplane.yaml
-        msg: "Talos controlplane configuration was not rendered."
-      - sh: test -f rendered/worker.yaml
-        msg: "Talos worker configuration was not rendered."
+      - sh: test -f clusterconfig/talosconfig.yaml
+        msg: Talos configuration was not rendered.
     cmds:
-      - for: { var: HOME_CONTROLPLANE_NODES }
-        cmd: talosctl apply --insecure -f rendered/controlplane.yaml -n {{.ITEM}}
-      - for: { var: HOME_WORKER_NODES }
-        cmd: talosctl apply --insecure -f rendered/worker.yaml -n {{.ITEM}}
+      - for: { var: HOME_CLUSTER_CP_NODES }
+        cmd: talosctl apply --insecure -f clusterconfig/$HOME_CLUSTER_NAME-{{.ITEM}}.yaml -n {{.ITEM}}
+      - for: { var: HOME_CLUSTER_WKR_NODES }
+        cmd: talosctl apply --insecure -f clusterconfig/$HOME_CLUSTER_NAME-{{.ITEM}}.yaml -n {{.ITEM}}
 
   talosconfig:
     desc: Import the talosconfig file for the home cluster.
     preconditions:
-      - sh: test -f rendered/talosconfig
+      - sh: test -f clusterconfig/talosconfig
         msg: "Talosconfig file was not rendered."
     cmds:
       - mkdir -p ~/.talos
       - rm -f ~/.talos/config
-      - cp rendered/talosconfig ~/.talos/config
+      - cp clusterconfig/talosconfig ~/.talos/config
 
   wait:
     desc: Wait for the talos cluster to be up and running.
     deps: [ task: talosconfig ]
     cmds:
-      - for: { var: HOME_CONTROLPLANE_NODES }
+      - for: { var: HOME_CLUSTER_CP_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
-      - for: { var: HOME_WORKER_NODES }
+      - for: { var: HOME_CLUSTER_WKR_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh

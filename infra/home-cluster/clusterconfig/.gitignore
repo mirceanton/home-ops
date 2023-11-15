@@ -1,0 +1,5 @@
+home-cluster-hkc-01.yaml
+home-cluster-hkc-02.yaml
+talosconfig
+home-cluster-hkc-01.home.k8s.mirceanton.com.yaml
+home-cluster-hkc-02.home.k8s.mirceanton.com.yaml

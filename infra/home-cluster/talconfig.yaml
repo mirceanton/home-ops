@@ -1,0 +1,56 @@
+---
+clusterName: ${HOME_CLUSTER_NAME}
+endpoint: https://${HOME_KUBERNETES_ENDPOINT}:6443
+domain: home.mirceanton.com
+
+talosVersion: v1.5.5
+kubernetesVersion: v1.28.2
+allowSchedulingOnControlPlanes: true
+
+patches:
+  - "@patches/cni.yaml"
+  - "@patches/interface-names.yaml"
+  - "@patches/kubelet-certificate-rotation.yaml"
+
+worker:
+  patches: []
+
+controlPlane:
+  patches:
+    - "@patches/keycloak-auth.yaml"
+
+nodes:
+  - hostname: hkc-01.home.k8s.mirceanton.com
+    controlPlane: true
+    ipAddress: 10.0.10.11
+    networkInterfaces:
+      - interface: enp0s31f6
+        dhcp: true
+        vip:
+          ip: ${HOME_KUBERNETES_ENDPOINT}
+    installDisk: /dev/nvme0n1
+    nodeLabels:
+      system: "2U"
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/i915-ucode
+          - siderolabs/intel-ucode
+          - siderolabs/iscsi-tools
+
+  - hostname: hkc-02.home.k8s.mirceanton.com
+    controlPlane: true
+    ipAddress: 10.0.10.12
+    networkInterfaces:
+      - interface: enp2s0
+        dhcp: true
+        vip:
+          ip: ${HOME_KUBERNETES_ENDPOINT}
+    installDisk: /dev/nvme0n1
+    nodeLabels:
+      system: "MinisForum"
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/amd-ucode

@@ -1,5 +1,6 @@
 # Talos Generated Configuration Files
 infra/**/*/secrets.yaml
+infra/**/*/talsecret.yaml
 infra/**/*/rendered/*
 
 # MkDocs Generated Files
