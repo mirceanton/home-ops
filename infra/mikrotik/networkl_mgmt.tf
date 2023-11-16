@@ -60,12 +60,6 @@ resource "routeros_ip_dhcp_server_lease" "bingus_mgmt_lease" {
   server      = routeros_ip_dhcp_server.mgmt_dhcp.name
   comment     = "Bingus"
 }
-resource "routeros_ip_dhcp_server_lease" "win10man_mgmt_lease" {
-  address     = "10.10.1.100"
-  mac_address = "4E:55:9E:C0:D3:41"
-  server      = routeros_ip_dhcp_server.mgmt_dhcp.name
-  comment     = "Windows 10 Management RDP"
-}
 
 # resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_mgmt_lease" {
 #   address     = "10.10.1.11"
