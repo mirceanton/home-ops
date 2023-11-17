@@ -53,7 +53,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
   config_patches = [
     templatefile("${path.module}/templates/controlplane-vip.yaml", {
       mac_address = each.value.mac_address,
-	  cluster_vip = var.cluster_vip
+      cluster_vip = var.cluster_vip
     }),
     templatefile("${path.module}/templates/dhcp.yaml", {
       hostname    = format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)),
@@ -73,7 +73,7 @@ resource "talos_machine_configuration_apply" "worker" {
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   for_each                    = var.node_data.workers
   node                        = each.key
-  
+
   # Node-specific config patches
   config_patches = [
     templatefile("${path.module}/templates/dhcp.yaml", {

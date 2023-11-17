@@ -9,8 +9,8 @@ variable "cluster_endpoint" {
 }
 
 variable "cluster_vip" {
-	description = "The IP address of the VIP to be placed in front of the Talos API nodes."
-  type = string
+  description = "The IP address of the VIP to be placed in front of the Talos API nodes."
+  type        = string
 }
 
 variable "talos_version" {
