@@ -3,11 +3,6 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "cluster_endpoint" {
-  description = "The endpoint for the Talos cluster"
-  type        = string
-}
-
 variable "cluster_vip" {
   description = "The IP address of the VIP to be placed in front of the Talos API nodes."
   type        = string
