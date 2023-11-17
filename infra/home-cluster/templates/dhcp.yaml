@@ -1,0 +1,8 @@
+---
+machine:
+  network:
+    hostname: ${hostname}
+
+    interfaces:
+      - interface: eth${replace(var.mac_address), ":", ""}
+        dhcp: true

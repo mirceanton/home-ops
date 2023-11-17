@@ -1,0 +1,7 @@
+---
+machine:
+  install:
+    extensions:
+      %{ for ext in system_extensions ~}
+      - image: ${ext}
+      %{ endfor ~}

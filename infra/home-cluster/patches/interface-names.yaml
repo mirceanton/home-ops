@@ -1,5 +1,0 @@
----
-machine:
-  install:
-    extraKernelArgs:
-      - net.ifnames=0
