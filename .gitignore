@@ -2,6 +2,11 @@
 infra/**/*/secrets.yaml
 infra/**/*/rendered/*
 
+# Terraform stuff
+infra/**/*/.terraform
+infra/**/*/.terraform.lock.hcl
+infra/**/*/*.auto.tfvars
+
 # MkDocs Generated Files
 site/
 
