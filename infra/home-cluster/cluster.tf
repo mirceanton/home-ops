@@ -1,5 +1,12 @@
+## ================================================================================================
+## talosctl gen secrets
+## ================================================================================================
 resource "talos_machine_secrets" "this" {}
 
+
+## ================================================================================================
+## talosctl gen config
+## ================================================================================================
 data "talos_machine_configuration" "controlplane" {
   cluster_name       = var.cluster_name
   cluster_endpoint   = var.cluster_endpoint
@@ -7,6 +14,14 @@ data "talos_machine_configuration" "controlplane" {
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
+
+  # Role-specific config patches
+  config_patches = [
+    file("${path.module}/patches/allow-controlplane-workloads.yaml"),
+    file("${path.module}/patches/cni.yaml"),
+    file("${path.module}/patches/keycloak-auth.yaml"),
+    file("${path.module}/patches/kubelet-certificate-rotation.yaml")
+  ]
 }
 
 data "talos_machine_configuration" "worker" {
@@ -16,31 +31,32 @@ data "talos_machine_configuration" "worker" {
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
+
+  # Role-specific config patches
+  config_patches = [
+    file("${path.module}/patches/cni.yaml"),
+    file("${path.module}/patches/kubelet-certificate-rotation.yaml")
+  ]
 }
 
-data "talos_client_configuration" "this" {
-  cluster_name         = var.cluster_name
-  client_configuration = talos_machine_secrets.this.client_configuration
-  endpoints            = [for k, v in var.node_data.controlplanes : k]
-  nodes                = [for k, v in var.node_data.controlplanes : k]
-}
 
+## ================================================================================================
+## talosctl apply-config --config-patch ...
+## ================================================================================================
 resource "talos_machine_configuration_apply" "controlplane" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   for_each                    = var.node_data.controlplanes
   node                        = each.key
-  config_patches = [
-    file("${path.module}/patches/allow-controlplane-workloads.yaml"),
-    file("${path.module}/patches/cni.yaml"),
-    file("${path.module}/patches/keycloak-auth.yaml"),
-    file("${path.module}/patches/kubelet-certificate-rotation.yaml"),
 
+  # Node-specific config patches
+  config_patches = [
     templatefile("${path.module}/templates/controlplane-vip.yaml", {
-      mac_address = each.value.mac_address
+      mac_address = each.value.mac_address,
+	  cluster_vip = var.cluster_vip
     }),
     templatefile("${path.module}/templates/dhcp.yaml", {
-      hostname    = each.value.hostname == null ? format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)) : each.value.hostname
+      hostname    = format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)),
       mac_address = each.value.mac_address
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
@@ -57,14 +73,11 @@ resource "talos_machine_configuration_apply" "worker" {
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   for_each                    = var.node_data.workers
   node                        = each.key
+  
+  # Node-specific config patches
   config_patches = [
-    file("${path.module}/patches/allow-controlplane-workloads.yaml"),
-    file("${path.module}/patches/cni.yaml"),
-    file("${path.module}/patches/kubelet-certificate-rotation.yaml"),
-
-
     templatefile("${path.module}/templates/dhcp.yaml", {
-      hostname    = each.value.hostname == null ? format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)) : each.value.hostname
+      hostname    = format("%s-wkr-%s", var.cluster_name, index(keys(var.node_data.workers), each.key)),
       mac_address = each.value.mac_address
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
@@ -76,34 +89,13 @@ resource "talos_machine_configuration_apply" "worker" {
   ]
 }
 
+
+## ================================================================================================
+## talosctl bootstrap
+## ================================================================================================
 resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = [for k, v in var.node_data.controlplanes : k][0]
-}
-
-data "talos_cluster_kubeconfig" "this" {
-  depends_on           = [talos_machine_bootstrap.this]
-  client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.node_data.controlplanes : k][0]
-}
-
-resource "local_file" "talosconfig" {
-  content  = data.talos_client_configuration.this.talos_config
-  filename = "~/.talos/configs/${var.cluster_name}.yaml"
-}
-resource "local_file" "kubeconfig" {
-  content  = data.talos_cluster_kubeconfig.this.kubeconfig_raw
-  filename = "~/.kube/configs/${var.cluster_name}.yaml"
-}
-
-output "talosconfig" {
-  value     = data.talos_client_configuration.this.talos_config
-  sensitive = true
-}
-
-output "kubeconfig" {
-  value     = data.talos_cluster_kubeconfig.this.kubeconfig_raw
-  sensitive = true
 }
