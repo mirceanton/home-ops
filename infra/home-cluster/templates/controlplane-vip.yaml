@@ -2,6 +2,6 @@
 machine:
   network:
     interfaces:
-      - interface: eth${replace(var.mac_address), ":", ""}
+      - interface: eth${replace(mac_address, ":", "")}
         vip:
-          ip: ${var.cluster_vip}
+          ip: ${cluster_vip}
