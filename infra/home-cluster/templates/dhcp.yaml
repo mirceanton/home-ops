@@ -4,5 +4,5 @@ machine:
     hostname: ${hostname}
 
     interfaces:
-      - interface: eth${replace(mac_address, ":", "")}
+      - interface: ${interface}
         dhcp: true
