@@ -7,14 +7,13 @@ data "http" "talos_image_hash_controlplane" {
   method   = "POST"
   insecure = true
 
-  request_body = <<EOT
-customization:
-    systemExtensions:
-      officialExtensions:
-        - siderolabs/i915-ucode
-        - siderolabs/intel-ucode
-        - siderolabs/iscsi-tools
-EOT
+  request_body = yamlencode({
+    "customization": {
+		"systemExtensions": {
+			"officialExtensions": each.value.system_extensions
+		}
+	}
+  })
 }
 data "http" "talos_image_hash_worker" {
   for_each = var.node_data.workers
@@ -22,14 +21,13 @@ data "http" "talos_image_hash_worker" {
   method   = "POST"
   insecure = true
 
-  request_body = <<EOT
-customization:
-    systemExtensions:
-      officialExtensions:
-        - siderolabs/i915-ucode
-        - siderolabs/intel-ucode
-        - siderolabs/iscsi-tools
-EOT
+  request_body = yamlencode({
+    "customization": {
+		"systemExtensions": {
+			"officialExtensions": each.value.system_extensions
+		}
+	}
+  })
 }
 
 
@@ -46,7 +44,7 @@ resource "talos_machine_secrets" "this" {
 ## ================================================================================================
 data "talos_machine_configuration" "controlplane" {
   cluster_name       = var.cluster_name
-  cluster_endpoint   = var.cluster_endpoint
+  cluster_endpoint   = "https://${var.cluster_vip}:6443"
   machine_type       = "controlplane"
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
@@ -63,7 +61,7 @@ data "talos_machine_configuration" "controlplane" {
 
 data "talos_machine_configuration" "worker" {
   cluster_name       = var.cluster_name
-  cluster_endpoint   = var.cluster_endpoint
+  cluster_endpoint   = "https://${var.cluster_vip}:6443"
   machine_type       = "worker"
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
