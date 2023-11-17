@@ -7,7 +7,7 @@ data "talos_client_configuration" "this" {
 
 resource "local_file" "talosconfig" {
   content  = data.talos_client_configuration.this.talos_config
-  filename = pathexpand( "~/.talos/configs/${var.cluster_name}.yaml" )
+  filename = pathexpand("~/.talos/configs/${var.cluster_name}.yaml")
 }
 
 output "talosconfig" {

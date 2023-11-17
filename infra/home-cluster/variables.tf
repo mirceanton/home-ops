@@ -27,14 +27,14 @@ variable "node_data" {
   description = "A map of node data"
   type = object({
     controlplanes = map(object({
-      install_disk = string
-      interface     = string
+      install_disk      = string
+      interface         = string
       system_extensions = list(string)
     }))
-  
+
     workers = map(object({
-      install_disk = string
-      interface = string
+      install_disk      = string
+      interface         = string
       system_extensions = list(string)
     }))
   })
