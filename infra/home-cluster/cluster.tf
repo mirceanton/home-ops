@@ -1,4 +1,39 @@
 ## ================================================================================================
+## Generate a custom installer image for each node using the Talos Image Factory
+## ================================================================================================
+data "http" "talos_image_hash_controlplane" {
+  for_each                    = var.node_data.controlplanes
+  url    = "https://factory.talos.dev/schematics"
+  method = "POST"
+  insecure = true
+
+  request_body = <<EOT
+customization:
+    systemExtensions:
+      officialExtensions:
+        - siderolabs/i915-ucode
+        - siderolabs/intel-ucode
+        - siderolabs/iscsi-tools
+EOT
+}
+data "http" "talos_image_hash_worker" {
+  for_each                    = var.node_data.workers
+  url    = "https://factory.talos.dev/schematics"
+  method = "POST"
+  insecure = true
+
+  request_body = <<EOT
+customization:
+    systemExtensions:
+      officialExtensions:
+        - siderolabs/i915-ucode
+        - siderolabs/intel-ucode
+        - siderolabs/iscsi-tools
+EOT
+}
+
+
+## ================================================================================================
 ## talosctl gen secrets
 ## ================================================================================================
 resource "talos_machine_secrets" "this" {
