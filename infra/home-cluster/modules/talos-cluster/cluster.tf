@@ -1,37 +1,4 @@
 ## ================================================================================================
-## Generate a custom installer image for each node using the Talos Image Factory
-## ================================================================================================
-data "http" "talos_image_hash_controlplane" {
-  for_each = var.node_data.controlplanes
-  url      = "https://factory.talos.dev/schematics"
-  method   = "POST"
-  insecure = true
-
-  request_body = yamlencode({
-    "customization" : {
-      "systemExtensions" : {
-        "officialExtensions" : each.value.system_extensions
-      }
-    }
-  })
-}
-data "http" "talos_image_hash_worker" {
-  for_each = var.node_data.workers
-  url      = "https://factory.talos.dev/schematics"
-  method   = "POST"
-  insecure = true
-
-  request_body = yamlencode({
-    "customization" : {
-      "systemExtensions" : {
-        "officialExtensions" : each.value.system_extensions
-      }
-    }
-  })
-}
-
-
-## ================================================================================================
 ## talosctl gen secrets
 ## ================================================================================================
 resource "talos_machine_secrets" "this" {}
@@ -94,11 +61,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
       install_disk = each.value.install_disk
-    }),
-    templatefile("${path.module}/templates/installer-image.yaml", {
-      image_hash    = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
-      talos_version = var.talos_version
-    }),
+    })
   ]
 }
 
@@ -116,11 +79,7 @@ resource "talos_machine_configuration_apply" "worker" {
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
       install_disk = each.value.install_disk
-    }),
-    templatefile("${path.module}/templates/installer-image.yaml", {
-      image_hash    = jsondecode(data.http.talos_image_hash_worker[each.key].response_body)["id"]
-      talos_version = var.talos_version
-    }),
+    })
   ]
 }
 

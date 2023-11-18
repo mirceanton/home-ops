@@ -11,11 +11,5 @@ terraform {
       source  = "hashicorp/local"
       version = "2.4.0"
     }
-
-    # To fetch the installer image name
-    http = {
-      source  = "hashicorp/http"
-      version = "3.4.0"
-    }
   }
 }

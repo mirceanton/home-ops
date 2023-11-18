@@ -6,11 +6,15 @@ data "talos_cluster_kubeconfig" "this" {
 }
 
 resource "local_file" "kubeconfig" {
-  content  = data.talos_cluster_kubeconfig.this.kubeconfig_raw
+  content  = nonsensitive( data.talos_cluster_kubeconfig.this.kubeconfig_raw )
   filename = pathexpand("~/.kube/configs/${var.cluster_name}.yaml")
 }
 
 output "kubeconfig" {
   value     = data.talos_cluster_kubeconfig.this.kubeconfig_raw
   sensitive = true
+}
+
+output "kubeconfig_file_path" {
+  value     = local_file.kubeconfig.filename
 }

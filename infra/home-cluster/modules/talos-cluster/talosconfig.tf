@@ -14,3 +14,7 @@ output "talosconfig" {
   value     = data.talos_client_configuration.this.talos_config
   sensitive = true
 }
+
+output "talosconfig_file_path" {
+  value     = local_file.talosconfig.filename
+}

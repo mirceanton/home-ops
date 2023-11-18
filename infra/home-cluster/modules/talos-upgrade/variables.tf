@@ -3,6 +3,10 @@ variable "talos_version" {
   type        = string
 }
 
+variable "talosconfig_file_path" {
+  type = string
+}
+
 variable "node_data" {
   description = "A map of node data"
   type = object({

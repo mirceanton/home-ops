@@ -1,4 +1,0 @@
----
-machine:
-  install:
-    image: factory.talos.dev/installer/${image_hash}:${talos_version}

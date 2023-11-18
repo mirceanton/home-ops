@@ -1,4 +1,37 @@
 ## ================================================================================================
+## Generate a custom installer image for each node using the Talos Image Factory
+## ================================================================================================
+data "http" "talos_image_hash_controlplane" {
+  for_each = var.node_data.controlplanes
+  url      = "https://factory.talos.dev/schematics"
+  method   = "POST"
+  insecure = true
+
+  request_body = yamlencode({
+    "customization" : {
+      "systemExtensions" : {
+        "officialExtensions" : each.value.system_extensions
+      }
+    }
+  })
+}
+data "http" "talos_image_hash_worker" {
+  for_each = var.node_data.workers
+  url      = "https://factory.talos.dev/schematics"
+  method   = "POST"
+  insecure = true
+
+  request_body = yamlencode({
+    "customization" : {
+      "systemExtensions" : {
+        "officialExtensions" : each.value.system_extensions
+      }
+    }
+  })
+}
+
+
+## ================================================================================================
 ## talosctl upgrade (to make sure system extensions are always applied I guess)
 ## ================================================================================================
 resource "null_resource" "talosctl_upgrade_controlplane" {
@@ -19,7 +52,7 @@ resource "null_resource" "talosctl_upgrade_controlplane" {
     }
     command = <<EOT
         talosctl upgrade \
-            --talosconfig ${local_file.talosconfig.filename} \
+            --talosconfig ${var.talosconfig_file_path} \
             --nodes ${each.key} \
             --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version} \
             $EXTRA_FLAGS
@@ -43,12 +76,12 @@ resource "null_resource" "talosctl_upgrade_workers" {
 
   provisioner "local-exec" {
     environment = {
-      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
+      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_worker[each.key].response_body)["id"]
     }
 
     command = <<EOT
         talosctl upgrade \
-            --talosconfig ${local_file.talosconfig.filename} \
+            --talosconfig ${var.talosconfig_file_path} \
             --nodes ${each.key} \
             --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version}
     EOT

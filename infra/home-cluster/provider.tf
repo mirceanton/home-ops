@@ -38,17 +38,6 @@ terraform {
   }
 }
 
-
-provider "helm" {
-  kubernetes {
-    config_path =  pathexpand("~/.kube/configs/${var.cluster_name}.yaml")
-  }
-}
-
-provider "kubernetes" {
-  config_path    =  pathexpand("~/.kube/configs/${var.cluster_name}.yaml")
-}
-
 provider "routeros" {
   hosturl  = var.mikrotik["hosturl"]
   username = var.mikrotik["username"]
