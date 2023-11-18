@@ -13,7 +13,7 @@ ARG AGE_VERSION=v1.1.1
 ARG TASKFILE_VERSION=v3.31.0
 ARG HELMFILE_VERSION=v0.158.1
 ARG DOCKER_VERSION=24.0.7-cli
-ARG TALHELPER_VERSION=v1.14.0
+ARG TALHELPER_VERSION=v1.15.0
 
 
 ## ================================================================================================
