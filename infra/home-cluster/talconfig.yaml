@@ -1,5 +1,5 @@
 ---
-clusterName: ${HOME_CLUSTER_NAME}
+clusterName: home-cluster
 endpoint: https://10.0.10.10:6443
 domain: home.mirceanton.com
 
@@ -19,41 +19,80 @@ controlPlane:
     - "@patches/keycloak-auth.yaml"
 
 nodes:
-  - hostname: hkc-01.home.k8s.mirceanton.com
+  - hostname: cp-01.dev.k8s.mirceanton.com
     controlPlane: true
-    ipAddress: 10.0.10.11
+    ipAddress: 10.0.10.195
     networkInterfaces:
-      - interface: eth7085C2588D31
-        dhcp: true
-      - interface: eth6805CAC2ADFA
+      - interface: enxf209426c8143
         dhcp: true
         vip:
           ip: 10.0.10.10
-    installDisk: /dev/nvme0n1
-    nodeLabels:
-      system: "2U"
+    installDisk: /dev/sda
     schematic:
       systemExtensions:
         officialExtensions:
-          - siderolabs/i915-ucode
-          - siderolabs/intel-ucode
+          - siderolabs/qemu-guest-agent
+          - siderolabs/iscsi-tools
+  - hostname: cp-02.dev.k8s.mirceanton.com
+    controlPlane: true
+    ipAddress: 10.0.10.194
+    networkInterfaces:
+      - interface: enx62bcc5c16107
+        dhcp: true
+        vip:
+          ip: 10.0.10.10
+    installDisk: /dev/sda
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/qemu-guest-agent
+          - siderolabs/iscsi-tools
+  - hostname: cp-03.dev.k8s.mirceanton.com
+    controlPlane: true
+    ipAddress: 10.0.10.193
+    networkInterfaces:
+      - interface: enx2a74dfcaae21
+        dhcp: true
+        vip:
+          ip: 10.0.10.10
+    installDisk: /dev/sda
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/qemu-guest-agent
           - siderolabs/iscsi-tools
 
-  - hostname: hkc-02.home.k8s.mirceanton.com
-    controlPlane: true
-    ipAddress: 10.0.10.12
+
+  - hostname: wkr-01.dev.k8s.mirceanton.com
+    ipAddress: 10.0.10.192
     networkInterfaces:
-      - interface: ethD037456F2229
+      - interface: enx12061545ed40
         dhcp: true
-      - interface: eth1C8341325597
-        dhcp: true
-        vip:
-          ip: 10.0.10.10
-    installDisk: /dev/nvme0n1
-    nodeLabels:
-      system: "MinisForum"
+    installDisk: /dev/sda
     schematic:
       systemExtensions:
         officialExtensions:
           - siderolabs/iscsi-tools
-          - siderolabs/amd-ucode
+          - siderolabs/qemu-guest-agent
+  - hostname: wkr-02.dev.k8s.mirceanton.com
+    ipAddress: 10.0.10.191
+    networkInterfaces:
+      - interface: enxf6532c2101d7
+        dhcp: true
+    installDisk: /dev/sda
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/qemu-guest-agent
+  - hostname: wkr-03.dev.k8s.mirceanton.com
+    ipAddress: 10.0.10.190
+    networkInterfaces:
+      - interface: enxceddef0c1f19
+        dhcp: true
+    installDisk: /dev/sda
+    schematic:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/qemu-guest-agent
