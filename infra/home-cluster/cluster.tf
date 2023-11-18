@@ -9,10 +9,10 @@ data "http" "talos_image_hash_controlplane" {
 
   request_body = yamlencode({
     "customization": {
-		"systemExtensions": {
-			"officialExtensions": each.value.system_extensions
-		}
-	}
+      "systemExtensions": {
+        "officialExtensions": each.value.system_extensions
+      }
+    }
   })
 }
 data "http" "talos_image_hash_worker" {
@@ -23,10 +23,10 @@ data "http" "talos_image_hash_worker" {
 
   request_body = yamlencode({
     "customization": {
-		"systemExtensions": {
-			"officialExtensions": each.value.system_extensions
-		}
-	}
+      "systemExtensions": {
+        "officialExtensions": each.value.system_extensions
+      }
+    }
   })
 }
 
@@ -135,4 +135,59 @@ resource "talos_machine_bootstrap" "this" {
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = [for k, v in var.node_data.controlplanes : k][0]
+}
+
+
+## ================================================================================================
+## talosctl upgrade (to make sure system extensions are always applied I guess)
+## ================================================================================================
+resource "null_resource" "talosctl_upgrade_controlplane" {
+  for_each                    = var.node_data.controlplanes
+
+  triggers = {
+    talos_version = var.talos_version,          # trigger the upgrade when changing the Talos OS version
+    extensions = each.value.system_extensions,  # trigger the upgrade when changing the system extensions
+  }
+
+  # run the upgrade command after the cluster is up and running
+  depends_on = [ talos_cluster_kubeconfig.this ]
+
+  provisioner "local-exec" {
+    environment = {
+      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
+      EXTRA_FLAGS = length(var.node_data.controlplanes) < 3 ? "--preserve" : ""
+    }
+    command = <<EOT
+        talosctl upgrade \
+            --talosconfig ${local_file.talosconfig.filename} \
+            --nodes ${each.key} \
+            --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version}
+            $EXTRA_FLAGS
+    EOT
+  }
+}
+
+resource "null_resource" "talosctl_upgrade_workers" {
+  for_each                    = var.node_data.workers
+
+  triggers = {
+    talos_version = var.talos_version,          # trigger the upgrade when changing the Talos OS version
+    extensions = each.value.system_extensions,  # trigger the upgrade when changing the system extensions
+  }
+
+  # upgrade workers after the controlplanes are upgraded
+  depends_on = [ null_resource.talosctl_upgrade_controlplane ]
+
+  provisioner "local-exec" {
+    environment = {
+      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
+    }
+
+    command = <<EOT
+        talosctl upgrade \
+            --talosconfig ${local_file.talosconfig.filename} \
+            --nodes ${each.key} \
+            --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version}
+    EOT
+  }
 }
