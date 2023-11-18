@@ -5,17 +5,8 @@ variable "cluster_name" {
 
 variable "cluster_vip" {
   description = "The IP address of the VIP to be placed in front of the Talos API nodes."
-  type        = object({
-    ip = string,
-    fqdn = string
-  })
-}
-
-variable "cluster_service_lb" {
-  description = "The IP address of the Kubernetes ingress controller."
-  type        = object({
-    ip = string,
-    fqdn = string
+  type = object({
+    ip = string
   })
 }
 
@@ -34,32 +25,20 @@ variable "node_data" {
   type = object({
     controlplanes = map(object({
       install_disk      = string
-      network_interface         = object({
-        name = string,
-        mac_address = string,
-      }),
       system_extensions = list(string),
-      fqdn        = string
+      network_interface = object({
+        name        = string,
+        mac_address = string,
+      })
     }))
 
     workers = map(object({
       install_disk      = string
-      network_interface         = object({
-        name = string,
-        mac_address = string,
-      }),
       system_extensions = list(string),
-      fqdn        = string
+      network_interface = object({
+        name        = string,
+        mac_address = string,
+      })
     }))
-  })
-}
-
-variable "mikrotik" {
-  description = "Connection details for the mikoritk router"
-  type = object({
-    hosturl  = string,
-    username = string,
-    password = string,
-    insecure = bool
   })
 }

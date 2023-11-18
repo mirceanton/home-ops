@@ -6,7 +6,7 @@ infra/**/*/rendered/*
 infra/**/*/.terraform
 infra/**/*/.terraform.lock.hcl
 infra/**/*/*.auto.tfvars
-infra/**/*/terraform.tfstate
+infra/**/*/terraform.tfstate*
 
 # MkDocs Generated Files
 site/

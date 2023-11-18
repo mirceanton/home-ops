@@ -1,0 +1,5 @@
+service:
+  clusterIP: 10.96.0.10
+  clusterIPs:
+    - 10.96.0.10
+  name: coredns

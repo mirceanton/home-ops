@@ -8,9 +8,9 @@ data "http" "talos_image_hash_controlplane" {
   insecure = true
 
   request_body = yamlencode({
-    "customization": {
-      "systemExtensions": {
-        "officialExtensions": each.value.system_extensions
+    "customization" : {
+      "systemExtensions" : {
+        "officialExtensions" : each.value.system_extensions
       }
     }
   })
@@ -22,9 +22,9 @@ data "http" "talos_image_hash_worker" {
   insecure = true
 
   request_body = yamlencode({
-    "customization": {
-      "systemExtensions": {
-        "officialExtensions": each.value.system_extensions
+    "customization" : {
+      "systemExtensions" : {
+        "officialExtensions" : each.value.system_extensions
       }
     }
   })
@@ -34,9 +34,7 @@ data "http" "talos_image_hash_worker" {
 ## ================================================================================================
 ## talosctl gen secrets
 ## ================================================================================================
-resource "talos_machine_secrets" "this" {
-  talos_version = var.talos_version
-}
+resource "talos_machine_secrets" "this" {}
 
 
 ## ================================================================================================
@@ -44,7 +42,7 @@ resource "talos_machine_secrets" "this" {
 ## ================================================================================================
 data "talos_machine_configuration" "controlplane" {
   cluster_name       = var.cluster_name
-  cluster_endpoint   = "https://${var.cluster_vip}:6443"
+  cluster_endpoint   = "https://${var.cluster_vip.ip}:6443"
   machine_type       = "controlplane"
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
@@ -61,7 +59,7 @@ data "talos_machine_configuration" "controlplane" {
 
 data "talos_machine_configuration" "worker" {
   cluster_name       = var.cluster_name
-  cluster_endpoint   = "https://${var.cluster_vip}:6443"
+  cluster_endpoint   = "https://${var.cluster_vip.ip}:6443"
   machine_type       = "worker"
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
@@ -87,12 +85,12 @@ resource "talos_machine_configuration_apply" "controlplane" {
   # Node-specific config patches
   config_patches = [
     templatefile("${path.module}/templates/controlplane-vip.yaml", {
-      interface   = each.value.interface,
-      cluster_vip = var.cluster_vip
+      interface   = each.value.network_interface.name,
+      cluster_vip = var.cluster_vip.ip
     }),
     templatefile("${path.module}/templates/dhcp.yaml", {
       hostname  = format("%s-cp-%s", var.cluster_name, index(keys(var.node_data.controlplanes), each.key)),
-      interface = each.value.interface
+      interface = each.value.network_interface.name
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
       install_disk = each.value.install_disk
@@ -114,7 +112,7 @@ resource "talos_machine_configuration_apply" "worker" {
   config_patches = [
     templatefile("${path.module}/templates/dhcp.yaml", {
       hostname  = format("%s-wkr-%s", var.cluster_name, index(keys(var.node_data.workers), each.key)),
-      interface = each.value.interface
+      interface = each.value.network_interface.name
     }),
     templatefile("${path.module}/templates/install-disk.yaml", {
       install_disk = each.value.install_disk
@@ -135,59 +133,4 @@ resource "talos_machine_bootstrap" "this" {
 
   client_configuration = talos_machine_secrets.this.client_configuration
   node                 = [for k, v in var.node_data.controlplanes : k][0]
-}
-
-
-## ================================================================================================
-## talosctl upgrade (to make sure system extensions are always applied I guess)
-## ================================================================================================
-resource "null_resource" "talosctl_upgrade_controlplane" {
-  for_each                    = var.node_data.controlplanes
-
-  triggers = {
-    talos_version = var.talos_version,          # trigger the upgrade when changing the Talos OS version
-    extensions = each.value.system_extensions,  # trigger the upgrade when changing the system extensions
-  }
-
-  # run the upgrade command after the cluster is up and running
-  depends_on = [ talos_cluster_kubeconfig.this ]
-
-  provisioner "local-exec" {
-    environment = {
-      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
-      EXTRA_FLAGS = length(var.node_data.controlplanes) < 3 ? "--preserve" : ""
-    }
-    command = <<EOT
-        talosctl upgrade \
-            --talosconfig ${local_file.talosconfig.filename} \
-            --nodes ${each.key} \
-            --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version}
-            $EXTRA_FLAGS
-    EOT
-  }
-}
-
-resource "null_resource" "talosctl_upgrade_workers" {
-  for_each                    = var.node_data.workers
-
-  triggers = {
-    talos_version = var.talos_version,          # trigger the upgrade when changing the Talos OS version
-    extensions = each.value.system_extensions,  # trigger the upgrade when changing the system extensions
-  }
-
-  # upgrade workers after the controlplanes are upgraded
-  depends_on = [ null_resource.talosctl_upgrade_controlplane ]
-
-  provisioner "local-exec" {
-    environment = {
-      INSTALLER_IMAGE = jsondecode(data.http.talos_image_hash_controlplane[each.key].response_body)["id"]
-    }
-
-    command = <<EOT
-        talosctl upgrade \
-            --talosconfig ${local_file.talosconfig.filename} \
-            --nodes ${each.key} \
-            --image factory.talos.dev/installer/$INSTALLER_IMAGE:${var.talos_version}
-    EOT
-  }
 }
