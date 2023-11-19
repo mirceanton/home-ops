@@ -19,80 +19,50 @@ controlPlane:
     - "@patches/keycloak-auth.yaml"
 
 nodes:
-  - hostname: cp-01.dev.k8s.mirceanton.com
+  - hostname: nuc.home.k8s.mirceanton.com
     controlPlane: true
-    ipAddress: 10.0.10.195
+    ipAddress: 10.0.10.11
     networkInterfaces:
-      - interface: enxf209426c8143
+      - interface: enp100s0
         dhcp: true
         vip:
           ip: 10.0.10.10
-    installDisk: /dev/sda
+    installDisk: /dev/nvme0n1
     schematic:
       systemExtensions:
         officialExtensions:
-          - siderolabs/qemu-guest-agent
+          - siderolabs/i915-ucode
+          - siderolabs/intel-ucode
           - siderolabs/iscsi-tools
-  - hostname: cp-02.dev.k8s.mirceanton.com
+
+  - hostname: srv.home.k8s.mirceanton.com
     controlPlane: true
-    ipAddress: 10.0.10.194
+    ipAddress: 10.0.10.12
     networkInterfaces:
-      - interface: enx62bcc5c16107
+      - interface: enp2s0
         dhcp: true
         vip:
           ip: 10.0.10.10
-    installDisk: /dev/sda
+    installDisk: /dev/nvme0n1
     schematic:
       systemExtensions:
         officialExtensions:
-          - siderolabs/qemu-guest-agent
-          - siderolabs/iscsi-tools
-  - hostname: cp-03.dev.k8s.mirceanton.com
-    controlPlane: true
-    ipAddress: 10.0.10.193
-    networkInterfaces:
-      - interface: enx2a74dfcaae21
-        dhcp: true
-        vip:
-          ip: 10.0.10.10
-    installDisk: /dev/sda
-    schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/qemu-guest-agent
+          - siderolabs/i915-ucode
+          - siderolabs/intel-ucode
           - siderolabs/iscsi-tools
 
 
-  - hostname: wkr-01.dev.k8s.mirceanton.com
-    ipAddress: 10.0.10.192
+  - hostname: minisforum.home.k8s.mirceanton.com
+    controlPlane: true
+    ipAddress: 10.0.10.13
     networkInterfaces:
-      - interface: enx12061545ed40
+      - interface: enp0s31f6
         dhcp: true
-    installDisk: /dev/sda
+        vip:
+          ip: 10.0.10.10
+    installDisk: /dev/nvme0n1
     schematic:
       systemExtensions:
         officialExtensions:
+          - siderolabs/amd-ucode
           - siderolabs/iscsi-tools
-          - siderolabs/qemu-guest-agent
-  - hostname: wkr-02.dev.k8s.mirceanton.com
-    ipAddress: 10.0.10.191
-    networkInterfaces:
-      - interface: enxf6532c2101d7
-        dhcp: true
-    installDisk: /dev/sda
-    schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/iscsi-tools
-          - siderolabs/qemu-guest-agent
-  - hostname: wkr-03.dev.k8s.mirceanton.com
-    ipAddress: 10.0.10.190
-    networkInterfaces:
-      - interface: enxceddef0c1f19
-        dhcp: true
-    installDisk: /dev/sda
-    schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/iscsi-tools
-          - siderolabs/qemu-guest-agent
