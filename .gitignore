@@ -2,6 +2,7 @@
 infra/**/*/secrets.yaml
 infra/**/*/talsecret.yaml
 infra/**/*/rendered/*
+infra/**/*/clusterconfig/*
 
 # MkDocs Generated Files
 site/
