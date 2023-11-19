@@ -56,16 +56,21 @@ resource "routeros_ip_dhcp_server_lease" "k8s_switch_lease" {
 
 resource "routeros_ip_dhcp_server_lease" "hkc_01_k8s_lease" {
   address     = "10.0.10.11"
-  mac_address = "68:05:CA:C2:AD:FA"
+  mac_address = "48:21:0B:50:EE:C2"
   server      = routeros_ip_dhcp_server.k8s_dhcp.name
-  comment     = "2U server"
+  comment     = "NUC-12 i5"
 }
 resource "routeros_ip_dhcp_server_lease" "hkc_02_k8s_lease" {
   address     = "10.0.10.12"
+  mac_address = "70:85:C2:58:8D:31"
+  server      = routeros_ip_dhcp_server.k8s_dhcp.name
+  comment     = "2U server"
+}
+resource "routeros_ip_dhcp_server_lease" "hkc_03_k8s_lease" {
+  address     = "10.0.10.13"
   mac_address = "1C:83:41:32:55:97"
   server      = routeros_ip_dhcp_server.k8s_dhcp.name
   comment     = "MinisForum"
 }
 
-# TODO: Lease for hkc-03
 # TODO: Lease for infra-01
