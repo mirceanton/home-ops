@@ -39,7 +39,7 @@ tasks:
       - task: k8s:bootstrap
       - task: k8s:kubeconfig
       - task: k8s:wait
-      # - task: k8s:core-components
+      - task: k8s:core-components
 
   cluster:select:
     desc: This will set the currently active cluster.
