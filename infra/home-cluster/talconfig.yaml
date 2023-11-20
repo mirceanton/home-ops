@@ -29,11 +29,12 @@ nodes:
           ip: 10.0.10.10
     installDisk: /dev/nvme0n1
     schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/i915-ucode
-          - siderolabs/intel-ucode
-          - siderolabs/iscsi-tools
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ucode
+            - siderolabs/iscsi-tools
 
   - hostname: srv.home.k8s.mirceanton.com
     controlPlane: true
@@ -45,11 +46,12 @@ nodes:
           ip: 10.0.10.10
     installDisk: /dev/nvme0n1
     schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/i915-ucode
-          - siderolabs/intel-ucode
-          - siderolabs/iscsi-tools
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ucode
+            - siderolabs/iscsi-tools
 
 
   - hostname: minisforum.home.k8s.mirceanton.com
@@ -62,7 +64,8 @@ nodes:
           ip: 10.0.10.10
     installDisk: /dev/nvme0n1
     schematic:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/amd-ucode
-          - siderolabs/iscsi-tools
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/iscsi-tools
