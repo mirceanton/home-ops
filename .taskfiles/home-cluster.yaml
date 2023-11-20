@@ -10,13 +10,21 @@ env:
 includes:
   sops:
     internal: true
-    taskfile: ../../sops.yaml
+    taskfile: ./sops.yaml
   talos:
-    taskfile: ./talos.yaml
-    dir: ../../../infra/home-cluster
+    internal: true
+    taskfile: ./utils/talos.yaml
+    dir: ../infra/home-cluster
+    vars:
+      CLUSTER_NAME: "{{.HOME_CLUSTER_NAME}}"
+      CLUSTER_NODES: "{{.HOME_CLUSTER_NODES}}"
   k8s:
-    taskfile: ./k8s.yaml
-    dir: ../../../kubernetes/home-cluster/bootstrap
+    internal: true
+    taskfile: utils/k8s.yaml
+    dir: ../kubernetes/home-cluster/bootstrap
+    vars:
+      CLUSTER_NAME: "{{.HOME_CLUSTER_NAME}}"
+      CLUSTER_NODES: "{{.HOME_CLUSTER_NODES}}"
 
 tasks:
   cluster:create:
@@ -31,7 +39,7 @@ tasks:
       - task: k8s:bootstrap
       - task: k8s:kubeconfig
       - task: k8s:wait
-      - task: k8s:core-components
+      # - task: k8s:core-components
 
   cluster:select:
     desc: This will set the currently active cluster.
@@ -46,7 +54,6 @@ tasks:
     cmds:
       - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
-      - task: talos:delete-config
 
   cluster:shutdown:
     desc: Shutdown all Talos nodes.

@@ -6,7 +6,7 @@ tasks:
     desc: Generate the Talos machineconfig files.
     cmds:
       - talhelper genconfig
-      - talosctl --talosconfig clusterconfig/talosconfig config node {{(split " " .HOME_CLUSTER_NODES)._0}}
+      - talosctl --talosconfig clusterconfig/talosconfig config node {{(split " " .CLUSTER_NODES)._0}}
 
   config:delete:
     desc: Delete the Talos machineconfig files.
@@ -34,5 +34,5 @@ tasks:
     desc: Wait for the kubelet to be healthy on the Talos nodes.
     deps: [ task: talosconfig ]
     cmds:
-      - for: { var: HOME_CLUSTER_NODES }
+      - for: { var: CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh

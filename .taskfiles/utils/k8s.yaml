@@ -10,20 +10,17 @@ tasks:
     desc: Fetch the kubeconfig from the Talos cluster.
     run: once
     cmds:
-      - talosctl kubeconfig ~/.kube/configs/{{.INFRA_CLUSTER_NAME}}.yaml --force
-      - kswitcher admin@{{.INFRA_CLUSTER_NAME}}
+      - talosctl kubeconfig ~/.kube/configs/{{.CLUSTER_NAME}}.yaml --force
+      - kswitcher admin@{{.CLUSTER_NAME}}
 
   core-components:
     desc: Install the core components on the Kubernetes cluster.
-    cmds:
-      - helmfile apply
+    cmds: [ helmfile apply ]
 
   wait:
     desc: Wait for all of the cluster nodes to be in a ready state.
     cmds:
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
-      - for: { var: INFRA_CONTROLPLANE_NODES }
+      - for: { var: CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
-      - for: { var: INFRA_WORKER_NODES }
-        cmd: NODE_IP={{.ITEM}} NODE_ROLE="<none>" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
       - kubectl get nodes
