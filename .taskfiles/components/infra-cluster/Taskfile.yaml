@@ -9,16 +9,20 @@ vars:
   INFRA_KUBERNETES_VERSION: 1.26.9
 
 includes:
-  sops: ../../sops.yaml
+  sops:
+    internal: true
+    taskfile: ../../sops.yaml
   talos:
+    internal: true
     taskfile: ./talos.yaml
     dir: ../../../infra/infra-cluster
   k8s:
+    internal: true
     taskfile: ./k8s.yaml
     dir: ../../../kubernetes/infra-cluster/bootstrap
 
 tasks:
-  cluster:create:
+  create:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
     cmds:
@@ -32,7 +36,7 @@ tasks:
       - task: k8s:wait
       - task: k8s:core-components
 
-  cluster:reset:
+  reset:
     desc: Reset all of the talos nodes.
     prompt: >
       This will destroy the cluster...
@@ -44,19 +48,19 @@ tasks:
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
       - task: talos:delete-config
 
-  cluster:shutdown:all:
+  shutdown:all:
     desc: Shutdown all Talos nodes.
     cmds:
-      - task: cluster:shutdown:workers
-      - task: cluster:shutdown:controlplane
+      - task: shutdown:workers
+      - task: shutdown:controlplane
 
-  cluster:shutdown:workers:
+  shutdown:workers:
     desc: Shutdown all Talos worker nodes.
     cmds:
       - for: { var: INFRA_WORKER_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
 
-  cluster:shutdown:controlplane:
+  shutdown:controlplane:
     prompt: >
       This will turn off the controlplane nodes, making the API server inaccessible...
       Are you sure you want to continue?

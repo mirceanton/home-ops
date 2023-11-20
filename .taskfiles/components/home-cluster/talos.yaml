@@ -2,11 +2,13 @@
 version: '3'
 
 tasks:
-  generate-config:
+  config:generate:
     desc: Generate the Talos machineconfig files.
-    cmds: [ talhelper genconfig ]
+    cmds:
+      - talhelper genconfig
+      - talosctl --talosconfig clusterconfig/talosconfig config node {{(split " " .HOME_CLUSTER_NODES)._0}}
 
-  delete-config:
+  config:delete:
     desc: Delete the Talos machineconfig files.
     cmds: [ rm -f clusterconfig/* ]
 
@@ -20,10 +22,17 @@ tasks:
       - rm -f ~/.talos/config
       - cp clusterconfig/talosconfig ~/.talos/config
 
-  apply-config:
+  config:bootstrap:
     desc: Bootstrap talos on the home cluster nodes.
     preconditions:
       - sh: test -f clusterconfig/talosconfig
         msg: Talos configuration was not rendered.
     cmds:
-      - python3 {{.ROOT_DIR}}/scripts/talos-apply-config.py
+      - python3 {{.ROOT_DIR}}/scripts/talhelper-gencommand-apply.py | bash
+
+  wait:
+    desc: Wait for the kubelet to be healthy on the Talos nodes.
+    deps: [ task: talosconfig ]
+    cmds:
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh

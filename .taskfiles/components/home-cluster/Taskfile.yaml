@@ -3,11 +3,14 @@ version: '3'
 
 env:
   HOME_CLUSTER_NAME: home-cluster
-  HOME_CLUSTER_CP_NODES: hkc-02.home.k8s.mirceanton.com
-  HOME_CLUSTER_WKR_NODES: ""
+  HOME_CLUSTER_NODES:
+    sh: >
+      grep -oP 'ipAddress: \K[0-9.]+' infra/home-cluster/talconfig.yaml | tr '\n' ' '
 
 includes:
-  sops: ../../sops.yaml
+  sops:
+    internal: true
+    taskfile: ../../sops.yaml
   talos:
     taskfile: ./talos.yaml
     dir: ../../../infra/home-cluster
@@ -20,9 +23,9 @@ tasks:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
     cmds:
-      - task: talos:delete-config
-      - task: talos:generate-config
-      - task: talos:apply-config
+      - task: talos:config:delete
+      - task: talos:config:generate
+      - task: talos:config:bootstrap
       - task: talos:talosconfig
       - task: talos:wait
       - task: k8s:bootstrap
@@ -30,35 +33,31 @@ tasks:
       - task: k8s:wait
       - task: k8s:core-components
 
+  cluster:select:
+    desc: This will set the currently active cluster.
+    deps: [ sops:decrypt ]
+    cmds:
+      - task: talos:talosconfig
+      - task: k8s:kubeconfig
+
   cluster:reset:
     desc: Reset all of the talos nodes.
-    prompt: >
-      This will destroy the cluster...
-      Are you sure you want to continue?
+    prompt: This will destroy the cluster. Are you sure you want to continue?
     cmds:
-      - for: { var: HOME_CLUSTER_WKR_NODES }
-        cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
-      - for: { var: HOME_CLUSTER_CP_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
       - task: talos:delete-config
 
-  cluster:shutdown:all:
+  cluster:shutdown:
     desc: Shutdown all Talos nodes.
+    prompt: This will shutdown all of the cluster nodes. Are you sure you want to continue?
     cmds:
-      - task: cluster:shutdown:workers
-      - task: cluster:shutdown:controlplane
-
-  cluster:shutdown:workers:
-    desc: Shutdown all Talos worker nodes.
-    cmds:
-      - for: { var: HOME_CLUSTER_WKR_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
 
-  cluster:shutdown:controlplane:
-    prompt: >
-      This will turn off the controlplane nodes, making the API server inaccessible...
-      Are you sure you want to continue?
-    desc: Shutdown all Talos controlplane nodes.
+  cluster:reboot:
+    desc: Reboot all Talos nodes.
+    prompt: This will reboot all of the cluster nodes. Are you sure you want to continue?
     cmds:
-      - for: { var: HOME_CLUSTER_CP_NODES }
-        cmd: talosctl shutdown --wait=false -n {{.ITEM}}
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: talosctl reboot -n {{.ITEM}}
