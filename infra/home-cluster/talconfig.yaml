@@ -34,7 +34,8 @@ nodes:
     installDisk: /dev/nvme0n1
     controlPlane: true
     networkInterfaces:
-      - interface: enp100s0
+      - deviceSelector:
+          busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
@@ -56,7 +57,8 @@ nodes:
     installDisk: /dev/nvme0n1
     controlPlane: true
     networkInterfaces:
-      - interface: enp2s0
+      - deviceSelector:
+          busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
@@ -78,7 +80,8 @@ nodes:
     installDisk: /dev/nvme0n1
     controlPlane: true
     networkInterfaces:
-      - interface: enp0s31f6
+      - deviceSelector:
+          busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}

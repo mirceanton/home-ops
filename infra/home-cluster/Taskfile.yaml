@@ -1,0 +1,68 @@
+---
+version: '3'
+
+env:
+  HOME_CLUSTER_NAME: home-cluster
+  HOME_CLUSTER_ENDPOINT_IP: 10.0.10.10
+  HOME_CLUSTER_NETWORK_DOMAIN: k8s.mirceanton.com
+
+  HOME_CLUSTER_NODES:
+    sh: >
+      grep -oP 'ipAddress: \K[0-9.]+' talconfig.yaml | tr '\n' ' '
+
+includes:
+  # TODO: replace with sopshelper
+  sops:
+    internal: true
+    taskfile: ../../.taskfiles/sops.yaml
+
+tasks:
+  cluster:create:
+    desc: Bootstrap the application cluster end to end.
+    deps: [ sops:decrypt ]
+    cmds:
+      - talhelper genconfig > /dev/null
+      #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
+      - talosctl apply-config -n 10.0.10.11 --file clusterconfig/home-cluster-nuc.home-cluster.k8s.mirceanton.com.yaml --insecure
+      - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.home-cluster.k8s.mirceanton.com.yaml --insecure
+      - talosctl apply-config -n 10.0.10.13 --file clusterconfig/home-cluster-minisforum.home-cluster.k8s.mirceanton.com.yaml --insecure
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
+      - talosctl bootstrap -n {{(split " " .HOME_CLUSTER_NODES)._0}}
+      - task: cluster:select
+      - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
+      - cd integrations && helmfile apply
+
+  cluster:select:
+    desc: This will set the currently active cluster.
+    deps: [ sops:decrypt ]
+    cmds:
+      - talhelper genconfig > /dev/null
+      - rm ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
+      - rm ~/.kube/config && talosctl kubeconfig
+
+  cluster:reset:
+    desc: Reset all of the talos nodes.
+    prompt: This will destroy the cluster. Are you sure you want to continue?
+    deps: [ cluster:select ]
+    cmds:
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
+
+  cluster:reboot:
+    desc: Reboot all Talos nodes.
+    prompt: This will reboot all of the cluster nodes. Are you sure you want to continue?
+    deps: [ cluster:select ]
+    cmds:
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: talosctl reboot -n {{.ITEM}}
+
+  cluster:shutdown:
+    desc: Shutdown all Talos nodes.
+    prompt: This will shutdown all of the cluster nodes. Are you sure you want to continue?
+    deps: [ cluster:select ]
+    cmds:
+      - for: { var: HOME_CLUSTER_NODES }
+        cmd: talosctl shutdown --wait=false -n {{.ITEM}}

@@ -8,6 +8,6 @@ metadata:
 spec:
   interval: 10m0s
   ref:
-    branch: main
+    branch: feat/migrate_home_cluster_to_bare_metal
   timeout: 3m
   url: https://github.com/mirceanton/home-ops
