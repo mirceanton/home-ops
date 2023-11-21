@@ -1,11 +1,21 @@
 ---
-clusterName: home-cluster
-endpoint: https://10.0.10.10:6443
-domain: home.mirceanton.com
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+clusterName: ${clusterName}
+endpoint: https://${clusterName}.${clusterNetworkDomain}:6443
 
+# renovate: datasource=github-releases depName=siderolabs/talos
 talosVersion: v1.5.5
-kubernetesVersion: v1.28.2
+
+# renovate: datasource=github-releases depName=kubernetes/kubernetes
+kubernetesVersion: v1.28.4
+
+domain: cluster.local
 allowSchedulingOnControlPlanes: true
+additionalApiServerCertSans:
+  - ${clusterEndpointIP}
+additionalMachineCertSans:
+  - ${clusterEndpointIP}
+  - ${clusterName}.${clusterNetworkDomain}
 
 patches:
   - "@patches/cni.yaml"
@@ -19,15 +29,15 @@ controlPlane:
     - "@patches/keycloak-auth.yaml"
 
 nodes:
-  - hostname: nuc.home.k8s.mirceanton.com
-    controlPlane: true
+  - hostname: nuc.${clusterName}.${clusterNetworkDomain}
     ipAddress: 10.0.10.11
+    installDisk: /dev/nvme0n1
+    controlPlane: true
     networkInterfaces:
       - interface: enp100s0
         dhcp: true
         vip:
-          ip: 10.0.10.10
-    installDisk: /dev/nvme0n1
+          ip: ${clusterEndpointIP}
     schematic:
       customization:
         systemExtensions:
@@ -36,15 +46,15 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-  - hostname: srv.home.k8s.mirceanton.com
-    controlPlane: true
+  - hostname: srv.${clusterName}.${clusterNetworkDomain}
     ipAddress: 10.0.10.12
+    installDisk: /dev/nvme0n1
+    controlPlane: true
     networkInterfaces:
       - interface: enp2s0
         dhcp: true
         vip:
-          ip: 10.0.10.10
-    installDisk: /dev/nvme0n1
+          ip: ${clusterEndpointIP}
     schematic:
       customization:
         systemExtensions:
@@ -53,16 +63,15 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-
-  - hostname: minisforum.home.k8s.mirceanton.com
-    controlPlane: true
+  - hostname: minisforum.${clusterName}.${clusterNetworkDomain}
     ipAddress: 10.0.10.13
+    installDisk: /dev/nvme0n1
+    controlPlane: true
     networkInterfaces:
       - interface: enp0s31f6
         dhcp: true
         vip:
-          ip: 10.0.10.10
-    installDisk: /dev/nvme0n1
+          ip: ${clusterEndpointIP}
     schematic:
       customization:
         systemExtensions:
