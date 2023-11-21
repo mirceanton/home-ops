@@ -21,7 +21,7 @@ tasks:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
     cmds:
-      - talhelper genconfig > /dev/null
+      - talhelper genconfig --no-gitignore > /dev/null
       #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
       - talosctl apply-config -n 10.0.10.11 --file clusterconfig/home-cluster-nuc.home-cluster.k8s.mirceanton.com.yaml --insecure
       - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.home-cluster.k8s.mirceanton.com.yaml --insecure
@@ -39,9 +39,9 @@ tasks:
     desc: This will set the currently active cluster.
     deps: [ sops:decrypt ]
     cmds:
-      - talhelper genconfig > /dev/null
-      - rm ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
-      - rm ~/.kube/config && talosctl kubeconfig
+      - talhelper genconfig --no-gitignore > /dev/null
+      - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
+      - rm -f ~/.kube/config && talosctl -n {{(split " " .HOME_CLUSTER_NODES)._0}} kubeconfig
 
   cluster:reset:
     desc: Reset all of the talos nodes.
