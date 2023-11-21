@@ -11,7 +11,7 @@ releases:
   - name: cilium
     namespace: cilium-system
     chart: cilium/cilium
-    version: 1.14.2
+    version: 1.14.4
     wait: true
     hooks:
       - events: [ "preapply" ]
