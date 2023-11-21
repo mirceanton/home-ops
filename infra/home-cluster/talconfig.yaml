@@ -38,6 +38,11 @@ nodes:
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
     schematic:
       customization:
         systemExtensions:
@@ -55,6 +60,11 @@ nodes:
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
     schematic:
       customization:
         systemExtensions:
@@ -72,6 +82,11 @@ nodes:
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
     schematic:
       customization:
         systemExtensions:
