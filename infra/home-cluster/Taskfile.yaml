@@ -23,9 +23,9 @@ tasks:
     cmds:
       - talhelper genconfig --no-gitignore > /dev/null
       #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
-      - talosctl apply-config -n 10.0.10.11 --file clusterconfig/home-cluster-nuc.home-cluster.k8s.mirceanton.com.yaml --insecure
-      - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.home-cluster.k8s.mirceanton.com.yaml --insecure
-      - talosctl apply-config -n 10.0.10.13 --file clusterconfig/home-cluster-minisforum.home-cluster.k8s.mirceanton.com.yaml --insecure
+      - talosctl apply-config -n 10.0.10.11 --file clusterconfig/home-cluster-nuc.yaml --insecure
+      - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.yaml --insecure
+      - talosctl apply-config -n 10.0.10.13 --file clusterconfig/home-cluster-min.yaml --insecure
       - for: { var: HOME_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
       - talosctl bootstrap -n {{(split " " .HOME_CLUSTER_NODES)._0}}

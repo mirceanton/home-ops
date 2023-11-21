@@ -1,7 +1,7 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
 clusterName: ${clusterName}
-endpoint: https://${clusterName}.${clusterNetworkDomain}:6443
+endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: datasource=github-releases depName=siderolabs/talos
 talosVersion: v1.5.5
@@ -15,7 +15,6 @@ additionalApiServerCertSans:
   - ${clusterEndpointIP}
 additionalMachineCertSans:
   - ${clusterEndpointIP}
-  - ${clusterName}.${clusterNetworkDomain}
 
 patches:
   - "@patches/cni.yaml"
@@ -29,7 +28,7 @@ controlPlane:
     - "@patches/keycloak-auth.yaml"
 
 nodes:
-  - hostname: nuc.${clusterName}.${clusterNetworkDomain}
+  - hostname: nuc
     ipAddress: 10.0.10.11
     installDisk: /dev/nvme0n1
     controlPlane: true
@@ -52,7 +51,7 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-  - hostname: srv.${clusterName}.${clusterNetworkDomain}
+  - hostname: srv
     ipAddress: 10.0.10.12
     installDisk: /dev/nvme0n1
     controlPlane: true
@@ -75,7 +74,7 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-  - hostname: minisforum.${clusterName}.${clusterNetworkDomain}
+  - hostname: minisforum
     ipAddress: 10.0.10.13
     installDisk: /dev/nvme0n1
     controlPlane: true

@@ -1,3 +1,2 @@
 clusterName: home-cluster
 clusterEndpointIP: 10.0.10.10
-clusterNetworkDomain: k8s.mirceanton.com
