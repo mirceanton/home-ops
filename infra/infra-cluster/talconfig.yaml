@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+clusterName: ${clusterName}
+endpoint: https://${clusterEndpointIP}:6443
+
+# renovate: datasource=github-releases depName=siderolabs/talos
+talosVersion: v1.5.5
+
+# renovate: datasource=github-releases depName=kubernetes/kubernetes
+kubernetesVersion: v1.28.4
+
+domain: cluster.local
+additionalApiServerCertSans:
+  - ${clusterEndpointIP}
+additionalMachineCertSans:
+  - ${clusterEndpointIP}
+
+allowSchedulingOnControlPlanes: true
+cniConfig:
+  name: flannel
+
+patches:
+    - |-  # Disable default API server admission plugins.
+      - op: remove
+        path: /cluster/apiServer/admissionControl
+
+    - |-  # Kubelet configuration
+      machine:
+        kubelet:
+          extraArgs:
+            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+            rotate-server-certificates: "true"
+
+nodes:
+  - hostname: minisforum
+    ipAddress: 10.0.10.31
+    controlPlane: true
+  
+    installDisk: /dev/nvme0n1
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/sata
+
+    networkInterfaces:
+      - deviceSelector:
+          busPath: "0*"
+        dhcp: true
+        vip:
+          ip: ${clusterEndpointIP}
+
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/iscsi-tools
+
+    patches:
+      - |-  # Extra disks
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/sata
+                type: bind
+                source: /var/mnt/sata
+                options:
+                  - rbind
+                  - rshared
+                  - rw

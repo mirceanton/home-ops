@@ -1,6 +1,0 @@
----
-machine:
-  disks:
-    - device: /dev/sdb
-      partitions:
-        - mountpoint: /var/mnt/local-path-provisioner
