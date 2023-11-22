@@ -37,12 +37,12 @@ patches:
           enabled: true
           port: 7445
 
-    - |-  # Kubelet configuration
-      machine:
-        kubelet:
-          extraArgs:
-            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
-            rotate-server-certificates: "true"
+  - |-  # Kubelet configuration
+    machine:
+      kubelet:
+        extraArgs:
+          feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+          rotate-server-certificates: "true"
 
 worker:
   patches: []
@@ -59,7 +59,6 @@ controlPlane:
             oidc-username-prefix: keycloak_
             oidc-issuer-url: https://auth.${clusterDomain}/keycloak/realms/home
             oidc-username-claim: email
-
 
 nodes:
   - hostname: nuc
