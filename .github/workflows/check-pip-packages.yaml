@@ -16,7 +16,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: [ "arc-runner-set-home-ops" ]
     container:
-      image: python:3.11.4-alpine3.18
+      image: python:3.12.0-alpine3.18
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
