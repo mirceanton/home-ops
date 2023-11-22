@@ -10,22 +10,56 @@ talosVersion: v1.5.5
 kubernetesVersion: v1.28.4
 
 domain: cluster.local
-allowSchedulingOnControlPlanes: true
 additionalApiServerCertSans:
   - ${clusterEndpointIP}
 additionalMachineCertSans:
   - ${clusterEndpointIP}
 
+allowSchedulingOnControlPlanes: true
+cniConfig:
+  name: none
+
 patches:
-  - "@patches/cni.yaml"
-  - "@patches/kubelet-certificate-rotation.yaml"
+  - |-  # Disable proxy
+    cluster:
+      proxy:
+        disabled: true
+
+  - |-  # Disable coreDNS
+    cluster:
+      coreDNS:
+        disabled: true
+
+  - |-  # Enable KubePrism
+    machine:
+      features:
+        kubePrism:
+          enabled: true
+          port: 7445
+
+    - |-  # Kubelet configuration
+      machine:
+        kubelet:
+          extraArgs:
+            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+            rotate-server-certificates: "true"
 
 worker:
   patches: []
 
 controlPlane:
   patches:
-    - "@patches/keycloak-auth.yaml"
+    - |-  # Keycloak Auth
+      cluster:
+        apiServer:
+          extraArgs:
+            oidc-client-id: kubernetes
+            oidc-groups-claim: groups
+            oidc-groups-prefix: keycloak_
+            oidc-username-prefix: keycloak_
+            oidc-issuer-url: https://auth.${clusterDomain}/keycloak/realms/home
+            oidc-username-claim: email
+
 
 nodes:
   - hostname: nuc
