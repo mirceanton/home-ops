@@ -2,12 +2,14 @@
 version: '3'
 
 env:
-  HOME_CLUSTER_NAME: home-cluster
-  HOME_CLUSTER_ENDPOINT_IP: 10.0.10.10
-  HOME_CLUSTER_NETWORK_DOMAIN: k8s.mirceanton.com
-
+  HOME_CLUSTER_NAME:
+    sh: |-
+      awk -F': ' '/clusterName/{print $2}' talenv.yaml
+  HOME_CLUSTER_ENDPOINT_IP:
+    sh: |-
+      awk -F': ' '/clusterEndpointIP/{print $2}' talenv.yaml
   HOME_CLUSTER_NODES:
-    sh: >
+    sh: |-
       grep -oP 'ipAddress: \K[0-9.]+' talconfig.yaml | tr '\n' ' '
 
 includes:
