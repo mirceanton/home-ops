@@ -10,7 +10,8 @@ spec:
     storage: 100Gi
   iscsi:
     targetPortal: 10.0.10.245:3260
-    iqn: iqn.2023-04.com.mirceanton.iscsi:truenas:infra-cluster-minio
+    # iqn: <base name from iscsi global config>:<extent name>
+    iqn: iqn.2023-04.mirceanton.com:infra-cluster-minio
     lun: 0
     fsType: ext4
     readOnly: false
