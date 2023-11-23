@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - cilium-system.namespace.yaml
+
+commonAnnotations:
+  meta.helm.sh/release-name: cilium
+  meta.helm.sh/release-namespace: cilium-system
+commonLabels:
+  app.kubernetes.io/managed-by: Helm
+
+helmCharts:
+  - name: cilium
+    repo: https://helm.cilium.io/
+    version: 1.14.4
+    releaseName: cilium
+    includeCRDs: true
+    namespace: cilium-system
+    valuesInline:
+      k8sServiceHost: localhost
+      k8sServicePort: 7445
+      kubeProxyReplacement: true
+      ipam:
+        mode: kubernetes
+      securityContext:
+        capabilities:
+          ciliumAgent:
+            - CHOWN
+            - KILL
+            - NET_ADMIN
+            - NET_RAW
+            - IPC_LOCK
+            - SYS_ADMIN
+            - SYS_RESOURCE
+            - DAC_OVERRIDE
+            - FOWNER
+            - SETGID
+            - SETUID
+          cleanCiliumState:
+            - NET_ADMIN
+            - SYS_ADMIN
+            - SYS_RESOURCE
+      cgroup:
+        autoMount:
+          enabled: false
+        hostRoot: /sys/fs/cgroup

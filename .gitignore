@@ -4,6 +4,9 @@ infra/**/*/talsecret.yaml
 infra/**/*/rendered/*
 infra/**/*/clusterconfig/*
 
+# Kustomize helm charts
+infra/**/*/integrations/**/*/charts/*
+
 # MkDocs Generated Files
 site/
 
