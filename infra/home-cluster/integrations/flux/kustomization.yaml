@@ -4,6 +4,8 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: flux-system
+
 resources:
   - github.com/fluxcd/flux2/manifests/install?ref=v2.1.2
   - age-key.secret.yaml
