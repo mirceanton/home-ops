@@ -4,13 +4,13 @@ version: '3'
 env:
   HOME_CLUSTER_NAME:
     sh: |-
-      awk -F': ' '/clusterName/{print $2}' talenv.yaml
+      awk -F': ' '/clusterName/{print $2}' {{.ROOT_DIR}}/infra/home-cluster/talenv.yaml
   HOME_CLUSTER_ENDPOINT_IP:
     sh: |-
-      awk -F': ' '/clusterEndpointIP/{print $2}' talenv.yaml
+      awk -F': ' '/clusterEndpointIP/{print $2}' {{.ROOT_DIR}}/infra/home-cluster/talenv.yaml
   HOME_CLUSTER_NODES:
     sh: |-
-      grep -oP 'ipAddress: \K[0-9.]+' talconfig.yaml | tr '\n' ' '
+      grep -oP 'ipAddress: \K[0-9.]+' {{.ROOT_DIR}}/infra/home-cluster/talconfig.yaml | tr '\n' ' '
 
 includes:
   # TODO: replace with sopshelper
