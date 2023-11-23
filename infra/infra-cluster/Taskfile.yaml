@@ -24,12 +24,13 @@ tasks:
     deps: [ sops:decrypt ]
     cmds:
       - talhelper genconfig --no-gitignore > /dev/null
+      - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
       #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
       - talosctl apply-config -n 10.0.10.190 --file clusterconfig/infra-cluster-minisforum.yaml --insecure
       - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
       - talosctl bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}
-      - task: cluster:select
+      - rm -f ~/.kube/config && talosctl -n {{(split " " .INFRA_CLUSTER_NODES)._0}} kubeconfig
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
       - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
