@@ -15,7 +15,7 @@ env:
 includes:
   # TODO: replace with sopshelper
   sops:
-    internal: true
+    internal: true`
     taskfile: ../../.taskfiles/sops.yaml
 
 tasks:
@@ -35,7 +35,7 @@ tasks:
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
       - for: { var: HOME_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
-      - cd integrations && helmfile apply
+      - kubectl kustomize --enable-helm integrations. | kubectl apply -f -
 
   cluster:select:
     desc: This will set the currently active cluster.
