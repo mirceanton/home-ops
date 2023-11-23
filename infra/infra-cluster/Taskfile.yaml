@@ -35,7 +35,7 @@ tasks:
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
       - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
-      - cd integrations && helmfile apply
+      - kubectl apply -k integrations
 
   cluster:select:
     desc: This will set the currently active cluster.
