@@ -4,8 +4,8 @@ version: '3'
 tasks:
   default:
     cmds:
-      - yaml
-      - terraform
+      - task: yaml
+      - task: terraform
 
   yaml:
     desc: Run yamllint using the custom config.
