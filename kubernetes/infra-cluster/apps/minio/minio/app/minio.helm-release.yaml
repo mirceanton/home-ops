@@ -104,11 +104,11 @@ spec:
 
 
     ## ================================================================================================
-    ## Persistence parameters -> use iscsi share from TrueNAS
+    ## Persistence parameters -> use local disk
     ## ================================================================================================
     persistence:
       enabled: true
-      existingClaim: minio-iscsi-pvc
+      existingClaim: minio-pvc
 
 
     ## ================================================================================================

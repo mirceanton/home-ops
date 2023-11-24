@@ -1,5 +1,0 @@
----
-cluster:
-  network:
-    cni:
-      name: flannel
