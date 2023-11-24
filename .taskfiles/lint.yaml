@@ -22,4 +22,4 @@ tasks:
     env:
       DIR: infra
     cmds:
-      - bash scripts/terraform-lint.sh
+      - python3 {{.ROOT_DIR}}/scripts/terraform-lint.py
