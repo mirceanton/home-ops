@@ -42,4 +42,4 @@ jobs:
       - name: Lint all terraform files under `./infra/`
         env:
           DIR: infra
-        run: python3 scripts/terraform-lint.py
+        run: pip3 install -r requirements.txt && python3 scripts/terraform-lint.py
