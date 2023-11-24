@@ -1,25 +1,29 @@
 import os
 import glob
+import argparse
 
-def process_files(filename_regex, yaml_schema_source):
-	# Find all files matching the provided regex recursively under the current directory
+# Include the @yaml_schema_source comment in the files matching the @filename_regex
+def process_files(filename_regex, yaml_schema_source, check_mode=False):
 	files = glob.glob(filename_regex, recursive=True)
+	error_found = False
 
-	# Loop through each file
 	for file_path in files:
 		with open(file_path, 'r') as f:
 			lines = f.readlines()
 
-		# Check if the second line is the specified string
-		if len(lines) < 2 or yaml_schema_source not in lines[1].strip():
-			# Add the specified string as the second line
-			lines.insert(1, f"# yaml-language-server: $schema={yaml_schema_source}\n")
+		if len(lines) > 0 and yaml_schema_source not in lines[1].strip():
+			error_found = True
 
-			# Write the updated lines back to the file
-			with open(file_path, 'w') as f:
-				f.writelines(lines)
+			if not check_mode:
+				lines.insert(1, f"# yaml-language-server: $schema={yaml_schema_source}\n")
+				with open(file_path, 'w') as f:
+					f.writelines(lines)
+				print(f"Added yaml schema to {file_path}")
+			else:
+				print(f"File is missing the expected schema: {file_path}")
+	
+	return error_found
 
-			print(f"Added second line to {file_path}")
 
 schema_mappings = {
 	"**/kustomization.yaml": "https://json.schemastore.org/kustomization",
@@ -38,5 +42,19 @@ schema_mappings = {
 	"**/talconfig.yaml": "https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json"
 }
 
+
+parser = argparse.ArgumentParser(description="Process files and ensure the specified schema is present in the second line.")
+parser.add_argument("--check", action="store_true", help="Check mode. Exit with status 1 if any file is missing the schema.")
+args = parser.parse_args()
+
+error_found = False
 for file_type, schema_source in schema_mappings.items():
-	process_files(file_type, schema_source)
+	err = process_files(
+		file_type,
+		schema_source,
+		check_mode = args.check
+	)
+	error_found = error_found or err
+
+if error_found:
+	exit(1)
