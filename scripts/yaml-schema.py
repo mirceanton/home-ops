@@ -33,6 +33,9 @@ schema_mappings = {
 
 	# Cert manager stuff
 	"cluster-issuer": "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/clusterissuer_v1.json",
+
+	# Talhelper stuff
+	"talconfig": "https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json"
 }
 
 for file_type, schema_source in schema_mappings.items():
