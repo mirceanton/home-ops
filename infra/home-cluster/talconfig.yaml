@@ -63,19 +63,26 @@ controlPlane:
 nodes:
   - hostname: nuc
     ipAddress: 10.0.10.11
-    installDisk: /dev/nvme0n1
     controlPlane: true
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
+
+    installDisk: /dev/nvme0n1
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/postgres
+
     networkInterfaces:
       - deviceSelector:
           busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
+
     schematic:
       customization:
         systemExtensions:
@@ -83,22 +90,41 @@ nodes:
             - siderolabs/i915-ucode
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
+
+    # patches:
+    #   - |-  # Extra disks
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/postgres
+    #             type: bind
+    #             source: /var/mnt/postgres
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
 
   - hostname: srv
     ipAddress: 10.0.10.12
-    installDisk: /dev/nvme0n1
     controlPlane: true
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
+
+    installDisk: /dev/nvme0n1
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/postgres
+
     networkInterfaces:
       - deviceSelector:
           busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
     schematic:
       customization:
         systemExtensions:
@@ -107,24 +133,57 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
+    # patches:
+    #   - |-  # Extra disks
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/postgres
+    #             type: bind
+    #             source: /var/mnt/postgres
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
+
   - hostname: minisforum
     ipAddress: 10.0.10.13
-    installDisk: /dev/nvme0n1
     controlPlane: true
+    nodeLabels:
+      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
+      node-role.kubernetes.io/controller: "true"      # runs controllers
+      node-role.kubernetes.io/worker: "true"          # runs general workloads
+      node-role.kubernetes.io/storage: "true"         # runs the storage backend
+
+    installDisk: /dev/nvme0n1
+    # machineDisks:
+    #   - device: /dev/sda
+    #     partitions:
+    #       - mountpoint: /var/mnt/postgres
+
     networkInterfaces:
       - deviceSelector:
           busPath: "0*"
         dhcp: true
         vip:
           ip: ${clusterEndpointIP}
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
+
     schematic:
       customization:
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/iscsi-tools
+
+    # patches:
+    #   - |-  # Extra disks
+    #     machine:
+    #       kubelet:
+    #         extraMounts:
+    #           - destination: /var/mnt/postgres
+    #             type: bind
+    #             source: /var/mnt/postgres
+    #             options:
+    #               - rbind
+    #               - rshared
+    #               - rw
