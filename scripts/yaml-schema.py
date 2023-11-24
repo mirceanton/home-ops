@@ -1,6 +1,7 @@
 import os
 import glob
 import argparse
+from colorama import Fore, Style
 
 # Include the @yaml_schema_source comment in the files matching the @filename_regex
 def process_files(filename_regex, yaml_schema_source, check_mode=False):
@@ -18,9 +19,9 @@ def process_files(filename_regex, yaml_schema_source, check_mode=False):
 				lines.insert(1, f"# yaml-language-server: $schema={yaml_schema_source}\n")
 				with open(file_path, 'w') as f:
 					f.writelines(lines)
-				print(f"Added yaml schema to {file_path}")
+				print(f"{Fore.YELLOW}Added yaml schema to {file_path}{Style.RESET_ALL}")
 			else:
-				print(f"File is missing the expected schema: {file_path}")
+				print(f"{Fore.RED}File is missing the expected schema: {file_path}{Style.RESET_ALL}")
 	
 	return error_found
 
