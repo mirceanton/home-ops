@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 # yamllint disable rule:line-length
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
