@@ -26,7 +26,7 @@ tasks:
       - talhelper genconfig --no-gitignore > /dev/null
       - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
       #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
-      - talosctl apply-config -n 10.0.10.190 --file clusterconfig/infra-cluster-minisforum.yaml --insecure
+      - talosctl apply-config -n 10.0.10.31 --file clusterconfig/infra-cluster-truenas-vm.yaml --insecure
       - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
       - talosctl bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}

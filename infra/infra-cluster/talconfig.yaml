@@ -20,10 +20,6 @@ cniConfig:
   name: flannel
 
 patches:
-    - |-  # Disable default API server admission plugins.
-      - op: remove
-        path: /cluster/apiServer/admissionControl
-
     - |-  # Kubelet configuration
       machine:
         kubelet:
@@ -32,15 +28,18 @@ patches:
             rotate-server-certificates: "true"
 
 nodes:
-  - hostname: minisforum
+  - hostname: truenas-vm
     ipAddress: 10.0.10.31
     controlPlane: true
-  
-    installDisk: /dev/nvme0n1
+
+    installDisk: /dev/sda
     machineDisks:
-      - device: /dev/sda
+      - device: /dev/vda
         partitions:
-          - mountpoint: /var/mnt/sata
+          - mountpoint: /var/mnt/artifactory
+      - device: /dev/vdb
+        partitions:
+          - mountpoint: /var/mnt/minio
 
     networkInterfaces:
       - deviceSelector:
@@ -49,21 +48,21 @@ nodes:
         vip:
           ip: ${clusterEndpointIP}
 
-    schematic:
-      customization:
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/amd-ucode
-            - siderolabs/iscsi-tools
-
     patches:
       - |-  # Extra disks
         machine:
           kubelet:
             extraMounts:
-              - destination: /var/mnt/sata
+              - destination: /var/mnt/artifactory
                 type: bind
-                source: /var/mnt/sata
+                source: /var/mnt/artifactory
+                options:
+                  - rbind
+                  - rshared
+                  - rw
+              - destination: /var/mnt/minio
+                type: bind
+                source: /var/mnt/minio
                 options:
                   - rbind
                   - rshared
