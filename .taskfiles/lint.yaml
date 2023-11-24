@@ -7,6 +7,11 @@ tasks:
       - task: yaml
       - task: terraform
 
+  yaml:schemas:
+    desc: Run yamllint using the custom config.
+    cmds:
+      - python3 {{.ROOT_DIR}}/scripts/yaml-schema.py {{.CLI_ARGS}}
+
   yaml:
     desc: Run yamllint using the custom config.
     cmds:
