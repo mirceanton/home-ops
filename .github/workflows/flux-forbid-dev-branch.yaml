@@ -15,11 +15,11 @@ jobs:
     runs-on: [ "arc-runner-set-home-ops" ]
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
       - name: Make sure the branch set for the flux sync is "main"
         env:
           BRANCH: "main"
         run: >
-          grep -q "branch: $BRANCH" ./kubernetes/home-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
-          grep -q "branch: $BRANCH" ./kubernetes/infra-cluster/bootstrap/flux-manifests/home-ops.git-repository.yaml
+          grep -q "branch: $BRANCH" ./infra/home-cluster/integrations/flux-manifests/home-ops.git-repository.yaml
+          grep -q "branch: $BRANCH" ./infra/infra-cluster/integrations/flux-manifests/home-ops.git-repository.yaml

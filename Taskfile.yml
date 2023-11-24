@@ -10,8 +10,12 @@ includes:
   lint: .taskfiles/lint.yaml
   sops: .taskfiles/sops.yaml
 
-  home: .taskfiles/components/home-cluster
-  infra: .taskfiles/components/infra-cluster
+  home:
+    taskfile: infra/home-cluster
+    dir: infra/home-cluster
+  infra:
+    taskfile: infra/infra-cluster
+    dir: infra/infra-cluster
 
 tasks:
   default:
