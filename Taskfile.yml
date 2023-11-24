@@ -5,10 +5,12 @@ env:
   SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
 
 includes:
-  docs: .taskfiles/docs.yaml
   hack: .taskfiles/hacks.yaml
   lint: .taskfiles/lint.yaml
   sops: .taskfiles/sops.yaml
+  docs:
+    taskfile: docs
+    dir: docs
 
   home:
     taskfile: infra/home-cluster
