@@ -1,7 +1,7 @@
 colorama==0.4.6
 kubernetes==28.1.0
 mkdocs==1.5.3
-mkdocs-material==9.4.3
+mkdocs-material==9.4.12
 mkdocs-material-extensions==1.2
 python-terraform==0.10.1
 PyYAML==6.0.1
