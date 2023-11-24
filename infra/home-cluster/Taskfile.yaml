@@ -30,12 +30,12 @@ tasks:
       - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.yaml --insecure
       - talosctl apply-config -n 10.0.10.13 --file clusterconfig/home-cluster-minisforum.yaml --insecure
       - for: { var: HOME_CLUSTER_NODES }
-        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
+        cmd: NODE_IP={{.ITEM}} python3 {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.py
       - talosctl bootstrap -n {{(split " " .HOME_CLUSTER_NODES)._0}}
       - rm -f ~/.kube/config && talosctl -n {{(split " " .HOME_CLUSTER_NODES)._0}} kubeconfig
-      - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
+      - python3 {{.ROOT_DIR}}/scripts/kubernetes-wait-api.py
       - for: { var: HOME_CLUSTER_NODES }
-        cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
+        cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" python3 {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.py
       - kubectl kustomize --enable-helm integrations | kubectl apply -f -
       - kubectl apply -k integrations/flux-manifests
 

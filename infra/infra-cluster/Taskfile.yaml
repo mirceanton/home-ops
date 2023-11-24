@@ -28,12 +28,12 @@ tasks:
       # TODO - talhelper gencommand apply --extra-flags=--insecure | bash
       - talosctl apply-config -n 10.0.10.31 --file clusterconfig/infra-cluster-truenas-vm.yaml --insecure
       - for: { var: INFRA_CLUSTER_NODES }
-        cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
+        cmd: NODE_IP={{.ITEM}} python3 {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.py
       - talosctl bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}
       - rm -f ~/.kube/config && talosctl -n {{(split " " .INFRA_CLUSTER_NODES)._0}} kubeconfig
-      - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
+      - python3 {{.ROOT_DIR}}/scripts/kubernetes-wait-api.py
       - for: { var: INFRA_CLUSTER_NODES }
-        cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
+        cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" python3 {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.py
       - kubectl apply -k integrations/flux
       - kubectl apply -k integrations/flux-manifests
 
