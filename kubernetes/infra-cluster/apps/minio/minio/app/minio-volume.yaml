@@ -16,11 +16,11 @@ spec:
   nodeAffinity:
     required:
       nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - truenas-vm
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - truenas-vm
 
 ---
 apiVersion: v1

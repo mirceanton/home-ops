@@ -20,12 +20,12 @@ cniConfig:
   name: flannel
 
 patches:
-    - |-  # Kubelet configuration
-      machine:
-        kubelet:
-          extraArgs:
-            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
-            rotate-server-certificates: "true"
+  - |-  # Kubelet configuration
+    machine:
+      kubelet:
+        extraArgs:
+          feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
+          rotate-server-certificates: "true"
 
 nodes:
   - hostname: truenas-vm

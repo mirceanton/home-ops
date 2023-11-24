@@ -9,6 +9,9 @@ ignore:
   # Ignore raw secret files
   - '*.secret.yaml'
 
+  # Ignore kustomize helm charts
+  - 'infra/**/*/integrations/**/*/charts/*'
+
   # Ignore python virtual environments
   - '.venv/**'
 
@@ -17,12 +20,14 @@ ignore:
   - gotk-components.yaml
 
   # Ignore Talos specific files
-  - secrets.yaml
-  - 'infra/**/rendered/*'
+  - 'infra/**/*/secrets.yaml'
+  - 'infra/**/*/talsecret.yaml'
+  - 'infra/**/*/rendered/*'
+  - 'infra/**/*/clusterconfig/*'
 
 rules:
   line-length:
-    max: 120
+    max: 150
 
   braces:
     level: warning

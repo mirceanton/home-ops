@@ -25,7 +25,7 @@ tasks:
     cmds:
       - talhelper genconfig --no-gitignore > /dev/null
       - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
-      #TODO - talhelper gencommand apply --extra-flags=--insecure | bash
+      # TODO - talhelper gencommand apply --extra-flags=--insecure | bash
       - talosctl apply-config -n 10.0.10.11 --file clusterconfig/home-cluster-nuc.yaml --insecure
       - talosctl apply-config -n 10.0.10.12 --file clusterconfig/home-cluster-srv.yaml --insecure
       - talosctl apply-config -n 10.0.10.13 --file clusterconfig/home-cluster-minisforum.yaml --insecure
