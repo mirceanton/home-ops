@@ -42,4 +42,4 @@ jobs:
       - name: Lint all terraform files under `./infra/`
         env:
           DIR: infra
-        run: bash scripts/terraform-lint.sh
+        run: python3 scripts/terraform-lint.py
