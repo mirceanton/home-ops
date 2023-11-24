@@ -8,6 +8,3 @@ namespace: flux-system
 
 resources:
   - github.com/fluxcd/flux2/manifests/install?ref=v2.1.2
-  - age-key.secret.yaml
-  - home-ops.git-repository.yaml
-  - home-ops.ks.yaml
