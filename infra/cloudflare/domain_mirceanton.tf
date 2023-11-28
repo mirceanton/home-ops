@@ -1,49 +1,50 @@
 module "domain_mirceanton" {
-  source     = "./modules/domain"
+  source = "./modules/domain"
 
   domain     = "mirceanton.com"
   account_id = cloudflare_account.mirceanton.id
   dns_entries = [
     # Generic settings
     {
-      name  = "_dmarc"
-      value = "v=DMARC1; p=quarantine;"
-      type  = "TXT"
+      name    = "_dmarc"
+      value   = var.mirceanton_dmarc
+      comment = "DMARC Record"
+      type    = "TXT"
     },
     {
-        id = "discord_txt",
-        name = "_discord",
-        type = "TXT"
-        comment = "Discord Domain Verification"
-        value = var.mirceanton_discord_txt
+      id      = "discord_txt",
+      name    = "_discord",
+      type    = "TXT"
+      comment = "Discord Domain Verification"
+      value   = var.mirceanton_discord_txt
     },
     {
-        id = "brevo_code",
-        name  = "@"
-        type  = "TXT"
-        comment = "Brevo Integration"
-        value = var.mirceanton_brevo_code
+      id      = "brevo_code",
+      name    = "@"
+      type    = "TXT"
+      comment = "Brevo Integration"
+      value   = var.mirceanton_brevo_code
     },
     {
-        id = "brevo_dkim",
-        name  = "mail._domainkey"
-        type  = "TXT"
-        comment = "Brevo Integration"
-        value = var.mirceanton_brevo_dkim
+      id      = "brevo_dkim",
+      name    = "mail._domainkey"
+      type    = "TXT"
+      comment = "Brevo Integration"
+      value   = var.mirceanton_brevo_dkim
     },
     {
-        id = "pages_root",
-        name  = "@"
-        type  = "CNAME"
-        comment = "CloudFlare Pages"
-        value = "mirceanton.pages.dev"
+      id      = "pages_root",
+      name    = "@"
+      type    = "CNAME"
+      comment = "CloudFlare Pages"
+      value   = "mirceanton.pages.dev"
     },
     {
-        id = "pages_www",
-        name  = "www"
-        type  = "CNAME"
-        comment = "CloudFlare Pages"
-        value = "mirceanton.pages.dev"
+      id      = "pages_www",
+      name    = "www"
+      type    = "CNAME"
+      comment = "CloudFlare Pages"
+      value   = "mirceanton.pages.dev"
     },
   ]
 
@@ -58,35 +59,35 @@ module "domain_mirceanton" {
 }
 
 module "email_routing_mirceanton" {
-  source     = "./modules/emails"
+  source = "./modules/emails"
 
-  zone_id = module.domain_mirceanton.zone_id
-  account_id = cloudflare_account.mirceanton.id
-  target_addresses = [ var.mirceanton_fwd_gmail ]
+  zone_id          = module.domain_mirceanton.zone_id
+  account_id       = cloudflare_account.mirceanton.id
+  target_addresses = [var.mirceanton_fwd_gmail]
 
   catchall = {
-    enabled = true,
-    action_type = "forward"
-    action_targets = [ var.mirceanton_fwd_gmail ]
+    enabled        = true,
+    action_type    = "forward"
+    action_targets = [var.mirceanton_fwd_gmail]
   }
 }
 
 module "cloudflare_pages_mirceanton" {
-  source     = "./modules/pages"
-  zone_id = module.domain_mirceanton.zone_id
-  account_id = cloudflare_account.mirceanton.id
-  pages_project_name = "mirceanton"
+  source               = "./modules/pages"
+  zone_id              = module.domain_mirceanton.zone_id
+  account_id           = cloudflare_account.mirceanton.id
+  pages_project_name   = "mirceanton"
   pages_project_domain = "mirceanton.com"
 
   pages_project_repo = {
-    type = "github"
+    type  = "github"
     owner = "mirceanton"
-    name = "mirceanton.com"
+    name  = "mirceanton.com"
 
-    preview_branch_includes       = ["post/*"]
-    preview_branch_excludes       = ["main"]
+    preview_branch_includes = ["post/*"]
+    preview_branch_excludes = ["main"]
 
     build_command = "npm run build"
-    build_dir = "public"
+    build_dir     = "public"
   }
 }
