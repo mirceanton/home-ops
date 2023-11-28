@@ -1,15 +1,29 @@
+# =================================================================================================
+# CloudFlare Credentials
+# =================================================================================================
 variable "cf_email" {
   type        = string
   description = "value"
   sensitive   = true
 }
-
 variable "cf_api_key" {
   type        = string
   description = "value"
   sensitive   = true
 }
 
+
+# =================================================================================================
+# Global Variables
+# =================================================================================================
+variable "gmail_address" {
+  type        = string
+  description = "value"
+}
+
+# =================================================================================================
+# mirceanton Variables
+# =================================================================================================
 variable "mirceanton_discord_txt" {
   type        = string
   description = "value"
@@ -26,13 +40,16 @@ variable "mirceanton_brevo_dkim" {
   description = "value"
   sensitive   = true
 }
-
-variable "mirceanton_fwd_gmail" {
-  type        = string
-  description = "value"
+variable "mirceanton_dmarc" {
+  type      = string
+  sensitive = true
 }
 
-variable "mirceanton_dmarc" {
+
+# =================================================================================================
+# mirceaanton Variables
+# =================================================================================================
+variable "mirceaanton_dmarc" {
   type      = string
   sensitive = true
 }
