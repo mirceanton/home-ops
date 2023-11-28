@@ -15,3 +15,9 @@ site/
 
 # Ignore Unencrypted Kubernetes Secrets
 kubernetes/**/*.secret.yaml
+
+# Terraform stuff
+**/*/.terraform/*
+**/*/.terraform.lock.hcl
+**/*/terraform.tfstate*
+**/*/*.auto.tfvars
