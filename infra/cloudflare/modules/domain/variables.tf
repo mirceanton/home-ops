@@ -20,6 +20,7 @@ variable "dns_entries" {
     proxied  = optional(bool, true),
     priority = optional(number, 0),
     ttl      = optional(number, 1)
+	comment			  = optional(string, "")
   }))
   default = []
 }

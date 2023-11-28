@@ -1,7 +1,3 @@
-# =================================================================================================
-# Create the CloudFlare Pages Project and sync it to the GitHub repository
-# Configure production and preview deployments
-# =================================================================================================
 resource "cloudflare_pages_project" "pages_project" {
   account_id        = var.account_id
   name              = var.pages_project_name
@@ -26,14 +22,4 @@ resource "cloudflare_pages_project" "pages_project" {
     build_command   = var.pages_project_repo.build_command
     destination_dir = var.pages_project_repo.build_dir
   }
-}
-
-
-# =================================================================================================
-# Assign the custom domain to the Pages Project
-# =================================================================================================
-resource "cloudflare_pages_domain" "pages_domain" {
-  account_id   = var.account_id
-  project_name = cloudflare_pages_project.pages_project.name
-  domain       = var.pages_project_domain
 }

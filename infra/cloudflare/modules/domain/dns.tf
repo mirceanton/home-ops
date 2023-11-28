@@ -9,5 +9,5 @@ resource "cloudflare_record" "dns_records" {
   type     = each.value.type
   ttl      = each.value.ttl
 
-  comment = "Terraform Managed DNS Record."
+  comment = "[Terraform Managed DNS Record] ${each.value.comment}"
 }
