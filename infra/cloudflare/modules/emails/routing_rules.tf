@@ -3,7 +3,7 @@
 # =================================================================================================
 resource "cloudflare_email_routing_catch_all" "catch_all" {
   zone_id = var.zone_id
-  name    = "catchall forwarder"
+  name    = "catchall"
   enabled = var.catchall.enabled
 
   matcher {
@@ -21,19 +21,19 @@ resource "cloudflare_email_routing_catch_all" "catch_all" {
 # Email Routing Rule: Granular
 # =================================================================================================
 resource "cloudflare_email_routing_rule" "granular" {
-  for_each = var.granular.rules
-  zone_id = var.zone_id
-  name    = "terraform rule"
-  enabled = each.enabled
+  for_each = { for v in var.routing_rules : v => v }
+  zone_id  = var.zone_id
+  name     = "terraform rule"
+  enabled  = each.value.enabled
 
   matcher {
-    type  = each.matcher.type
-    field = each.matcher.field
-    value = each.matcher.value
+    type  = each.value.matcher.type
+    field = each.value.matcher.field
+    value = each.value.matcher.value
   }
 
   action {
-    type  = each.action.type
-    value = each.action.value
+    type  = each.value.action.type
+    value = each.value.action.value
   }
 }

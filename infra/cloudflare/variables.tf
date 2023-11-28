@@ -1,34 +1,38 @@
 variable "cf_email" {
-  type = string
+  type        = string
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "cf_api_key" {
-  type = string
+  type        = string
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "mirceanton_discord_txt" {
-  type = string
+  type        = string
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "mirceanton_brevo_code" {
-  type = string
+  type        = string
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 variable "mirceanton_brevo_dkim" {
-  type = string
+  type        = string
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "mirceanton_fwd_gmail" {
-  type = string
+  type        = string
   description = "value"
+}
+
+variable "mirceanton_dmarc" {
+  type      = string
   sensitive = true
 }

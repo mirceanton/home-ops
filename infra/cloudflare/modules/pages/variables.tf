@@ -13,13 +13,13 @@ variable "pages_project_domain" {
 
 variable "pages_project_repo" {
   type = object({
-    type = optional(string, "github"),
+    type  = optional(string, "github"),
     owner = string,
-    name = string,
+    name  = string,
 
-    production_branch = optional(string, "main"),
+    production_branch            = optional(string, "main"),
     production_deployment_enable = optional(bool, true),
-    preview_deployment_setting = optional(string, "custom"),
+    preview_deployment_setting   = optional(string, "custom"),
 
     pr_comments_enable = optional(bool, true),
     deployments_enable = optional(bool, true),
@@ -28,6 +28,6 @@ variable "pages_project_repo" {
     preview_branch_excludes = list(string),
 
     build_command = string,
-    build_dir = string,
+    build_dir     = string,
   })
 }

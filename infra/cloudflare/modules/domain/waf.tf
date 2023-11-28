@@ -1,8 +1,8 @@
 resource "cloudflare_ruleset" "waf_custom_rules" {
-  zone_id = cloudflare_zone.zone.id
-  name    = "Zone custom WAF ruleset"
-  kind    = "zone"
-  phase   = "http_request_firewall_custom"
+  zone_id     = cloudflare_zone.zone.id
+  name        = "Zone custom WAF ruleset"
+  kind        = "zone"
+  phase       = "http_request_firewall_custom"
   description = "Terraform Managed RuleSet."
 
   dynamic "rules" {
