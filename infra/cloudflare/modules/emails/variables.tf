@@ -34,3 +34,17 @@ variable "routing_rules" {
   }))
   default = []
 }
+
+variable "dns_entries" {
+  type = list(object({
+    id       = optional(string)
+    name     = string,
+    value    = string,
+    type     = optional(string, "A"),
+    proxied  = optional(bool, true),
+    priority = optional(number, 0),
+    ttl      = optional(number, 1)
+    comment  = optional(string, "")
+  }))
+  default = []
+}

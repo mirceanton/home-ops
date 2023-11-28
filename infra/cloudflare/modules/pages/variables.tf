@@ -11,6 +11,11 @@ variable "pages_project_domain" {
   type = string
 }
 
+variable "www_redirect_enabled" {
+  type    = bool
+  default = true
+}
+
 variable "pages_project_repo" {
   type = object({
     type  = optional(string, "github"),
