@@ -1,32 +1,10 @@
-
+# =================================================================================================
+# DNS Zone + Records + WAF
+# =================================================================================================
 module "domain_mirceaanton" {
   source     = "./modules/domain"
   domain     = "mirceaanton.com"
   account_id = cloudflare_account.mirceanton.id
-
-  dns_entries = [
-    # Generic settings
-    {
-      name    = "_dmarc"
-      value   = "v=DMARC1; p=quarantine;"
-      comment = "DMARC records"
-      type    = "TXT"
-    },
-
-    # redirect to main domain
-    {
-      id    = "root_redirect",
-      name  = "@",
-      type  = "CNAME"
-      value = "mirceanton.com"
-    },
-    {
-      id    = "www_redirect",
-      name  = "www",
-      type  = "CNAME"
-      value = "mirceanton.com"
-    },
-  ]
 
   waf_custom_rules = [
     {
@@ -38,16 +16,52 @@ module "domain_mirceaanton" {
   ]
 }
 
+
+# =================================================================================================
+# CloudFlare eMail Routing
+# =================================================================================================
 module "email_routing_mirceaanton" {
   source = "./modules/emails"
 
   account_id       = cloudflare_account.mirceanton.id
   zone_id          = module.domain_mirceaanton.zone_id
-  target_addresses = [var.mirceanton_fwd_gmail]
+  target_addresses = [var.gmail_address]
 
   catchall = {
     enabled        = true,
     action_type    = "forward"
-    action_targets = [var.mirceanton_fwd_gmail]
+    action_targets = [var.gmail_address]
+  }
+
+  dns_entries = [
+    {
+      name    = "_dmarc"
+      value   = var.mirceaanton_dmarc
+      comment = "DMARC Record"
+      type    = "TXT"
+    }
+  ]
+}
+
+
+# =================================================================================================
+# Redirect secondary domain to mirceanton.com
+# =================================================================================================
+module "mirceaanton_redirect_to_mirceanton" {
+  source  = "./modules/redirect"
+  zone_id = module.domain_mirceaanton.zone_id
+  redirect = {
+    from     = "mirceaanton.com"
+    to       = "https://mirceanton.com"
+    priority = 1
+  }
+}
+module "mirceaanton_www_redirect_to_mirceanton" {
+  source  = "./modules/redirect"
+  zone_id = module.domain_mirceaanton.zone_id
+  redirect = {
+    from     = "www.mirceaanton.com"
+    to       = "https://mirceanton.com"
+    priority = 2
   }
 }
