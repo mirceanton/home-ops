@@ -8,3 +8,4 @@ resources:
 
   # Flux Kustomizations
   - tf-controller/
+  - terraforms/
