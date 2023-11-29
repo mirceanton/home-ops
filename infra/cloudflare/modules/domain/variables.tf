@@ -1,32 +1,30 @@
 variable "account_id" {
-  type = string
+  type        = string
+  description = "The Cloudflare account ID associated with the domain setup."
 }
 
 variable "domain" {
-  type = string
-}
-
-variable "enable_default_firewall_rules" {
-  type    = bool
-  default = true
+  type        = string
+  description = "The domain name to be configured."
 }
 
 variable "dns_entries" {
-  type = list(object({
+  type        = list(object({
     id       = optional(string)
-    name     = string,
-    value    = string,
-    type     = optional(string, "A"),
-    proxied  = optional(bool, true),
-    priority = optional(number, 0),
+    name     = string
+    value    = string
+    type     = optional(string, "A")
+    proxied  = optional(bool, true)
+    priority = optional(number, 0)
     ttl      = optional(number, 1)
     comment  = optional(string, "")
   }))
-  default = []
+  default     = []
+  description = "List of DNS entries for the domain configuration."
 }
 
 variable "waf_custom_rules" {
-  type = list(object({
+  type        = list(object({
     enabled           = bool
     description       = string
     expression        = string
@@ -34,5 +32,6 @@ variable "waf_custom_rules" {
     action_parameters = optional(any, {})
     logging           = optional(any, {})
   }))
-  default = []
+  default     = []
+  description = "List of custom Web Application Firewall (WAF) rules for the domain."
 }

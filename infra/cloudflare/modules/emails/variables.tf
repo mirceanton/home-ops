@@ -1,13 +1,16 @@
 variable "zone_id" {
-  type = string
+  type        = string
+  description = "The Zone ID of the Cloudflare account where email redirection will be configured."
 }
 
 variable "account_id" {
-  type = string
+  type        = string
+  description = "The Cloudflare account ID associated with the email redirection configuration."
 }
 
 variable "target_addresses" {
-  type = set(string)
+  type        = set(string)
+  description = "Set of email addresses to which the incoming emails will be redirected."
 }
 
 variable "catchall" {
@@ -16,7 +19,7 @@ variable "catchall" {
     action_type    = optional(string, "forward")
     action_targets = optional(list(string), [""])
   })
-  default = {}
+  description = "Configuration for catch-all email forwarding, if enabled."
 }
 
 variable "routing_rules" {
@@ -32,19 +35,19 @@ variable "routing_rules" {
       value = string
     })
   }))
-  default = []
+  description = "List of routing rules for custom email redirection based on specific criteria."
 }
 
 variable "dns_entries" {
   type = list(object({
     id       = optional(string)
-    name     = string,
-    value    = string,
-    type     = optional(string, "A"),
-    proxied  = optional(bool, true),
-    priority = optional(number, 0),
+    name     = string
+    value    = string
+    type     = optional(string, "A")
+    proxied  = optional(bool, true)
+    priority = optional(number, 0)
     ttl      = optional(number, 1)
     comment  = optional(string, "")
   }))
-  default = []
+  description = "List of DNS entries for email redirection configuration."
 }

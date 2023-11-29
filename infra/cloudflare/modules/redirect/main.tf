@@ -6,6 +6,9 @@ terraform {
   }
 }
 
+# =================================================================================================
+# Cloudflare Page Rule for URL Redirect
+# =================================================================================================
 resource "cloudflare_page_rule" "page_rule_redirect" {
   zone_id  = var.zone_id
   target   = var.redirect.from
@@ -19,13 +22,16 @@ resource "cloudflare_page_rule" "page_rule_redirect" {
   }
 }
 
+# =================================================================================================
+# Cloudflare DNS Record for URL Redirect
+# =================================================================================================
 resource "cloudflare_record" "dns_record" {
   zone_id = var.zone_id
 
-  name  = var.redirect.from
-  type  = "CNAME"
-  value = trim(var.redirect.to, "https://")
+  name    = var.redirect.from
+  type    = "CNAME"
+  value   = trim(var.redirect.to, "https://")
 
   proxied = true
-  comment = trimspace("[Terraform Managed] Redirect")
+  comment = "[Terraform Managed] Redirect"
 }
