@@ -11,4 +11,4 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/gitops-dashboard/weave-gitops/app
   targetNamespace: gitops-dashboard
   dependsOn:
-    - name: cluster-apps-keycloak-config
+    - name: cluster-terraforms-keycloak

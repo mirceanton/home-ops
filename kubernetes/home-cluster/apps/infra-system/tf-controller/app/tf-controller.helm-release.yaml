@@ -71,8 +71,6 @@ spec:
       creationTimeout: 5m0s
       serviceAccount:
         create: true
-        allowedNamespaces:
-          - auth
 
 
     ## ================================================================================================

@@ -2,7 +2,7 @@
 apiVersion: infra.contrib.fluxcd.io/v1alpha2
 kind: Terraform
 metadata:
-  name: keycloak-config
+  name: keycloak
 spec:
   interval: 30m
   approvePlan: auto
@@ -19,7 +19,7 @@ spec:
 
   varsFrom:
     - kind: ConfigMap
-      name: keycloak-config-connection
+      name: keycloak-connection
     - kind: Secret
       name: keycloak-admin-creds
 
@@ -27,13 +27,13 @@ spec:
       name: keycloak-config-smtp
 
     - kind: Secret
-      name: keycloak-config-kubernetes-client
+      name: keycloak-client-kubernetes-dashboard
       varsKeys:
         - client-id:kubernetes_client_id
         - client-secret:kubernetes_client_secret
 
     - kind: Secret
-      name: keycloak-config-weave-gitops-client
+      name: keycloak-client-weave-gitops
       varsKeys:
         - client-id:weave_gitops_client_id
         - client-secret:weave_gitops_client_secret

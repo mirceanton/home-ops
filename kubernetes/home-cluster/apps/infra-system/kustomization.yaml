@@ -3,6 +3,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./discord-webhook.secret.sops.yaml
-  - ./discord.alert.yaml
-  - ./discord.provider.yaml
+  # Pre Flux
+  - namespace.yaml
+
+  # Flux Kustomizations
+  - tf-controller/
+  - terraforms/

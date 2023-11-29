@@ -3,12 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-oauth2-proxy
+  name: cluster-terraforms-keycloak
   namespace: flux-system
-  labels:
-    home-ops.mirceanton.com/group: admin-apps
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/kube-dashboard/oauth2-proxy/app
-  targetNamespace: kube-dashboard
+  path: ${CLUSTER_APPS_BASE_DIR}/infra-system/terraforms/keycloak
+  targetNamespace: infra-system
   dependsOn:
-    - name: cluster-terraforms-keycloak
+    - name: cluster-apps-tf-controller
+    - name: cluster-apps-keycloak

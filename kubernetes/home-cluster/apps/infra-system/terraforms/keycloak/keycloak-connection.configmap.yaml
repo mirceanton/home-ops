@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: keycloak-config-connection
+    name: keycloak-connection
 data:
     keycloak_client_id: admin-cli
     keycloak_username: admin
