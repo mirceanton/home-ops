@@ -1,3 +1,7 @@
+locals {
+  base_domain = "mirceanton.com"
+}
+
 resource "routeros_system_identity" "identity" {
   name = "MikroTik-RB5009"
 }

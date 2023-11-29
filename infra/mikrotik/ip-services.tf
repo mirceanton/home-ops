@@ -6,7 +6,7 @@ locals {
 
 resource "routeros_system_certificate" "webfig_cert" {
   name        = "webfig"
-  common_name = split("/", routeros_ip_address.lan_address.address)[0]
+  common_name = split("/", "192.168.69.1")[0]
   country     = "RO"
   days_valid  = 3650
   key_size    = "prime256v1"
