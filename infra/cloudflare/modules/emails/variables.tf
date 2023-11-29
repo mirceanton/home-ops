@@ -35,6 +35,7 @@ variable "routing_rules" {
       value = string
     })
   }))
+  default = []
   description = "List of routing rules for custom email redirection based on specific criteria."
 }
 
@@ -49,5 +50,6 @@ variable "dns_entries" {
     ttl      = optional(number, 1)
     comment  = optional(string, "")
   }))
+  default = []
   description = "List of DNS entries for email redirection configuration."
 }
