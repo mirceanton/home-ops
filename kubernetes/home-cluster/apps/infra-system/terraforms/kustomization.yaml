@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - cloudflare.ks.yaml
   - keycloak.ks.yaml
+  - mikrotik.ks.yaml
