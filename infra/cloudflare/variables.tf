@@ -44,16 +44,16 @@ variable "mirceanton_brevo_dkim" {
 }
 
 variable "mirceanton_dmarc" {
-  type      = string
+  type        = string
   description = "DMARC configuration for the mirceanton environment."
-  sensitive = true
+  sensitive   = true
 }
 
 # =================================================================================================
 # mirceaanton Variables
 # =================================================================================================
 variable "mirceaanton_dmarc" {
-  type      = string
+  type        = string
   description = "DMARC configuration for the mirceaanton environment."
-  sensitive = true
+  sensitive   = true
 }
