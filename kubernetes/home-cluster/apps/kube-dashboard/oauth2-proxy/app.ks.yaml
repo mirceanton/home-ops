@@ -11,4 +11,4 @@ spec:
   path: ${CLUSTER_APPS_BASE_DIR}/kube-dashboard/oauth2-proxy/app
   targetNamespace: kube-dashboard
   dependsOn:
-    - name: cluster-apps-keycloak-config
+    - name: cluster-terraforms-keycloak
