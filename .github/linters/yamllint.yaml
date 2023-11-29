@@ -42,6 +42,7 @@ rules:
   document-start:
     ignore:
       - kubernetes/**/*/*.secret.yaml
+      - '**/*/talenv.yaml'
 
   # Ignore truthy for github workflows due to dummy trigger on the
   # 'on:' clause
@@ -49,3 +50,7 @@ rules:
     ignore:
       - .github/workflows/*.yml
       - .github/workflows/*.yaml
+
+  comments-indentation:
+    ignore:
+      - '**/*/talconfig.yaml'
