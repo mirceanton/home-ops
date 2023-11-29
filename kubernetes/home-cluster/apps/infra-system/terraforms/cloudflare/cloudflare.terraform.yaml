@@ -9,7 +9,7 @@ spec:
   backendConfig:
     disable: true
 
-  path: infra/keycloak
+  path: infra/cloudflare
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
