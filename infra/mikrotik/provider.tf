@@ -9,7 +9,7 @@ terraform {
     organization = "mirceanton"
 
     workspaces {
-      name = "MikrotTik-RB5009"
+      name = "MikrotTik"
     }
   }
 }
