@@ -69,7 +69,7 @@ Based on the example output, the ID of our WAN bridge is `*A` and the ID of our 
 
 ```bash
 terraform import routeros_interface_bridge.wan_bridge "*A"
-terraform import routeros_interface_bridge.lan_bridge "*B"
+terraform import module.lan_network.routeros_interface_bridge.network_bridge "*B"
 ```
 
 #### Importing the DHCP Client
@@ -105,10 +105,10 @@ Columns: ADDRESS, NETWORK, INTERFACE
 Based on the example output, the ID of our LAN IP address is `*2`:
 
 ```bash
-terraform import routeros_ip_address.lan_address "*2"
+terraform import module.lan_network.routeros_ip_address.network_address "*2"
 ```
 
-#### Importing the bridge ports:
+#### Importing the bridge ports
 
 On Mikrotik, run the following command to print the IDs of the bridge ports:
 
