@@ -2,7 +2,7 @@
 apiVersion: infra.contrib.fluxcd.io/v1alpha2
 kind: Terraform
 metadata:
-  name: MikroTik
+  name: mikrotik
 spec:
   interval: 1h
   approvePlan: auto
