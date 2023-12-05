@@ -33,6 +33,8 @@
 		// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/folderIcons.png
 		// =========================================================================================================
 		// Top level
+		"workflows": "CI",
+		"linters": "Font",
 		"infra": "Serverless",
 
 		// Clusters
