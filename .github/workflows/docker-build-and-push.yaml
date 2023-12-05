@@ -12,12 +12,17 @@ jobs:
   build:
     runs-on: [ "arc-runner-set-home-ops" ]
     steps:
-      - name: Extract current date
-        id: extract-date
-        run: echo "calver=$(date -u +'%Y.%m')" >> $GITHUB_OUTPUT
-
       - name: Checkout the Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+
+      - name: Generate Image Tag
+        id: generate-tags
+        env:
+          REGISTRY_USER: "${{ github.repository_owner }}"
+          REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          REGISTRY_URL: ghcr.io
+          IMAGE_NAME: gitops-toolkit
+        run: echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -42,8 +47,7 @@ jobs:
           images: |
             ${{ secrets.DOCKER_USERNAME }}/gitops-toolkit
             ghcr.io/${{ github.repository_owner }}/gitops-toolkit
-          tags: |
-            ${{ steps.extract-date.outputs.calver }}
+          tags: ${{ env.generated_tag }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
