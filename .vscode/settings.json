@@ -14,6 +14,21 @@
 		"./**/*.sops.yaml": "yaml",
 	},
 	"files.trimTrailingWhitespace": true,
+	"material-icon-theme.files.associations": {
+		// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/fileIcons.png
+		// =======================================================================================================
+		// Kustomize
+		"kustomization.yaml": "Tree",
+
+		// SOPS Files
+		"*.secret.sops.yaml": "Lock",
+
+		// K8S Objects
+		"*.secret.yaml": "Key",
+		"*.reflected-secret.yaml": "Key",
+		"*.configmap.yaml": "Settings",
+
+	},
 	"material-icon-theme.folders.associations": {
 		// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/folderIcons.png
 		// =========================================================================================================
