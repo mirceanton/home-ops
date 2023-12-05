@@ -1,0 +1,21 @@
+{
+	"editor.bracketPairColorization.enabled": true,
+	"editor.fontFamily": "Cascadia Code",
+	"editor.fontLigatures": true,
+	"editor.guides.bracketPairs": true,
+	"editor.guides.bracketPairsHorizontal": true,
+	"editor.guides.highlightActiveBracketPair": true,
+	"editor.hover.delay": 500,
+	"editor.rulers": [ 150 ],  // matches max line length in yamllint config
+	"editor.stickyScroll.enabled": true,
+	"explorer.autoReveal": false,
+	"files.associations": {
+		"*.json5": "jsonc",
+		"./**/*.sops.yaml": "yaml",
+	},
+	"files.trimTrailingWhitespace": true,
+	"yaml.schemaStore.enable": true,
+	"yaml.schemas": {
+	"kubernetes": "./kubernetes/**/*.yaml"
+	}
+}
