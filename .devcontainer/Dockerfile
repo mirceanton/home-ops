@@ -62,7 +62,7 @@ RUN wget https://github.com/cilium/cilium-cli/releases/download/${CILIUM_VERSION
 ## ================================================================================================
 ## Main image
 ## ================================================================================================
-FROM mcr.microsoft.com/devcontainers/base:debian AS workspace
+FROM mcr.microsoft.com/devcontainers/base:bullseye AS workspace
 ENV EDITOR=vim
 
 RUN DEBIAN_FRONTEND=noninteractive \
