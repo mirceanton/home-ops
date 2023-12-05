@@ -1,5 +1,5 @@
 ## ================================================================================================
-## Utility versions
+# Utility versions
 ## ================================================================================================
 ARG TERRAFORM_VERSION=1.6.5
 ARG FLUX_VERSION=v2.1.2
@@ -12,18 +12,23 @@ ARG AGE_VERSION=v1.1.1
 ARG TASKFILE_VERSION=v3.31.0
 ARG DOCKER_VERSION=24.0.7-cli
 ARG TALHELPER_VERSION=v1.15.0
+ARG KUSTOMIZE_VERSION=v5.0.1
+ARG STERN_VERSION=v1.27.0
+ARG CILIUM_VERSION=v0.15.16
 
 
 ## ================================================================================================
 # "Build" stage for utilities with docker images already present
 ## ================================================================================================
-FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
-FROM ghcr.io/getsops/sops:${SOPS_VERSION} as sops
-FROM derailed/k9s:${K9S_VERSION} as k9s
-FROM fluxcd/flux-cli:${FLUX_VERSION} as flux
-FROM bitnami/kubectl:${KUBECTL_VERSION} as kubectl
-FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
 FROM docker:${DOCKER_VERSION} as docker
+FROM registry.k8s.io/kustomize/kustomize:${KUSTOMIZE_VERSION} as kustomize
+FROM bitnami/kubectl:${KUBECTL_VERSION} as kubectl
+FROM ghcr.io/stern/stern:${STERN_VERSION} as stern
+FROM fluxcd/flux-cli:${FLUX_VERSION} as flux
+FROM derailed/k9s:${K9S_VERSION} as k9s
+FROM ghcr.io/getsops/sops:${SOPS_VERSION} as sops
+FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
+FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
 
 ## ================================================================================================
 # Build stages for other utilities
@@ -49,6 +54,10 @@ FROM alpine as talhelper
 ARG TALHELPER_VERSION
 RUN wget https://github.com/budimanjojo/talhelper/releases/download/${TALHELPER_VERSION}/talhelper_linux_amd64.tar.gz -O talhelper.tar.gz && tar xvf talhelper.tar.gz && mv talhelper /bin/talhelper
 
+FROM alpine as cilium
+ARG CILIUM_VERSION
+RUN wget https://github.com/cilium/cilium-cli/releases/download/${CILIUM_VERSION}/cilium-linux-amd64.tar.gz -O cilium.tar.gz && tar xvf cilium.tar.gz && mv cilium /bin/cilium
+
 
 ## ================================================================================================
 ## Main image
@@ -56,9 +65,8 @@ RUN wget https://github.com/budimanjojo/talhelper/releases/download/${TALHELPER_
 FROM mcr.microsoft.com/devcontainers/base:debian AS workspace
 ENV EDITOR=vim
 
-# Install `sudo` and configure bash completion
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-	apt-get -y upgrade && \
+RUN DEBIAN_FRONTEND=noninteractive \
+	apt-get update && apt-get upgrade -y && \
 	apt-get install -y \
 		sudo \
 		git \
@@ -78,10 +86,23 @@ RUN mkdir -p /etc/bash_completion.d
 # Enable passwordless sudo :kek:
 RUN echo 'vscode ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+# Install tools with no bash completion
 COPY --from=k9s /bin/k9s /usr/local/bin/k9s
 COPY --from=sops /usr/local/bin/sops /usr/local/bin/sops
 COPY --from=age /bin/age /usr/local/bin/age
 COPY --from=age /bin/age-keygen /usr/local/bin/age-keygen
+
+# Install kustomize and set up bash completion
+COPY --from=kustomize /app/kustomize /usr/local/bin/kustomize
+RUN kustomize completion bash | sudo tee /etc/bash_completion.d/kustomize.bash > /dev/null
+
+# Install cilium and set up bash completion
+COPY --from=cilium /bin/cilium /usr/local/bin/cilium
+RUN cilium completion bash | sudo tee /etc/bash_completion.d/cilium.bash > /dev/null
+
+# Install stern and set up bash completion
+COPY --from=stern /usr/local/bin/stern /usr/local/bin/stern
+RUN stern --completion=bash | sudo tee /etc/bash_completion.d/stern.bash > /dev/null
 
 # Install terraform and set up bash completion
 COPY --from=terraform /bin/terraform /usr/local/bin/terraform
