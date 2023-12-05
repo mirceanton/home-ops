@@ -1,0 +1,17 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
+{
+	"name": "Home Ops",
+	"containerEnv": {
+		"SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/.age.key"
+	},
+	"build": { "dockerfile": "Dockerfile" },
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"version": "latest",
+			"dockerDashComposeVersion": "latest",
+			"installDockerBuildx": "true",
+			"enableNonRootDocker": "true"
+		}
+	}
+}
