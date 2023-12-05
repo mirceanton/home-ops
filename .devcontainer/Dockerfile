@@ -30,6 +30,7 @@ FROM ghcr.io/getsops/sops:${SOPS_VERSION} as sops
 FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
 FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
 
+
 ## ================================================================================================
 # Build stages for other utilities
 ## ================================================================================================
@@ -45,10 +46,6 @@ RUN wget https://github.com/FiloSottile/age/releases/download/${AGE_VERSION}/age
 FROM alpine as helm
 ARG HELM_VERSION
 RUN wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz && tar xvf helm-${HELM_VERSION}-linux-amd64.tar.gz && mv linux-amd64/helm /bin/helm
-
-FROM alpine as kswitcher
-ARG KSWITCHER_VERSION
-RUN wget https://raw.githubusercontent.com/mirceanton/kswitcher/${KSWITCHER_VERSION}/src/kswitcher.py -O /bin/kswitcher && chmod +x /bin/kswitcher
 
 FROM alpine as talhelper
 ARG TALHELPER_VERSION
