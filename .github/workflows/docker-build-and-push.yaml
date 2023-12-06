@@ -22,7 +22,9 @@ jobs:
           REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
-        run: echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_ENV
+        run: |
+          apt install -y curl jq
+          echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
