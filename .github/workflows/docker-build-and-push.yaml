@@ -9,22 +9,29 @@ on:
       - Dockerfile
 
 jobs:
-  build:
+  generate-tag:
     runs-on: ["arc-runner-set-home-ops"]
     steps:
-      - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Install prerqeuisites
+        run: sudo apt update && sudo apt install -y curl jq
 
       - name: Generate Image Tag
-        id: generate-tags
+        id: calver-tag
         env:
           REGISTRY_USER: "${{ github.repository_owner }}"
           REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
-        run: |
-          sudo apt update && sudo apt install -y curl jq
-          echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_ENV
+        run: echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_OUTPUT
+    outputs:
+      calver-tag: ${{ steps.calver-tag.outputs.generated_tag }}
+
+  build:
+    needs: [generate-tag]
+    runs-on: ["arc-runner-set-home-ops"]
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -41,13 +48,14 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
-          tags: ${{ env.generated_tag }}
+          tags: |
+            ${{ needs.generate-tag.outputs.calver-tag }}
+            latest
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .devcontainer/
-          file: ./Dockerfile
+          context: ./.devcontainer
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
