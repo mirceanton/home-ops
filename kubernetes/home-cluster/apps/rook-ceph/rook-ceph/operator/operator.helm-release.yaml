@@ -24,8 +24,8 @@ spec:
       serviceMonitor:
         enabled: true
 
-    monitoring:
-      enabled: false
+    nodeSelector:
+      node-role.kubernetes.io/controller: "true"
 
     resources:
       requests:
