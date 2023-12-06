@@ -14,10 +14,6 @@ spec:
         name: rook-ceph
 
   values:
-    monitoring:
-      enabled: false
-      createPrometheusRules: false
-
     ingress:
       dashboard:
         ingressClassName: nginx
@@ -45,9 +41,6 @@ spec:
         connections:
           requireMsgr2: true
 
-      crashCollector:
-        disable: false
-
       dashboard:
         enabled: true
         urlPrefix: /
@@ -60,15 +53,15 @@ spec:
           osdsPerDevice: "1"
 
         nodes:
-          - name: hkc-01
+          - name: minisforum
             devices:
               - name: /dev/sda
-          - name: hkc-02
+          - name: nuc
             devices:
               - name: /dev/sda
-          - name: hkc-03
+          - name: srv
             devices:
-              - name: /dev/sda
+              - name: /dev/sdb
 
       resources:
         mgr:
