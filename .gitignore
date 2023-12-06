@@ -22,3 +22,6 @@ kubernetes/**/*.secret.yaml
 **/*/terraform.tfstate
 **/*/terraform.tfstate.backup
 **/*/*.auto.tfvars
+
+# Age Encryption key
+.age.key
