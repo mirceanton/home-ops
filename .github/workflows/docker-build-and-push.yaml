@@ -23,7 +23,7 @@ jobs:
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
         run: |
-          apt install -y curl jq
+          sudo apt update && sudo apt install -y curl jq
           echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_ENV
 
       - name: Set up Docker Buildx
