@@ -1,0 +1,72 @@
+{
+	"editor.bracketPairColorization.enabled": true,
+	"editor.fontFamily": "Cascadia Code",
+	"editor.fontLigatures": true,
+	"editor.guides.bracketPairs": true,
+	"editor.guides.bracketPairsHorizontal": true,
+	"editor.guides.highlightActiveBracketPair": true,
+	"editor.hover.delay": 500,
+	"editor.rulers": [ 150 ],  // matches max line length in yamllint config
+	"editor.stickyScroll.enabled": true,
+	"explorer.autoReveal": false,
+	"files.associations": {
+		"*.json5": "jsonc",
+		"./**/*.sops.yaml": "yaml",
+	},
+	"files.trimTrailingWhitespace": true,
+	"material-icon-theme.files.associations": {
+		// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/fileIcons.png
+		// =======================================================================================================
+		// Kustomize
+		"kustomization.yaml": "Tree",
+
+		// SOPS Files
+		"*.secret.sops.yaml": "Lock",
+
+		// K8S Objects
+		"*.secret.yaml": "Key",
+		"*.reflected-secret.yaml": "Key",
+		"*.configmap.yaml": "Settings",
+
+	},
+	"material-icon-theme.folders.associations": {
+		// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/folderIcons.png
+		// =========================================================================================================
+		// Top level
+		"workflows": "CI",
+		"linters": "Font",
+		"infra": "Serverless",
+
+		// Clusters
+		"home-cluster": "Home",
+		"infra-cluster": "Utils",
+
+		// Namespaces
+		"auth": "Secure",
+		"cert-manager-system": "Guard",
+		"cilium-system": "Context",
+		"flux-system": "Pipe",
+		"github-actions-runners": "GitHub",
+		"github-actions-system": "GitHub",
+		"kube-system": "Kubernetes",
+		"kube-utils": "Tools",
+		"infra-system": "Server",
+		"ingress-nginx-system": "Routes",
+		"ingress-system": "Routes",
+		"networking": "Connection",
+		"rook-ceph": "Dump",
+		"minio": "Packages",
+		"volsync": "Packages",
+
+		// Misc.
+		"terraforms": "Terraform",
+		"tf-controller": "Controller",
+		"cloudflare": "Global",
+		"keycloak": "Secure",
+		"rbac": "Admin",
+	},
+	"yaml.schemaStore.enable": true,
+	"yaml.schemas": {
+	"kubernetes": "./kubernetes/**/*.yaml"
+	}
+}
