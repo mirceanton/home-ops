@@ -15,6 +15,9 @@ jobs:
       - name: Install prerqeuisites
         run: sudo apt update && sudo apt install -y curl jq
 
+      - name: Checkout the Repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
       - name: Generate Image Tag
         id: calver-tag
         env:
