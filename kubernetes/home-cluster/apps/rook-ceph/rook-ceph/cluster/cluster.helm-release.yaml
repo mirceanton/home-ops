@@ -13,6 +13,12 @@ spec:
         kind: HelmRepository
         name: rook-ceph
 
+  dependsOn:
+    - name: rook-ceph-operator
+      namespace: rook-ceph
+    - name: snapshot-controller
+      namespace: kube-system
+
   values:
     ingress:
       dashboard:
