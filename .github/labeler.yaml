@@ -1,18 +1,39 @@
 ---
+# =================================================================================================
+# Area Labels
+# =================================================================================================
 area/github:
-  - ".github/**/*"
+  - changed-files:
+      - any-glob-to-any-file: ".github/**/*"
 
 area/kubernetes:
-  - "kubernetes/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "kubernetes/**/*"
 
 area/scripts:
-  - "scripts/**/*"
-  - ".taskfiles/**/*"
-  - Taskfile.yml
+  - changed-files:
+      - any-glob-to-any-file: "scripts/**/*"
+      - any-glob-to-any-file: ".taskfiles/**/*"
+      - any-glob-to-any-file: "Taskfile.yml"
 
 area/infrastructure:
-  - "infra/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "infra/**/*"
 
 area/docs:
-  - "docs/**/*"
-  - mkdocs.yml
+  - changed-files:
+      - any-glob-to-any-file: "docs/**/*"
+      - any-glob-to-any-file: "mkdocs.yml"
+
+# =================================================================================================
+# Cluster Labels
+# =================================================================================================
+cluster/home:
+  - changed-files:
+      - any-glob-to-any-file: "kubernetes/home-cluster/**/*"
+      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
+
+cluster/infra:
+  - changed-files:
+      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
+      - any-glob-to-any-file: "infra/infra-cluster/**/*"
