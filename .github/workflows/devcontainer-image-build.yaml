@@ -1,5 +1,5 @@
 ---
-name: Docker Build and Publish
+name: Build and Publish DevContainer Image
 
 on:
   workflow_dispatch: {}
