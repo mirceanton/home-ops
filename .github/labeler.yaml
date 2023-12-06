@@ -4,37 +4,36 @@
 # =================================================================================================
 area/github:
   - changed-files:
-    - any-glob-to-any-file: ".github/**/*"
+      - any-glob-to-any-file: ".github/**/*"
 
 area/kubernetes:
   - changed-files:
-    - any-glob-to-any-file: "kubernetes/**/*"
+      - any-glob-to-any-file: "kubernetes/**/*"
 
 area/scripts:
   - changed-files:
-    - any-glob-to-any-file: "scripts/**/*"
-    - any-glob-to-any-file: ".taskfiles/**/*"
-    - any-glob-to-any-file: "Taskfile.yml"
+      - any-glob-to-any-file: "scripts/**/*"
+      - any-glob-to-any-file: ".taskfiles/**/*"
+      - any-glob-to-any-file: "Taskfile.yml"
 
 area/infrastructure:
   - changed-files:
-    - any-glob-to-any-file: "infra/**/*"
+      - any-glob-to-any-file: "infra/**/*"
 
 area/docs:
   - changed-files:
-    - any-glob-to-any-file: "docs/**/*"
-    - any-glob-to-any-file: "mkdocs.yml"
-
+      - any-glob-to-any-file: "docs/**/*"
+      - any-glob-to-any-file: "mkdocs.yml"
 
 # =================================================================================================
 # Cluster Labels
 # =================================================================================================
 cluster/home:
   - changed-files:
-    - any-glob-to-any-file: "kubernetes/home-cluster/**/*"
-    - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
+      - any-glob-to-any-file: "kubernetes/home-cluster/**/*"
+      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
 
 cluster/infra:
   - changed-files:
-    - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
-    - any-glob-to-any-file: "infra/infra-cluster/**/*"
+      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
+      - any-glob-to-any-file: "infra/infra-cluster/**/*"

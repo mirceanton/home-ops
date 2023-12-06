@@ -7,7 +7,7 @@ on:
 jobs:
   labeler:
     name: Labeler
-    runs-on: [ "arc-runner-set-home-ops" ]
+    runs-on: ["arc-runner-set-home-ops"]
     permissions:
       contents: read
       pull-requests: write
