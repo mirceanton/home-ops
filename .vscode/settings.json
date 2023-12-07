@@ -61,6 +61,7 @@
 		// Misc.
 		"notifications": "Messages",
 		"terraforms": "Terraform",
+		"terraform-system": "Terraform",
 		"tf-controller": "Controller",
 		"operator": "Controller",
 		"cloudflare": "Global",
