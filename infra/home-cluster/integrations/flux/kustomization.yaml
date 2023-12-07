@@ -6,3 +6,27 @@ namespace: flux-system
 
 resources:
   - github.com/fluxcd/flux2/manifests/install?ref=v2.1.2
+
+patches:
+  # Disable the network policies
+  - patch: |
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: not-used
+    target:
+      group: networking.k8s.io
+      kind: NetworkPolicy
+
+  # Disable image-reflector and image-automation controllers
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: not-used
+      spec:
+        replicas: 0
+    target:
+      kind: Deployment
+      name: (image-reflector-controller|image-automation-controller)
