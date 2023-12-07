@@ -59,11 +59,14 @@
 		"volsync": "Packages",
 
 		// Misc.
+		"notifications": "Messages",
 		"terraforms": "Terraform",
 		"tf-controller": "Controller",
+		"operator": "Controller",
 		"cloudflare": "Global",
 		"keycloak": "Secure",
 		"rbac": "Admin",
+		"oauth2-proxy": "Global"
 	},
 	"yaml.schemaStore.enable": true,
 	"yaml.schemas": {
