@@ -20,3 +20,8 @@ spec:
   varsFrom:
     - kind: Secret
       name: minio-connection-details
+    - kind: Secret
+      name: minio-creds
+      varsKeys:
+        - root-user:minio_user
+        - root-password:minio_pass

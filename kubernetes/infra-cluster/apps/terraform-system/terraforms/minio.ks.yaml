@@ -3,10 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-minio-config
+  name: cluster-terraforms-minio
   namespace: flux-system
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/minio/minio/config
-  targetNamespace: minio
+  path: ${CLUSTER_APPS_BASE_DIR}/terraform-system/terraforms/minio
+  targetNamespace: terraform-system
   dependsOn:
+    - name: cluster-apps-tf-controller
     - name: cluster-apps-minio

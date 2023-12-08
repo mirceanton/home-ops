@@ -28,9 +28,7 @@ spec:
 
     ## MinIO authentication parameters
     auth:
-      rootUser: ${MINIO_ADMIN_USER}
-      rootPassword: ${MINIO_ADMIN_PASS}
-
+      existingSecret: minio-creds
 
     ## ================================================================================================
     ## MinIO Deployment parameters
@@ -46,7 +44,6 @@ spec:
       requests:
         cpu: 1
         memory: 1Gi
-
 
     ## ================================================================================================
     ## Ingress parameters
@@ -95,13 +92,11 @@ spec:
             - s3.minio.${CLUSTER_DOMAIN}
           secretName: s3.minio.${CLUSTER_DOMAIN}-tls
 
-
     ## ================================================================================================
     ## NetworkPolicy parameters
     ## ================================================================================================
     networkPolicy:
       enabled: false
-
 
     ## ================================================================================================
     ## Persistence parameters -> use local disk
@@ -109,7 +104,6 @@ spec:
     persistence:
       enabled: true
       existingClaim: minio-pvc
-
 
     ## ================================================================================================
     ## Monitoring

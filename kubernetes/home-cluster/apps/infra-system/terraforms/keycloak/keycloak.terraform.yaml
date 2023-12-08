@@ -35,5 +35,5 @@ spec:
     - kind: Secret
       name: keycloak-client-weave-gitops
       varsKeys:
-        - client-id:weave_gitops_client_id
-        - client-secret:weave_gitops_client_secret
+        - clientID:weave_gitops_client_id
+        - clientSecret:weave_gitops_client_secret
