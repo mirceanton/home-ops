@@ -11,7 +11,7 @@ metadata:
     patching.home.mirceanton.com/post-build: false
     patching.home.mirceanton.com/decryption: true
 spec:
-  path: kubernetes/infra-cluster/apps/terraform-system/terraforms/minio
+  path: kubernetes/infra-cluster/terraforms/minio
   targetNamespace: terraform-system
   prune: true
   wait: true
