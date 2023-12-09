@@ -13,4 +13,6 @@ metadata:
 spec:
   path: kubernetes/infra-cluster/apps/kube-system/reflector/app
   targetNamespace: kube-system
+  prune: true
+  wait: true
   dependsOn: []
