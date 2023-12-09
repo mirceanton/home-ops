@@ -25,7 +25,8 @@ tasks:
     cmds:
       # Generate and apply Talos config
       - talhelper genconfig --no-gitignore > /dev/null
-      - talhelper gencommand apply --extra-flags=--insecure | bash
+      # TODO - talhelper gencommand apply --extra-flags=--insecure | bash
+      - talosctl apply-config -n 10.0.10.31 --file clusterconfig/infra-cluster-truenas-vm.yaml --insecure
 
       # Wait for Talos nodes to become Healthy
       - for: { var: HOME_CLUSTER_NODES }
