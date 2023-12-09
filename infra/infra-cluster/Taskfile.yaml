@@ -29,16 +29,17 @@ tasks:
       - talosctl apply-config -n 10.0.10.31 --file clusterconfig/infra-cluster-truenas-vm.yaml --insecure
 
       # Wait for Talos nodes to become Healthy
-      - for: { var: HOME_CLUSTER_NODES }
+      - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
 
       # Bootstrap Kubernetes and import Kubeconfig
-      - talosctl --talosconfig clusterconfig/talosconfig bootstrap -n {{(split " " .HOME_CLUSTER_NODES)._0}}
+      - cat clusterconfig/talosconfig
+      - talosctl --talosconfig clusterconfig/talosconfig bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}
       - task: cluster:select
 
       # Wait for Kubernetes to become Ready
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
-      - for: { var: HOME_CLUSTER_NODES }
+      - for: { var: INFRA_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
 
       # Bootstrap FluxCD
