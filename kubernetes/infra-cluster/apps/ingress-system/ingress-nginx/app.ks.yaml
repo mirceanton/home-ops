@@ -14,4 +14,5 @@ spec:
   path: kubernetes/infra-cluster/apps/ingress-system/ingress-nginx/app
   targetNamespace: ingress-system
   prune: true
+  wait: true
   dependsOn: []

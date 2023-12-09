@@ -14,5 +14,6 @@ spec:
   path: kubernetes/infra-cluster/apps/cert-manager-system/cert-manager/issuers
   targetNamespace: cert-manager-system
   prune: true
+  wait: true
   dependsOn:
     - name: cluster-apps-cert-manager

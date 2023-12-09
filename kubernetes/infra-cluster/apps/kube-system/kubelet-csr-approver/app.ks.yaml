@@ -14,4 +14,5 @@ spec:
   path: kubernetes/infra-cluster/apps/kube-system/kubelet-csr-approver/app
   targetNamespace: kube-system
   prune: true
+  wait: true
   dependsOn: []

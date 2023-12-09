@@ -14,8 +14,5 @@ spec:
   path: kubernetes/infra-cluster/apps/loadbalancer-system/metallb/app
   targetNamespace: loadbalancer-system
   prune: true
-  dependsOn: []
-
-  # we need to wait for the HR to be ready in order to mark this KS as ready
-  # because the resources KS will fail otherwise
   wait: true
+  dependsOn: []
