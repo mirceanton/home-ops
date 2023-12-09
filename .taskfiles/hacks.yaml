@@ -1,5 +1,6 @@
 ---
-version: '3'
+# yaml-language-server: $schema=https://json.schemastore.org/taskfile
+version: "3"
 
 tasks:
   delete-stuck-ns:
