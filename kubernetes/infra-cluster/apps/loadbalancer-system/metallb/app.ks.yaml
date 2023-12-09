@@ -6,8 +6,12 @@ metadata:
   name: cluster-apps-metallb
   namespace: flux-system
   labels:
-    home-ops.mirceanton.com/group: system-apps
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/decryption: false
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/loadbalancer-system/metallb/app
+  path: kubernetes/infra-cluster/apps/loadbalancer-system/metallb/app
   targetNamespace: loadbalancer-system
+  prune: true
   dependsOn: []

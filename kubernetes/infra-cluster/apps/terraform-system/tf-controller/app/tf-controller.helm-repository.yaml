@@ -5,4 +5,5 @@ kind: HelmRepository
 metadata:
   name: tf-controller
 spec:
+  interval: 1h
   url: https://weaveworks.github.io/tf-controller/

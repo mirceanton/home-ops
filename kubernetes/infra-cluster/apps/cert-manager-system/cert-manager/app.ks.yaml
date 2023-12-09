@@ -6,8 +6,12 @@ metadata:
   name: cluster-apps-cert-manager
   namespace: flux-system
   labels:
-    home-ops.mirceanton.com/group: system-apps
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/decryption: false
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/cert-manager-system/cert-manager/app
+  path: kubernetes/infra-cluster/apps/cert-manager-system/cert-manager/app
   targetNamespace: cert-manager-system
+  prune: true
   dependsOn: []

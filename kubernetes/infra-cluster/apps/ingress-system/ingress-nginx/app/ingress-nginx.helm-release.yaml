@@ -13,12 +13,18 @@ spec:
         kind: HelmRepository
         name: ingress-nginx
 
-  values:
-    controller:
-      replicaCount: 1
+  valuesFrom:
+    - kind: ConfigMap
+      name: ingress-nginx-values
 
-      ingressClass: nginx
-      ingressClassResource:
-        name: nginx
-        enabled: true
-        default: true
+  interval: 30m
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false

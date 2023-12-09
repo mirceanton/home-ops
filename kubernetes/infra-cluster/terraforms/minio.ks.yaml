@@ -5,8 +5,13 @@ kind: Kustomization
 metadata:
   name: cluster-terraforms-minio
   namespace: flux-system
+  labels:
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/decryption: true
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/terraform-system/terraforms/minio
+  path: kubernetes/infra-cluster/apps/terraform-system/terraforms/minio
   targetNamespace: terraform-system
   dependsOn:
     - name: cluster-apps-tf-controller

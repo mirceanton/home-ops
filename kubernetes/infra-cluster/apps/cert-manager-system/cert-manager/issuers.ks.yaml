@@ -5,8 +5,14 @@ kind: Kustomization
 metadata:
   name: cluster-apps-cert-manager-issuers
   namespace: flux-system
+  labels:
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/decryption: true
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/cert-manager-system/cert-manager/issuers
+  path: kubernetes/infra-cluster/apps/cert-manager-system/cert-manager/issuers
   targetNamespace: cert-manager-system
+  prune: true
   dependsOn:
     - name: cluster-apps-cert-manager

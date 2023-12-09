@@ -1,0 +1,39 @@
+---
+image:
+  repository: registry.k8s.io/metrics-server/metrics-server
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+## ================================================================================================
+## METRICS SERVER DEPLOYMENT PARAMETERS
+## ================================================================================================
+replicas: 1
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 100Mi
+  limits:
+    cpu: 200m
+    memory: 200Mi
+
+rbac:
+  create: true
+  pspEnabled: false
+serviceAccount:
+  create: true
+
+## ================================================================================================
+## MONITORING
+## ================================================================================================
+metrics:
+  enabled: false
+
+serviceMonitor:
+  enabled: false

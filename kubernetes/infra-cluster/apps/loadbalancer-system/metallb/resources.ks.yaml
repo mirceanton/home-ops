@@ -5,8 +5,14 @@ kind: Kustomization
 metadata:
   name: cluster-apps-metallb-resources
   namespace: flux-system
+  labels:
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: true
+    patching.home.mirceanton.com/decryption: false
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/loadbalancer-system/metallb/resources
+  path: kubernetes/infra-cluster/apps/loadbalancer-system/metallb/resources
   targetNamespace: loadbalancer-system
+  prune: true
   dependsOn:
     - name: cluster-apps-metallb
