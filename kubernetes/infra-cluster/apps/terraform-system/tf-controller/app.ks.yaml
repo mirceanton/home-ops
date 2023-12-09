@@ -15,3 +15,7 @@ spec:
   targetNamespace: flux-system
   prune: true
   dependsOn: []
+
+  # we need to wait for the HR to be ready in order to mark this KS as ready
+  # because the cluster terraforms KS will fail otherwise
+  wait: true
