@@ -13,6 +13,8 @@ metadata:
 spec:
   path: kubernetes/infra-cluster/apps/terraform-system/terraforms/minio
   targetNamespace: terraform-system
+  prune: true
+  wait: true
   dependsOn:
     - name: cluster-apps-tf-controller
     - name: cluster-apps-minio
