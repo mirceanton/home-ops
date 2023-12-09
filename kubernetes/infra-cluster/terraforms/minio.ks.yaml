@@ -8,7 +8,7 @@ metadata:
   labels:
     patching.home.mirceanton.com/source-ref: true
     patching.home.mirceanton.com/intervals: true
-    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/post-build: true
     patching.home.mirceanton.com/decryption: true
 spec:
   path: kubernetes/infra-cluster/terraforms/minio
