@@ -33,24 +33,35 @@ spec:
 
   patches:
     # ====================================================================
-    # Inject shared snippets into all Kustomizations
-    # -> source repo, variable substitution, decription etc.
+    # Inject home-ops git repository as KS source
     # ====================================================================
     - target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
+        labelSelector: patching.home.mirceanton.com/source-ref=true
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
         metadata:
           name: not-used
         spec:
-          # Apply the home-ops git repo as a sourceRef on all Kustomization
           sourceRef:
             kind: GitRepository
             name: home-ops-git-repo
 
-          # Apply the postBuild variable substitution on all Kustomization
+    # ====================================================================
+    # Inject postBuild substitution config into KS
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: patching.home.mirceanton.com/post-build=true
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
           postBuild:
             substituteFrom:
               - kind: ConfigMap
@@ -58,97 +69,37 @@ spec:
               - kind: Secret
                 name: cluster-secrets
 
-          # Enable sops decryption on all Kustomization
+    # ====================================================================
+    # Inject sops decryption config into KS
+    # ====================================================================
+    - target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
+        labelSelector: patching.home.mirceanton.com/decryption=true
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: not-used
+        spec:
           decryption:
             provider: sops
             secretRef:
               name: sops-age
 
-          # Set wait and prune for all Kustomizations (can override through ns labels)
-          wait: true
-          prune: true
-
-          # Set intervals for all Kustomizations
-          interval: ${KUSTOMIZATION_INTERVAL}
-          retryInterval: ${KUSTOMIZATION_RETRY_INTERVAL}
-          timeout: ${KUSTOMIZATION_TIMEOUT}
-
-          patches:
-            - target:
-                group: source.toolkit.fluxcd.io
-                kind: HelmRepository
-              patch: |-
-                apiVersion: source.toolkit.fluxcd.io/v1beta2
-                kind: HelmRepository
-                metadata:
-                  name: not-used
-                spec:
-                  interval: ${HELMREPOSITORY_INTERVAL}
-
-            - target:
-                group: helm.toolkit.fluxcd.io
-                kind: HelmRelease
-              patch: |-
-                apiVersion: helm.toolkit.fluxcd.io/v2beta1
-                kind: HelmRelease
-                metadata:
-                  name: not-used
-                spec:
-                  interval: ${HELMRELEASE_INTERVAL}
-                  rollback:
-                    timeout: ${HELMRELEASE_ROLLBACK_TIMEOUT}
-                  install:
-                    remediation:
-                      retries: ${HELMRELEASE_INSTALL_RETRIES}
-                  upgrade:
-                    remediation:
-                      retries: ${HELMRELEASE_UPGRADE_RETRIES}
-                  uninstall:
-                    keepHistory: false
-
     # ====================================================================
-    # Simulate Kustomization Groups: all system apps depend on flux
+    # Inject common intervals into KS
     # ====================================================================
     - target:
         group: kustomize.toolkit.fluxcd.io
         kind: Kustomization
-        labelSelector: home-ops.mirceanton.com/group=system-apps
-      patch: |
-        - op: add
-          path: /spec/dependsOn/-
-          value:
-            name: cluster-apps-flux
-        - op: add
-          path: /spec/dependsOn/-
-          value:
-            name: cluster-apps-flux-addons
-
-    # ====================================================================
-    # Simulate Kustomization Groups: all admin apps depend on ingress and certs
-    # ====================================================================
-    - target:
-        group: kustomize.toolkit.fluxcd.io
+        labelSelector: patching.home.mirceanton.com/intervals=true
+      patch: |-
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
         kind: Kustomization
-        labelSelector: home-ops.mirceanton.com/group=admin-apps
-      patch: |
-        - op: add
-          path: /spec/dependsOn/-
-          value:
-            name: cluster-apps-ingress-nginx
-        - op: add
-          path: /spec/dependsOn/-
-          value:
-            name: cluster-apps-cert-manager-issuers
-
-    # ====================================================================
-    # Simulate Kustomization Groups: apps that need IPs for their LB Svc
-    # ====================================================================
-    - target:
-        group: kustomize.toolkit.fluxcd.io
-        kind: Kustomization
-        labelSelector: home-ops.mirceanton.com/needs=ip
-      patch: |
-        - op: add
-          path: /spec/dependsOn/-
-          value:
-            name: cluster-apps-metallb-resources
+        metadata:
+          name: not-used
+        spec:
+          interval: 10m
+          retryInterval: 1m
+          timeout: 15m
