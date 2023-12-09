@@ -12,7 +12,7 @@ metadata:
     patching.home.mirceanton.com/decryption: false
 spec:
   path: kubernetes/infra-cluster/apps/terraform-system/tf-controller/app
-  targetNamespace: flux-system
+  targetNamespace: terraform-system
   prune: true
   dependsOn: []
 
