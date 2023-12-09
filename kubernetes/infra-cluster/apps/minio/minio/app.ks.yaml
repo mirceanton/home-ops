@@ -13,4 +13,5 @@ metadata:
 spec:
   path: kubernetes/infra-cluster/apps/minio/minio/app
   targetNamespace: minio
+  prune: true
   dependsOn: []
