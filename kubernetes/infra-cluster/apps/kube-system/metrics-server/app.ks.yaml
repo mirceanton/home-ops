@@ -11,7 +11,7 @@ metadata:
     patching.home.mirceanton.com/post-build: false
     patching.home.mirceanton.com/decryption: false
 spec:
-  path: kubernetes/infra-cluster/appskube-system/metrics-server/app
+  path: kubernetes/infra-cluster/apps/kube-system/metrics-server/app
   targetNamespace: kube-system
   prune: true
   dependsOn:
