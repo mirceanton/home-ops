@@ -33,7 +33,6 @@ tasks:
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
 
       # Bootstrap Kubernetes and import Kubeconfig
-      - cat clusterconfig/talosconfig
       - talosctl --talosconfig clusterconfig/talosconfig bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}
       - task: cluster:select
 
@@ -43,7 +42,7 @@ tasks:
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
 
       # Bootstrap FluxCD
-      - kubectl kustomize --enable-helm integrations | kubectl apply -f -
+      - kustomize build integrations | kubectl apply -f -
       - cat $SOPS_AGE_KEY_FILE | kubectl create secret generic sops-age --namespace=flux-system --from-file=age.agekey=/dev/stdin
 
   cluster:select:
