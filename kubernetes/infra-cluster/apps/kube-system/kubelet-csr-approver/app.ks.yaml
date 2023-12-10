@@ -15,4 +15,5 @@ spec:
   targetNamespace: kube-system
   prune: true
   wait: true
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-flux
