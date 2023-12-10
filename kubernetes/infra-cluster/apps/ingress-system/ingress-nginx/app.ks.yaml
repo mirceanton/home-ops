@@ -15,4 +15,6 @@ spec:
   targetNamespace: ingress-system
   prune: true
   wait: true
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-flux
+    - name: cluster-apps-metallb-resources

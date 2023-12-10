@@ -9,6 +9,8 @@ spec:
   path: kubernetes/infra-cluster/terraforms
   dependsOn:
     - name: cluster-config
+    - name: cluster-apps-tf-controller
+    - name: cluster-apps-reflector
 
   wait: true
   prune: true

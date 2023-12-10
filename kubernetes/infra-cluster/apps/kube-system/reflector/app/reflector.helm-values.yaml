@@ -7,3 +7,9 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 imagePullSecrets: []
+
+configuration:
+  logging:
+    minimumLevel: Debug
+
+resources: {}

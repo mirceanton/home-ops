@@ -15,4 +15,5 @@ spec:
   targetNamespace: minio
   prune: true
   wait: true
-  dependsOn: []
+  dependsOn:
+    - name: cluster-apps-flux
