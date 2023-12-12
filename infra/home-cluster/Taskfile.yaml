@@ -2,6 +2,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/taskfile
 version: "3"
 
+
 env:
   HOME_CLUSTER_NAME:
     sh: |-
@@ -13,11 +14,13 @@ env:
     sh: |-
       grep -oP 'ipAddress: \K[0-9.]+' {{.ROOT_DIR}}/infra/home-cluster/talconfig.yaml | tr '\n' ' '
 
+
 includes:
   # TODO: replace with sopshelper
   sops:
     internal: true
     taskfile: ../../.taskfiles/sops.yaml
+
 
 tasks:
   cluster:create:
@@ -45,7 +48,7 @@ tasks:
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
 
       # Bootstrap FluxCD
-      - kubectl kustomize --enable-helm integrations | kubectl apply -f -
+      - kustomize build --enable-helm integrations | kubectl apply -f -
       - cat $SOPS_AGE_KEY_FILE | kubectl create secret generic sops-age --namespace=flux-system --from-file=age.agekey=/dev/stdin
 
   cluster:select:
