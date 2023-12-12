@@ -5,10 +5,22 @@ kind: Kustomization
 metadata:
   name: cluster-apps-keycloak
   namespace: flux-system
-  labels:
-    home-ops.mirceanton.com/group: admin-apps
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/auth/keycloak/app
+  path: kubernetes/home-cluster/apps/auth/keycloak
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
   targetNamespace: auth
   dependsOn:
     - name: cluster-apps-democratic-csi-iscsi
+
+  wait: true
+  prune: true
+  interval: 5m
+  timeout: 30m
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age

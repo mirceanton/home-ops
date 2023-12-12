@@ -1,6 +1,16 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
-  - app.ks.yaml
+  - bitnami.helm-repository.yaml
+  - keycloak.helm-release.yaml
+  - admin-creds.secret.sops.yaml
+  - postgres-creds.secret.sops.yaml
+
+configMapGenerator:
+  - name: keycloak-values
+    options:
+      disableNameSuffixHash: true
+    files:
+      - values.yaml=keycloak.helm-values.yaml

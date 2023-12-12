@@ -5,4 +5,5 @@ kind: HelmRepository
 metadata:
   name: bitnami
 spec:
+  interval: 1h
   url: https://charts.bitnami.com/bitnami
