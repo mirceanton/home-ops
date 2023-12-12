@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-cert-manager
   namespace: flux-system
 spec:
-  path: kubernetes/home-cluster/apps/cert-manager-system/cert-manager/app
+  path: kubernetes/home-cluster/apps/cert-manager-system/cert-manager
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
