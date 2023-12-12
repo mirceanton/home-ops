@@ -6,4 +6,3 @@ resources:
   - cilium
   - coredns
   - flux
-  - flux-manifests

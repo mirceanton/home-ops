@@ -6,6 +6,8 @@ namespace: flux-system
 
 resources:
   - github.com/fluxcd/flux2/manifests/install?ref=v2.1.2
+  - home-ops.git-repository.yaml
+  - home-ops.ks.yaml
 
 patches:
   # Disable the network policies
