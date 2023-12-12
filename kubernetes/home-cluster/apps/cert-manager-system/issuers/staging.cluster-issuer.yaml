@@ -21,3 +21,5 @@ spec:
           dnsZones:
             - "mirceanton.com"
             - "*.mirceanton.com"
+            - "mirceaanton.com"
+            - "*.mirceaanton.com"
