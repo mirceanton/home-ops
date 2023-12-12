@@ -5,4 +5,5 @@ kind: HelmRepository
 metadata:
   name: postfinance
 spec:
+  interval: 1h
   url: https://postfinance.github.io/kubelet-csr-approver

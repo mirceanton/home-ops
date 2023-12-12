@@ -8,7 +8,16 @@ metadata:
   labels:
     home-ops.mirceanton.com/group: system-apps
 spec:
-  path: ${CLUSTER_APPS_BASE_DIR}/kube-system/metrics-server/app
+  path: kubernetes/home-cluster/apps/kube-system/metrics-server/app
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
   targetNamespace: kube-system
   dependsOn:
     - name: cluster-apps-kubelet-csr-approver
+
+  wait: true
+  prune: true
+  interval: 5m
+  timeout: 30m

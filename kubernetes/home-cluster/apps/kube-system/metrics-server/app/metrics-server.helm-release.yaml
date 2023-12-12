@@ -13,14 +13,18 @@ spec:
         kind: HelmRepository
         name: metrics-server
 
-  values:
-    replicas: 2
+  valuesFrom:
+    - kind: ConfigMap
+      name: metrics-server-values
 
-    # Prevent 2 instances from being scheduled on the same node
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/instance: metrics-server
+  interval: 30m
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
