@@ -1,7 +1,16 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
+
 resources:
-  - app.ks.yaml
-  - rbac.ks.yaml
+  - weaveworks.helm-repository.yaml
+  - weave-gitops.helm-release.yaml
+  - cluster-user-auth.secret.sops.yaml
+  - oidc-auth.secret.sops.yaml
+
+configMapGenerator:
+  - name: weave-gitops-values
+    options:
+      disableNameSuffixHash: true
+    files:
+      - values.yaml=weave-gitops.helm-values.yaml

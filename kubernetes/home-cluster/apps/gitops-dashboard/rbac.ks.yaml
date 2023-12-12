@@ -3,19 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-descheduler
+  name: cluster-apps-weave-gitops-rbac
   namespace: flux-system
-  labels:
-    home-ops.mirceanton.com/group: system-apps
 spec:
-  path: kubernetes/home-cluster/apps/descheduler-system/descheduler
+  path: kubernetes/home-cluster/apps/gitops-dashboard/rbac
   sourceRef:
     kind: GitRepository
-    name: home-ops-git-repo
+    name: cluster-apps
 
-  targetNamespace: descheduler-system
+  targetNamespace: gitops-dashboard
   dependsOn:
-    - name: cluster-apps-flux-discord-notifications
+    - name: cluster-apps-weave-gitops
 
   wait: true
   prune: true

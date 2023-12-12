@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: tf-controller
+  name: kubernetes-dashboard
 spec:
   interval: 1h
-  url: https://weaveworks.github.io/tf-controller/
+  url: https://kubernetes.github.io/dashboard/

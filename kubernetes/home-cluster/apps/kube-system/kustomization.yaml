@@ -5,6 +5,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - coredns/
-  - keycloak-oidc-rbac/
+  # - keycloak-oidc-rbac/
   - kubelet-csr-approver/
   - metrics-server/

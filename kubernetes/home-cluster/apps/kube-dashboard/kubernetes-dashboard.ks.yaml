@@ -3,21 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-descheduler
+  name: cluster-apps-kube-dashboard
   namespace: flux-system
   labels:
-    home-ops.mirceanton.com/group: system-apps
+    home-ops.mirceanton.com/group: admin-apps
 spec:
-  path: kubernetes/home-cluster/apps/descheduler-system/descheduler
+  path: kubernetes/home-cluster/apps/kube-dashboard/kubernetes-dashboard
   sourceRef:
     kind: GitRepository
-    name: home-ops-git-repo
+    name: kubernetes-dashboard
 
-  targetNamespace: descheduler-system
+  targetNamespace: kube-dashboard
   dependsOn:
     - name: cluster-apps-flux-discord-notifications
-
-  wait: true
-  prune: true
-  interval: 5m
-  timeout: 30m

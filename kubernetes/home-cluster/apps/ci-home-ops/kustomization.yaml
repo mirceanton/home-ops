@@ -4,5 +4,4 @@
 # kind: Kustomization
 # resources:
 #   - namespace.yaml
-#   - kubernetes-dashboard.ks.yaml
-#   - oauth2-proxy.ks.yaml
+#   - home-ops-runners/app.ks.yaml

@@ -3,7 +3,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: tf-controller
+  name: weaveworks
 spec:
   interval: 1h
-  url: https://weaveworks.github.io/tf-controller/
+  type: oci
+  url: oci://ghcr.io/weaveworks/charts

@@ -3,20 +3,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tf-controller
-  namespace: flux-system
+  name: kube-dashboard
 spec:
   chart:
     spec:
-      chart: tf-controller
-      version: 0.15.1
+      chart: kubernetes-dashboard
+      version: 6.0.8
       sourceRef:
         kind: HelmRepository
-        name: tf-controller
+        name: kubernetes-dashboard
 
   valuesFrom:
     - kind: ConfigMap
-      name: tf-controller-values
+      name: kube-dashboard-values
 
   interval: 30m
   maxHistory: 2

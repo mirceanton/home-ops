@@ -3,20 +3,19 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tf-controller
-  namespace: flux-system
+  name: weave-gitops
 spec:
   chart:
     spec:
-      chart: tf-controller
-      version: 0.15.1
+      chart: weave-gitops
+      version: 4.0.33
       sourceRef:
         kind: HelmRepository
-        name: tf-controller
+        name: weaveworks
 
   valuesFrom:
-    - kind: ConfigMap
-      name: tf-controller-values
+    - kind: Secret
+      name: weave-gitops-values
 
   interval: 30m
   maxHistory: 2

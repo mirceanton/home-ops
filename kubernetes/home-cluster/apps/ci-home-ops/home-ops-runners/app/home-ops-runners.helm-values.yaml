@@ -1,0 +1,21 @@
+---
+runnerScaleSetName: arc-runner-set-home-ops
+minRunners: 5
+maxRunners: 10
+
+githubConfigUrl: https://github.com/mirceanton/home-ops
+githubConfigSecret: github-token
+
+containerMode:
+  type: dind
+
+template:
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:2.311.0
+        command: ["/home/runner/run.sh"]
+
+controllerServiceAccount:
+  name: actions-runner-controller-gha-rs-controller
+  namespace: github-actions-system

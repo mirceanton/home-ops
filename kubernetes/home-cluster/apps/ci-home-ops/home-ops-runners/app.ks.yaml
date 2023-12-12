@@ -3,19 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-descheduler
+  name: cluster-apps-ci-home-ops-runners
   namespace: flux-system
   labels:
-    home-ops.mirceanton.com/group: system-apps
+    home-ops.mirceanton.com/group: ci-apps
 spec:
-  path: kubernetes/home-cluster/apps/descheduler-system/descheduler
+  path: kubernetes/home-cluster/apps/ci-home-ops/home-ops-runners
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
 
-  targetNamespace: descheduler-system
+  targetNamespace: github-actions-runners
   dependsOn:
-    - name: cluster-apps-flux-discord-notifications
+    - name: cluster-apps-github-actions-controller
 
   wait: true
   prune: true
