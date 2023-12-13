@@ -1,6 +1,20 @@
 ---
 fullnameOverride: coredns
-replicaCount: 3  # one replica on each controlplane node
+
+# =================================================================================================
+# Image and Repository Settings
+# =================================================================================================
+image:
+  repository: coredns/coredns
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+# =================================================================================================
+# Scheduling Settings
+# =================================================================================================
+replicaCount: 3 # one replica on each controlplane node
+
+nodeSelector: {}
 
 # Allow scheduling on controlplane nodes
 tolerations:
@@ -26,19 +40,36 @@ topologySpreadConstraints:
       matchLabels:
         app.kubernetes.io/instance: coredns
 
+# =================================================================================================
+# Resources
+# =================================================================================================
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# =================================================================================================
+# Service
+# =================================================================================================
 service:
   name: coredns
   clusterIP: 10.96.0.10
-  clusterIPs: [ 10.96.0.10 ]
+  clusterIPs: [10.96.0.10]
 
-serviceAccount:
-  create: true
-
+# =================================================================================================
+# Extra Annotations
+# =================================================================================================
 # Annotate for auto-reloading if configmap changed
 deployment:
   annotations:
     reloader.stakater.com/auto: "true"
 
+# =================================================================================================
+# Application Settings
+# =================================================================================================
 servers:
   - zones:
       - zone: .
@@ -67,3 +98,12 @@ servers:
       - name: loop
       - name: reload
       - name: loadbalance
+
+# =================================================================================================
+# Prometheus Metrics
+# =================================================================================================
+prometheus:
+  service:
+    enabled: false
+  monitor:
+    enabled: false

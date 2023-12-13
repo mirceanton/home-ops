@@ -1,6 +1,6 @@
 ---
 # =================================================================================================
-# Image and repository settings
+# Image and Repository Settings
 # =================================================================================================
 image:
   repository: registry.k8s.io/metrics-server/metrics-server
