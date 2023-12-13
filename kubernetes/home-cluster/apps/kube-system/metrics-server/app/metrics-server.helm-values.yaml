@@ -1,4 +1,15 @@
 ---
+# =================================================================================================
+# Image and repository settings
+# =================================================================================================
+image:
+  repository: registry.k8s.io/metrics-server/metrics-server
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+# =================================================================================================
+# Scheduling Settings
+# =================================================================================================
 replicas: 2
 
 # Prevent 2 instances from being scheduled on the same node
@@ -9,3 +20,45 @@ topologySpreadConstraints:
     labelSelector:
       matchLabels:
         app.kubernetes.io/instance: metrics-server
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# =================================================================================================
+# Application Settings
+# =================================================================================================
+defaultArgs:
+  - --cert-dir=/tmp
+  - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+  - --kubelet-use-node-status-port
+  - --metric-resolution=15s
+
+# =================================================================================================
+# Pod Disruption Budget
+# https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+# =================================================================================================
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  maxUnavailable:
+
+# =================================================================================================
+# Resources
+# See https://github.com/kubernetes-sigs/metrics-server#scaling
+# =================================================================================================
+resources:
+  requests:
+    cpu: 100m
+    memory: 200Mi
+  # limits:
+  #   cpu:
+  #   memory:
+
+# =================================================================================================
+# Prometheus Metrics
+# =================================================================================================
+metrics:
+  enabled: false
+serviceMonitor:
+  enabled: false

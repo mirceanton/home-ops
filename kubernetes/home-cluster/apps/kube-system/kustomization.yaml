@@ -7,4 +7,4 @@ resources:
   # - coredns/app.ks.yaml
   # - keycloak-oidc-rbac/
   - kubelet-csr-approver/app.ks.yaml
-  # - metrics-server/app.ks.yaml
+  - metrics-server/app.ks.yaml
