@@ -2,7 +2,7 @@
 # Utility versions
 ## ================================================================================================
 ARG TERRAFORM_VERSION=1.6.5
-ARG FLUX_VERSION=v2.1.2
+ARG FLUX_VERSION=v2.2.2
 ARG SOPS_VERSION=v3.8.1-alpine
 ARG KUBECTL_VERSION=1.28.4
 ARG K9S_VERSION=v0.28.2
