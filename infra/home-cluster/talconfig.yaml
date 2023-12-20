@@ -4,10 +4,10 @@ clusterName: ${clusterName}
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: datasource=github-releases depName=siderolabs/talos
-talosVersion: v1.5.5
+talosVersion: v1.6.0
 
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-kubernetesVersion: v1.28.4
+kubernetesVersion: v1.29.0
 
 domain: cluster.local
 additionalApiServerCertSans:
@@ -60,8 +60,27 @@ controlPlane:
             oidc-issuer-url: https://auth.${clusterDomain}/keycloak/realms/home
             oidc-username-claim: email
 
+    - |-  # Extra disks
+      machine:
+        kubelet:
+          extraMounts:
+            - destination: /var/mnt/postgres
+              type: bind
+              source: /var/mnt/postgres
+              options:
+                - rbind
+                - rshared
+                - rw
+            - destination: /var/mnt/rook0
+              type: bind
+              source: /var/mnt/postgres
+              options:
+                - rbind
+                - rshared
+                - rw
+
 nodes:
-  - hostname: nuc
+  - hostname: hkc-01
     ipAddress: 10.0.10.11
     controlPlane: true
     nodeLabels:
@@ -70,11 +89,14 @@ nodes:
       node-role.kubernetes.io/worker: "true"          # runs general workloads
       node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
-    installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    installDisk: /dev/sdb
+    machineDisks:
+      - device: /dev/nvme0n1
+        partitions:
+          - mountpoint: /var/mnt/rook0
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -91,20 +113,7 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
-
-  - hostname: srv
+  - hostname: hkc-02
     ipAddress: 10.0.10.12
     controlPlane: true
     nodeLabels:
@@ -114,10 +123,13 @@ nodes:
       node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
     installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    machineDisks:
+      - device: /dev/nvme0n2
+        partitions:
+          - mountpoint: /var/mnt/rook0
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -133,20 +145,7 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
-
-  - hostname: minisforum
+  - hostname: hkc-03
     ipAddress: 10.0.10.13
     controlPlane: true
     nodeLabels:
@@ -155,11 +154,14 @@ nodes:
       node-role.kubernetes.io/worker: "true"          # runs general workloads
       node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
-    installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    installDisk: /dev/sdb
+    machineDisks:
+      - device: /dev/nvme0n1
+        partitions:
+          - mountpoint: /var/mnt/rook0
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -174,16 +176,3 @@ nodes:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/iscsi-tools
-
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
