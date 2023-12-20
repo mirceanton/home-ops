@@ -5,7 +5,7 @@
 	"containerEnv": {
 		"SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/.age.key"
 	},
-	"image": "ghcr.io/mirceanton/gitops-toolkit:2023.12.0",
+	"image": "ghcr.io/mirceanton/gitops-toolkit:latest",
 	// "build": { "dockerfile": "Dockerfile" },
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {

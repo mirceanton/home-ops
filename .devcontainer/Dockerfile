@@ -2,25 +2,23 @@
 # Utility versions
 ## ================================================================================================
 ARG TERRAFORM_VERSION=1.6.6
-ARG FLUX_VERSION=v2.1.2
+ARG FLUX_VERSION=v2.2.2
 ARG SOPS_VERSION=v3.8.1-alpine
-ARG KUBECTL_VERSION=1.28.4
-ARG K9S_VERSION=v0.28.2
-ARG TALOSCTL_VERSION=v1.5.5
-ARG HELM_VERSION=v3.13.1
+ARG KUBECTL_VERSION=1.29.0
+ARG K9S_VERSION=v0.29.1
+ARG TALOSCTL_VERSION=v1.6.0
+ARG HELM_VERSION=v3.13.3
 ARG AGE_VERSION=v1.1.1
-ARG TASKFILE_VERSION=v3.31.0
-ARG DOCKER_VERSION=24.0.7-cli
-ARG TALHELPER_VERSION=v1.15.0
+ARG TASKFILE_VERSION=v3.32.0
+ARG TALHELPER_VERSION=v1.16.2
 ARG KUSTOMIZE_VERSION=v5.3.0
 ARG STERN_VERSION=1.27.0
-ARG CILIUM_VERSION=v0.15.16
+ARG CILIUM_VERSION=v0.15.19
 
 
 ## ================================================================================================
 # "Build" stage for utilities with docker images already present
 ## ================================================================================================
-FROM docker:${DOCKER_VERSION} as docker
 FROM registry.k8s.io/kustomize/kustomize:${KUSTOMIZE_VERSION} as kustomize
 FROM bitnami/kubectl:${KUBECTL_VERSION} as kubectl
 FROM ghcr.io/stern/stern:${STERN_VERSION} as stern
