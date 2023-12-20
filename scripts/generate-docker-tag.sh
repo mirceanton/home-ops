@@ -51,4 +51,5 @@ existing_tags=$(fetch_tags $calver)
 patch=$(determine_patch "$existing_tags")
 
 # Print the generated tag
-echo "$calver.$patch"
+echo "calver_tag_latest=$calver"
+echo "calver_tag_versioned=$calver.$patch"
