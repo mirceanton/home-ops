@@ -4,7 +4,7 @@
 ARG TERRAFORM_VERSION=1.6.6
 ARG FLUX_VERSION=v2.2.2
 ARG SOPS_VERSION=v3.8.1-alpine
-ARG KUBECTL_VERSION=1.29.0
+ARG KUBECTL_VERSION=1.28.5
 ARG K9S_VERSION=v0.29.1
 ARG TALOSCTL_VERSION=v1.6.0
 ARG HELM_VERSION=v3.13.3
@@ -27,7 +27,7 @@ FROM derailed/k9s:${K9S_VERSION} as k9s
 FROM ghcr.io/getsops/sops:${SOPS_VERSION} as sops
 FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
 FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
-
+FROM ghcr.io/budimanjojo/talhelper:${TALHELPER_VERSION} as talhelper
 
 ## ================================================================================================
 # Build stages for other utilities
@@ -44,10 +44,6 @@ RUN wget https://github.com/FiloSottile/age/releases/download/${AGE_VERSION}/age
 FROM alpine as helm
 ARG HELM_VERSION
 RUN wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz && tar xvf helm-${HELM_VERSION}-linux-amd64.tar.gz && mv linux-amd64/helm /bin/helm
-
-FROM alpine as talhelper
-ARG TALHELPER_VERSION
-RUN wget https://github.com/budimanjojo/talhelper/releases/download/${TALHELPER_VERSION}/talhelper_linux_amd64.tar.gz -O talhelper.tar.gz && tar xvf talhelper.tar.gz && mv talhelper /bin/talhelper
 
 FROM alpine as cilium
 ARG CILIUM_VERSION
@@ -108,7 +104,7 @@ COPY --from=talosctl /talosctl /usr/local/bin/talosctl
 RUN talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl.bash > /dev/null
 
 # Install talhelper and set up bash completion
-COPY --from=talhelper /bin/talhelper /usr/local/bin/talhelper
+COPY --from=talhelper /usr/local/bin/talhelper /usr/local/bin/talhelper
 RUN talhelper completion bash | sudo tee /etc/bash_completion.d/talhelper.bash > /dev/null
 
 # Install taskfile and set up bash completion
