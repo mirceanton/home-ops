@@ -10,7 +10,7 @@ on:
 
 jobs:
   generate-tag:
-    runs-on: ["arc-runner-set-home-ops"]
+    runs-on: "ubuntu-latest"
     steps:
       - name: Install prerqeuisites
         run: sudo apt update && sudo apt install -y curl jq
@@ -25,13 +25,15 @@ jobs:
           REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
-        run: echo "generated_tag=$(bash scripts/generate-docker-tag.sh)" | tee $GITHUB_OUTPUT
+        run: bash scripts/generate-docker-tag.sh | tee $GITHUB_OUTPUT
+
     outputs:
-      calver-tag: ${{ steps.calver-tag.outputs.generated_tag }}
+      calver-tag-versioned: ${{ steps.calver-tag.outputs.calver_tag_versioned }}
+      calver-tag-latest: ${{ steps.calver-tag.outputs.calver_tag_latest }}
 
   build:
     needs: [generate-tag]
-    runs-on: ["arc-runner-set-home-ops"]
+    runs-on: "ubuntu-latest"
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -52,7 +54,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
           tags: |
-            ${{ needs.generate-tag.outputs.calver-tag }}
+            ${{ needs.generate-tag.outputs.calver-tag-versioned }}
+            ${{ needs.generate-tag.outputs.calver-tag-latest }}
             latest
 
       - name: Build and push
