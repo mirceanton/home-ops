@@ -49,6 +49,7 @@ tasks:
 
       # Bootstrap FluxCD
       - kustomize build --enable-helm integrations | kubectl apply -f -
+      - kubectl apply -f integrations/flux-manifests/
       - cat $SOPS_AGE_KEY_FILE | kubectl create secret generic sops-age --namespace=flux-system --from-file=age.agekey=/dev/stdin
 
   cluster:select:
