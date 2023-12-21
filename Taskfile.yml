@@ -10,11 +10,11 @@ includes:
   sops: .taskfiles/sops.yaml
 
   home:
-    taskfile: infra/home-cluster
-    dir: infra/home-cluster
+    taskfile: clusters/home-cluster
+    dir: clusters/home-cluster
   infra:
-    taskfile: infra/infra-cluster
-    dir: infra/infra-cluster
+    taskfile: clusters/infra-cluster
+    dir: clusters/infra-cluster
 
 tasks:
   default:
