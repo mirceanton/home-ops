@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   create_pr:
-    runs-on: [ "arc-runner-set-home-ops" ]
+    runs-on: ubuntu-latest
     container:
       image: ghcr.io/supportpal/github-gh-cli
     steps:

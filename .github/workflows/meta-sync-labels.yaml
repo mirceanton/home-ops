@@ -10,7 +10,7 @@ on:
 jobs:
   labels:
     name: Sync Labels
-    runs-on: [ "arc-runner-set-home-ops" ]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1

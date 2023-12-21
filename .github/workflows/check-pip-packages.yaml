@@ -14,7 +14,7 @@ on:
 jobs:
   check-pip-install:
     if: ${{ !github.event.pull_request.draft }}
-    runs-on: [ "arc-runner-set-home-ops" ]
+    runs-on: ubuntu-latest
     container:
       image: python:3.12.1-alpine3.18
     steps:
