@@ -1,0 +1,138 @@
+version: v1alpha1
+debug: false
+persist: true
+machine:
+  type: controlplane
+  token: j96ekq.kys2x0d8suozdv9q
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEFEaDdKNDlZU0ZML0h2VThaRS9JcjlNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU16RXlNRGd4TnpJeU1ETmFGdzB6TXpFeU1EVXhOekl5TUROYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBU1lCb29yMXFrZWtmNkd3NUxpZkc5d3d0M0toY2FRQjhRNjUwCjYyZDErZGlqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVZkM0aDNTVXR0Yk1RSGNCWgp5Vndxc2NHVm5od3dCUVlESzJWd0EwRUE3LzYwNDhqZEFVNXZJaERuZFI3YlRaV1NhYlR0QmtHY3N5VXdpSFduCi85WFFHRnBPcGtiS1N0STFBOUZWN2hRZHdzVWJvT05OeVNWSks0V0lUZmZpQWc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM0Q0FRQXdCUVlESzJWd0JDSUVJTUFtby9HZGlNUEt6aE5GS3FCQ2xTNzlINEN6ZWRvMEQ3MmlHQUFKYlFuWgotLS0tLUVORCBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0K
+  certSANs:
+    - 10.0.10.10
+  kubelet:
+    image: ghcr.io/siderolabs/kubelet:v1.29.0
+    extraArgs:
+      rotate-server-certificates: "true"
+    extraMounts:
+      - destination: /var/mnt/postgres
+        type: bind
+        source: /var/mnt/postgres
+        options:
+          - rbind
+          - rshared
+          - rw
+      - destination: /var/mnt/rook0
+        type: bind
+        source: /var/mnt/postgres
+        options:
+          - rbind
+          - rshared
+          - rw
+    defaultRuntimeSeccompProfileEnabled: true
+    disableManifestsDirectory: true
+  network:
+    hostname: hkc-01
+    interfaces:
+      - deviceSelector:
+          busPath: 0*
+        dhcp: true
+        vip:
+          ip: 10.0.10.10
+  disks:
+    - device: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNX0T706590R
+      partitions:
+        - mountpoint: /var/mnt/rook0
+    - device: /dev/disk/by-id/ata-CT500MX500SSD1_2048E4D4E15C
+      partitions:
+        - mountpoint: /var/mnt/postgres
+  install:
+    disk: /dev/disk/by-id/ata-SAMSUNG_MZ7PD128HAFV-000H7_S16NNSAF811320
+    image: factory.talos.dev/installer/2dcd442954d67662d41c61bdb92165aaf7189aff9997bd011b6968c12ce8d9c0:v1.6.0
+    wipe: false
+  features:
+    rbac: true
+    stableHostname: true
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+  nodeLabels:
+    node-role.kubernetes.io/control-plane: "true"
+    node-role.kubernetes.io/controller: "true"
+    node-role.kubernetes.io/storage: "true"
+    node-role.kubernetes.io/worker: "true"
+cluster:
+  id: OzbCQoyQrPrVBmA33WyRCRGy6sLAqfzhVB2UWPOhC10=
+  secret: 1YUv3zY1NP1RRa0R4iZ2kFk1OhDAw6LZ1riWAGj6auY=
+  controlPlane:
+    endpoint: https://10.0.10.10:6443
+  clusterName: home-cluster
+  network:
+    cni:
+      name: none
+    dnsDomain: cluster.local
+    podSubnets:
+      - 10.244.0.0/16
+    serviceSubnets:
+      - 10.96.0.0/12
+  token: 1muzva.jh6i9flsyshb30s4
+  secretboxEncryptionSecret: qu0oTcKzkE8KunrH6+PhizZ8LcM+N/4sh6XQKac8FL0=
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVRDZ0F3SUJBZ0lSQUlUQ1kzKzVvL1gxb1BEU3R2UWFDNjB3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlNekV5TURneE56SXlNRE5hRncwek16RXlNRFV4TnpJeQpNRE5hTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVR1NUhkcWZoRlhnTzRBWHd5UiswN3ZMbXpMZ0Q4bEJqMkFGWUg2dENtZkd0bmhBa2Rqa2hIV2owK3gKWXplRUhKVXFTcmQ4cXJvOERuWnBVMXRyc3NFZm8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGTW12eVB5REt6YmZhODRHYkVtRU5oY0xqcFFHTUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSVFETndFVHMKNmF2WWNNQlF0dkYxeXh4ak1RZ29Td1phZHNCV09OdjVoSmxzOXdJZ044bnVGVW1xNzk2bXBWS3M4UlZVNDYzQQovNmlCeHNlYnlwNE10dTZ4VFBZPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUlXcGpQSkY3THg4bmw5UEJYcTBENG4yWllzem53dTdhT1JkUHhiOTlVeC9vQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFN3VSM2FuNFJWNER1QUY4TWtmdE83eTVzeTRBL0pRWTlnQldCK3JRcG54clo0UUpIWTVJUgoxbzlQc1dNM2hCeVZLa3EzZktxNlBBNTJhVk5iYTdMQkh3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  aggregatorCA:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJYakNDQVFXZ0F3SUJBZ0lRTUtSdmkwekYzMjQzTW04WVp5aGQwVEFLQmdncWhrak9QUVFEQWpBQU1CNFgKRFRJek1USXdPREUzTWpJd00xb1hEVE16TVRJd05URTNNakl3TTFvd0FEQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxRwpTTTQ5QXdFSEEwSUFCT0RGNi84d2xkdVErOFlhdEd3S0Y1M1FGM0x4UFRkRk5aV2xpbUJldVBKaUI2YjlSazRLCm42a25jMCtvU2liVE1vZDFJSXdQT2ZwcGI0MDJRbmZBMm1PallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWQKQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZApCZ05WSFE0RUZnUVVtbUU1TjZyQk9SQTZ6SjJmcWNTUW4rbGdKU2t3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnCkdvN2VyY2pqTW4xbThzb1QrNytIamg5Q2F4a2ZRQjIzQ2VHYWVkc0ljQ0FDSUJESnJpWjk3ZkRaNzlJZWxyM3gKb2xiUzdZL0xLbG0xbzY0MGxVQkxKN3J2Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUNNK2p4QUpxZG1PSGp6Q0FjTDQyY3lXZGVJRVEveWkrbkM2dzlIZ1B6aFJvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFNE1Yci96Q1YyNUQ3eGhxMGJBb1huZEFYY3ZFOU4wVTFsYVdLWUY2NDhtSUhwdjFHVGdxZgpxU2R6VDZoS0p0TXloM1VnakE4NSttbHZqVFpDZDhEYVl3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  serviceAccount:
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU1rQURvc000L1BNanEzcDdKeHRtUVh2cVV1bUZIU1NJVFZZL3kvUzlKWUhvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFOEZFU2pXWE9JaXl0V3hya2ZMUnN1ZFB4Q2duYzRMS2JiYXZ3R0hURzdVeXRxcDA0ZHVxegpFblE2NTNpWGRLWURrM1cvblBXOE5uUkFMOHNqV2FoOWJnPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  apiServer:
+    image: registry.k8s.io/kube-apiserver:v1.29.0
+    extraArgs:
+      oidc-client-id: kubernetes
+      oidc-groups-claim: groups
+      oidc-groups-prefix: keycloak_
+      oidc-issuer-url: https://auth.home.mirceanton.com/keycloak/realms/home
+      oidc-username-claim: email
+      oidc-username-prefix: keycloak_
+    certSANs:
+      - 10.0.10.10
+      - 10.0.10.10
+    disablePodSecurityPolicy: true
+    admissionControl:
+      - name: PodSecurity
+        configuration:
+          apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+          defaults:
+            audit: restricted
+            audit-version: latest
+            enforce: baseline
+            enforce-version: latest
+            warn: restricted
+            warn-version: latest
+          exemptions:
+            namespaces:
+              - kube-system
+            runtimeClasses: []
+            usernames: []
+          kind: PodSecurityConfiguration
+  controllerManager:
+    image: registry.k8s.io/kube-controller-manager:v1.29.0
+  proxy:
+    disabled: true
+    image: registry.k8s.io/kube-proxy:v1.29.0
+  scheduler:
+    image: registry.k8s.io/kube-scheduler:v1.29.0
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}
+  etcd:
+    ca:
+      crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJmVENDQVNTZ0F3SUJBZ0lSQU1XK2YvVDdBNzIyemhGbzRlK2J0S3d3Q2dZSUtvWkl6ajBFQXdJd0R6RU4KTUFzR0ExVUVDaE1FWlhSalpEQWVGdzB5TXpFeU1EZ3hOekl5TUROYUZ3MHpNekV5TURVeE56SXlNRE5hTUE4eApEVEFMQmdOVkJBb1RCR1YwWTJRd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFSK2ZzSVB6ZGlTClJ3QVIzR0J0Ny9kM2ZkbHVEamcwUktEWWcySVg3TXpla0FSYlV0clpLVnFNY2JBYXBNU0tWTGFtdkkyU3RCQngKWWNpZFN6V0pXZDYybzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSApBd0VHQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRktTRHNlQ21QZVJOCkh4ZWtTMEQ4VkE1WGh1eVdNQW9HQ0NxR1NNNDlCQU1DQTBjQU1FUUNJR09nQmVCUG92a00xWGREN0M3ZEhHRm8KR1g5bmx0eFRTSjQxMlZhOVRKUWJBaUJiWTZTYlhsNXdVT0czT0tWN1JVUXBpNXVRdk43SWE1VjVQcWpCQ3gzYgpHZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+      key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU14OWNYNkZ4WFNwTnYwU3RBWm45U0VscGNFUWhnUm1KUTlMa1BCUGx4SlBvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFZm43Q0Q4M1lra2NBRWR4Z2JlLzNkMzNaYmc0NE5FU2cySU5pRit6TTNwQUVXMUxhMlNsYQpqSEd3R3FURWlsUzJwcnlOa3JRUWNXSEluVXMxaVZuZXRnPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  coreDNS:
+    disabled: true
+  allowSchedulingOnControlPlanes: true
