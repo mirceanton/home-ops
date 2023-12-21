@@ -1,8 +1,0 @@
----
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: ingress-pool
-spec:
-  addresses:
-    - ${INGRESS_POOL}
