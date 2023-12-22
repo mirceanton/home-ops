@@ -6,8 +6,19 @@ RED='\033[0;31m'
 NC='\033[0m'  # No color
 
 # Find all YAML files
-files=$(find . -type f -name "*.yaml" )
+files=$(git ls-files | grep yaml)  # get all the yaml files tracked by git
+files=$(echo "$files" | grep --invert-match ".sops.yaml")  # remove sops files
 
+# Remove k8s files
+files=$(echo "$files" | grep --invert-match -v "namespace.yaml")
+files=$(echo "$files" | grep --invert-match -v "configmap.yaml")
+files=$(echo "$files" | grep --invert-match -v "deployment.yaml")
+
+# Remove misc files with no schema
+files=$(echo "$files" | grep --invert-match -v "talenv.yaml")
+files=$(echo "$files" | grep --invert-match -v ".github/labels.yaml")
+
+# Assume success
 status=0
 
 # Loop through all files
@@ -21,4 +32,4 @@ for f in $files; do
   fi
 done
 
-exit status
+exit $status
