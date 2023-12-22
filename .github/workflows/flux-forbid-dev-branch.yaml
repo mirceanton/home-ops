@@ -2,6 +2,7 @@
 name: Check Flux Sync Branch
 
 on:
+  workflow_dispatch: {}
   pull_request:
     types:
       - opened
@@ -11,15 +12,13 @@ on:
 
 jobs:
   flux-check-job:
-    if: ${{ !github.event.pull_request.draft }}
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@v4.1.1
 
       - name: Make sure the branch set for the flux sync is "main"
         env:
           BRANCH: "main"
-        run: >
-          grep -q "branch: $BRANCH" ./infra/home-cluster/integrations/flux-manifests/home-ops.git-repository.yaml
-          grep -q "branch: $BRANCH" ./infra/infra-cluster/integrations/flux-manifests/home-ops.git-repository.yaml
+        run: bash scrips/flux-check-branch.sh
