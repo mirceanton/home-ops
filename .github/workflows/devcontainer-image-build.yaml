@@ -54,10 +54,10 @@ jobs:
     runs-on: "ubuntu-latest"
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     outputs:
-      calver_tag_yyyy_mm_v: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm_v }} # eg. 2099.12.7
-      calver_tag_yyyy_mm: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm }}     # eg. 2099.12
-      calver_tag_yyyy: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}           # eg. 2099
-      custom_tag: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}           # eg. 2099
+      calver_tag_yyyy_mm_v: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm_v }}  # eg. 2099.12.7
+      calver_tag_yyyy_mm: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm }}      # eg. 2099.12
+      calver_tag_yyyy: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}            # eg. 2099
+      custom_tag: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}
 
     steps:
       - name: Install prerqeuisites
