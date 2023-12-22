@@ -21,4 +21,4 @@ jobs:
       - name: Make sure the branch set for the flux sync is "main"
         env:
           BRANCH: "main"
-        run: bash scrips/flux-check-branch.sh
+        run: bash scripts/flux-check-branch.sh
