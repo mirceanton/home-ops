@@ -10,6 +10,7 @@ permissions:
 jobs:
   create_pr:
     runs-on: ubuntu-latest
+    if: github.actor == github.repository_owner
     container:
       image: ghcr.io/supportpal/github-gh-cli
     steps:
