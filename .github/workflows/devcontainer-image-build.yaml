@@ -67,7 +67,7 @@ jobs:
       calver_tag_yyyy_mm_v: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm_v }}  # eg. 2099.12.7
       calver_tag_yyyy_mm: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm }}      # eg. 2099.12
       calver_tag_yyyy: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}            # eg. 2099
-      custom_tag: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}
+      custom_tag: ${{ steps.calver-tag.outputs.custom_tag }}
 
     steps:
       - name: Install prerqeuisites
@@ -136,7 +136,7 @@ jobs:
       - name: Push
         uses: docker/build-push-action@v5
         with:
-          context: ./.devcontainer
+          context: .devcontainer
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
