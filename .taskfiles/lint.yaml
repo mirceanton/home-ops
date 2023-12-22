@@ -6,12 +6,14 @@ tasks:
   default:
     cmds:
       - task: yaml
+      - task: yaml:schemas
       - task: terraform
+      - task: flux:check-branch
 
   yaml:schemas:
-    desc: Run yamllint using the custom config.
+    desc: Check if all yaml files have schemas set.
     cmds:
-      - python3 {{.ROOT_DIR}}/scripts/yaml-schema.py {{.CLI_ARGS}}
+      - bash scripts/yaml-check-schema.sh
 
   yaml:
     desc: Run yamllint using the custom config.
@@ -20,7 +22,10 @@ tasks:
 
   terraform:
     desc: Validate all terraform files for proper formatting.
-    env:
-      DIR: infra
     cmds:
       - bash scripts/terraform-lint.sh
+
+  flux:check-branch:
+    desc: Check if the branch is allowed to be merged.
+    cmds:
+      - bash scripts/flux-check-branch.sh
