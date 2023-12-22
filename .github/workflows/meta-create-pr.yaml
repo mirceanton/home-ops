@@ -10,23 +10,18 @@ permissions:
 jobs:
   create_pr:
     runs-on: ubuntu-latest
+    if: github.actor == github.repository_owner
     container:
       image: ghcr.io/supportpal/github-gh-cli
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@v4.1.1
 
       - name: Automatically Generate The PR Name
         id: generate_name
-        run: |
-          output=$(bash scripts/generate-pr-name.sh)
-          echo "pr_name=$output" >> $GITHUB_OUTPUT
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
-
-      - name: Show The Generated Name
-        run: |
-          echo "PR Name: ${{ steps.generate_name.outputs.pr_name }}"
+        run: echo "pr_name=$(bash scripts/generate-pr-name.sh)" | tee $GITHUB_OUTPUT
 
       - name: Create pull request
         id: open-pr

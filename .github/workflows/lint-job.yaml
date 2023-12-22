@@ -2,6 +2,7 @@
 name: Lint Job
 
 on:
+  workflow_dispatch: {}
   pull_request:
     types:
       - opened
@@ -17,7 +18,7 @@ jobs:
       image: python:3.12.1-alpine3.18
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@v4.1.1
 
       - name: Install YAML Lint
         run: pip3 install yamllint
@@ -30,16 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@v4.1.1
 
       - name: Install terraform
-        run:
-          sudo apt update && sudo apt install wget unzip -y &&
-          wget https://releases.hashicorp.com/terraform/1.6.3/terraform_1.6.3_linux_amd64.zip &&
-          unzip terraform_1.6.3_linux_amd64.zip &&
-          sudo install -o root -g root terraform /usr/local/bin/terraform
+        uses: hashicorp/setup-terraform@v3.0.0
 
       - name: Lint all terraform files under `./infra/`
-        env:
-          DIR: infra
         run: bash scripts/terraform-lint.sh

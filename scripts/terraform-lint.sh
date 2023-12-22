@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TF_DIR=terraform
+
 # Color codes for pretty output
 RED="\e[31m"
 GREEN="\e[32m"
@@ -14,7 +16,7 @@ RESET="\e[0m"
 formatted=1
 
 # Loop through all directories in $DIR
-for d in "$DIR"/*; do
+for d in "$TF_DIR"/*; do
   if [ -d "$d" ]; then
     # Check if there are any terraform files inside the subdirectory
     if ls "$d"/*.tf* 1> /dev/null 2>&1; then
