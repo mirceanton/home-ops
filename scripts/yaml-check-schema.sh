@@ -17,6 +17,7 @@ files=$(echo "$files" | grep --invert-match -v "deployment.yaml")
 # Remove misc files with no schema
 files=$(echo "$files" | grep --invert-match -v "talenv.yaml")
 files=$(echo "$files" | grep --invert-match -v ".github/labels.yaml")
+files=$(echo "$files" | grep --invert-match -v ".sh")
 
 # Assume success
 status=0
