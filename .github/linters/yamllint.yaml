@@ -3,27 +3,16 @@ extends: default
 
 ignore:
   # Ignore SOPS encrypted files
-  - '*.sops.yaml'
-  - '*.sops.yml'
+  - "*.sops.yaml"
 
   # Ignore raw secret files
-  - '*.secret.yaml'
+  - "*.secret.yaml"
 
   # Ignore kustomize helm charts
-  - 'infra/**/*/integrations/**/*/charts/*'
+  - charts/
 
-  # Ignore python virtual environments
-  - '.venv/**'
-
-  # Ignore FluxCD specific files
-  - gotk-sync.yaml
-  - gotk-components.yaml
-
-  # Ignore Talos specific files
-  - 'infra/**/*/secrets.yaml'
-  - 'infra/**/*/talsecret.yaml'
-  - 'infra/**/*/rendered/*'
-  - 'infra/**/*/clusterconfig/*'
+  # Ignore rendered Talos config files
+  - clusterconfig/
 
 rules:
   line-length:
@@ -41,16 +30,14 @@ rules:
   # to do about it. they are generated
   document-start:
     ignore:
-      - kubernetes/**/*/*.secret.yaml
-      - '**/*/talenv.yaml'
+      - talenv.yaml
 
   # Ignore truthy for github workflows due to dummy trigger on the
   # 'on:' clause
   truthy:
     ignore:
-      - .github/workflows/*.yml
-      - .github/workflows/*.yaml
+      - .github/workflows
 
   comments-indentation:
     ignore:
-      - '**/*/talconfig.yaml'
+      - talconfig.yaml

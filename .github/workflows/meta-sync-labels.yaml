@@ -2,7 +2,7 @@
 name: Sync Labels
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   push:
     branches: [ "main" ]
     paths: [ ".github/labels.yaml" ]
@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
+        uses: actions/checkout@v4.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync Labels
-        uses: EndBug/label-sync@da00f2c11fdb78e4fae44adac2fdd713778ea3e8  # renovate: tag=v2.3.2
+        uses: EndBug/label-sync@v2.3.2
         with:
           config-file: .github/labels.yaml
           token: ${{ secrets.GITHUB_TOKEN }}
