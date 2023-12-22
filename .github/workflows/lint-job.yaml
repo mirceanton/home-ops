@@ -27,6 +27,16 @@ jobs:
       - name: Run yamllint
         run: yamllint -c .github/linters/yamllint.yaml .
 
+  yaml-schema-job:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Run checker script
+        run: bash scripts/yaml-check-schema.sh
+
   terraform-lint-job:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
@@ -37,5 +47,15 @@ jobs:
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3.0.0
 
-      - name: Lint all terraform files under `./infra/`
+      - name: Run checker script
         run: bash scripts/terraform-lint.sh
+
+  flux-branch-job:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Run checker script
+        run: bash scripts/flux-check-branch.sh
