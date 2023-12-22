@@ -5,6 +5,5 @@ kind: Kustomization
 namespace: flux-system
 
 resources:
-  - age-key.secret.yaml
   - home-ops.git-repository.yaml
   - home-ops.ks.yaml
