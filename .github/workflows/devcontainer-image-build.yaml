@@ -61,7 +61,6 @@ jobs:
 
   generate-tag:
     runs-on: "ubuntu-latest"
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - debug
     outputs:
@@ -99,7 +98,6 @@ jobs:
 
   publish:
     runs-on: "ubuntu-latest"
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build
       - generate-tag
