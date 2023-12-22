@@ -4,10 +4,6 @@ name: Build and Publish DevContainer Image
 on:
   workflow_dispatch:
     inputs:
-      publish:
-        description: "Publish the image to ghcr.io"
-        required: true
-        default: "true"
       custom-tag:
         description: "Custom tag for the image"
         required: false
