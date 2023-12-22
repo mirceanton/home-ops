@@ -1,27 +1,20 @@
 # Talos Generated Configuration Files
-infra/**/*/secrets.yaml
-infra/**/*/talsecret.yaml
-infra/**/*/rendered/*
-infra/**/*/clusterconfig/*
+talsecret.yaml
+clusterconfig/
 
 # Kustomize helm charts
-infra/**/*/integrations/**/*/charts/*
+charts/
 
-# MkDocs Generated Files
-site/
-
-# Python Virtual Environment
-.venv/*
 
 # Ignore Unencrypted Kubernetes Secrets
-kubernetes/**/*.secret.yaml
+*.secret.yaml
 
 # Terraform stuff
-**/*/.terraform/*
-**/*/.terraform.lock.hcl
-**/*/terraform.tfstate
-**/*/terraform.tfstate.backup
-**/*/*.auto.tfvars
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.auto.tfvars
 
 # Age Encryption key
 .age.key
