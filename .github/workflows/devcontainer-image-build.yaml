@@ -52,6 +52,7 @@ jobs:
       # since only then we need the artifact to push it to the registry
       # otherwise it's just a test to see that the image still builds ok
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: gitops-toolkit
@@ -61,6 +62,7 @@ jobs:
 
   generate-tag:
     runs-on: "ubuntu-latest"
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - debug
     outputs:
@@ -98,6 +100,7 @@ jobs:
 
   publish:
     runs-on: "ubuntu-latest"
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build
       - generate-tag
@@ -105,7 +108,6 @@ jobs:
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@v4.1.1
-
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
