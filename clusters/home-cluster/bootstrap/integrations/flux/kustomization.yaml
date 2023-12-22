@@ -5,4 +5,4 @@ kind: Kustomization
 namespace: flux-system
 
 resources:
-  - github.com/fluxcd/flux2/manifests/install?ref=v2.1.2
+  - github.com/fluxcd/flux2/manifests/install?ref=v2.2.2
