@@ -13,7 +13,7 @@ commonLabels:
 helmCharts:
   - name: coredns
     repo: https://coredns.github.io/helm/
-    version: 1.26.0
+    version: 1.28.2
     releaseName: coredns
     includeCRDs: true
     namespace: kube-system
