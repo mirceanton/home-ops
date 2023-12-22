@@ -14,13 +14,12 @@ on:
 
   # on push to main, build and publish
   push:
-    branches: [main]
-    paths: [Dockerfile]
+    branches: [ main ]
+    paths: [ .devcontainer/Dockerfile ]
 
   # on PR to main, test build
   pull_request:
-    branches: [main]
-    paths: [Dockerfile]
+    paths: [ .devcontainer/Dockerfile ]
 
 jobs:
   debug:
