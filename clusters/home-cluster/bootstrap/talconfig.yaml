@@ -41,7 +41,6 @@ patches:
     machine:
       kubelet:
         extraArgs:
-          feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
           rotate-server-certificates: "true"
 
 worker:
@@ -60,21 +59,28 @@ controlPlane:
             oidc-issuer-url: https://auth.${clusterDomain}/keycloak/realms/home
             oidc-username-claim: email
 
+    - |-  # Extra disks
+      machine:
+        kubelet:
+          extraMounts:
+            - destination: /var/mnt/postgres
+              type: bind
+              source: /var/mnt/postgres
+              options:
+                - rbind
+                - rshared
+                - rw
+
 nodes:
-  - hostname: nuc
+  - hostname: hkc-01
     ipAddress: 10.0.10.11
     controlPlane: true
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
-    installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    installDisk: /dev/sdb
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -91,33 +97,15 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
-
-  - hostname: srv
+  - hostname: hkc-02
     ipAddress: 10.0.10.12
     controlPlane: true
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
     installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -133,33 +121,15 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
-
-  - hostname: minisforum
+  - hostname: hkc-03
     ipAddress: 10.0.10.13
     controlPlane: true
-    nodeLabels:
-      node-role.kubernetes.io/control-plane: "true"   # runs the kubernetes controlplane
-      node-role.kubernetes.io/controller: "true"      # runs controllers
-      node-role.kubernetes.io/worker: "true"          # runs general workloads
-      node-role.kubernetes.io/storage: "true"         # runs the storage backend
 
-    installDisk: /dev/nvme0n1
-    # machineDisks:
-    #   - device: /dev/sda
-    #     partitions:
-    #       - mountpoint: /var/mnt/postgres
+    installDisk: /dev/sdb
+    machineDisks:
+      - device: /dev/sda
+        partitions:
+          - mountpoint: /var/mnt/postgres
 
     networkInterfaces:
       - deviceSelector:
@@ -174,16 +144,3 @@ nodes:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/iscsi-tools
-
-    # patches:
-    #   - |-  # Extra disks
-    #     machine:
-    #       kubelet:
-    #         extraMounts:
-    #           - destination: /var/mnt/postgres
-    #             type: bind
-    #             source: /var/mnt/postgres
-    #             options:
-    #               - rbind
-    #               - rshared
-    #               - rw
