@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: home-ops
+  name: cluster
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: kubernetes/infra-cluster
+  path: clusters/infra-cluster
   prune: true
   sourceRef:
     kind: GitRepository
