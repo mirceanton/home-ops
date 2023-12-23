@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-flux-discord-notifications
+  namespace: flux-system
+spec:
+  path: ${CLUSTER_APPS_BASE_DIR}/flux-system/notifications/discord/
+  targetNamespace: flux-system
+
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
+  # Apply the postBuild variable substitution on all Kustomization
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: Secret
+        name: cluster-secrets
+
+  # Enable sops decryption on all Kustomization
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+
+  wait: true
+  prune: true
+
+  interval: 5m
+  retryInterval: 1m
+  timeout: 30m
