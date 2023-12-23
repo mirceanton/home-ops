@@ -8,9 +8,11 @@ on:
       publish:
         description: "Publish the image to the registry (true/false)"
         required: true
-        default: "false"
+        type: boolean
+        default: false
       custom-tag:
         description: "Custom tag for the image"
+        type: string
         required: false
 
   # on push to main, build and publish
@@ -53,12 +55,9 @@ jobs:
 
   generate-tag:
     runs-on: "ubuntu-latest"
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+    if: ${{ github.event.inputs.custom-tag != '' }}
     outputs:
-      calver_tag_yyyy_mm_v: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm_v }}  # eg. 2099.12.7
-      calver_tag_yyyy_mm: ${{ steps.calver-tag.outputs.calver_tag_yyyy_mm }}      # eg. 2099.12
-      calver_tag_yyyy: ${{ steps.calver-tag.outputs.calver_tag_yyyy }}            # eg. 2099
-      custom_tag: ${{ steps.calver-tag.outputs.custom_tag }}
+      tags: ${{ steps.generator.outputs.tags }}
 
     steps:
       - name: Install prerqeuisites
@@ -68,28 +67,19 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Generate Image Tag
-        id: calver-tag
+        id: generator
         env:
           REGISTRY_USER: "${{ github.repository_owner }}"
           REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
-        run: |
-          if [ -n "${{ github.event.inputs.custom-tag }}" ]; then
-            echo "calver_tag_yyyy_mm_v=' '" | tee $GITHUB_OUTPUT
-            echo "calver_tag_yyyy_mm=' '" | tee $GITHUB_OUTPUT
-            echo "calver_tag_yyyy=' '" | tee $GITHUB_OUTPUT
-            echo "custom_tag=${{ github.event.inputs.custom-tag }}" | tee $GITHUB_OUTPUT
-          else
-            echo "calver_tag_yyyy_mm_v=$(bash scripts/generate-docker-tag.sh --format=yyyy_mm_v)" | tee $GITHUB_OUTPUT
-            echo "calver_tag_yyyy_mm=$(bash scripts/generate-docker-tag.sh --format=yyyy_mm)" | tee $GITHUB_OUTPUT
-            echo "calver_tag_yyyy=$(bash scripts/generate-docker-tag.sh --format=yyyy)" | tee $GITHUB_OUTPUT
-            echo "custom_tag=' '" | tee $GITHUB_OUTPUT
-          fi
+        run: bash scripts/generate-docker-tag.sh >> "$GITHUB_OUTPUT"
 
   publish:
     runs-on: "ubuntu-latest"
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
     needs:
       - build
       - generate-tag
@@ -117,16 +107,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: (debug) Show Tags
-        env:
-          CALVER_TAG_YYYY_MM_V: ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm_v }}
-          CALVER_TAG_YYYY_MM: ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm }}
-          CALVER_TAG_YYYY: ${{ needs.generate-tag.outputs.calver_tag_yyyy }}
-          CUSTOM_TAG: ${{ needs.generate-tag.outputs.custom_tag }}
         run: |-
-          echo "$CALVER_TAG_YYYY_MM_V=$CALVER_TAG_YYYY_MM_V"
-          echo "$CALVER_TAG_YYYY_MM=$CALVER_TAG_YYYY_MM"
-          echo "$CALVER_TAG_YYYY=$CALVER_TAG_YYYY"
-          echo "$CUSTOM_TAG=$CUSTOM_TAG"
+          echo "Tag = ${{ needs.generate-tag.outputs.tags || github.event.inputs.custom-tag || ' '}}"
 
       - name: Docker meta
         id: meta
@@ -134,10 +116,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
           tags: |
-            ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm_v }}
-            ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm }}
-            ${{ needs.generate-tag.outputs.calver_tag_yyyy }}
-            ${{ needs.generate-tag.outputs.custom_tag }}
+            ${{ needs.generate-tag.outputs.tags || github.event.inputs.custom-tag || ' '}}
             latest
 
       - name: Push
