@@ -5,26 +5,5 @@ metadata:
   namespace: flux-system
   name: cluster-settings
 data:
-  CLUSTER_ID: '0'
-  CLUSTER_NAME: infra-cluster
   CLUSTER_DOMAIN: infra.mirceanton.com
   CLUSTER_ENVIRONMENT: production  # staging, production -> selects letsencrypt cluster issuer
-  CLUSTER_APPS_BASE_DIR: ./kubernetes/infra-cluster/apps
-
-  INGRESS_POOL: 10.0.10.90-10.0.10.90
-
-  TIMEZONE: Europe/Bucharest
-
-  TRUENAS_IP: 10.0.10.245
-  MINIO_NFS_PATH: tank/Homelab/InfraCluster/minio
-
-  HELMRELEASE_INTERVAL: 30m
-  HELMRELEASE_ROLLBACK_TIMEOUT: 15m
-  HELMRELEASE_INSTALL_RETRIES: "5"
-  HELMRELEASE_UPGRADE_RETRIES: "5"
-
-  HELMREPOSITORY_INTERVAL: 30m
-
-  KUSTOMIZATION_INTERVAL: 30m
-  KUSTOMIZATION_RETRY_INTERVAL: 1m
-  KUSTOMIZATION_TIMEOUT: 15m

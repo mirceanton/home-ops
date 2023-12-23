@@ -14,6 +14,7 @@ ignore:
 
   # Ignore rendered Talos config files
   - clusterconfig/
+  - talsecret.yaml
 
 rules:
   line-length:

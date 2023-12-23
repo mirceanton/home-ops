@@ -6,4 +6,4 @@ namespace: flux-system
 
 resources:
   - home-ops.git-repository.yaml
-  - home-ops.ks.yaml
+  - cluster.ks.yaml

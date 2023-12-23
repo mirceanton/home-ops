@@ -4,10 +4,10 @@ clusterName: ${clusterName}
 endpoint: https://${clusterEndpointIP}:6443
 
 # renovate: datasource=github-releases depName=siderolabs/talos
-talosVersion: v1.5.5
+talosVersion: v1.6.1
 
 # renovate: datasource=github-releases depName=kubernetes/kubernetes
-kubernetesVersion: v1.28.4
+kubernetesVersion: v1.29.0
 
 domain: cluster.local
 additionalApiServerCertSans:
@@ -24,7 +24,6 @@ patches:
     machine:
       kubelet:
         extraArgs:
-          feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
           rotate-server-certificates: "true"
 
 nodes:

@@ -6,9 +6,4 @@ tasks:
   delete-stuck-ns:
     desc: Delete all namespaces that are stuck in a terminating state.
     cmds:
-      - bash {{.ROOT_DIR}}/scripts/delete-stuck-ns.sh
-
-  list-docker-images:
-    desc: Show a list of all of the docker images running in the cluster.
-    cmds:
-      - python3 {{.ROOT_DIR}}/scripts/get-all-docker-images-running-in-cluster.py
+      - bash scripts/delete-stuck-ns.sh

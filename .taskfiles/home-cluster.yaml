@@ -3,40 +3,47 @@
 version: '3'
 
 env:
-  INFRA_CLUSTER_NAME:
+  HOME_CLUSTER_NODES:
     sh: |-
-      awk -F': ' '/clusterName/{print $2}' {{.ROOT_DIR}}/infra/infra-cluster/talenv.yaml
-  INFRA_CLUSTER_ENDPOINT_IP:
-    sh: |-
-      awk -F': ' '/clusterEndpointIP/{print $2}' {{.ROOT_DIR}}/infra/infra-cluster/talenv.yaml
-  INFRA_CLUSTER_NODES:
-    sh: |-
-      grep -oP 'ipAddress: \K[0-9.]+' {{.ROOT_DIR}}/infra/infra-cluster/talconfig.yaml | tr '\n' ' '
+      grep -oP 'ipAddress\: \K[0-9.]+' $(git ls-files | grep talconfig.yaml) | tr '\n' ' '
 
 includes:
   # TODO: replace with sopshelper
   sops:
     internal: true
-    taskfile: ../../.taskfiles/sops.yaml
+    taskfile: ./sops.yaml
 
 tasks:
   cluster:create:
     desc: Bootstrap the application cluster end to end.
     deps: [ sops:decrypt ]
     cmds:
-      - talhelper genconfig --no-gitignore > /dev/null
-      - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
-      # TODO - talhelper gencommand apply --extra-flags=--insecure | bash
-      - talosctl apply-config -n 10.0.10.31 --file clusterconfig/infra-cluster-truenas-vm.yaml --insecure
-      - for: { var: INFRA_CLUSTER_NODES }
+      # Generate and apply Talos config
+      - talhelper genconfig > /dev/null
+      - talhelper gencommand apply --extra-flags=--insecure | bash
+
+      # Import talosconfig
+      - rm -f ~/.talos/config
+      - cp clusterconfig/talosconfig ~/.talos/config
+      - talosctl config nodes {{(split " " .HOME_CLUSTER_NODES)._0}}
+
+      # Wait for Talos to become ready
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} bash {{.ROOT_DIR}}/scripts/talos-wait-node-kubelet-healthy.sh
-      - talosctl bootstrap -n {{(split " " .INFRA_CLUSTER_NODES)._0}}
-      - rm -f ~/.kube/config && talosctl -n {{(split " " .INFRA_CLUSTER_NODES)._0}} kubeconfig
+
+      # Bootstrap Kubernetes and import kubeconfig
+      - talhelper gencommand bootstrap | bash
+      - talosctl kubeconfig --force
+
+      # Wait for Kubernetes to become Ready
       - bash {{.ROOT_DIR}}/scripts/kubernetes-wait-api.sh
-      - for: { var: INFRA_CLUSTER_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
-      - kubectl apply -k integrations/flux
+
+      # Bootstrap FluxCD (and other integrations)
+      - kubectl kustomize --enable-helm integrations | kubectl apply -f -
       - kubectl apply -k integrations/flux-manifests
+      - cat $SOPS_AGE_KEY_FILE | kubectl create secret generic sops-age --namespace=flux-system --from-file=age.agekey=/dev/stdin
 
   cluster:select:
     desc: This will set the currently active cluster.
@@ -44,14 +51,14 @@ tasks:
     cmds:
       - talhelper genconfig --no-gitignore > /dev/null
       - rm -f ~/.talos/config && cp clusterconfig/talosconfig ~/.talos/config
-      - rm -f ~/.kube/config && talosctl -n {{(split " " .INFRA_CLUSTER_NODES)._0}} kubeconfig
+      - rm -f ~/.kube/config && talosctl -n {{(split " " .HOME_CLUSTER_NODES)._0}} kubeconfig
 
   cluster:reset:
     desc: Reset all of the talos nodes.
     prompt: This will destroy the cluster. Are you sure you want to continue?
     deps: [ cluster:select ]
     cmds:
-      - for: { var: INFRA_CLUSTER_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl reset --reboot --graceful=false --wipe-mode=all --wait=false -n {{.ITEM}}
 
   cluster:reboot:
@@ -59,7 +66,7 @@ tasks:
     prompt: This will reboot all of the cluster nodes. Are you sure you want to continue?
     deps: [ cluster:select ]
     cmds:
-      - for: { var: INFRA_CLUSTER_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl reboot -n {{.ITEM}}
 
   cluster:shutdown:
@@ -67,5 +74,20 @@ tasks:
     prompt: This will shutdown all of the cluster nodes. Are you sure you want to continue?
     deps: [ cluster:select ]
     cmds:
-      - for: { var: INFRA_CLUSTER_NODES }
+      - for: { var: HOME_CLUSTER_NODES }
         cmd: talosctl shutdown --wait=false -n {{.ITEM}}
+
+
+  generate-config:
+    desc: Generate the Talos config.
+    deps: [ sops:decrypt ]
+    cmds:
+      - talhelper genconfig > /dev/null
+    sources:
+      - talconfig.yaml
+      - talenv.yaml
+      - talsecret.yaml
+    generates:
+      - clusterconfig/talosconfig
+      - clusterconfig/.gitignore
+      - clusterconfig/*.yaml

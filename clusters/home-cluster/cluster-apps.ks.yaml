@@ -6,7 +6,11 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
-  path: kubernetes/home-cluster/apps
+  path: clusters/home-cluster/apps
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
   dependsOn:
     - name: cluster-config
 
@@ -14,10 +18,6 @@ spec:
   prune: true
   interval: 5m
   timeout: 30m
-
-  sourceRef:
-    kind: GitRepository
-    name: home-ops-git-repo
 
   decryption:
     provider: sops
