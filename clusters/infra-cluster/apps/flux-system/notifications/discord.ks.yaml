@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-flux-discord-notifications
+  namespace: flux-system
+  labels:
+    patching.home.mirceanton.com/source-ref: true
+    patching.home.mirceanton.com/intervals: true
+    patching.home.mirceanton.com/post-build: false
+    patching.home.mirceanton.com/decryption: true
+spec:
+  path: kubernetes/infra-cluster/apps/flux-system/notifications/discord/
+  targetNamespace: flux-system
+  prune: true
+  dependsOn: []
