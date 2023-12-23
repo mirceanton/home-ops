@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-coredns
+  namespace: flux-system
+  labels:
+    home-ops.mirceanton.com/group: system-apps
+spec:
+  path: kubernetes/home-cluster/apps/kube-system/coredns/app
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+  targetNamespace: kube-system
+
+  wait: true
+  prune: true
+  interval: 5m
+  timeout: 30m

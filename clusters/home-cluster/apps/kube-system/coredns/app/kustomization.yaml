@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - coredns.helm-repository.yaml
+  - coredns.helm-release.yaml
+
+configMapGenerator:
+  - name: coredns-values
+    options:
+      disableNameSuffixHash: true
+    files:
+      - values.yaml=coredns.helm-values.yaml
