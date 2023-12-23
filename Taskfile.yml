@@ -1,20 +1,17 @@
 ---
 version: '3'
 
-env:
-  SOPS_AGE_KEY_FILE: /home/mike/.config/sops/age/keys.txt
-
 includes:
   hack: .taskfiles/hacks.yaml
   lint: .taskfiles/lint.yaml
   sops: .taskfiles/sops.yaml
 
   home:
-    taskfile: clusters/home-cluster
-    dir: clusters/home-cluster
+    taskfile: .taskfiles/home-cluster.yaml
+    dir: clusters/home-cluster/bootstrap
   infra:
-    taskfile: clusters/infra-cluster
-    dir: clusters/infra-cluster
+    taskfile: .taskfiles/infra-cluster.yaml
+    dir: clusters/infra-cluster/bootstrap
 
 tasks:
   default:
