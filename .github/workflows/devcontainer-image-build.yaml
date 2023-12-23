@@ -75,7 +75,7 @@ jobs:
           REGISTRY_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           REGISTRY_URL: ghcr.io
           IMAGE_NAME: gitops-toolkit
-        run: bash scripts/generate-docker-tag.sh >> "$GITHUB_OUTPUT"
+        run: echo "tags=$(bash scripts/generate-docker-tag.sh)" >> "$GITHUB_OUTPUT"
 
   publish:
     runs-on: "ubuntu-latest"
