@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - cluster-config.ks.yaml
   - cluster-apps.ks.yaml
+  - cluster-terraforms.ks.yaml

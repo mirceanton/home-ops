@@ -6,17 +6,17 @@ metadata:
   name: cluster-config
   namespace: flux-system
 spec:
-  path: kubernetes/home-cluster/config
+  path: clusters/home-cluster/config
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
   dependsOn: []
 
   wait: true
   prune: true
   interval: 5m
   timeout: 30m
-
-  sourceRef:
-    kind: GitRepository
-    name: home-ops-git-repo
 
   decryption:
     provider: sops
