@@ -43,7 +43,7 @@ jobs:
       # since only then we need the artifact to push it to the registry
       # otherwise it's just a test to see that the image still builds ok
       - name: Upload artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
         uses: actions/upload-artifact@v4.0.0
         with:
           name: gitops-toolkit
