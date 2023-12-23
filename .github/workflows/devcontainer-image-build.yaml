@@ -117,11 +117,16 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: (debug) Show Tags
-        run: |
-          echo "calver_tag_yyyy_mm_v=${{ needs.generate-tag.outputs.calver_tag_yyyy_mm_v }}"
-          echo "calver_tag_yyyy_mm=${{ needs.generate-tag.outputs.calver_tag_yyyy_mm }}"
-          echo "calver_tag_yyyy=${{ needs.generate-tag.outputs.calver_tag_yyyy }}"
-          echo "custom_tag=${{ needs.generate-tag.outputs.custom_tag }}"
+        env:
+          CALVER_TAG_YYYY_MM_V: ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm_v }}
+          CALVER_TAG_YYYY_MM: ${{ needs.generate-tag.outputs.calver_tag_yyyy_mm }}
+          CALVER_TAG_YYYY: ${{ needs.generate-tag.outputs.calver_tag_yyyy }}
+          CUSTOM_TAG: ${{ needs.generate-tag.outputs.custom_tag }}
+        run: |-
+          echo "$CALVER_TAG_YYYY_MM_V=$CALVER_TAG_YYYY_MM_V"
+          echo "$CALVER_TAG_YYYY_MM=$CALVER_TAG_YYYY_MM"
+          echo "$CALVER_TAG_YYYY=$CALVER_TAG_YYYY"
+          echo "$CUSTOM_TAG=$CUSTOM_TAG"
 
       - name: Docker meta
         id: meta
