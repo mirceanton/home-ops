@@ -40,12 +40,16 @@ jobs:
           context: ./.devcontainer
           tags: gitops-toolkit:latest
           outputs: type=docker,dest=/tmp/gitops-toolkit.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # Only upload the artifact if the trigger event was a push to the main branch
       # since only then we need the artifact to push it to the registry
       # otherwise it's just a test to see that the image still builds ok
       - name: Upload artifact
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
         uses: actions/upload-artifact@v4.0.0
         with:
           name: gitops-toolkit
@@ -126,3 +130,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
