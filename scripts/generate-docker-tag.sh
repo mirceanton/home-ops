@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# Default format
-FORMAT="yyyy_mm_v"
-
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --format=*)
-      FORMAT="${1#*=}"
-      shift
-      ;;
-    *)
-      echo "Error: Unknown option: $1"
-      exit 1
-      ;;
-  esac
-done
-
 # Check if REGISTRY_USER is set
 if [ -z "$REGISTRY_USER" ]; then
   echo "Error: Please set the environment variable REGISTRY_USER"
@@ -61,25 +44,7 @@ determine_patch() {
 # Extract current date
 calver=$(date -u +'%Y.%m')
 
-# Fetch existing tags from the container registry
-existing_tags=$(fetch_tags $calver)
-
 # Determine the next patch number
-patch=$(determine_patch "$existing_tags")
+patch=$(determine_patch "$(fetch_tags $calver)")
 
-# Print the generated tag based on the specified format
-case "$FORMAT" in
-  yyyy_mm_v)
-    echo "$calver.$patch"
-    ;;
-  yyyy_mm)
-    echo "$calver"
-    ;;
-  yyyy)
-    echo "$(date -u +'%Y')"
-    ;;
-  *)
-    echo "Error: Unsupported format: $FORMAT"
-    exit 1
-    ;;
-esac
+echo "$calver.$patch"
