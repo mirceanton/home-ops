@@ -124,6 +124,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: (debug) Show Tags
+        run: |
+          echo "calver_tag_yyyy_mm_v=${{ needs.generate-tag.outputs.calver_tag_yyyy_mm_v }}"
+          echo "calver_tag_yyyy_mm=${{ needs.generate-tag.outputs.calver_tag_yyyy_mm }}"
+          echo "calver_tag_yyyy=${{ needs.generate-tag.outputs.calver_tag_yyyy }}"
+          echo "custom_tag=${{ needs.generate-tag.outputs.custom_tag }}"
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5.4.0
