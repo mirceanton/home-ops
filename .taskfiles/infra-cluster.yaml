@@ -4,8 +4,10 @@ version: '3'
 
 env:
   INFRA_CLUSTER_NODES:
+    # for god knows what reason, this doesn't work if the expression
+    # is the same as that used for the home cluster
     sh: |-
-      grep -oP 'ipAddress: \K[0-9.]+' {{.ROOT_DIR}}/infra/infra-cluster/talconfig.yaml | tr '\n' ' '
+      cat $(git ls-files | grep talconfig.yaml) | grep -oP 'ipAddress\: \K[0-9.]+'
 
 includes:
   # TODO: replace with sopshelper
@@ -41,7 +43,7 @@ tasks:
         cmd: NODE_IP={{.ITEM}} NODE_ROLE="control-plane" bash {{.ROOT_DIR}}/scripts/kubernetes-wait-node-joined.sh
 
       # Bootstrap FluxCD
-      - kubectl kustomize --enable-helm integrations | kubectl apply -f -
+      - kubectl apply -k integrations/flux
       - kubectl apply -k integrations/flux-manifests
       - cat $SOPS_AGE_KEY_FILE | kubectl create secret generic sops-age --namespace=flux-system --from-file=age.agekey=/dev/stdin
 
