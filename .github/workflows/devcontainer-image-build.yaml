@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       publish:
-        description: "Publish the image to the registry (true/false)"
+        description: "Publish the image to the registry?"
         required: true
         type: boolean
         default: false
@@ -107,10 +107,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: (debug) Show Tags
-        run: |-
-          echo "Tag = ${{ needs.generate-tag.outputs.tags }}"
 
       - name: Docker meta
         id: meta
