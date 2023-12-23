@@ -55,7 +55,9 @@ jobs:
 
   generate-tag:
     runs-on: "ubuntu-latest"
-    if: ${{ github.event.inputs.custom-tag != '' }}
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
     outputs:
       tags: ${{ steps.generator.outputs.tags }}
 
@@ -108,7 +110,7 @@ jobs:
 
       - name: (debug) Show Tags
         run: |-
-          echo "Tag = ${{ needs.generate-tag.outputs.tags || github.event.inputs.custom-tag || ' '}}"
+          echo "Tag = ${{ needs.generate-tag.outputs.tags }}"
 
       - name: Docker meta
         id: meta
@@ -116,7 +118,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
           tags: |
-            ${{ needs.generate-tag.outputs.tags || github.event.inputs.custom-tag || ' '}}
+            ${{ needs.generate-tag.outputs.tags }}
+            ${{ github.event.inputs.custom-tag }}
             latest
 
       - name: Push
