@@ -6,5 +6,4 @@ metadata:
   name: ingress-advertisement
 spec:
   ipAddressPools:
-    - minio-pool
-    - artifactory-pool
+    - ingress-pool
