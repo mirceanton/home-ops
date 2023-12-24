@@ -19,6 +19,9 @@ files=$(echo "$files" | grep --invert-match -v "talenv.yaml")
 files=$(echo "$files" | grep --invert-match -v ".github/labels.yaml")
 files=$(echo "$files" | grep --invert-match -v ".sh")
 
+# Remove helm values files
+files=$(echo "$files" | grep --invert-match -v ".helm-values.yaml")
+
 # Assume success
 status=0
 
