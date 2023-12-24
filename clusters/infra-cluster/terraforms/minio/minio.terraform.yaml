@@ -1,0 +1,27 @@
+---
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: minio-config
+spec:
+  interval: 30m
+  approvePlan: auto
+  path: infra/minio
+
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+    namespace: flux-system
+
+  vars:
+    - name: cluster_domain
+      value: ${CLUSTER_DOMAIN}
+
+  varsFrom:
+    - kind: Secret
+      name: minio-connection-details
+    - kind: Secret
+      name: minio-creds
+      varsKeys:
+        - root-user:minio_user
+        - root-password:minio_pass

@@ -11,7 +11,9 @@ spec:
     kind: GitRepository
     name: home-ops-git-repo
 
-  dependsOn: []
+  dependsOn:
+    - name: cluster-config
+    - name: cluster-apps-tf-controller
 
   wait: false
   prune: true
