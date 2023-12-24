@@ -12,5 +12,5 @@ variable "minio_pass" {
 
 variable "minio_ssl" {
   type    = bool
-  default = true
+  default = false
 }
