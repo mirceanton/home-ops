@@ -12,7 +12,7 @@ spec:
     name: home-ops-git-repo
   targetNamespace: kube-system
 
-  wait: true
+  wait: false
   prune: true
   interval: 5m
   timeout: 30m
