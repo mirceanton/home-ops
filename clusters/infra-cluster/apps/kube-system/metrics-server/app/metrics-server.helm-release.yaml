@@ -31,3 +31,4 @@ spec:
 
   dependsOn:
     - name: kubelet-csr-approver
+      namespace: kube-system
