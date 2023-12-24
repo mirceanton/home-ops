@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
-  targetNamespace: loadbalancer-system
+  targetNamespace: networking-system
 
   prune: true
   wait: true  # true because the resources ks depends on this ks for the CRDs
