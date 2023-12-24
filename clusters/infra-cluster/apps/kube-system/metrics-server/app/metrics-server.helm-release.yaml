@@ -30,4 +30,4 @@ spec:
     keepHistory: false
 
   dependsOn:
-    - name: cluster-apps-kubelet-csr-approver
+    - name: kubelet-csr-approver
