@@ -18,7 +18,7 @@ spec:
       value: ${CLUSTER_DOMAIN}
 
   varsFrom:
-    - kind: Secret
+    - kind: ConfigMap
       name: minio-connection-details
     - kind: Secret
       name: minio-creds
