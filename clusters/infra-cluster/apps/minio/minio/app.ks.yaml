@@ -13,7 +13,7 @@ spec:
   targetNamespace: minio
 
   prune: true
-  wait: true
+  wait: false
   interval: 5m
   timeout: 30m
 
