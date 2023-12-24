@@ -13,7 +13,7 @@ rbac:
 ## ================================================================================================
 controller:
   enabled: true
-  logLevel: info # `all`, `debug`, `info`, `warn`, `error` or `none`
+  logLevel: info  # `all`, `debug`, `info`, `warn`, `error` or `none`
   image:
     repository: quay.io/metallb/controller
     pullPolicy: IfNotPresent
@@ -33,7 +33,7 @@ controller:
 ## ================================================================================================
 speaker:
   enabled: true
-  logLevel: info # `all`, `debug`, `info`, `warn`, `error` or `none`
+  logLevel: info  # `all`, `debug`, `info`, `warn`, `error` or `none`
 
   image:
     repository: quay.io/metallb/speaker

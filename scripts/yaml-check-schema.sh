@@ -13,6 +13,7 @@ files=$(echo "$files" | grep --invert-match ".sops.yaml")  # remove sops files
 files=$(echo "$files" | grep --invert-match -v "namespace.yaml")
 files=$(echo "$files" | grep --invert-match -v "configmap.yaml")
 files=$(echo "$files" | grep --invert-match -v "deployment.yaml")
+files=$(echo "$files" | grep --invert-match -v "volume.yaml")
 
 # Remove misc files with no schema
 files=$(echo "$files" | grep --invert-match -v "talenv.yaml")
