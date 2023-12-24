@@ -16,6 +16,3 @@ spec:
   wait: true  # true because the resources ks depends on this ks for the CRDs
   interval: 5m
   timeout: 30m
-
-  dependsOn:
-    - name: cluster-apps-flux
