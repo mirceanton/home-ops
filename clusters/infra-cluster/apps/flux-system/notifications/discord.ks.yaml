@@ -4,14 +4,21 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: cluster-apps-flux-discord-notifications
-  namespace: flux-system
-  labels:
-    patching.home.mirceanton.com/source-ref: true
-    patching.home.mirceanton.com/intervals: true
-    patching.home.mirceanton.com/post-build: false
-    patching.home.mirceanton.com/decryption: true
 spec:
-  path: kubernetes/infra-cluster/apps/flux-system/notifications/discord/
+  path: clusters/infra-cluster/apps/flux-system/notifications/discord
+  sourceRef:
+    kind: GitRepository
+    name: home-ops-git-repo
+
   targetNamespace: flux-system
-  prune: true
   dependsOn: []
+
+  wait: true
+  prune: true
+  interval: 5m
+  timeout: 30m
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age

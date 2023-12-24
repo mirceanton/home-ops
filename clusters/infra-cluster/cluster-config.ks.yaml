@@ -6,7 +6,7 @@ metadata:
   name: cluster-config
   namespace: flux-system
 spec:
-  path: kubernetes/infra-cluster/config
+  path: clusters/infra-cluster/config
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo

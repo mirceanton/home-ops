@@ -8,11 +8,13 @@ metadata:
   labels:
     home-ops.mirceanton.com/group: system-apps
 spec:
-  path: kubernetes/home-cluster/apps/kube-system/coredns/app
+  path: clusters/home-cluster/apps/kube-system/coredns/app
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
+
   targetNamespace: kube-system
+  dependsOn: []
 
   wait: true
   prune: true

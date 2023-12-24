@@ -7,15 +7,15 @@ metadata:
   namespace: flux-system
 spec:
   path: ./
-  targetNamespace: flux-system
-
   sourceRef:
     kind: OCIRepository
     name: flux-manifests
 
+  targetNamespace: flux-system
+  dependsOn: []
+
   prune: true
   wait: true
-
   interval: 5m
   retryInterval: 1m
   timeout: 30m
