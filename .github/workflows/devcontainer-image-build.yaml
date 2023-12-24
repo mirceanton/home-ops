@@ -40,8 +40,6 @@ jobs:
           context: ./.devcontainer
           tags: gitops-toolkit:latest
           outputs: type=docker,dest=/tmp/gitops-toolkit.tar
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       # Only upload the artifact if the trigger event was a push to the main branch
       # since only then we need the artifact to push it to the registry
@@ -130,5 +128,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
