@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: minio-url
 data:
-  minio_server: s3.minio.${CLUSTER_DOMAIN}
+  minio_server: minio.${CLUSTER_DOMAIN}
   minio_ssl: "false"
