@@ -7,6 +7,7 @@ image:
   pullPolicy: IfNotPresent
 imagePullSecrets: []
 
+
 # =================================================================================================
 # Scheduling Settings
 # =================================================================================================
@@ -25,6 +26,7 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
+
 # =================================================================================================
 # Application Settings
 # =================================================================================================
@@ -33,6 +35,7 @@ defaultArgs:
   - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
   - --kubelet-use-node-status-port
   - --metric-resolution=15s
+
 
 # =================================================================================================
 # Pod Disruption Budget
@@ -43,6 +46,7 @@ podDisruptionBudget:
   minAvailable: 1
   maxUnavailable:
 
+
 # =================================================================================================
 # Resources
 # See https://github.com/kubernetes-sigs/metrics-server#scaling
@@ -51,9 +55,7 @@ resources:
   requests:
     cpu: 100m
     memory: 200Mi
-  # limits:
-  #   cpu:
-  #   memory:
+
 
 # =================================================================================================
 # Prometheus Metrics

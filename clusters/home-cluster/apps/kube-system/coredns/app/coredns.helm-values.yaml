@@ -12,7 +12,7 @@ image:
 # =================================================================================================
 # Scheduling Settings
 # =================================================================================================
-replicaCount: 3 # one replica on each controlplane node
+replicaCount: 3  # one replica on each controlplane node
 
 nodeSelector: {}
 
