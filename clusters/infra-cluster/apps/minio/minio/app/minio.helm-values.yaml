@@ -1,0 +1,70 @@
+---
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+
+## ================================================================================================
+## Minio App Settings
+## ================================================================================================
+## @param mode MinIO server mode (`standalone` or `distributed`)
+## ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+mode: standalone
+
+## MinIO authentication parameters
+auth:
+  existingSecret: minio-creds
+
+## ================================================================================================
+## MinIO Deployment parameters
+## ================================================================================================
+deployment:
+  updateStrategy:
+    type: Recreate
+
+resources:
+  limits:
+    cpu: 4
+    memory: 6Gi
+  requests:
+    cpu: 1
+    memory: 1Gi
+
+## ================================================================================================
+## Ingress parameters
+## ================================================================================================
+## MinIO Console ingress
+service:
+  type: LoadBalancer
+
+ingress:
+  enabled: false
+
+## MinIO API Ingress
+apiIngress:
+  enabled: false
+
+## ================================================================================================
+## NetworkPolicy parameters
+## ================================================================================================
+networkPolicy:
+  enabled: false
+
+
+## ================================================================================================
+## Persistence parameters -> use local disk
+## ================================================================================================
+persistence:
+  enabled: true
+  existingClaim: minio-pvc
+
+
+## ================================================================================================
+## Monitoring
+## ================================================================================================
+metrics:
+  serviceMonitor:
+    enabled: false
+  prometheusRule:
+    enabled: false
