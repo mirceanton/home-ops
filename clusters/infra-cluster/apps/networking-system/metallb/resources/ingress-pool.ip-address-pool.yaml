@@ -3,7 +3,7 @@
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: minio-pool
+  name: ingress-pool
 spec:
   addresses:
     - 10.0.10.39-10.0.10.39
