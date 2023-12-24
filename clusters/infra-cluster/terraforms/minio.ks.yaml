@@ -13,7 +13,7 @@ spec:
   targetNamespace: terraform-system
 
   prune: true
-  wait: true
+  wait: false
   interval: 5m
   timeout: 10m
 
