@@ -9,7 +9,15 @@ area/github:
 
 area/kubernetes:
   - changed-files:
-      - any-glob-to-any-file: "kubernetes/**/*"
+      - any-glob-to-any-file: "clusters/infra-cluster/apps/**/*"
+      - any-glob-to-any-file: "clusters/infra-cluster/config/**/*"
+      - any-glob-to-any-file: "clusters/home-cluster/apps/**/*"
+      - any-glob-to-any-file: "clusters/home-cluster/config/**/*"
+
+area/talos:
+  - changed-files:
+      - any-glob-to-any-file: "clusters/infra-cluster/bootstrap/**/*"
+      - any-glob-to-any-file: "clusters/home-cluster/bootstrap/**/*"
 
 area/scripts:
   - changed-files:
@@ -17,24 +25,20 @@ area/scripts:
       - any-glob-to-any-file: ".taskfiles/**/*"
       - any-glob-to-any-file: "Taskfile.yml"
 
-area/infrastructure:
+area/terraform:
   - changed-files:
-      - any-glob-to-any-file: "infra/**/*"
+      - any-glob-to-any-file: "terraform/**/*"
+      - any-glob-to-any-file: "clusters/home-cluster/terraforms/**/*"
+      - any-glob-to-any-file: "clusters/terraforms-cluster/terraforms/**/*"
 
-area/docs:
-  - changed-files:
-      - any-glob-to-any-file: "docs/**/*"
-      - any-glob-to-any-file: "mkdocs.yml"
 
 # =================================================================================================
 # Cluster Labels
 # =================================================================================================
 cluster/home:
   - changed-files:
-      - any-glob-to-any-file: "kubernetes/home-cluster/**/*"
-      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
+      - any-glob-to-any-file: "clusters/home-cluster/**/*"
 
 cluster/infra:
   - changed-files:
-      - any-glob-to-any-file: "kubernetes/infra-cluster/**/*"
-      - any-glob-to-any-file: "infra/infra-cluster/**/*"
+      - any-glob-to-any-file: "clusters/infra-cluster/**/*"
