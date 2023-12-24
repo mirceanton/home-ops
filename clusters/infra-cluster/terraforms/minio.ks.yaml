@@ -12,10 +12,17 @@ spec:
     name: home-ops-git-repo
   targetNamespace: terraform-system
 
+  dependsOn:
+    - name: cluster-apps-minio
+
   prune: true
   wait: false
   interval: 5m
   timeout: 10m
 
-  dependsOn:
-    - name: cluster-apps-minio
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+      - kind: Secret
+        name: cluster-secrets
