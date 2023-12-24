@@ -6,3 +6,4 @@ kind: Kustomization
 resources:
   - ./flux-manifests.oci-repository.yaml
   - ./flux.ks.yaml
+  - ./flux-addons.ks.yaml

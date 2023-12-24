@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-flux-addons
   namespace: flux-system
 spec:
-  path: clusters/infra-cluster/apps/flux-system/flux/addons
+  path: clusters/home-cluster/apps/flux-system/flux/addons
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
