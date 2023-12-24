@@ -6,4 +6,8 @@ metadata:
   name: service-pool
 spec:
   addresses:
-    - 10.0.10.35-10.0.10.39
+    - 10.0.10.38-10.0.10.38
+  serviceAllocation:
+    priority: 50
+    namespaces:
+      - artifactory
