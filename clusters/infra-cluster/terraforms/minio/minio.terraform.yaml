@@ -13,12 +13,6 @@ spec:
     name: home-ops-git-repo
     namespace: flux-system
 
-  vars:
-    - name: cluster_domain
-      value: ${CLUSTER_DOMAIN}
-    - name: minio_server
-      value: s3.minio.${CLUSTER_DOMAIN}
-
   varsFrom:
     - kind: ConfigMap
       name: minio-url
