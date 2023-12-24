@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 30m
   approvePlan: auto
-  path: infra/minio
+  path: terraform/minio
 
   sourceRef:
     kind: GitRepository
