@@ -22,6 +22,28 @@ files=$(echo "$files" | grep --invert-match -v ".sh")
 # Remove helm values files
 files=$(echo "$files" | grep --invert-match -v ".helm-values.yaml")
 
+# Flags
+quiet=false
+verbose=false
+
+# Process command line options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -q|--quiet)
+      quiet=true
+      shift
+      ;;
+    -v|--verbose)
+      verbose=true
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
 # Assume success
 status=0
 
@@ -29,9 +51,13 @@ status=0
 for f in $files; do
   # Look for the yaml schema store comment
   if grep -q '# yaml-language-server: $schema=' "$f"; then
-    echo -e "  - ${GREEN}YAML schema ok for $f${NC}"
+    if [ "$verbose" = true ]; then
+      echo -e "  - ${GREEN}YAML schema ok for $f${NC}"
+    fi
   else
-    echo -e "  - ${RED}YAML schema check failed for $f${NC}"
+    if [ "$quiet" = false ]; then
+      echo -e "  - ${RED}YAML schema check failed for $f${NC}"
+    fi
     status=1
   fi
 done
