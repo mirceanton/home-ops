@@ -6,23 +6,11 @@ metadata:
 spec:
   interval: 30m
   approvePlan: auto
-  backendConfig:
-    disable: true
-
   path: terraform/minio
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
     namespace: flux-system
-
-  runnerPodTemplate:
-    spec:
-      env:
-        - name: TF_TOKEN_app_terraform_io
-          valueFrom:
-            secretKeyRef:
-              name: terraform-cloud-token
-              key: token
 
   varsFrom:
     - kind: ConfigMap

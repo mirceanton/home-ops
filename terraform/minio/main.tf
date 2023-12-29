@@ -1,11 +1,4 @@
 terraform {
-  cloud {
-    organization = "mirceanton"
-
-    workspaces {
-      name = "MinIO"
-    }
-  }
   required_providers {
     minio = {
       source  = "aminueza/minio"
