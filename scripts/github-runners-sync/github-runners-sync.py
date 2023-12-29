@@ -65,7 +65,7 @@ def cleanup_files(repo, branch_name, manifest_directory, runner_repos):
 		for file in existing_files:
 			repo_name = os.path.basename(file.path).split('.')[0]
 			if repo_name not in runner_repos:
-				print(f"  - Removing file {file_name}")
+				print(f"  - Removing file {file.path}")
 				repo.delete_file(
 					path=file.path,
 					message=f"Remove runner manifest for {repo_name}",
