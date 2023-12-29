@@ -26,7 +26,7 @@ uninstall:
     keepHistory: false
 
 dependsOn:
-    - name: cluster-apps-github-actions-controller
+  - name: cluster-apps-github-actions-controller
     namespace: github-actions
 
 values:
