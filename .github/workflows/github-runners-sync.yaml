@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: GitHub Runners Sync Job
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  flux-branch-job:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12.1-alpine3.18
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Install requirements
+        run: pip3 install -r scripts/github_actions_sync/requirements.txt
+
+      - name: Run script
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SYNC_BRANCH_NAME: chore/github-runners-sync
+          SEARCH_TOPICS: ""
+          OUTPUT_DIRECTORY: clusters/home-cluster/apps/github-actions/runners/manifests
+          CLEANUP: "true"
+        run: python3 scripts/github_actions_sync/github_actions_sync.py
