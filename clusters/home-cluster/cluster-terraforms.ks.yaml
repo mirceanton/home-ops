@@ -14,7 +14,7 @@ spec:
   dependsOn:
     - name: cluster-config
 
-  wait: true
+  wait: false
   prune: true
   interval: 5m
   timeout: 30m

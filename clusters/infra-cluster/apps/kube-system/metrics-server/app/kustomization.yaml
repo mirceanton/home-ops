@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - metrics-server.helm-release.yaml
+  - metrics-server.helm-repository.yaml
+
+configMapGenerator:
+  - name: metrics-server-values
+    options:
+      disableNameSuffixHash: true
+    files:
+      - values.yaml=./metrics-server.helm-values.yaml

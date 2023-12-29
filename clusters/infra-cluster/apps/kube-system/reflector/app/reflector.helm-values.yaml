@@ -1,0 +1,15 @@
+---
+fullnameOverride: reflector
+replicaCount: 1
+
+image:
+  repository: emberstack/kubernetes-reflector
+  pullPolicy: IfNotPresent
+  tag: ""
+imagePullSecrets: []
+
+configuration:
+  logging:
+    minimumLevel: Debug
+
+resources: {}

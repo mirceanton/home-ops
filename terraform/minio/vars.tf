@@ -12,5 +12,33 @@ variable "minio_pass" {
 
 variable "minio_ssl" {
   type    = bool
-  default = true
+  default = false
+}
+
+variable "volsync_bucket_name" {
+  type = string
+}
+variable "volsync_bucket_access_key" {
+  type      = string
+  sensitive = false
+  default   = null
+}
+variable "volsync_bucket_secret_key" {
+  type      = string
+  sensitive = true
+  default   = null
+}
+
+variable "cnpg_bucket_name" {
+  type = string
+}
+variable "cnpg_bucket_access_key" {
+  type      = string
+  sensitive = false
+  default   = null
+}
+variable "cnpg_bucket_secret_key" {
+  type      = string
+  sensitive = true
+  default   = null
 }

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minio-url
+data:
+  minio_server: api.minio.${CLUSTER_DOMAIN}
+  minio_ssl: "true"

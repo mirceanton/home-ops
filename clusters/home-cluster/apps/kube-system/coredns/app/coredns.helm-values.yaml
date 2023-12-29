@@ -1,0 +1,109 @@
+---
+fullnameOverride: coredns
+
+# =================================================================================================
+# Image and Repository Settings
+# =================================================================================================
+image:
+  repository: coredns/coredns
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+# =================================================================================================
+# Scheduling Settings
+# =================================================================================================
+replicaCount: 3  # one replica on each controlplane node
+
+nodeSelector: {}
+
+# Allow scheduling on controlplane nodes
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+
+# Prefer controlplane nodes
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+
+# Prevent 2 pods on the same node
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/instance: coredns
+
+# =================================================================================================
+# Resources
+# =================================================================================================
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# =================================================================================================
+# Service
+# =================================================================================================
+service:
+  name: coredns
+  clusterIP: 10.96.0.10
+  clusterIPs: [10.96.0.10]
+
+# =================================================================================================
+# Extra Annotations
+# =================================================================================================
+# Annotate for auto-reloading if configmap changed
+deployment:
+  annotations:
+    reloader.stakater.com/auto: "true"
+
+# =================================================================================================
+# Application Settings
+# =================================================================================================
+servers:
+  - zones:
+      - zone: .
+        scheme: dns://
+        use_tcp: true
+    port: 53
+    plugins:
+      - name: log
+      - name: errors
+      - name: health
+        configBlock: |-
+          lameduck 5s
+      - name: ready
+      - name: kubernetes
+        parameters: cluster.local in-addr.arpa ip6.arpa
+        configBlock: |-
+          pods insecure
+          fallthrough in-addr.arpa ip6.arpa
+          ttl 30
+      - name: prometheus
+        parameters: 0.0.0.0:9153
+      - name: forward
+        parameters: . /etc/resolv.conf
+      - name: cache
+        parameters: 30
+      - name: loop
+      - name: reload
+      - name: loadbalance
+
+# =================================================================================================
+# Prometheus Metrics
+# =================================================================================================
+prometheus:
+  service:
+    enabled: false
+  monitor:
+    enabled: false

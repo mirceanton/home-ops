@@ -1,0 +1,61 @@
+---
+## ================================================================================================
+## IMAGE AND REPOSITORY SETTINGS
+## ================================================================================================
+image:
+  repository: ghcr.io/postfinance/kubelet-csr-approver
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+
+## ================================================================================================
+## KUBELET CSR APPROVER APP SETTINGS
+## ================================================================================================
+# Required configuration item
+providerRegex: ^(truenas-vm)$
+
+# optional, permits to bypass dns resolution checks. default: false
+bypassDnsResolution: true
+
+# number of DNS SAN names allowed in a certificate request. defaults to 1
+allowedDnsNames: 1
+
+# optional, permits ignoring CSRs with another Username than `system:node:...`
+ignoreNonSystemNode: false
+
+# set this parameter to true to ignore mismatching DNS name and hostname
+bypassHostnameCheck: false
+
+# optional, list of IP (IPv4, IPv6) subnets that are allowed to submit CSRs
+providerIpPrefixes:
+  - 10.0.10.0/24
+
+# logging level ranges from -5 (Fatal) to 10 (Verbose). default level is 0
+loggingLevel: 0
+
+
+## ================================================================================================
+## KUBELET CSR APPROVER DEPLOYMENT PARAMETERS
+## ================================================================================================
+replicas: 1
+leaderElection: false
+
+rbac:
+  manage: true
+serviceAccount:
+  create: true
+
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 100m
+  limits:
+    memory: 128Mi
+    cpu: 250m
+
+
+## ================================================================================================
+## MONITORING
+## ================================================================================================
+metrics:
+  enable: false
