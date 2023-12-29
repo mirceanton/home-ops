@@ -83,8 +83,8 @@ def create_pull_request(repo, branch_name):
 
 			---
 
-			beep boop. I am a bot :robot:
-			""",
+			beep boop. I am a bot 🤖
+			""".replace("\t", "")
 			head=branch_name,
 			base="main"
 		)
