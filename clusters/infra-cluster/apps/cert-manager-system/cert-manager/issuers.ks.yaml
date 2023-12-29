@@ -19,3 +19,8 @@ spec:
 
   dependsOn:
     - name: cluster-apps-cert-manager
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
