@@ -88,7 +88,7 @@ def create_pull_request(repo, branch_name):
 			head=branch_name,
 			base="main"
 		)
-		print(f"  - Pull request created {pull_request.html_url}")
+		print(f"  - Pull request created")
 	except GithubException as e:
 		if e.data['errors'][0]['message'].startswith("A pull request already exists"):
 			print("  - Pull request already exists")
