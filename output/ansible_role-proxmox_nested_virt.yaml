@@ -6,36 +6,36 @@ metadata:
 name: ci-ansible_role-proxmox_nested_virt-runners
 spec:
 chart:
-	spec:
-	chart: gha-runner-scale-set
-	version: 0.6.1
-	sourceRef:
-		kind: HelmRepository
-		name: actions-runner-controller
+    spec:
+    chart: gha-runner-scale-set
+    version: 0.6.1
+    sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller
 
 interval: 30m
 maxHistory: 2
 install:
-	remediation:
-	retries: 3
+    remediation:
+    retries: 3
 upgrade:
-	cleanupOnFail: true
-	remediation:
-	retries: 3
+    cleanupOnFail: true
+    remediation:
+    retries: 3
 uninstall:
-	keepHistory: false
+    keepHistory: false
 
 dependsOn:
-	- name: cluster-apps-github-actions-controller
-	namespace: github-actions
+    - name: cluster-apps-github-actions-controller
+    namespace: github-actions
 
 values:
-	runnerScaleSetName: self-hosted
-	minRunners: 1
-	maxRunners: 10
+    runnerScaleSetName: self-hosted
+    minRunners: 1
+    maxRunners: 10
 
-	githubConfigUrl: https://github.com/mirceanton/ansible_role-proxmox_cloudbuntu
-	githubConfigSecret: github-actions-runner-token
+    githubConfigUrl: https://github.com/mirceanton/ansible_role-proxmox_cloudbuntu
+    githubConfigSecret: github-actions-runner-token
 
-	containerMode:
-	type: dind
+    containerMode:
+    type: dind
