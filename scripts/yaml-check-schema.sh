@@ -14,11 +14,13 @@ files=$(echo "$files" | grep --invert-match -v "namespace.yaml")
 files=$(echo "$files" | grep --invert-match -v "configmap.yaml")
 files=$(echo "$files" | grep --invert-match -v "deployment.yaml")
 files=$(echo "$files" | grep --invert-match -v "volume.yaml")
+files=$(echo "$files" | grep --invert-match -v ".reflected-secret.yaml")
 
 # Remove misc files with no schema
 files=$(echo "$files" | grep --invert-match -v "talenv.yaml")
 files=$(echo "$files" | grep --invert-match -v ".github/labels.yaml")
 files=$(echo "$files" | grep --invert-match -v ".sh")
+files=$(echo "$files" | grep --invert-match -v ".terraform.yaml")
 
 # Remove helm values files
 files=$(echo "$files" | grep --invert-match -v ".helm-values.yaml")
