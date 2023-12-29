@@ -26,3 +26,8 @@ spec:
         name: cluster-settings
       - kind: Secret
         name: cluster-secrets
+
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
