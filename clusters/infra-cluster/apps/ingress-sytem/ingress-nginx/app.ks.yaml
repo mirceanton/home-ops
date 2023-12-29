@@ -3,19 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-metallb-resources
+  name: cluster-apps-ingress-nginx
   namespace: flux-system
 spec:
-  path: clusters/infra-cluster/apps/networking-system/metallb/resources
+  path: clusters/infra-cluster/apps/ingress-sytem/ingress-nginx/app
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
   targetNamespace: networking-system
 
   prune: true
-  wait: true  # true because there are raw yaml manifests in here
+  wait: false
   interval: 5m
-  timeout: 30m
+  timeout: 10m
 
   dependsOn:
-    - name: cluster-apps-metallb
+    - name: cluster-apps-metallb-resources
