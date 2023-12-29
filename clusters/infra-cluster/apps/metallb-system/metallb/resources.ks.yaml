@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
-  targetNamespace: networking-system
+  targetNamespace: metallb-system
 
   prune: true
   wait: true  # true because there are raw yaml manifests in here

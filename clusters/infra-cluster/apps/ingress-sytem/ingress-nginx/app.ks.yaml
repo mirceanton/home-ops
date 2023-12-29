@@ -10,7 +10,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
-  targetNamespace: networking-system
+  targetNamespace: ingress-system
 
   prune: true
   wait: false
