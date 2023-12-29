@@ -148,7 +148,7 @@ print("[STAGE 5] Generating and commiting manifest files")
 manifest_directory = os.getenv("OUTPUT_DIRECTORY")
 print(f"  - Using output directory {manifest_directory}")
 
-env = Environment(loader=FileSystemLoader("templates"))
+env = Environment(loader=FileSystemLoader("scripts/github-runners-sync/templates"))
 template = env.get_template("github-runner.helm-release.yaml.j2")
 
 files_changed = False
