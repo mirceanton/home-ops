@@ -58,6 +58,7 @@ def create_or_update_file(repo, branch_name, file_path, file_contents):
 	return True
 
 def cleanup_files(repo, branch_name, manifest_directory, runner_repos):
+	status = False
 	try:
 		existing_files = repo.get_contents(manifest_directory, ref=branch_name)
 
@@ -71,8 +72,10 @@ def cleanup_files(repo, branch_name, manifest_directory, runner_repos):
 					branch=branch_name,
 					sha=file.sha
 				)
+				status = True
 	except GithubException:
 		print("  - No files to remove")
+	return status
 
 def create_pull_request(repo, branch_name):
 	try:
@@ -161,14 +164,16 @@ for repo in runner_repos:
 	# Create the file if it doesn't exist
 	file_path = os.path.join(manifest_directory, f"{repo.name}.yaml")
 	print(f"  - Processing {file_path}")
-	files_changed = files_changed or create_or_update_file(main_repo, branch_name, file_path, rendered)
+	file_status = create_or_update_file(main_repo, branch_name, file_path, rendered)
+	files_changed = files_changed or file_status
 
 
 # Cleanup: Remove files that are not in the list of searched repositories
 print("[STAGE 6] Cleaning up files")
 if os.getenv("CLEANUP"):
 	print("  - Cleanup enabled")
-	files_changed = files_changed or cleanup_files(main_repo, branch_name, manifest_directory, runner_repos)
+	cleanup_status = cleanup_files(main_repo, branch_name, manifest_directory, runner_repos)
+	files_changed = files_changed or cleanup_status
 else:
 	print("  - Skipping cleanup")
 
