@@ -16,14 +16,14 @@ def create_branch_if_not_exists(repo, branch_name) -> bool:
 def search_repositories(g, username, search_topics):
 	if not search_topics:
 		print("  - No topic specified, searching for all repositories")
-		return g.search_repositories(query=f"org:{username}")
+		return list(g.search_repositories(query=f"org:{username}"))
 
 	topics_list = [search_topics] if "," not in search_topics else search_topics.split(",")
 	print(f"  - Searching for repositories with topics in {topics_list}")
 
 	runner_repos = []
 	for topic in topics_list:
-		repositories_for_topic = g.search_repositories(query=f"topic:{topic} org:{username}")
+		repositories_for_topic = list(g.search_repositories(query=f"topic:{topic} org:{username}"))
 		print(f"  - Found {repositories_for_topic.totalCount} repositories for topic {topic}")
 
 		runner_repos.extend(repositories_for_topic)
@@ -81,9 +81,8 @@ def create_pull_request(repo, branch_name):
 			body="""
 			This is an automated pull request to update runner manifests.
 
-			---
 
-			beep boop. I am a bot 🤖
+			*beep boop. I am a bot 🤖*
 			""".replace("\t", ""),
 			head=branch_name,
 			base="main"
