@@ -1,3 +1,0 @@
-
-
-GITHUB_TOKEN
