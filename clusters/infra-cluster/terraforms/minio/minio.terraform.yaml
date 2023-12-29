@@ -13,6 +13,15 @@ spec:
     name: home-ops-git-repo
     namespace: flux-system
 
+  runnerPodTemplate:
+    spec:
+      env:
+        - name: TF_TOKEN_app_terraform_io
+          valueFrom:
+            secretKeyRef:
+              name: terraform-cloud-token
+              key: token
+
   varsFrom:
     - kind: ConfigMap
       name: minio-url
