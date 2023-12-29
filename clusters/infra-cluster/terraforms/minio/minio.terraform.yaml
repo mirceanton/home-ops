@@ -6,8 +6,10 @@ metadata:
 spec:
   interval: 30m
   approvePlan: auto
-  path: terraform/minio
+  backendConfig:
+    disable: true
 
+  path: terraform/minio
   sourceRef:
     kind: GitRepository
     name: home-ops-git-repo
