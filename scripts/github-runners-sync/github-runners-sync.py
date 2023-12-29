@@ -105,11 +105,12 @@ username = os.getenv("GITHUB_REPOSITORY_OWNER")
 token = os.getenv("GITHUB_TOKEN")
 print(f"  - Authenticating as {username}")
 print(f"  - Using token {token[:4]}...{token[-4:]}")
-g = Github(auth=Auth.Login(username, token))
-if not g.get_user().login == username:
+try:
+	g = Github(auth=Auth.Login(username, token))
+	print("  - Authentication successful")
+except GithubException:
 	print("  - Authentication failed")
 	exit(1)
-print("  - Authentication successful")
 
 
 # Fetch main GitHub repository
