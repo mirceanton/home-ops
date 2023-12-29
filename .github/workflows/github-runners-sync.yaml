@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SYNC_BRANCH_NAME: chore/github-runners-sync
-          SEARCH_TOPICS: ""
+          SEARCH_TOPICS: "ansible"
           OUTPUT_DIRECTORY: clusters/home-cluster/apps/github-actions/runners/manifests
           CLEANUP: "true"
         run: python3 scripts/github-runners-sync/github-runners-sync.py
