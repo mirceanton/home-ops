@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: minio-url
 data:
-  minio_server: minio.${CLUSTER_DOMAIN}
-  minio_ssl: "false"
+  minio_server: api.minio.${CLUSTER_DOMAIN}
+  minio_ssl: "true"

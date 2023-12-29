@@ -16,8 +16,14 @@ spec:
   varsFrom:
     - kind: ConfigMap
       name: minio-url
+
     - kind: Secret
       name: minio-creds
       varsKeys:
         - root-user:minio_user
         - root-password:minio_pass
+
+    - kind: Secret
+      name: volsync-bucket-secrets
+    - kind: Secret
+      name: cnpg-bucket-secrets
