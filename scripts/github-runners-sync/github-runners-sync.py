@@ -24,7 +24,7 @@ def search_repositories(g, username, search_topics):
 	runner_repos = []
 	for topic in topics_list:
 		repositories_for_topic = list(g.search_repositories(query=f"topic:{topic} org:{username}"))
-		print(f"  - Found {repositories_for_topic.totalCount} repositories for topic {topic}")
+		print(f"  - Found {len(repositories_for_topic)} repositories for topic {topic}")
 
 		runner_repos.extend(repositories_for_topic)
 	return runner_repos
