@@ -59,12 +59,13 @@ def create_or_update_file(repo, branch_name, file_path, file_contents):
 
 def cleanup_files(repo, branch_name, manifest_directory, runner_repos):
 	status = False
+	repo_names = [repo.name for repo in runner_repos]
 	try:
 		existing_files = repo.get_contents(manifest_directory, ref=branch_name)
 
 		for file in existing_files:
-			repo_name = os.path.basename(file.path).split('.')[0]
-			if repo_name not in runner_repos:
+			repo_name = os.path.basename(file.name).split('.')[0]
+			if repo_name not in repo_names:
 				print(f"  - Removing file {file.path}")
 				repo.delete_file(
 					path=file.path,
