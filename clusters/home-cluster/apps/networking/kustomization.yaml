@@ -6,3 +6,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./metallb
+  - ./ingress-nginx
