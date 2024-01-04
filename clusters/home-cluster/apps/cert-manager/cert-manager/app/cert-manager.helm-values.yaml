@@ -1,0 +1,20 @@
+---
+installCRDs: true
+
+replicaCount: 2
+webhook:
+  replicaCount: 2
+cainjector:
+  replicaCount: 2
+
+dns01RecursiveNameservers: 1.1.1.1:53,9.9.9.9:53
+dns01RecursiveNameserversOnly: true
+
+podDnsPolicy: "None"
+podDnsConfig:
+  nameservers:
+    - "1.1.1.1"
+    - "9.9.9.9"
+
+prometheus:
+  enabled: false
