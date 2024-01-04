@@ -1,0 +1,48 @@
+---
+# Kube prism endpoint
+k8sServiceHost: localhost
+k8sServicePort: 7445
+
+kubeProxyReplacement: true
+
+operator:
+  replicas: 2
+
+  # Schedule pods on controlplane nodes
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+ipam:
+  mode: kubernetes
+
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+
+cgroup:
+  hostRoot: /sys/fs/cgroup
+  autoMount:
+    enabled: false
