@@ -72,13 +72,14 @@ controlPlane:
                 - rw
 
 nodes:
-  - hostname: hkc-01
+  - hostname: hkc-01  # # nuc-i5
     ipAddress: 10.0.10.11
     controlPlane: true
 
-    installDisk: /dev/sdb
+    installDisk: /dev/disk/by-id/ata-SAMSUNG_MZ7PD128HAFV-000H7_S16NNSAF811320
+    # rook disk: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNX0T706590R
     machineDisks:
-      - device: /dev/sda
+      - device: /dev/disk/by-id/ata-CT500MX500SSD1_2048E4D4E15C
         partitions:
           - mountpoint: /var/mnt/postgres
 
@@ -97,13 +98,14 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-  - hostname: hkc-02
+  - hostname: hkc-02  # # i5-11400f
     ipAddress: 10.0.10.12
     controlPlane: true
 
-    installDisk: /dev/nvme0n1
+    installDisk: /dev/disk/by-id/nvme-SAMSUNG_MZVLB256HAHQ-000H1_S425NA0M903854
+    # rook disk: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNX0W653536D
     machineDisks:
-      - device: /dev/sda
+      - device: /dev/disk/by-id/ata-CT500MX500SSD1_2336E87416C5
         partitions:
           - mountpoint: /var/mnt/postgres
 
@@ -121,13 +123,14 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
 
-  - hostname: hkc-03
+  - hostname: hkc-03  # # i5-6500
     ipAddress: 10.0.10.13
     controlPlane: true
 
-    installDisk: /dev/sdb
+    installDisk: /dev/disk/by-id/nvme-SAMSUNG_MZVLW256HEHP-000L7_S35ENA0J977406
+    # rook disk: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNF0N610592W
     machineDisks:
-      - device: /dev/sda
+      - device: /dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S3Z2NB1K729005X
         partitions:
           - mountpoint: /var/mnt/postgres
 
@@ -142,5 +145,6 @@ nodes:
       customization:
         systemExtensions:
           officialExtensions:
-            - siderolabs/amd-ucode
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ucode
             - siderolabs/iscsi-tools
