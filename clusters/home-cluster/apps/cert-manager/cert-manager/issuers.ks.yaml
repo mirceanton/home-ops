@@ -11,7 +11,7 @@ spec:
     kind: GitRepository
     name: home-ops-git-repo
 
-  targetNamespace: cert-manager-system
+  targetNamespace: cert-manager
   dependsOn:
     - name: cluster-apps-cert-manager
 
