@@ -1,0 +1,36 @@
+---
+controller:
+  allowSnippetAnnotations: true
+  replicaCount: 2
+
+  # Prevent 2 instances from being scheduled on the same node
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/instance: nginx-external
+
+  extraEnvs:
+    - name: TZ
+      value: "${TIMEZONE}"
+
+  ingressClassResource:
+    name: nginx-external
+    default: true
+    controllerValue: k8s.io/internal
+
+  admissionWebhooks:
+    objectSelector:
+      matchExpressions:
+        - key: ingress-class
+          operator: In
+          values: ["internal"]
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 250Mi
+    limits:
+      memory: 500Mi
