@@ -16,7 +16,7 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     container:
-      image: python:3.12.1-alpine3.18
+      image: python:3.12.2-alpine3.18
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@v4.1.1
