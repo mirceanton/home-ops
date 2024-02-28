@@ -7,3 +7,5 @@ metadata:
 data:
   CLUSTER_DOMAIN: home.mirceanton.com
   CLUSTER_ENVIRONMENT: staging  # staging, production -> selects letsencrypt cluster issuer
+
+  TIMEZONE: Europe/Bucharest
