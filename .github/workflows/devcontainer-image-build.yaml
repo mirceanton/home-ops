@@ -35,7 +35,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.2.0
 
       - name: Build and export
-        uses: docker/build-push-action@v5.2.0
+        uses: docker/build-push-action@v5.3.0
         with:
           context: ./.devcontainer
           tags: gitops-toolkit:latest
@@ -121,7 +121,7 @@ jobs:
             latest
 
       - name: Push
-        uses: docker/build-push-action@v5.2.0
+        uses: docker/build-push-action@v5.3.0
         with:
           context: .devcontainer
           platforms: linux/amd64
