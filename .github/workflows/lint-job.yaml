@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v4.1.4
 
       - name: Install terraform
-        uses: hashicorp/setup-terraform@v3.1.0
+        uses: hashicorp/setup-terraform@v3.1.1
 
       - name: Run checker script
         run: bash scripts/terraform-lint.sh
