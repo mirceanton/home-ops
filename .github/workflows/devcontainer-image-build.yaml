@@ -29,7 +29,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.3.0
@@ -68,7 +68,7 @@ jobs:
         run: sudo apt update && sudo apt install -y curl jq
 
       - name: Checkout the Repository
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
 
       - name: Generate Image Tag
         id: generator
@@ -90,7 +90,7 @@ jobs:
 
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
 
       - name: Download artifact
         uses: actions/download-artifact@v4.1.7
