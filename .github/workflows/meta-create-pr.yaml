@@ -16,7 +16,7 @@ jobs:
       image: ghcr.io/supportpal/github-gh-cli
     steps:
       - name: Checkout the Repository
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
 
       - name: Automatically Generate The PR Name
         id: generate_name
