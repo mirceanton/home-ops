@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: flux-system
 
 resources:
-  - github.com/fluxcd/flux2/manifests/install?ref=v2.2.3
+  - github.com/fluxcd/flux2/manifests/install?ref=v2.3.0
 
 patches:
   # Disable the network policies
