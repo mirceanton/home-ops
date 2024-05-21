@@ -1,23 +1,32 @@
 #!/bin/bash
 
-# Store the GitHub branch name in a variable
-branch="$GITHUB_REF_NAME"
+# Check if the environment variable is set
+if [ -z "$GITHUB_REF_NAME" ]; then
+  echo "GITHUB_REF_NAME is not set"
+  exit 1
+fi
 
-# Split the string at the '/' character
-IFS='/' read -ra parts <<< "$branch"
+# Split the string by '/'
+IFS='/' read -r -a parts <<< "$GITHUB_REF_NAME"
 
-# Extract the topic and description parts
-topic="${parts[0]}"
-description="${parts[1]}"
-
-# Replace underscores with spaces in the description
-description="${description//_/ }"
-
-# Convert the description to title case
-description="$(echo "$description" | awk '{ for(i=1;i<=NF;i++) $i= toupper(substr($i,1,1)) tolower(substr($i,2)); }1')"
-
-# Format the output
-output="${topic}: ${description}"
-
-# Print the result
-echo "$output"
+# Check the number of parts after splitting
+case ${#parts[@]} in
+  2)
+    # Format: <type>/<message>
+    type="${parts[0]}"
+    message="${parts[1]}"
+    echo "type: $message"
+    ;;
+  3)
+    # Format: <type>/<scope>/<message>
+    type="${parts[0]}"
+    scope="${parts[1]}"
+    message="${parts[2]}"
+    echo "$type($scope): $message"
+    ;;
+  *)
+    # If the format does not match either case, exit with failure
+    echo "Invalid branch name format"
+    exit 1
+    ;;
+esac
