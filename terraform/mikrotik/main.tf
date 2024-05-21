@@ -8,5 +8,5 @@ resource "routeros_dns" "dns-server" {
 }
 
 resource "routeros_system_clock" "timezone" {
-    time_zone_name = "Europe/Bucharest"
+  time_zone_name = "Europe/Bucharest"
 }
