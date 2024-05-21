@@ -68,6 +68,30 @@ resource "routeros_ip_dhcp_server_lease" "kube_03" {
 }
 
 
+## ================================================================================================
+## DNS Records
+## ================================================================================================
+resource "routeros_ip_dns_record" "kube_01" {
+  name    = "kube_01.${routeros_ip_dhcp_server_network.management.domain}"
+  address = routeros_ip_dhcp_server_lease.kube_01.address
+  type    = "A"
+}
+resource "routeros_ip_dns_record" "kube_02" {
+  name    = "kube_02.${routeros_ip_dhcp_server_network.management.domain}"
+  address = routeros_ip_dhcp_server_lease.kube_02.address
+  type    = "A"
+}
+resource "routeros_ip_dns_record" "kube_03" {
+  name    = "kube_03.${routeros_ip_dhcp_server_network.management.domain}"
+  address = routeros_ip_dhcp_server_lease.kube_03.address
+  type    = "A"
+}
+resource "routeros_ip_dns_record" "kubernetes_api" {
+  name    = "kubernetes.${routeros_ip_dhcp_server_network.management.domain}"
+  address = "10.0.10.50"
+  type    = "A"
+}
+
 
 ## ================================================================================================
 ## Bridge Ports
