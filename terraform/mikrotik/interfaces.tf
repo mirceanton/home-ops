@@ -3,8 +3,7 @@ resource "routeros_interface_ethernet" "wan" {
   name         = "ether1"
   comment      = "WAN"
   l2mtu        = 1514
-
-  advertise = "100M-baseT-half,100M-baseT-full"
+  advertise    = "100M-baseT-full"
 }
 
 resource "routeros_interface_ethernet" "desktop" {
