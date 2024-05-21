@@ -34,3 +34,10 @@ resource "routeros_interface_ethernet" "home_assistant" {
   comment      = "HomeAssistant"
   l2mtu        = 1514
 }
+
+resource "routeros_interface_ethernet" "management" {
+  factory_name = "ether8"
+  name         = "ether8"
+  comment      = "Management"
+  l2mtu        = 1514
+}
