@@ -17,7 +17,7 @@ resource "routeros_interface_bridge_port" "wan" {
 ## DHCP Client Config
 ## ================================================================================================
 resource "routeros_ip_dhcp_client" "wan" {
-  interface = routeros_interface_ethernet.wan.name
+  interface = routeros_interface_bridge.wan.name
   comment   = "WAN DHCP Client"
 }
 
