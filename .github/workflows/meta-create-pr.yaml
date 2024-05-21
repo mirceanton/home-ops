@@ -18,6 +18,13 @@ jobs:
       - name: Checkout the Repository
         uses: actions/checkout@v4.1.5
 
+      - name: Generate Token
+        uses: actions/create-github-app-token@a0de6af83968303c8c955486bf9739a57d23c7f1 # v1
+        id: app-token
+        with:
+          app-id: "${{ secrets.BOT_APP_ID }}"
+          private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+
       - name: Automatically Generate The PR Name
         id: generate_name
         env:
@@ -25,9 +32,8 @@ jobs:
         run: echo "pr_name=$(bash scripts/generate-pr-name.sh)" | tee $GITHUB_OUTPUT
 
       - name: Create pull request
-        id: open-pr
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token  }}
         run: |
           git config --global --add safe.directory /__w/home-ops/home-ops
           gh pr create \
