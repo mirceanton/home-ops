@@ -49,7 +49,7 @@ resource "routeros_ip_dhcp_server_lease" "access_point" {
   server      = routeros_ip_dhcp_server.lan.name
   comment     = "Mikrotik cAP AX"
 }
-resource "routeros_ip_dhcp_server_lease" "truenas" {
+resource "routeros_ip_dhcp_server_lease" "truenas_lan" {
   address     = "192.168.69.254"
   mac_address = "E0:D5:5E:24:A1:EC"
   server      = routeros_ip_dhcp_server.lan.name
