@@ -37,6 +37,31 @@ resource "routeros_ip_pool" "lan" {
   ]
 }
 
+resource "routeros_ip_dhcp_server_lease" "desktop" {
+  address     = "192.168.69.69"
+  mac_address = "74:56:3C:B7:9B:D8"
+  server      = routeros_ip_dhcp_server.lan.name
+  comment     = "Mircea Desktop PC"
+}
+resource "routeros_ip_dhcp_server_lease" "access_point" {
+  address     = "192.168.69.2"
+  mac_address = "D4:01:C3:01:26:EC"
+  server      = routeros_ip_dhcp_server.lan.name
+  comment     = "Mikrotik cAP AX"
+}
+resource "routeros_ip_dhcp_server_lease" "truenas" {
+  address     = "192.168.69.254"
+  mac_address = "E0:D5:5E:24:A1:EC"
+  server      = routeros_ip_dhcp_server.lan.name
+  comment     = "TrueNAS LAN"
+}
+resource "routeros_ip_dhcp_server_lease" "home_assistant" {
+  address     = "192.168.69.252"
+  mac_address = "00:1E:06:42:C7:73"
+  server      = routeros_ip_dhcp_server.lan.name
+  comment     = "HomeAssistant"
+}
+
 
 ## ================================================================================================
 ## Bridge Ports
