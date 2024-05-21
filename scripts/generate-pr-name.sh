@@ -15,13 +15,15 @@ case ${#parts[@]} in
     # Format: <type>/<message>
     type="${parts[0]}"
     message="${parts[1]}"
-    echo "type: $message"
+    message=$(echo "$message" | tr '-_' ' ')
+    echo "$type: $message"
     ;;
   3)
     # Format: <type>/<scope>/<message>
     type="${parts[0]}"
     scope="${parts[1]}"
     message="${parts[2]}"
+    message=$(echo "$message" | tr '-_' ' ')
     echo "$type($scope): $message"
     ;;
   *)
