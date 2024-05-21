@@ -36,3 +36,32 @@ resource "routeros_ip_pool" "lan" {
     "192.168.69.100-192.168.69.199"
   ]
 }
+
+
+## ================================================================================================
+## Bridge Ports
+## ================================================================================================
+resource "routeros_interface_bridge_port" "desktop" {
+  bridge    = routeros_interface_bridge.lan.name
+  interface = routeros_interface_ethernet.desktop.name
+  comment   = routeros_interface_ethernet.desktop.comment
+  pvid      = "1"
+}
+resource "routeros_interface_bridge_port" "access_point" {
+  bridge    = routeros_interface_bridge.lan.name
+  interface = routeros_interface_ethernet.access_point.name
+  comment   = routeros_interface_ethernet.access_point.comment
+  pvid      = "1"
+}
+resource "routeros_interface_bridge_port" "truenas" {
+  bridge    = routeros_interface_bridge.lan.name
+  interface = routeros_interface_ethernet.truenas.name
+  comment   = routeros_interface_ethernet.truenas.comment
+  pvid      = "1"
+}
+resource "routeros_interface_bridge_port" "home_assistant" {
+  bridge    = routeros_interface_bridge.lan.name
+  interface = routeros_interface_ethernet.home_assistant.name
+  comment   = routeros_interface_ethernet.home_assistant.comment
+  pvid      = "1"
+}
