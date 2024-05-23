@@ -1,32 +1,12 @@
-## ================================================================================================
-## Bridge Network Configuration
-## ================================================================================================
-resource "routeros_interface_bridge" "wan" {
-  name           = "brWAN"
-  vlan_filtering = false
-}
-
-resource "routeros_interface_bridge_port" "wan" {
-  bridge    = routeros_interface_bridge.wan.name
-  interface = routeros_interface_ethernet.wan.name
-  pvid      = "1"
+# Add wan port to public interface list
+resource "routeros_interface_list_member" "public_wan" {
+  list      = routeros_interface_list.public.name
+  interface = routeros_interface_ethernet.wan.factory_name
 }
 
 
-## ================================================================================================
-## DHCP Client Config
-## ================================================================================================
+# DHCP Client -> get IP from uplink
 resource "routeros_ip_dhcp_client" "wan" {
-  interface = routeros_interface_bridge.wan.name
+  interface = routeros_interface_ethernet.wan
   comment   = "WAN DHCP Client"
-}
-
-
-## ================================================================================================
-## NAT Configuration
-## ================================================================================================
-resource "routeros_ip_firewall_nat" "wan_default_nat" {
-  action        = "masquerade"
-  chain         = "srcnat"
-  out_interface = routeros_interface_bridge.wan.name
 }
