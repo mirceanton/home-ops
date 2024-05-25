@@ -5,6 +5,10 @@ resource "routeros_interface_list_member" "management_trusted" {
   list      = routeros_interface_list.private_trusted.name
   interface = routeros_interface_ethernet.management.factory_name
 }
+resource "routeros_interface_list_member" "management_internal" {
+  list      = routeros_interface_list.internal.name
+  interface = routeros_interface_ethernet.management.factory_name
+}
 
 resource "routeros_ip_address" "management" {
   interface = routeros_interface_ethernet.management.factory_name
@@ -24,7 +28,7 @@ resource "routeros_ip_pool" "management" {
 }
 resource "routeros_ip_dhcp_server_network" "management" {
   comment      = "Management DHCP Server Network"
-  domain       = "management.${locals.local_domain}"
+  domain       = "mgmt.${local.local_domain}"
   address      = "10.0.10.0/24"
   gateway      = "10.0.10.1"
   dns_server   = "10.0.10.1"
@@ -81,10 +85,9 @@ resource "routeros_ip_dhcp_server_lease" "mgmt_kube_03" {
 ## ================================================================================================
 ## DNS Records
 ## ================================================================================================
-# self
 resource "routeros_ip_dns_record" "mgmt_self" {
-  name    = "cisco-sg350.${routeros_ip_dhcp_server_network.management.domain}"
-  address = routeros_ip_dhcp_server_lease.mgmt_cisco_sg350.address
+  name    = "homebase.${routeros_ip_dhcp_server_network.management.domain}"
+  address = routeros_ip_dhcp_server_network.management.gateway
   type    = "A"
 }
 
@@ -112,12 +115,12 @@ resource "routeros_ip_dns_record" "mgmt_kube_01" {
   type    = "A"
 }
 resource "routeros_ip_dns_record" "mgmt_kube_02" {
-  name    = "mgmt_kube_02.${routeros_ip_dns_record.mgmt_kubernetes_api.name}"
+  name    = "kube_02.${routeros_ip_dns_record.mgmt_kubernetes_api.name}"
   address = routeros_ip_dhcp_server_lease.mgmt_kube_02.address
   type    = "A"
 }
 resource "routeros_ip_dns_record" "mgmt_kube_03" {
-  name    = "mgmt_kube_03.${routeros_ip_dns_record.mgmt_kubernetes_api.name}"
+  name    = "kube_03.${routeros_ip_dns_record.mgmt_kubernetes_api.name}"
   address = routeros_ip_dhcp_server_lease.mgmt_kube_03.address
   type    = "A"
 }

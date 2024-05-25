@@ -1,12 +1,12 @@
-# Add wan port to public interface list
-resource "routeros_interface_list_member" "public_wan" {
-  list      = routeros_interface_list.public.name
+# Add wan port to external interface list
+resource "routeros_interface_list_member" "external_wan" {
+  list      = routeros_interface_list.external.name
   interface = routeros_interface_ethernet.wan.factory_name
 }
 
 
 # DHCP Client -> get IP from uplink
 resource "routeros_ip_dhcp_client" "wan" {
-  interface = routeros_interface_ethernet.wan
+  interface = routeros_interface_ethernet.wan.factory_name
   comment   = "WAN DHCP Client"
 }

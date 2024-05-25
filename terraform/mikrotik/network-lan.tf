@@ -14,6 +14,10 @@ resource "routeros_interface_list_member" "lan_untrusted" {
   list      = routeros_interface_list.private_untrusted.name
   interface = routeros_interface_bridge.lan.name
 }
+resource "routeros_interface_list_member" "lan_internal" {
+  list      = routeros_interface_list.internal.name
+  interface = routeros_interface_bridge.lan.name
+}
 
 
 ## ================================================================================================
@@ -21,23 +25,23 @@ resource "routeros_interface_list_member" "lan_untrusted" {
 ## ================================================================================================
 resource "routeros_interface_bridge_port" "lan_desktop" {
   bridge    = routeros_interface_bridge.lan.name
-  interface = routeros_interface_ethernet.lan_desktop.name
-  comment   = routeros_interface_ethernet.lan_desktop.comment
+  interface = routeros_interface_ethernet.desktop.name
+  comment   = routeros_interface_ethernet.desktop.comment
   pvid      = "1"
 }
 resource "routeros_interface_bridge_port" "lan_access_point" {
   bridge    = routeros_interface_bridge.lan.name
-  interface = routeros_interface_ethernet.lan_access_point.name
-  comment   = routeros_interface_ethernet.lan_access_point.comment
+  interface = routeros_interface_ethernet.access_point.name
+  comment   = routeros_interface_ethernet.access_point.comment
   pvid      = "1"
 }
-resource "routeros_interface_bridge_port" "truenas" {
+resource "routeros_interface_bridge_port" "lan_truenas" {
   bridge    = routeros_interface_bridge.lan.name
   interface = routeros_interface_ethernet.truenas.name
   comment   = routeros_interface_ethernet.truenas.comment
   pvid      = "1"
 }
-resource "routeros_interface_bridge_port" "home_assistant" {
+resource "routeros_interface_bridge_port" "lan_home_assistant" {
   bridge    = routeros_interface_bridge.lan.name
   interface = routeros_interface_ethernet.home_assistant.name
   comment   = routeros_interface_ethernet.home_assistant.comment
@@ -56,7 +60,7 @@ resource "routeros_ip_pool" "lan" {
 }
 resource "routeros_ip_dhcp_server_network" "lan" {
   comment      = "LAN DHCP Server"
-  domain       = "home.${locals.local_domain}"
+  domain       = "home.${local.local_domain}"
   address      = "192.168.69.0/24"
   gateway      = "192.168.69.1"
   dns_server   = "192.168.69.1"
@@ -107,6 +111,12 @@ resource "routeros_ip_dhcp_server_lease" "lan_home_assistant" {
 ## ================================================================================================
 ## DNS Records
 ## ================================================================================================
+resource "routeros_ip_dns_record" "lan_self" {
+  name    = "homebase.${routeros_ip_dhcp_server_network.lan.domain}"
+  address = routeros_ip_dhcp_server_network.lan.gateway
+  type    = "A"
+}
+
 resource "routeros_ip_dns_record" "lan_desktop" {
   name    = "mpadsk.${routeros_ip_dhcp_server_network.lan.domain}"
   address = routeros_ip_dhcp_server_lease.lan_desktop.address
@@ -122,12 +132,7 @@ resource "routeros_ip_dns_record" "lan_home_assistant" {
   address = routeros_ip_dhcp_server_lease.lan_home_assistant.address
   type    = "A"
 }
-resource "routeros_ip_dns_record" "lan_home_assistant" {
-  name    = "homeassistant.${routeros_ip_dhcp_server_network.lan.domain}"
-  address = routeros_ip_dhcp_server_lease.lan_home_assistant.address
-  type    = "A"
-}
-resource "routeros_dns_record" "cname_record" {
+resource "routeros_ip_dns_record" "lan_home_assistant2" {
   name            = "homeassistant.${routeros_ip_dhcp_server_network.lan.domain}"
   cname           = "hass.${routeros_ip_dhcp_server_network.lan.domain}"
   type            = "CNAME"
