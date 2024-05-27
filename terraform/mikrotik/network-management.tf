@@ -60,6 +60,12 @@ resource "routeros_ip_dhcp_server_lease" "mgmt_odroid_c4" {
   server      = routeros_ip_dhcp_server.management.name
   comment     = "Odroid C4"
 }
+resource "routeros_ip_dhcp_server_lease" "mgmt_proxmox" {
+  address     = "10.0.10.99"
+  mac_address = "A8:A1:59:71:8B:B0"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "PVE"
+}
 resource "routeros_ip_dhcp_server_lease" "mgmt_kube_01" {
   address     = "10.0.10.51"
   mac_address = "74:56:3C:9E:BF:1A"
@@ -100,6 +106,11 @@ resource "routeros_ip_dns_record" "mgmt_cisco_sg350" {
 resource "routeros_ip_dns_record" "mgmt_odroid_c4" {
   name    = "odroid-c4.${routeros_ip_dhcp_server_network.management.domain}"
   address = routeros_ip_dhcp_server_lease.mgmt_odroid_c4.address
+  type    = "A"
+}
+resource "routeros_ip_dns_record" "mgmt_pve" {
+  name    = "proxmox.${routeros_ip_dhcp_server_network.management.domain}"
+  address = routeros_ip_dhcp_server_lease.mgmt_proxmox.address
   type    = "A"
 }
 
