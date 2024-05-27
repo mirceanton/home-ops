@@ -34,10 +34,10 @@ resource "routeros_interface_ethernet" "home_assistant" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "ether6" {
+resource "routeros_interface_ethernet" "proxmox_lan" {
   factory_name = "ether6"
   name         = "ether6"
-  comment      = "N/A"
+  comment      = "Proxmox LAN"
   disabled     = true
   l2mtu        = 1514
 }

@@ -47,6 +47,12 @@ resource "routeros_interface_bridge_port" "lan_home_assistant" {
   comment   = routeros_interface_ethernet.home_assistant.comment
   pvid      = "1"
 }
+resource "routeros_interface_bridge_port" "lan_proxmox" {
+  bridge    = routeros_interface_bridge.lan.name
+  interface = routeros_interface_ethernet.proxmox_lan
+  comment   = routeros_interface_ethernet.proxmox_lan
+  pvid      = "1"
+}
 
 
 
