@@ -38,7 +38,7 @@ resource "routeros_interface_ethernet" "proxmox_lan" {
   factory_name = "ether6"
   name         = "ether6"
   comment      = "Proxmox LAN"
-  disabled     = true
+  disabled     = false
   l2mtu        = 1514
 }
 
