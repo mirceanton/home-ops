@@ -77,7 +77,7 @@ resource "routeros_ip_dhcp_server" "lan" {
   interface          = routeros_interface_bridge.lan.name
   name               = "LAN-dhcp"
   client_mac_limit   = 1
-  conflict_detection = true
+  conflict_detection = false
 }
 
 
@@ -139,7 +139,7 @@ resource "routeros_ip_dns_record" "lan_home_assistant" {
   type    = "A"
 }
 resource "routeros_ip_dns_record" "lan_home_assistant2" {
-  name            = "homeassistant.${routeros_ip_dhcp_server_network.lan.domain}"
-  cname           = "hass.${routeros_ip_dhcp_server_network.lan.domain}"
-  type            = "CNAME"
+  name           = "hass.${routeros_ip_dhcp_server_network.lan.domain}"
+  cname          = "homeassistant.${routeros_ip_dhcp_server_network.lan.domain}"
+  type           = "CNAME"
 }
