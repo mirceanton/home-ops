@@ -32,57 +32,50 @@ resource "routeros_ip_firewall_filter" "rule_1" {
   place_before = routeros_ip_firewall_filter.rule_2.id
 }
 resource "routeros_ip_firewall_filter" "rule_2" {
-  comment="defconf: drop invalid"
-  chain = "input"
-  action="drop"
-  connection_state="invalid"
-  place_before = routeros_ip_firewall_filter.rule_3.id
-}
-resource "routeros_ip_firewall_filter" "rule_3" {
-  comment="block untrusted -> trusted"
-  chain = "forward"
-  action="drop"
-  src_address_list = "private_untrusted"
-  dst_address_list = "private_trusted"
-  place_before = routeros_ip_firewall_filter.rule_4.id
-}
-resource "routeros_ip_firewall_filter" "rule_4" {
-  chain = "input"
-  action="accept"
-  protocol="icmp"
-  comment="defconf: accept ICMP"
-  place_before = routeros_ip_firewall_filter.rule_5.id
-}
-resource "routeros_ip_firewall_filter" "rule_5" {
-  chain = "input"
-  action="drop"
-  in_interface_list="!internal"
-  comment="defconf: drop all not coming from internal networks"
-  place_before = routeros_ip_firewall_filter.rule_6.id
-}
-resource "routeros_ip_firewall_filter" "rule_6" {
   comment="defconf: fasttrack"
   chain = "forward"
   action="fasttrack-connection"
   connection_state="established,related"
   hw_offload = true
-  place_before = routeros_ip_firewall_filter.rule_7.id
+  place_before = routeros_ip_firewall_filter.rule_3.id
 }
-resource "routeros_ip_firewall_filter" "rule_7" {
+resource "routeros_ip_firewall_filter" "rule_3" {
   chain = "forward"
   action="accept"
   connection_state="established,related,untracked"
   comment="defconf: accept established,related, untracked"
-  place_before = routeros_ip_firewall_filter.rule_8.id
+  place_before = routeros_ip_firewall_filter.rule_4.id
 }
-resource "routeros_ip_firewall_filter" "rule_8" {
+resource "routeros_ip_firewall_filter" "rule_4" {
+  comment="defconf: drop invalid"
+  chain = "input"
+  action="drop"
+  connection_state="invalid"
+  place_before = routeros_ip_firewall_filter.rule_5.id
+}
+resource "routeros_ip_firewall_filter" "rule_5" {
+  comment="block untrusted -> trusted"
+  chain = "forward"
+  action="drop"
+  src_address_list = "private_untrusted"
+  dst_address_list = "private_trusted"
+  place_before = routeros_ip_firewall_filter.rule_6.id
+}
+resource "routeros_ip_firewall_filter" "rule_6" {
+  chain = "input"
+  action="drop"
+  in_interface_list="!internal"
+  comment="defconf: drop all not coming from internal networks"
+  place_before = routeros_ip_firewall_filter.rule_7.id
+}
+resource "routeros_ip_firewall_filter" "rule_7" {
   chain = "forward"
   action="drop"
   connection_state="invalid"
   comment="defconf: drop invalid"
-  place_before = routeros_ip_firewall_filter.rule_9.id
+  place_before = routeros_ip_firewall_filter.rule_8.id
 }
-resource "routeros_ip_firewall_filter" "rule_9" {
+resource "routeros_ip_firewall_filter" "rule_8" {
   chain = "forward"
   action="drop"
   connection_state="new"
