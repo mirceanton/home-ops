@@ -1,0 +1,26 @@
+---
+controller:
+  enabled: true
+  # -- Controller log level. Must be one of: `all`, `debug`, `info`, `warn`, `error` or `none`
+  logLevel: info
+  image:
+    repository: quay.io/metallb/controller
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+speaker:
+  enabled: true
+  # -- Speaker log level. Must be one of: `all`, `debug`, `info`, `warn`, `error` or `none`
+  logLevel: info
+  tolerateMaster: true
+  image:
+    repository: quay.io/metallb/speaker
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+crds:
+  enabled: true
