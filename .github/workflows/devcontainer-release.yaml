@@ -25,4 +25,5 @@ jobs:
     secrets: inherit
     with:
       image-name: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
+      context: .devcontainer
       platforms: linux/amd64
