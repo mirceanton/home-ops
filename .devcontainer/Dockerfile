@@ -19,34 +19,34 @@ ARG CILIUM_VERSION=v0.15.19
 ## ================================================================================================
 # "Build" stage for utilities with docker images already present
 ## ================================================================================================
-FROM registry.k8s.io/kustomize/kustomize:${KUSTOMIZE_VERSION} as kustomize
-FROM bitnami/kubectl:${KUBECTL_VERSION} as kubectl
-FROM ghcr.io/stern/stern:${STERN_VERSION} as stern
-FROM fluxcd/flux-cli:${FLUX_VERSION} as flux
-FROM derailed/k9s:${K9S_VERSION} as k9s
-FROM ghcr.io/getsops/sops:${SOPS_VERSION} as sops
-FROM hashicorp/terraform:${TERRAFORM_VERSION} as terraform
-FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} as talosctl
-FROM ghcr.io/budimanjojo/talhelper:${TALHELPER_VERSION} as talhelper
+FROM registry.k8s.io/kustomize/kustomize:${KUSTOMIZE_VERSION} AS kustomize
+FROM bitnami/kubectl:${KUBECTL_VERSION} AS kubectl
+FROM ghcr.io/stern/stern:${STERN_VERSION} AS stern
+FROM fluxcd/flux-cli:${FLUX_VERSION} AS flux
+FROM derailed/k9s:${K9S_VERSION} AS k9s
+FROM ghcr.io/getsops/sops:${SOPS_VERSION} AS sops
+FROM hashicorp/terraform:${TERRAFORM_VERSION} AS terraform
+FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} AS talosctl
+FROM ghcr.io/budimanjojo/talhelper:${TALHELPER_VERSION} AS talhelper
 
 
 ## ================================================================================================
 # Build stages for other utilities
 ## ================================================================================================
-FROM alpine as taskfile
+FROM alpine AS taskfile
 ARG TASKFILE_VERSION
 RUN wget https://github.com/go-task/task/releases/download/${TASKFILE_VERSION}/task_linux_amd64.tar.gz && tar xvf task_linux_amd64.tar.gz && mv task /bin/task
 RUN wget https://raw.githubusercontent.com/go-task/task/${TASKFILE_VERSION}/completion/bash/task.bash -O /task_completion.bash
 
-FROM alpine as age
+FROM alpine AS age
 ARG AGE_VERSION
 RUN wget https://github.com/FiloSottile/age/releases/download/${AGE_VERSION}/age-${AGE_VERSION}-linux-amd64.tar.gz -O age.tar.gz && tar xvf age.tar.gz && mv age/age /bin/age && mv age/age-keygen /bin/age-keygen
 
-FROM alpine as helm
+FROM alpine AS helm
 ARG HELM_VERSION
 RUN wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz && tar xvf helm-${HELM_VERSION}-linux-amd64.tar.gz && mv linux-amd64/helm /bin/helm
 
-FROM alpine as cilium
+FROM alpine AS cilium
 ARG CILIUM_VERSION
 RUN wget https://github.com/cilium/cilium-cli/releases/download/${CILIUM_VERSION}/cilium-linux-amd64.tar.gz -O cilium.tar.gz && tar xvf cilium.tar.gz && mv cilium /bin/cilium
 
