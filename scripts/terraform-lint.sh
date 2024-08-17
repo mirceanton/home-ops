@@ -16,18 +16,18 @@ verbose=false
 # Process command line options
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -q|--quiet)
-      quiet=true
-      shift
-      ;;
-    -v|--verbose)
-      verbose=true
-      shift
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
+  -q | --quiet)
+    quiet=true
+    shift
+    ;;
+  -v | --verbose)
+    verbose=true
+    shift
+    ;;
+  *)
+    echo "Unknown option: $1"
+    exit 1
+    ;;
   esac
 done
 
@@ -35,11 +35,11 @@ done
 for d in "$TF_DIR"/*; do
   if [ -d "$d" ]; then
     # Check if there are any terraform files inside the subdirectory
-    if ls "$d"/*.tf* 1> /dev/null 2>&1; then
-      pushd "$d" > /dev/null
+    if ls "$d"/*.tf* 1>/dev/null 2>&1; then
+      pushd "$d" >/dev/null
 
       # Check if terraform files are properly formatted
-      if terraform fmt -check 1> /dev/null 2>&1; then
+      if terraform fmt -check 1>/dev/null 2>&1; then
         if [ "$verbose" = true ]; then
           echo -e "${GREEN}Terraform files in '$d' are properly formatted.${RESET}"
         fi
@@ -47,10 +47,10 @@ for d in "$TF_DIR"/*; do
         if [ "$quiet" = false ]; then
           echo -e "${RED}Terraform files in '$d' are not properly formatted.${RESET}"
         fi
-        formatted=0  # update flag
+        formatted=0 # update flag
       fi
 
-      popd > /dev/null
+      popd >/dev/null
     else
       if [ "$verbose" = true ]; then
         echo -e "${GREY}No Terraform files found in '$d'. Skipping...${RESET}"

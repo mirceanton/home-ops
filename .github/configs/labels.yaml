@@ -3,11 +3,11 @@
 # Area labels - Pull Requests
 # =================================================================================================
 - name: area/github
-  color: "000000"  # github black
+  color: "000000" # github black
   description: Changes made in the github directory
 
 - name: area/kubernetes
-  color: "3970E4"  # kubernetes blue
+  color: "3970E4" # kubernetes blue
   description: Changes made in the kubernetes directory
 
 - name: area/talos
@@ -15,13 +15,12 @@
   description: Changes made in the kubernetes directory
 
 - name: area/scripts
-  color: "29BEB0"  # taskfile gray
+  color: "29BEB0" # taskfile gray
   description: Changes made in the scripts or .taskfiles directory
 
 - name: area/terraform
-  color: "844FBA"  # terraform purple
+  color: "844FBA" # terraform purple
   description: Changes made in the infrastructure directory
-
 
 # =================================================================================================
 # Cluster Labels - Issues
@@ -33,7 +32,6 @@
 - name: cluster/infra
   color: "aabbcc"
   description: Changes made to some config related to the infra-cluster.
-
 
 # =================================================================================================
 # App Labels - Issues

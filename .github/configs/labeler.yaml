@@ -31,7 +31,6 @@ area/terraform:
       - any-glob-to-any-file: "clusters/home-cluster/terraforms/**/*"
       - any-glob-to-any-file: "clusters/terraforms-cluster/terraforms/**/*"
 
-
 # =================================================================================================
 # Cluster Labels
 # =================================================================================================
