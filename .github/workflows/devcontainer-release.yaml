@@ -25,5 +25,6 @@ jobs:
     secrets: inherit
     with:
       image-name: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
-      file: .devcontainer/Dockerfile
+      dockerfile: .devcontainer/Dockerfile
+      custom-tag: ${{ inputs.custom-tag }}
       platforms: linux/amd64
