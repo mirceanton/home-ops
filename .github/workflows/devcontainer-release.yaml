@@ -24,5 +24,6 @@ jobs:
     uses: mirceanton/reusable-workflows/.github/workflows/docker-release.yaml@main
     secrets: inherit
     with:
-      image-name: ghcr.io/${{ github.repository.owner }}/gitops-toolkit
+      image-name: ghcr.io/${{ github.repository_owner }}/gitops-toolkit
+      file: .devcontainer/Dockerfile
       platforms: linux/amd64

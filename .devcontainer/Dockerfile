@@ -1,18 +1,18 @@
 ## ================================================================================================
 # Utility versions
 ## ================================================================================================
-ARG TERRAFORM_VERSION=1.8.3
+ARG TERRAFORM_VERSION=1.9.4
 ARG FLUX_VERSION=v2.3.0
 ARG SOPS_VERSION=v3.9.0-alpine
 ARG KUBECTL_VERSION=1.30.1
 ARG K9S_VERSION=v0.32.4
-ARG TALOSCTL_VERSION=v1.7.1
+ARG TALOSCTL_VERSION=v1.7.6
 ARG HELM_VERSION=v3.13.3
 ARG AGE_VERSION=v1.1.1
 ARG TASKFILE_VERSION=v3.32.0
-ARG TALHELPER_VERSION=v2.4.4
-ARG KUSTOMIZE_VERSION=v5.4.1
-ARG STERN_VERSION=1.29.0
+ARG KUSTOMIZE_VERSION=v5.4.3
+ARG TALHELPER_VERSION=v3.0.5
+ARG STERN_VERSION=1.30.0
 ARG CILIUM_VERSION=v0.15.19
 
 
