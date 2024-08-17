@@ -17,14 +17,9 @@ This is a monorepo for my homelab infrastructure automation. I try to adhere (as
 ### Directories
 
 ```sh
+📁 .devcontainer        # Holds the configuration files for the devcontainer setup
+📁 .github              # CI workflows and various tool configurations
 📁 .taskfiles           # Holds all of the "modules" for my Taskfile automation
-📁 docs                 # MkDocs Documentation Source
-📁 infra                # Infrastructure Automation, structured per-element
-└─📁 home-cluster       # Talos Configuration for the home cluster
-📁 kubernetes           # Kubernetes cluster(s) definitions
-├─📁 apps               # Apps deployed in the k8s cluster, grouped by namespce
-├─📁 bootstrap          # Minimal set of deployments to get the cluster up and running with Flux
-└─📁 cluster-config     # Flux variables for the cluster
 📁 scripts              # Various scripts used for automation, generally called within tasks
 ```
 

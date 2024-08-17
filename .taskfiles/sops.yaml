@@ -6,11 +6,9 @@ tasks:
   encrypt:
     desc: Encrypt all sops files in this repository.
     run: once
-    cmds:
-      - bash {{.ROOT_DIR}}/scripts/sops-encrypt-all.sh
+    cmd: bash {{.ROOT_DIR}}/scripts/sops-encrypt-all.sh
 
   decrypt:
     desc: Decrypt all sops files in this repository.
     run: once
-    cmds:
-      - bash {{.ROOT_DIR}}/scripts/sops-decrypt-all.sh {{.CLI_ARGS}}
+    cmd: bash {{.ROOT_DIR}}/scripts/sops-decrypt-all.sh {{.CLI_ARGS}}

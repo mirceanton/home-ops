@@ -6,15 +6,7 @@ includes:
   lint: .taskfiles/lint.yaml
   sops: .taskfiles/sops.yaml
 
-  home:
-    taskfile: .taskfiles/home-cluster.yaml
-    dir: clusters/home-cluster/bootstrap
-  infra:
-    taskfile: .taskfiles/infra-cluster.yaml
-    dir: clusters/infra-cluster/bootstrap
-
 tasks:
   default:
     silent: true
-    cmds:
-      - task -l
+    cmd: task -l

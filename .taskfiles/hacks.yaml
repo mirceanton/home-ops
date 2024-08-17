@@ -5,5 +5,4 @@ version: '3'
 tasks:
   delete-stuck-ns:
     desc: Delete all namespaces that are stuck in a terminating state.
-    cmds:
-      - bash scripts/delete-stuck-ns.sh
+    cmd: bash scripts/delete-stuck-ns.sh
