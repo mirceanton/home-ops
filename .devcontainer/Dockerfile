@@ -60,17 +60,17 @@ ENV EDITOR=vim
 RUN DEBIAN_FRONTEND=noninteractive \
 	apt-get update && apt-get upgrade -y && \
 	apt-get install -y \
-		sudo \
-		git \
-		bash-completion \
-		vim \
-		curl \
-		wget \
-		unzip \
-		htop \
-		net-tools \
-		iputils-ping \
-		dnsutils && \
+	sudo \
+	git \
+	bash-completion \
+	vim \
+	curl \
+	wget \
+	unzip \
+	htop \
+	net-tools \
+	iputils-ping \
+	dnsutils && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /etc/bash_completion.d
