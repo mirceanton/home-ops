@@ -16,7 +16,7 @@ commonLabels:
 helmCharts:
   - name: cilium
     repo: https://helm.cilium.io/
-    version: 1.15.5
+    version: 1.16.1
     releaseName: cilium
     includeCRDs: true
     namespace: cilium-system
