@@ -4,12 +4,7 @@ name: Lint Job
 
 on:
   workflow_dispatch: {}
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
+  pull_request: {}
 
 jobs:
   yamllint-job:
@@ -25,7 +20,7 @@ jobs:
         run: pip3 install yamllint
 
       - name: Run yamllint
-        run: yamllint -c .github/linters/yamllint.yaml .
+        run: yamllint -c .github/configs/yamllint.yaml .
 
   yaml-schema-job:
     if: ${{ !github.event.pull_request.draft }}
