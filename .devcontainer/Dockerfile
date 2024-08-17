@@ -3,7 +3,7 @@
 ## ================================================================================================
 ARG TERRAFORM_VERSION=1.9.4
 ARG FLUX_VERSION=v2.3.0
-ARG SOPS_VERSION=v3.8.1-alpine
+ARG SOPS_VERSION=v3.9.0-alpine
 ARG KUBECTL_VERSION=1.30.1
 ARG K9S_VERSION=v0.32.4
 ARG TALOSCTL_VERSION=v1.7.6
