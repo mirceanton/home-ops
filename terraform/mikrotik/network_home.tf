@@ -34,6 +34,14 @@ resource "routeros_interface_bridge_port" "home_switch" {
   comment   = routeros_interface_ethernet.home.comment
   pvid      = "1"
 }
+resource "routeros_interface_bridge_port" "home_home_assistant" {
+  bridge    = routeros_interface_bridge.home.name
+  interface = routeros_interface_ethernet.home_assistant.name
+  comment   = routeros_interface_ethernet.home_assistant.comment
+  pvid      = "1"
+}
+
+
 
 
 ## ================================================================================================
@@ -69,4 +77,10 @@ resource "routeros_ip_dhcp_server_lease" "home_NUC" {
   mac_address = "08:BF:B8:69:9D:C8"
   server      = routeros_ip_dhcp_server.home.name
   comment     = "Mircea Desktop PC"
+}
+resource "routeros_ip_dhcp_server_lease" "home_home_assistant" {
+  address     = "192.168.69.252"
+  mac_address = "00:1E:06:42:C7:73"
+  server      = routeros_ip_dhcp_server.home.name
+  comment     = "HomeAssistant"
 }
