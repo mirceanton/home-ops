@@ -1,6 +1,7 @@
 locals {
+  tls_service     = { "api-ssl" = 8729, "www-ssl" = 443 }
   disable_service = { "api" = 8728, "ftp" = 21, "telnet" = 23, "www" = 80, "ssh" = 22 }
-  enable_service  = { "winbox" = 8291, "api-ssl" = 8729, "www-ssl" = 443 }
+  enable_service  = { "winbox" = 8291 }
 }
 
 resource "routeros_ip_service" "disabled" {
@@ -54,4 +55,13 @@ resource "routeros_system_certificate" "webfig" {
   sign {
     ca = routeros_system_certificate.local-root-ca-cert.name
   }
+}
+
+resource "routeros_ip_service" "ssl" {
+  for_each    = local.tls_service
+  numbers     = each.key
+  port        = each.value
+  tls_version = "only-1.2"
+  disabled    = false
+  certificate = routeros_system_certificate.webfig.name
 }
