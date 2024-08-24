@@ -59,3 +59,14 @@ resource "routeros_ip_dhcp_server" "home" {
   client_mac_limit   = 1
   conflict_detection = false
 }
+
+
+## ================================================================================================
+## Static DHCP Leases
+## ================================================================================================
+resource "routeros_ip_dhcp_server_lease" "home_NUC" {
+  address     = "192.168.69.69"
+  mac_address = "08:BF:B8:69:9D:C8"
+  server      = routeros_ip_dhcp_server.home.name
+  comment     = "Mircea Desktop PC"
+}
