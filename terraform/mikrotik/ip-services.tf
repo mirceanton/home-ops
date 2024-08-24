@@ -18,3 +18,40 @@ resource "routeros_ip_service" "enabled" {
   disabled = false
 }
 
+
+import {
+  to = routeros_system_certificate.local-root-ca-cert
+  id = "*1"
+}
+resource "routeros_system_certificate" "local-root-ca-cert" {
+  name        = "local-root-cert"
+  common_name = "local-cert"
+  key_size    = "prime256v1"
+  key_usage   = ["key-cert-sign", "crl-sign"]
+  trusted     = true
+  sign {}
+}
+
+
+import {
+  to = routeros_system_certificate.webfig
+  id = "*2"
+}
+resource "routeros_system_certificate" "webfig" {
+  name        = "webfig"
+  common_name = "192.168.69.1"
+
+  country      = "RO"
+  locality     = "BUC"
+  organization = "MIRCEANTON"
+  unit         = "HOME"
+  days_valid   = 3650
+
+  key_usage = ["key-cert-sign", "crl-sign", "digital-signature", "key-agreement", "tls-server"]
+  key_size  = "prime256v1"
+
+  trusted = true
+  sign {
+    ca = routeros_system_certificate.local-root-ca-cert.name
+  }
+}
