@@ -11,3 +11,13 @@ resource "routeros_ip_address" "management" {
   network   = "10.0.0.0"
 }
 
+
+## ================================================================================================
+## Bridge Ports
+## ================================================================================================
+resource "routeros_interface_bridge_port" "management_switch" {
+  bridge    = routeros_interface_bridge.management.name
+  interface = routeros_interface_ethernet.management.name
+  comment   = routeros_interface_ethernet.management.comment
+  pvid      = "1"
+}
