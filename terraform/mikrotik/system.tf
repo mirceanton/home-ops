@@ -12,3 +12,7 @@ resource "routeros_dns" "dns-server" {
 resource "routeros_system_clock" "timezone" {
   time_zone_name = "Europe/Bucharest"
 }
+
+resource "routeros_tool_mac_server_winbox" "mac_server_winbox" {
+  allowed_interface_list = "all"
+}
