@@ -19,3 +19,6 @@ resource "routeros_tool_mac_server_winbox" "mac_server_winbox" {
 resource "routeros_tool_mac_server" "mac_server" {
   allowed_interface_list = "all"
 }
+resource "routeros_tool_bandwidth_server" "bandwidth_server" {
+  enabled = false
+}
