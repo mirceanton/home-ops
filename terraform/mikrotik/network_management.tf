@@ -21,3 +21,28 @@ resource "routeros_interface_bridge_port" "management_switch" {
   comment   = routeros_interface_ethernet.management.comment
   pvid      = "1"
 }
+
+
+## ================================================================================================
+## DHCP Server Config
+## ================================================================================================
+resource "routeros_ip_pool" "management" {
+  name    = "management-dhcp-pool"
+  comment = "Management DHCP Pool"
+  ranges  = ["10.0.0.100-10.0.0.199"]
+}
+resource "routeros_ip_dhcp_server_network" "management" {
+  comment    = "Management DHCP Network"
+  domain     = "management.${local.internal_domain}"
+  address    = "10.0.0.0/24"
+  gateway    = "10.0.0.1"
+  dns_server = ["10.0.0.1"]
+}
+resource "routeros_ip_dhcp_server" "management" {
+  name               = "management-dhcp"
+  comment            = "Management DHCP Server"
+  address_pool       = routeros_ip_pool.management.name
+  interface          = routeros_interface_bridge.management.name
+  client_mac_limit   = 1
+  conflict_detection = false
+}
