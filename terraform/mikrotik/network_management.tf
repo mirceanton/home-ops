@@ -21,6 +21,12 @@ resource "routeros_interface_bridge_port" "management_switch" {
   comment   = routeros_interface_ethernet.management.comment
   pvid      = "1"
 }
+resource "routeros_interface_bridge_port" "management_odroid_c4" {
+  bridge    = routeros_interface_bridge.management.name
+  interface = routeros_interface_ethernet.odroid_c4.name
+  comment   = routeros_interface_ethernet.odroid_c4.comment
+  pvid      = "1"
+}
 
 
 ## ================================================================================================
