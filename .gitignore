@@ -5,7 +5,6 @@ clusterconfig/
 # Kustomize helm charts
 charts/
 
-
 # Ignore Unencrypted Kubernetes Secrets
 *.secret.yaml
 
@@ -15,6 +14,8 @@ charts/
 terraform.tfstate
 terraform.tfstate.backup
 *.auto.tfvars
+.terraform.tfstate.lock.info
+.bitwarden/
 
 # Age Encryption key
 .age.key
