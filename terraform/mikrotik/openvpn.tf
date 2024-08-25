@@ -20,23 +20,6 @@ resource "routeros_system_certificate" "ovpn_server_crt" {
   }
 }
 
-resource "routeros_system_certificate" "ovpn_client_crt" {
-  name        = "OpenVPN-Client-Certificate"
-  common_name = "Mikrotik OpenVPN Client"
-  key_size    = "prime256v1"
-  key_usage   = ["tls-client"]
-  sign {
-    ca = routeros_system_certificate.ovpn_ca.name
-  }
-
-  country      = "RO"
-  state        = "B"
-  locality     = "BUC"
-  organization = "MIRCEANTON"
-  unit         = "HOME"
-  days_valid   = 3650 # 10 years
-}
-
 
 # =================================================================================================
 # IP Pool
@@ -94,4 +77,24 @@ resource "routeros_ip_firewall_filter" "ovpn_pass" {
 
   log        = true
   log_prefix = "ovpn_"
+}
+
+
+# =================================================================================================
+# OpenVPN Users
+# =================================================================================================
+locals {
+  vpn_users = [
+    "mirceanton", "bomkii", "kookmuc", "gradcristi", "gradadi"
+  ]
+}
+
+module "vpn_user" {
+  source   = "./module/vpn_user"
+  for_each = toset(local.vpn_users)
+
+  username                    = each.key
+  vpn_profile                 = routeros_ppp_profile.ovpn.name
+  bitwarden_organization_name = "HomeLab"
+  openvpn_ca_certificate_name = routeros_system_certificate.ovpn_ca.name
 }
