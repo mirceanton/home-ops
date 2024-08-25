@@ -5,24 +5,27 @@ resource "routeros_interface_ethernet" "wan" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "home" {
+resource "routeros_interface_ethernet" "ether2" {
   factory_name = "ether2"
   name         = "ether2"
-  comment      = "Home Switch"
+  comment      = "N/A"
+  disabled     = true
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "management" {
+resource "routeros_interface_ethernet" "ether3" {
   factory_name = "ether3"
   name         = "ether3"
-  comment      = "Management Switch"
+  comment      = "N/A"
+  disabled     = true
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "cluster" {
+resource "routeros_interface_ethernet" "ether4" {
   factory_name = "ether4"
   name         = "ether4"
-  comment      = "Cluster Switch"
+  comment      = "N/A"
+  disabled     = true
   l2mtu        = 1514
 }
 
@@ -34,26 +37,26 @@ resource "routeros_interface_ethernet" "ether5" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "access_point" {
+resource "routeros_interface_ethernet" "cluster" {
   factory_name = "ether6"
   name         = "ether6"
-  comment      = "Access Point"
+  comment      = "Cluster Switch"
   disabled     = false
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "home_assistant" {
+resource "routeros_interface_ethernet" "home" {
   factory_name = "ether7"
   name         = "ether7"
-  comment      = "Home Assistant"
+  comment      = "Home Switch"
   disabled     = false
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "odroid_c4" {
+resource "routeros_interface_ethernet" "management" {
   factory_name = "ether8"
   name         = "ether8"
-  comment      = "Odroid C4 - Terraform"
+  comment      = "Management Switch"
   l2mtu        = 1514
 }
 

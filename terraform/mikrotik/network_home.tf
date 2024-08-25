@@ -34,12 +34,6 @@ resource "routeros_interface_bridge_port" "home_switch" {
   comment   = routeros_interface_ethernet.home.comment
   pvid      = "1"
 }
-resource "routeros_interface_bridge_port" "home_home_assistant" {
-  bridge    = routeros_interface_bridge.home.name
-  interface = routeros_interface_ethernet.home_assistant.name
-  comment   = routeros_interface_ethernet.home_assistant.comment
-  pvid      = "1"
-}
 
 
 ## ================================================================================================
@@ -70,6 +64,12 @@ resource "routeros_ip_dhcp_server" "home" {
 ## ================================================================================================
 ## Static DHCP Leases
 ## ================================================================================================
+resource "routeros_ip_dhcp_server_lease" "home_switch" {
+  address     = "192.168.69.2"
+  mac_address = "00:EE:AB:28:1C:81"
+  server      = routeros_ip_dhcp_server.home.name
+  comment     = "Cisco SG350-10"
+}
 resource "routeros_ip_dhcp_server_lease" "home_NUC" {
   address     = "192.168.69.69"
   mac_address = "08:BF:B8:69:9D:C8"

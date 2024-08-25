@@ -21,12 +21,6 @@ resource "routeros_interface_bridge_port" "management_switch" {
   comment   = routeros_interface_ethernet.management.comment
   pvid      = "1"
 }
-resource "routeros_interface_bridge_port" "management_odroid_c4" {
-  bridge    = routeros_interface_bridge.management.name
-  interface = routeros_interface_ethernet.odroid_c4.name
-  comment   = routeros_interface_ethernet.odroid_c4.comment
-  pvid      = "1"
-}
 
 
 ## ================================================================================================
@@ -57,13 +51,48 @@ resource "routeros_ip_dhcp_server" "management" {
 ## ================================================================================================
 ## Static DHCP Leases
 ## ================================================================================================
-# TODO static lease Odroid C4
-# TODO static lease HKC 01
-# TODO static lease HKC 02
-# TODO static lease HKC 03
-# TODO static lease TrueNAS
-# TODO static lease Proxmox
-# TODO static lease Mikrotik AP
+resource "routeros_ip_dhcp_server_lease" "management_odroid_c4" {
+  address     = "10.0.0.11"
+  mac_address = "00:1E:06:48:6A:28"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "Odroid C4"
+}
+resource "routeros_ip_dhcp_server_lease" "management_hkc_01" {
+  address     = "10.0.0.21"
+  mac_address = "74:56:3C:99:5B:CE"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "HKC-01"
+}
+resource "routeros_ip_dhcp_server_lease" "management_hkc_02" {
+  address     = "10.0.0.22"
+  mac_address = "74:56:3C:B2:E5:A8"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "HKC 02"
+}
+resource "routeros_ip_dhcp_server_lease" "management_hkc_03" {
+  address     = "10.0.0.23"
+  mac_address = "74:56:3C:9E:BF:1A"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "HKC 03"
+}
+resource "routeros_ip_dhcp_server_lease" "management_truenas" {
+  address     = "10.0.0.254"
+  mac_address = "E0:D5:5E:24:A1:E4"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "TrueNAS"
+}
+resource "routeros_ip_dhcp_server_lease" "management_proxmox" {
+  address     = "10.0.0.250"
+  mac_address = "A8:A1:59:71:8B:B0"
+  server      = routeros_ip_dhcp_server.management.name
+  comment     = "Proxmox"
+}
+# resource "routeros_ip_dhcp_server_lease" "management_ap" {
+#   address     = "10.0.0.5"
+#   mac_address = ""
+#   server      = routeros_ip_dhcp_server.management.name
+#   comment     = "Mikrotik cAP AX"
+# }
 
 
 ## ================================================================================================
