@@ -38,9 +38,15 @@ resource "random_password" "certificate_secret" {
   special = true
 }
 # TODO: automate certificate export
-# TODO: automate certificate download to tf runner
+# https://help.mikrotik.com/docs/display/ROS/Certificates#Certificates-ExportCertificate
+# /certificate export-certificate ServerCA export-passphrase=yourpassphrase
+
+# TODO: automate certificate download to tf runner (SCP??)
 # TODO: automate certificate export to bitwarden
+
 # TODO: automate ovpn config export
+# https://help.mikrotik.com/docs/display/ROS/OpenVPN
+# /interface/ovpn-server/server/export-client-configuration ca-certificate=myCa.crt client-certificate=client1.crt client-cert-key=client1.key server-address=192.168.88.1
 
 
 ## ================================================================================================
