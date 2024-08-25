@@ -38,7 +38,7 @@ Next, create another bridge for our LAN connection, assign an IP to it and add o
 In order to get internet connectivity, we need to configure NAT:
 
 ```bash
-/ip/firewall/nat add chain=srcnat out-interface=brWAN action=masquerade
+/ip/firewall/nat add chain=srcnat out-interface=brWAN action=masquerade src-address=192.168.69.0/24
 ```
 
 For terraform to be able to connecto to our router and manage it, we need to create a self signed certificate and enable the HTTPS service:
