@@ -50,3 +50,12 @@ variable "bitwarden_master_password" {
   description = "The master password to authenticate against the BitWarden server."
   sensitive   = true
 }
+
+## ================================================================================================
+## Cloudflare Variables
+## ================================================================================================
+variable "cloudflare_token" {
+  type        = string
+  description = "The token to authenticate against the Cloudflare API."
+  sensitive   = true
+}
