@@ -1,5 +1,9 @@
 # Mikrotik RB5009 Terraform Automation
 
+## Requirements
+
+- bitwarden CLI: <https://github.com/bitwarden/clients>
+
 ## Getting Started
 
 ### Step 1. Clearing out all Default Configuration
