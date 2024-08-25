@@ -46,3 +46,13 @@ resource "routeros_ip_dhcp_server" "cluster" {
   client_mac_limit   = 1
   conflict_detection = false
 }
+
+
+## ================================================================================================
+## Static DHCP Leases
+## ================================================================================================
+# TODO static lease HKC 01
+# TODO static lease HKC 02
+# TODO static lease HKC 03
+# TODO static lease TrueNAS
+# TODO static lease Proxmox

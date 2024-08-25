@@ -52,3 +52,15 @@ resource "routeros_ip_dhcp_server" "management" {
   client_mac_limit   = 1
   conflict_detection = false
 }
+
+
+## ================================================================================================
+## Static DHCP Leases
+## ================================================================================================
+# TODO static lease Odroid C4
+# TODO static lease HKC 01
+# TODO static lease HKC 02
+# TODO static lease HKC 03
+# TODO static lease TrueNAS
+# TODO static lease Proxmox
+# TODO static lease Mikrotik AP

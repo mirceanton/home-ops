@@ -42,8 +42,6 @@ resource "routeros_interface_bridge_port" "home_home_assistant" {
 }
 
 
-
-
 ## ================================================================================================
 ## DHCP Server Config
 ## ================================================================================================
@@ -84,3 +82,6 @@ resource "routeros_ip_dhcp_server_lease" "home_home_assistant" {
   server      = routeros_ip_dhcp_server.home.name
   comment     = "HomeAssistant"
 }
+# TODO static lease Gaming PC
+# TODO static lease TrueNAS
+# TODO static lease MikroTik AP
