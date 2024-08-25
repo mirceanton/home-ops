@@ -85,3 +85,19 @@ resource "routeros_ip_dhcp_server_lease" "home_home_assistant" {
 # TODO static lease Gaming PC
 # TODO static lease TrueNAS
 # TODO static lease MikroTik AP
+
+
+## ================================================================================================
+## NAT Rules
+## ================================================================================================
+import {
+  to = routeros_ip_firewall_nat.home
+  id = "*8"
+}
+resource "routeros_ip_firewall_nat" "home" {
+  comment       = "NAT Home Traffic"
+  chain         = "srcnat"
+  out_interface = routeros_interface_bridge.wan.name
+  action        = "masquerade"
+  src_address   = "${routeros_ip_address.home.network}/24"
+}
