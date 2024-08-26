@@ -78,6 +78,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip && \
+	pip install -r /tmp/requirements.txt
+
 # Enable passwordless sudo :kek:
 RUN echo 'vscode ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
