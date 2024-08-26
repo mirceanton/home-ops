@@ -6,7 +6,9 @@
 	"containerEnv": {
 		"SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/.age.key",
 		"KUBECONFIG": "/home/vscode/.kube/config",
-		"KUBECONFIG_DIR": "/home/vscode/.kube/configs/"
+		"KUBECONFIG_DIR": "/home/vscode/.kube/configs/",
+		"TALOSCONFIG": "/home/vscode/.talos/config",
+		"TALOSCONFIG_DIR": "/home/vscode/.talos/configs/"
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
