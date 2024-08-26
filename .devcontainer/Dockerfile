@@ -58,7 +58,7 @@ RUN wget https://github.com/cilium/cilium-cli/releases/download/${CILIUM_VERSION
 ## ================================================================================================
 ## Main image
 ## ================================================================================================
-FROM mcr.microsoft.com/devcontainers/base:bullseye AS workspace
+FROM mcr.microsoft.com/devcontainers/python:3.12-bullseye AS workspace
 ENV EDITOR=vim
 
 RUN DEBIAN_FRONTEND=noninteractive \
@@ -77,6 +77,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
 	dnsutils && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade pip && \
+	pip install -r /tmp/requirements.txt
 
 # Enable passwordless sudo :kek:
 RUN echo 'vscode ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
