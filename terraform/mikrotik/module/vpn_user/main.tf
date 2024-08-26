@@ -52,18 +52,16 @@ resource "random_password" "certificate_secret" {
 ## ================================================================================================
 ## BitWarden Resources
 ## ================================================================================================
-data "bitwarden_organization" "homelab" {
-  search = var.bitwarden_organization_name
-}
-
 data "bitwarden_org_collection" "user_collection" {
-  organization_id = data.bitwarden_organization.homelab.id
-  search          = "Users/${var.username}"
+  organization_id = var.bitwarden_organization_id
+  search          = var.username
 }
 
 resource "bitwarden_item_login" "vpn_credentials" {
-  organization_id = data.bitwarden_organization.homelab.id
-  collection_ids  = [data.bitwarden_org_collection.user_collection.id]
+  organization_id = var.bitwarden_organization_id
+  collection_ids = [
+    data.bitwarden_org_collection.user_collection.id
+  ]
 
   name     = "OpenVPN"
   username = var.username

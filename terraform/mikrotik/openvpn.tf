@@ -97,6 +97,6 @@ module "vpn_user" {
 
   username                    = each.key
   vpn_profile                 = routeros_ppp_profile.ovpn.name
-  bitwarden_organization_name = "HomeLab"
+  bitwarden_organization_id   = "82cb7c0d-45c3-494c-81cf-b1d701208c8d"
   openvpn_ca_certificate_name = routeros_system_certificate.ovpn_ca.name
 }

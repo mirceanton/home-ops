@@ -8,8 +8,8 @@ variable "vpn_profile" {
   type        = string
 }
 
-variable "bitwarden_organization_name" {
-  description = "The name of the BitWarden organization to store the VPN user credentials"
+variable "bitwarden_organization_id" {
+  description = "The ID of the BitWarden organization to store the VPN user credentials"
   type        = string
 }
 
