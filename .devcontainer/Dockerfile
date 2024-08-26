@@ -14,6 +14,7 @@ ARG KUSTOMIZE_VERSION=v5.4.3
 ARG TALHELPER_VERSION=v3.0.5
 ARG STERN_VERSION=1.30.0
 ARG CILIUM_VERSION=v0.15.19
+ARG KUBESWITCHER_VERSION=v1.0.2
 
 
 ## ================================================================================================
@@ -28,6 +29,7 @@ FROM ghcr.io/getsops/sops:${SOPS_VERSION} AS sops
 FROM hashicorp/terraform:${TERRAFORM_VERSION} AS terraform
 FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} AS talosctl
 FROM ghcr.io/budimanjojo/talhelper:${TALHELPER_VERSION} AS talhelper
+FROM ghcr.io/mirceanton/kube-switcher:${KUBESWITCHER_VERSION} AS kubeswitcher
 
 
 ## ================================================================================================
@@ -73,7 +75,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
 	dnsutils && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
-RUN mkdir -p /etc/bash_completion.d
 
 # Enable passwordless sudo :kek:
 RUN echo 'vscode ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -115,6 +116,10 @@ COPY --from=taskfile /task_completion.bash /etc/bash_completion.d/task.bash
 # Install kubectl and set up bash completion
 COPY --from=kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 RUN kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl.bash > /dev/null
+
+# Install kubeswitcher as a kubectl plugin
+COPY --from=kubeswitcher /kube-switcher /usr/local/bin/kubectl-switch
+RUN kubectl switch completion bash | sudo tee /etc/bash_completion.d/kubectl-switch.bash > /dev/null
 
 # Install helm and set up bash completion
 COPY --from=helm /bin/helm /usr/local/bin/helm
