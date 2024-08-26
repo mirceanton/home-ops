@@ -2,9 +2,11 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
 {
 	"name": "HomeOps",
-	"image": "ghcr.io/mircea-pavel-anton/gitops-toolkit:latest",
+	"image": "ghcr.io/mirceanton/gitops-toolkit:latest",
 	"containerEnv": {
-		"SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/.age.key"
+		"SOPS_AGE_KEY_FILE": "${containerWorkspaceFolder}/.age.key",
+		"KUBECONFIG": "/home/vscode/.kube/config",
+		"KUBECONFIG_DIR": "/home/vscode/.kube/configs/"
 	},
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
@@ -65,7 +67,7 @@
 					// K8S Objects
 					"*.secret.yaml": "Key",
 					"*.reflected-secret.yaml": "Key",
-					"*.configmap.yaml": "Settings",
+					"*.configmap.yaml": "Settings"
 				},
 				"material-icon-theme.folders.associations": {
 					// Reference: https://raw.githubusercontent.com/PKief/vscode-material-icon-theme/main/images/folderIcons.png
@@ -98,7 +100,7 @@
 					"tf-controller": "Controller",
 					"cloudflare": "Global",
 					"keycloak": "Secure",
-					"rbac": "Admin",
+					"rbac": "Admin"
 				},
 				"[json]": {
 					"editor.defaultFormatter": "vscode.json-language-features",
