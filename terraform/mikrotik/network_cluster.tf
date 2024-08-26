@@ -3,7 +3,7 @@
 ## ================================================================================================
 resource "routeros_interface_bridge" "cluster" {
   name           = "brCLUSTER"
-  vlan_filtering = true
+  vlan_filtering = false
 }
 resource "routeros_ip_address" "cluster" {
   address   = "10.0.10.1/24"

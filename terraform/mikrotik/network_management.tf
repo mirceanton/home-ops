@@ -3,7 +3,7 @@
 ## ================================================================================================
 resource "routeros_interface_bridge" "management" {
   name           = "brMANAGEMENT"
-  vlan_filtering = true
+  vlan_filtering = false
 }
 resource "routeros_ip_address" "management" {
   address   = "10.0.0.1/24"

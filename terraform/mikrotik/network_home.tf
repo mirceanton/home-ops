@@ -1,18 +1,9 @@
 ## ================================================================================================
 ## Bridge Network Configuration
 ## ================================================================================================
-import {
-  to = routeros_interface_bridge.home
-  id = "*C"
-}
 resource "routeros_interface_bridge" "home" {
   name           = "brHOME"
-  vlan_filtering = true
-}
-
-import {
-  to = routeros_ip_address.home
-  id = "*2"
+  vlan_filtering = false
 }
 resource "routeros_ip_address" "home" {
   address   = "192.168.69.1/24"
@@ -24,10 +15,6 @@ resource "routeros_ip_address" "home" {
 ## ================================================================================================
 ## Bridge Ports
 ## ================================================================================================
-import {
-  to = routeros_interface_bridge_port.home_switch
-  id = "*1"
-}
 resource "routeros_interface_bridge_port" "home_switch" {
   bridge    = routeros_interface_bridge.home.name
   interface = routeros_interface_ethernet.home.name
@@ -90,10 +77,6 @@ resource "routeros_ip_dhcp_server_lease" "home_home_assistant" {
 ## ================================================================================================
 ## NAT Rules
 ## ================================================================================================
-import {
-  to = routeros_ip_firewall_nat.home
-  id = "*8"
-}
 resource "routeros_ip_firewall_nat" "home" {
   comment       = "NAT Home Traffic"
   chain         = "srcnat"

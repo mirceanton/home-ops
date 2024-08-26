@@ -4,6 +4,9 @@ locals {
   enable_service  = { "winbox" = 8291 }
 }
 
+## ================================================================================================
+## Enable/Disable Services
+## ================================================================================================
 resource "routeros_ip_service" "disabled" {
   for_each = local.disable_service
   numbers  = each.key
@@ -20,10 +23,9 @@ resource "routeros_ip_service" "enabled" {
 }
 
 
-import {
-  to = routeros_system_certificate.local-root-ca-cert
-  id = "*1"
-}
+## ================================================================================================
+## Certificate setup for TLS Services
+## ================================================================================================
 resource "routeros_system_certificate" "local-root-ca-cert" {
   name        = "local-root-cert"
   common_name = "local-cert"
@@ -31,12 +33,12 @@ resource "routeros_system_certificate" "local-root-ca-cert" {
   key_usage   = ["key-cert-sign", "crl-sign"]
   trusted     = true
   sign {}
-}
 
-
-import {
-  to = routeros_system_certificate.webfig
-  id = "*2"
+  lifecycle {
+    ignore_changes = [
+      sign
+    ]
+  }
 }
 resource "routeros_system_certificate" "webfig" {
   name        = "webfig"
@@ -55,8 +57,18 @@ resource "routeros_system_certificate" "webfig" {
   sign {
     ca = routeros_system_certificate.local-root-ca-cert.name
   }
+
+  lifecycle {
+    ignore_changes = [
+      sign
+    ]
+  }
 }
 
+
+## ================================================================================================
+## TLS Services
+## ================================================================================================
 resource "routeros_ip_service" "ssl" {
   for_each    = local.tls_service
   numbers     = each.key
