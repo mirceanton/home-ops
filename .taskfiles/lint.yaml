@@ -10,7 +10,7 @@ tasks:
 
   yaml:
     desc: Run yamllint using the custom config.
-    cmd: yamllint -c .github/linters/yamllint.yaml .
+    cmd: yamllint --config-file=.github/configs/yamllint.yaml .
 
   terraform:
     desc: Validate all terraform files for proper formatting.
