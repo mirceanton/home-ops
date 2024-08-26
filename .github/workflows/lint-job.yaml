@@ -3,34 +3,91 @@
 name: Lint Job
 
 on:
-  workflow_dispatch: {}
   pull_request: {}
+  workflow_dispatch: {}
+
+env:
+  # Check trigger type
+  IS_MANUAL_TRIGGER: ${{ github.event_name == 'workflow_dispatch' }}
+  IS_PR_DRAFT: ${{ github.event_name == 'pull_request' && github.event.pull_request.draft }}
+
+  # Check for file changes in the pull request
+  YAML_CHANGES: ${{ contains(github.event.pull_request.changed_files.*, '.yml') || contains(github.event.pull_request.changed_files.*, '.yaml') }}
+  SH_CHANGES: ${{ contains(github.event.pull_request.changed_files.*, '.sh') }}
+  MD_CHANGES: ${{ contains(github.event.pull_request.changed_files.*, '.md') }}
+  TF_CHANGES: ${{ contains(github.event.pull_request.changed_files.*, '.tf') }}
 
 jobs:
-  yamllint-job:
-    if: ${{ !github.event.pull_request.draft }}
+  yamllint:
+    name: Lint YAML files
     runs-on: ubuntu-latest
-    container:
-      image: python:3.12.3-alpine3.18@sha256:24680ddf8422899b24756d62b31eb5de782fbb42e9c2bb1c70f1f55fcf891721
+    if: env.IS_MANUAL_TRIGGER == 'true' || (env.YAML_CHANGES == 'true' && env.IS_PR_DRAFT == 'false')
     steps:
-      - name: Checkout the Repository
+      - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Install YAML Lint
-        run: pip3 install yamllint
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: "3.12"
+
+      - name: Install yamllint
+        run: pip install yamllint
 
       - name: Run yamllint
         run: yamllint -c .github/configs/yamllint.yaml .
 
-  terraform-lint-job:
-    if: ${{ !github.event.pull_request.draft }}
+  shellcheck:
+    name: Lint Bash scripts
     runs-on: ubuntu-latest
+    if: env.IS_MANUAL_TRIGGER == 'true' || (env.SH_CHANGES == 'true' && env.IS_PR_DRAFT == 'false')
     steps:
-      - name: Checkout the Repository
+      - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
 
-      - name: Run checker script
-        run: bash scripts/terraform-lint.sh
+      - name: Run ShellCheck
+        run: find . -name "*.sh" -exec shellcheck {} +
+
+  markdownlint:
+    name: Lint Markdown files
+    runs-on: ubuntu-latest
+    if: env.IS_MANUAL_TRIGGER == 'true' || (env.MD_CHANGES == 'true' && env.IS_PR_DRAFT == 'false')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version: "20"
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        run: markdownlint '**/*.md'
+
+  tflint:
+    name: Lint Terraform files
+    runs-on: ubuntu-latest
+    if: env.IS_MANUAL_TRIGGER == 'true' || (env.TF_CHANGES == 'true' && env.IS_PR_DRAFT == 'false')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: terraform-linters/setup-tflint@v4
+        name: Setup TFLint
+        with:
+          tflint_version: v0.53.0
+
+      - name: Show TFLint version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format=compact --recursive
