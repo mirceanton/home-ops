@@ -35,10 +35,20 @@ jobs:
               - '**/*.yaml'
             bash:
               - '**/*.sh'
+              - '**/*.bash'
             markdown:
               - '**/*.md'
+              - '**/*.markdown'
             terraform:
               - '**/*.tf'
+              - '**/*.tfvars'
+
+      - name: Show Paths
+        run: |
+          echo "yaml=${{ steps.filter.outputs.yaml }}"
+          echo "bash=${{ steps.filter.outputs.bash }}"
+          echo "markdown=${{ steps.filter.outputs.markdown }}"
+          echo "terraform=${{ steps.filter.outputs.terraform }}"
 
   yamllint:
     runs-on: ubuntu-latest
