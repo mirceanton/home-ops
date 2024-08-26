@@ -15,6 +15,10 @@ on:
 permissions:
   issues: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   label-sync:
     uses: mirceanton/reusable-workflows/.github/workflows/meta-label-sync.yaml@main

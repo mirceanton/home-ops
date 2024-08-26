@@ -3,34 +3,127 @@
 name: Lint Job
 
 on:
-  workflow_dispatch: {}
   pull_request: {}
+  workflow_dispatch:
+    inputs:
+      run-all:
+        description: "Whether to run all linters or only the ones that have changes"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  yamllint-job:
-    if: ${{ !github.event.pull_request.draft }}
+  paths-filter:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.12.3-alpine3.18@sha256:24680ddf8422899b24756d62b31eb5de782fbb42e9c2bb1c70f1f55fcf891721
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && !github.event.pull_request.draft)
+    outputs:
+      yaml: ${{ steps.filter.outputs.yaml }}
+      bash: ${{ steps.filter.outputs.bash }}
+      markdown: ${{ steps.filter.outputs.markdown }}
+      terraform: ${{ steps.filter.outputs.terraform }}
     steps:
-      - name: Checkout the Repository
+      - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Install YAML Lint
-        run: pip3 install yamllint
+      - name: Scan Paths
+        uses: dorny/paths-filter@v3.0.2
+        id: filter
+        with:
+          filters: |
+            yaml:
+              - '**/*.yml'
+              - '**/*.yaml'
+            bash:
+              - '**/*.sh'
+              - '**/*.bash'
+            markdown:
+              - '**/*.md'
+              - '**/*.markdown'
+            terraform:
+              - '**/*.tf'
+              - '**/*.tfvars'
+
+      - name: Show Paths
+        run: |
+          echo "yaml=${{ steps.filter.outputs.yaml }}"
+          echo "bash=${{ steps.filter.outputs.bash }}"
+          echo "markdown=${{ steps.filter.outputs.markdown }}"
+          echo "terraform=${{ steps.filter.outputs.terraform }}"
+
+  yamllint:
+    runs-on: ubuntu-latest
+    needs: [paths-filter]
+    if: needs.paths-filter.outputs.yaml == 'true' || github.event.inputs.run-all == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: "3.12"
+
+      - name: Install yamllint
+        run: pip install yamllint
 
       - name: Run yamllint
         run: yamllint -c .github/configs/yamllint.yaml .
 
-  terraform-lint-job:
-    if: ${{ !github.event.pull_request.draft }}
+  shellcheck:
     runs-on: ubuntu-latest
+    needs: [paths-filter]
+    if: needs.paths-filter.outputs.bash == 'true' || github.event.inputs.run-all == true
     steps:
-      - name: Checkout the Repository
+      - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+      - name: Install ShellCheck
+        run: sudo apt-get install -y shellcheck
 
-      - name: Run checker script
-        run: bash scripts/terraform-lint.sh
+      - name: Run ShellCheck
+        run: find . -name "*.sh" -exec shellcheck {} +
+
+  markdownlint:
+    runs-on: ubuntu-latest
+    needs: [paths-filter]
+    if: needs.paths-filter.outputs.markdown == 'true' || github.event.inputs.run-all == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version: "20"
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        run: markdownlint '**/*.md'
+
+  tflint:
+    runs-on: ubuntu-latest
+    needs: [paths-filter]
+    if: needs.paths-filter.outputs.terraform == 'true' || github.event.inputs.run-all == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: terraform-linters/setup-tflint@v4
+        name: Setup TFLint
+        with:
+          tflint_version: v0.53.0
+
+      - name: Show TFLint version
+        run: tflint --version
+
+      - name: Init TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format=compact --recursive
