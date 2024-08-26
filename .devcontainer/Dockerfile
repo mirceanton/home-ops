@@ -15,6 +15,7 @@ ARG TALHELPER_VERSION=v3.0.5
 ARG STERN_VERSION=1.30.0
 ARG CILIUM_VERSION=v0.15.19
 ARG KUBESWITCHER_VERSION=v1.0.2
+ARG TALSWITCHER_VERSION=v1.1.0
 
 
 ## ================================================================================================
@@ -30,6 +31,7 @@ FROM hashicorp/terraform:${TERRAFORM_VERSION} AS terraform
 FROM ghcr.io/siderolabs/talosctl:${TALOSCTL_VERSION} AS talosctl
 FROM ghcr.io/budimanjojo/talhelper:${TALHELPER_VERSION} AS talhelper
 FROM ghcr.io/mirceanton/kube-switcher:${KUBESWITCHER_VERSION} AS kubeswitcher
+FROM ghcr.io/mirceanton/talswitcher:${TALSWITCHER_VERSION} AS talswitcher
 
 
 ## ================================================================================================
@@ -108,6 +110,10 @@ RUN talosctl completion bash | sudo tee /etc/bash_completion.d/talosctl.bash > /
 # Install talhelper and set up bash completion
 COPY --from=talhelper /usr/local/bin/talhelper /usr/local/bin/talhelper
 RUN talhelper completion bash | sudo tee /etc/bash_completion.d/talhelper.bash > /dev/null
+
+# Install talswitcher and set up bash completion
+COPY --from=talswitcher /talswitcher /usr/local/bin/talswitcher
+RUN talswitcher completion bash | sudo tee /etc/bash_completion.d/talswitcher.bash > /dev/null
 
 # Install taskfile and set up bash completion
 COPY --from=taskfile /bin/task /usr/local/bin/task
