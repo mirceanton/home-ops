@@ -17,7 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && !github.event.pull_request.draft)
     outputs:
-      filter: ${{ steps.filter.outputs }}
+      yaml: ${{ steps.filter.outputs.yaml }}
+      bash: ${{ steps.filter.outputs.bash }}
+      markdown: ${{ steps.filter.outputs.markdown }}
+      terraform: ${{ steps.filter.outputs.terraform }}
     steps:
       - name: Checkout code
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
