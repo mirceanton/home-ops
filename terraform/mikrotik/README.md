@@ -17,7 +17,7 @@ First, we'll create a new bridge for our WAN connection, we'll enable a DHCP cli
 ```bash
 /interface/bridge/add name=brWAN
 /ip/dhcp-client/add disabled=no interface=brWAN
-/interface/bridge/port/add interface=ether8 bridge=brWAN
+/interface/bridge/port/add interface=ether1 bridge=brWAN
 ```
 
 After a few moments, the device should have received an IP address from the DHCP server. Test internet connectivity:
@@ -30,9 +30,9 @@ ping www.google.com
 Next, create another bridge for our LAN connection, assign an IP to it and add our physical port(s) to the bridge.
 
 ```bash
-/interface/bridge/add name=brLAN
-/ip/address/add address=192.168.69.1/24 interface=brLAN
-/interface/bridge/port/add interface=ether1 bridge=brLAN
+/interface/bridge/add name=brHOME
+/ip/address/add address=192.168.69.1/24 interface=brHOME
+/interface/bridge/port/add interface=ether7 bridge=brHOME
 ```
 
 In order to get internet connectivity, we need to configure NAT:
@@ -44,12 +44,20 @@ In order to get internet connectivity, we need to configure NAT:
 For terraform to be able to connecto to our router and manage it, we need to create a self signed certificate and enable the HTTPS service:
 
 ```bash
-/certificate/add name=local-root-cert common-name=local-cert key-usage=key-cert-sign,crl-sign
+/certificate/add name=local-root-cert common-name=local-cert key-size=prime256v1 key-usage=key-cert-sign,crl-sign trusted=yes
 /certificate/sign local-root-cert
-/certificate/add name=webfig common-name=192.168.69.1
-/certificate/sign webfig
+/certificate/add name=webfig common-name=192.168.69.1 country=RO locality=BUC organization=MIRCEANTON unit=HOME days-valid=3650 key-size=prime256v1 key-usage=key-cert-sign,crl-sign,digital-signature,key-agreement,tls-server trusted=yes
+/certificate/sign ca=local-root-cert webfig
 /ip/service/set www-ssl certificate=webfig disabled=no
 ```
+
+Optionally, we can now create a service account for our terraform automation as follows:
+
+```bash
+/user/add name=terraform group=full disabled=no comment="Service Account for Teraform Automation" password=terraform
+```
+
+> obviously, set a stronger password than that. this is just an example
 
 ### Step 3. Set a static IP on your workstation
 
@@ -62,24 +70,33 @@ The terraform code provided has `import` blocks to handle importing all of the r
 On Mikrotik, run the following command to print the IDs of the bridges:
 
 ```bash
-[admin@MikroTik] > :put [/interface/bridge get [print show-ids]]
-Flags: X - disabled, R - running
-*B R name="brLAN" mtu=auto actual-mtu=1500 l2mtu=1514 arp=enabled arp-timeout=auto mac-address=48:A9:8A:BD:AB:D4 protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s
-     transmit-hold-count=6 vlan-filtering=no dhcp-snooping=no
+:put [/interface/bridge get [print show-ids]]
+```
 
-*A R name="brWAN" mtu=auto actual-mtu=1500 l2mtu=1514 arp=enabled arp-timeout=auto mac-address=48:A9:8A:BD:AB:DB protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s
-     transmit-hold-count=6 vlan-filtering=no dhcp-snooping=no
+Sample output:
+
+```bash
+*C R name="brHOME" mtu=auto actual-mtu=1500 l2mtu=1514 arp=enabled arp-timeout=auto mac-address=48:A9:8A:BD:AB:D5 protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s transmit-hold-count=6
+     vlan-filtering=no dhcp-snooping=no port-cost-mode=long
+
+*B R name="brWAN" mtu=auto actual-mtu=1500 l2mtu=1514 arp=enabled arp-timeout=auto mac-address=48:A9:8A:BD:AB:D4 protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s transmit-hold-count=6
+     vlan-filtering=no dhcp-snooping=no port-cost-mode=long
 ```
 
 #### Importing the DHCP Client
 
 On Mikrotik, run the following command to print the ID of the client:
 
+```sh
+:put [/ip/dhcp-client get [print show-ids]]
+```
+
+Sample output:
+
 ```bash
-[admin@MikroTik] > :put [/ip/dhcp-client get [print show-ids]]
 Columns: INTERFACE, USE-PEER-DNS, ADD-DEFAULT-ROUTE, STATUS, ADDRESS
 *  INTERFACE  USE-PEER-DNS  ADD-DEFAULT-ROUTE  STATUS  ADDRESS
-*1 brWAN      yes           yes                bound   192.168.10.170/24
+*1 brWAN      yes           yes                bound   192.168.10.104/24
 ```
 
 #### Importing the LAN IP address
@@ -87,12 +104,16 @@ Columns: INTERFACE, USE-PEER-DNS, ADD-DEFAULT-ROUTE, STATUS, ADDRESS
 On Mikrotik, run the following command to print the ID of the client:
 
 ```bash
-[admin@MikroTik] > :put [/ip/address get [print show-ids]]
-Flags: D - DYNAMIC
+:put [/ip/address get [print show-ids]]
+```
+
+Sample output:
+
+```bash
 Columns: ADDRESS, NETWORK, INTERFACE
 *    ADDRESS            NETWORK       INTERFACE
-*1 D 192.168.10.170/24  192.168.10.0  brWAN
-*2   192.168.69.1/24    192.168.69.0  brLAN
+*1 D 192.168.10.104/24  192.168.10.0  brWAN
+*2   192.168.69.1/24    192.168.69.0  brHOME
 ```
 
 #### Importing the bridge ports
@@ -100,12 +121,16 @@ Columns: ADDRESS, NETWORK, INTERFACE
 On Mikrotik, run the following command to print the IDs of the bridge ports:
 
 ```bash
-[admin@MikroTik] > :put [/interface/bridge/port get [print show-ids]]
-Flags: H - HW-OFFLOAD
-Columns: INTERFACE, BRIDGE, HW, PVID, PRIORITY, PATH-COST, INTERNAL-PATH-COST, HORIZON
-*    INTERFACE  BRIDGE  HW   PVID  PRIORITY  PATH-COST  INTERNAL-PATH-COST  HORIZON
-*0 H ether8     brWAN   yes     1  0x80             10                  10  none
-*1   ether1     brLAN   yes     1  0x80             10                  10  none
+:put [/interface/bridge/port get [print show-ids]]
+```
+
+Sample output:
+
+```bash
+Columns: INTERFACE, BRIDGE, HW, PVID, PRIORITY, HORIZON
+*    INTERFACE  BRIDGE  HW   PVID  PRIORITY  HORIZON
+*0 H ether1     brWAN   yes     1  0x80      none
+*1   ether2     brHOME  yes     1  0x80      none
 ```
 
 #### Importing the NAT rule
@@ -113,9 +138,13 @@ Columns: INTERFACE, BRIDGE, HW, PVID, PRIORITY, PATH-COST, INTERNAL-PATH-COST, H
 On Mikrotik, run the following command to print the IDs of the NAT rules:
 
 ```bash
-[admin@MikroTik] > :put [/ip/firewall/nat get [print show-ids]]
-Flags: X - disabled, I - invalid; D - dynamic
-*1    chain=srcnat action=masquerade out-interface=brWAN
+:put [/ip/firewall/nat get [print show-ids]]
+```
+
+Sample output:
+
+```bash
+*1    chain=srcnat action=masquerade src-address=192.168.69.0/24 out-interface=brWAN
 ```
 
 #### Importing the self signed certificate
@@ -123,10 +152,12 @@ Flags: X - disabled, I - invalid; D - dynamic
 On Mikrotik, run the following command to print the IDs of the system certificates:
 
 ```bash
-[admin@MikroTik] > :put [/certificate get [print show-ids]]
-Flags: K - PRIVATE-KEY; A - AUTHORITY; E - EXPIRED; T - TRUSTED
+:put [/certificate get [print show-ids]]
+```
+
+```bash
 Columns: NAME, COMMON-NAME, SKID
-*       NAME             COMMON-NAME   SKID
-*1 KAET local-root-cert  local-cert    2d6cf098d1c69e03ba835fceadfcf05f5200c562
-*3 KAET webfig           192.168.69.1  d05bb506bf7c31b4d0ba235b23d2871a6e72ce74
+*      NAME             COMMON-NAME   SKID
+*1 KAT local-root-cert  local-cert    a0c40660c79d2753c110147136272dce6d24b513
+*2 KAT webfig           192.168.69.1  d8ff3c5980cc520454ed8d39385ff586e396b563
 ```
