@@ -93,15 +93,3 @@ resource "routeros_ip_dhcp_server_lease" "management_proxmox" {
 #   server      = routeros_ip_dhcp_server.management.name
 #   comment     = "Mikrotik cAP AX"
 # }
-
-
-## ================================================================================================
-## NAT Rules
-## ================================================================================================
-resource "routeros_ip_firewall_nat" "management" {
-  comment       = "NAT Management Traffic"
-  chain         = "srcnat"
-  out_interface = routeros_interface_bridge.wan.name
-  action        = "masquerade"
-  src_address   = "${routeros_ip_address.management.network}/24"
-}

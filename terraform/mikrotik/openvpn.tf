@@ -75,28 +75,6 @@ resource "routeros_ovpn_server" "server" {
 
 
 # =================================================================================================
-# Firewall Rules
-# =================================================================================================
-resource "routeros_ip_firewall_nat" "ovpn" {
-  comment       = "NAT OpenVPN Traffic"
-  chain         = "srcnat"
-  out_interface = routeros_interface_bridge.wan.name
-  action        = "masquerade"
-  src_address   = "172.16.69.0/24"
-}
-resource "routeros_ip_firewall_filter" "ovpn_pass" {
-  comment  = "Allow OpenVPN traffic"
-  chain    = "input"
-  dst_port = "1194" # OpenVPN port
-  protocol = "tcp"
-  action   = "accept"
-
-  log        = true
-  log_prefix = "ovpn_"
-}
-
-
-# =================================================================================================
 # OpenVPN Users
 # =================================================================================================
 locals {
