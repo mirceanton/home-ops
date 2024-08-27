@@ -50,6 +50,7 @@ resource "routeros_ppp_profile" "ovpn" {
   remote_address  = routeros_ip_pool.ovpn-pool.name
   dns_server      = routeros_ip_dhcp_server_network.home.dns_server
   only_one        = "yes"
+  use_upnp        = "yes"
   use_compression = "yes"
   use_encryption  = "yes"
 }
