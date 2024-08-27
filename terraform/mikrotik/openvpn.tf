@@ -7,7 +7,10 @@ resource "routeros_system_certificate" "ovpn_ca" {
   key_size    = "prime256v1"
   key_usage   = ["key-cert-sign", "crl-sign"]
   trusted     = true
-  sign {}
+  days_valid  = 3650
+  sign {
+    ca_crl_host = "vpn.mirceanton.com"
+  }
 }
 
 resource "routeros_system_certificate" "ovpn_server_crt" {
@@ -15,6 +18,13 @@ resource "routeros_system_certificate" "ovpn_server_crt" {
   common_name = "Mikrotik OpenVPN"
   key_size    = "prime256v1"
   key_usage   = ["digital-signature", "key-encipherment", "tls-server"]
+
+  country      = "RO"
+  locality     = "BUC"
+  organization = "MIRCEANTON"
+  unit         = "VPN"
+  days_valid   = 3650
+
   sign {
     ca = routeros_system_certificate.ovpn_ca.name
   }
@@ -39,7 +49,6 @@ resource "routeros_ppp_profile" "ovpn" {
   local_address  = "172.16.69.1"
   remote_address = routeros_ip_pool.ovpn-pool.name
 }
-
 
 # =================================================================================================
 # OpenVPN Server
