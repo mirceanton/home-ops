@@ -59,3 +59,13 @@ variable "cloudflare_token" {
   description = "The token to authenticate against the Cloudflare API."
   sensitive   = true
 }
+
+
+## ================================================================================================
+## Discord Variables
+## ================================================================================================
+variable "discord_webhook_url" {
+  type        = string
+  description = "The URL for the Discord webhook."
+  sensitive   = true
+}

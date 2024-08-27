@@ -53,7 +53,20 @@ resource "routeros_ppp_profile" "ovpn" {
   use_upnp        = "yes"
   use_compression = "yes"
   use_encryption  = "yes"
+  on_up           = <<-EOF
+    :local webhookUrl "${var.discord_webhook_url}";
+    :local address $"remote-address"
+    :local Text "User `$user` has connected to the VPN as `$address`!";
+    /tool fetch url=($webhookUrl) http-method=post http-data=("content=" . $Text) mode=https keep-result=no
+  EOF
+  on_down         = <<-EOF
+    :local webhookUrl "${var.discord_webhook_url}";
+    :local address $"remote-address"
+    :local Text "User `$user` has disconnected from the VPN!";
+    /tool fetch url=($webhookUrl) http-method=post http-data=("content=" . $Text) mode=https keep-result=no
+  EOF
 }
+
 
 # =================================================================================================
 # OpenVPN Server
