@@ -49,6 +49,7 @@ resource "routeros_ppp_profile" "ovpn" {
   local_address  = "172.16.69.1"
   remote_address = routeros_ip_pool.ovpn-pool.name
   dns_server     = routeros_ip_dhcp_server_network.home.dns_server
+  only_one       = "yes"
 }
 
 # =================================================================================================
