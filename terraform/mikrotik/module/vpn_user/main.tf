@@ -30,7 +30,7 @@ resource "routeros_system_certificate" "client_crt" {
   state        = "B"
   locality     = "BUC"
   organization = "MIRCEANTON"
-  unit         = "HOME"
+  unit         = "VPN"
   days_valid   = 3650 # 10 years
 }
 resource "random_password" "certificate_secret" {
