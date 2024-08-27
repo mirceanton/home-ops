@@ -69,8 +69,13 @@ resource "routeros_ip_dhcp_server_lease" "home_home_assistant" {
   server      = routeros_ip_dhcp_server.home.name
   comment     = "HomeAssistant"
 }
+resource "routeros_ip_dhcp_server_lease" "home_truenas" {
+  address     = "192.168.69.254"
+  mac_address = "E0:D5:5E:24:A1:EC"
+  server      = routeros_ip_dhcp_server.home.name
+  comment     = "TrueNAS"
+}
 # TODO static lease Gaming PC
-# TODO static lease TrueNAS
 # TODO static lease MikroTik AP
 
 
