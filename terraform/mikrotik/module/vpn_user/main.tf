@@ -11,6 +11,7 @@ resource "routeros_ppp_secret" "user" {
   comment  = "OpenVPN User"
   password = random_password.user_secret.result
   profile  = var.vpn_profile
+  service  = "ovpn"
 }
 
 
