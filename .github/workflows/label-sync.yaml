@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Label Sync
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Dry Run"
+        default: true
+        required: false
+        type: boolean
+
+  # Dry run on pull requests
+  pull_request:
+    paths:
+      - .github/workflows/label-sync.yaml
+      - .github/labels/base.yaml
+
+  # Run when the configs changed on the main branch
+  push:
+    branches: ["main"]
+    paths:
+      - .github/workflows/label-sync.yaml
+      - .github/labels/base.yaml
+
+  # Scheduled daily
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  label-sync:
+    uses: mirceanton/reusable-workflows/.github/workflows/reusable-label-sync.yaml
+    secrets: inherit
+    with:
+      dry-run: ${{ inputs.dry-run || github.event_name == 'pull_request' }}
+      config-file: .config/labels.yaml
