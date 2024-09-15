@@ -71,3 +71,46 @@ resource "routeros_container" "cloudflare-ddns" {
 
   envlist = "cloudflare-ddns-envs"
 }
+
+
+## ================================================================================================
+## Cloudflare DDNS Status Notification
+## ================================================================================================
+resource "routeros_system_script" "check_cloudflare_ddns" {
+  name    = "check-cloudflare-ddns"
+  comment = "Send Discord notification on Cloudflare DDNS container state change"
+  policy  = ["read"]
+  source  = <<-EOF
+    :local containerName "${routeros_container.cloudflare-ddns.name}"
+    :local webhookUrl "${var.discord_webhook_url}";
+
+    # Get the current state of the container
+    :local currentState [/container get [find name=\$containerName] status]
+
+    # Global variable to store the previous state
+    :global previousState
+
+    # If the previous state does not exist (is empty), initialize it to the current status
+    :if ([:len \$previousState] = 0) do={
+        :set previousState \$currentState
+    }
+
+    # Check for state change
+    :if (\$currentState != \$previousState) do={
+        # Prepare Discord notification
+        :local message "Cloudflare DDNS Container State Change from \$previousState to \$currentState"
+
+        # Send the notification to Discord
+        /tool fetch url=($webhookUrl) http-method=post http-data=("content=" . $message) mode=https keep-result=no
+
+        # Update the previous state
+        :set previousState \$currentState
+    }
+  EOF
+}
+resource "routeros_scheduler" "check_ddns_container" {
+  name     = "check-cloudflare-ddns-container"
+  comment  = "Check the Cloudflare DDNS container state every 5 minutes"
+  interval = "5s"
+  on_event = routeros_system_script.check_cloudflare_ddns.name
+}
