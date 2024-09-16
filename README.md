@@ -1,10 +1,8 @@
-<!-- markdownlint-disable MD033 -->
 <div align="center">
   <img src="https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png" align="center" width="144px" height="144px"/>
   <h3> My home operations repository </h3>
   <i>managed with Flux, Renovate and GitHub Actions</i> 🤖
 </div>
-<!-- markdownlint-enable MD033 -->
 
 ---
 
@@ -23,13 +21,11 @@ This is a monorepo for my homelab infrastructure automation. I try to adhere (as
 
 ## ⭐ Stargazers
 
-<!-- markdownlint-disable MD033 -->
 <div align="center">
     <a href="https://star-history.com/#mirceanton/home-ops&Date">
         <img src="https://api.star-history.com/svg?repos=mirceanton/home-ops&type=Date">
     </a>
 </div>
-<!-- markdownlint-enable MD033 -->
 
 ## 🤝 Gratitude and Thanks
 

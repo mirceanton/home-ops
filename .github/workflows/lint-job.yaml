@@ -11,7 +11,7 @@ jobs:
     uses: mirceanton/reusable-workflows/.github/workflows/reusable-yamllint.yaml@v3.4.1
     secrets: inherit
     with:
-      yamllint-args: "--config-file=.config/yamllint.yaml"
+      yamllint-args: "--config-file=.yamllint.yaml"
 
   actionlint:
     uses: mirceanton/reusable-workflows/.github/workflows/reusable-actionlint.yaml@v3.4.1

@@ -16,6 +16,7 @@ list-marker-space: false
 no-alt-text: false
 no-blanks-blockquote: false
 no-hard-tabs: false
+no-inline-html: false
 no-missing-space-atx: false
 no-missing-space-closed-atx: false
 no-multiple-blanks: false
