@@ -17,6 +17,7 @@ This is a monorepo for my homelab infrastructure automation. I try to adhere (as
 📁 .github              # CI workflows and various tool configurations
 📁 .taskfiles           # Holds all of the "modules" for my Taskfile automation
 📁 scripts              # Various scripts used for automation, generally called within tasks
+📁 terraform            # Terraform configuration for managing infrastructure outside of K8S
 ```
 
 ## ⭐ Stargazers
