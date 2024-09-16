@@ -1,11 +1,7 @@
 <div align="center">
-
-<img src="https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png" align="center" width="144px" height="144px"/>
-
-<h3> My home operations repository </h3>
-
-<i>managed with Flux, Renovate and GitHub Actions</i> 🤖
-
+  <img src="https://raw.githubusercontent.com/mirceanton/home-ops/main/icon.png" align="center" width="144px" height="144px"/>
+  <h3> My home operations repository </h3>
+  <i>managed with Flux, Renovate and GitHub Actions</i> 🤖
 </div>
 
 ---
@@ -21,6 +17,7 @@ This is a monorepo for my homelab infrastructure automation. I try to adhere (as
 📁 .github              # CI workflows and various tool configurations
 📁 .taskfiles           # Holds all of the "modules" for my Taskfile automation
 📁 scripts              # Various scripts used for automation, generally called within tasks
+📁 terraform            # Terraform configuration for managing infrastructure outside of K8S
 ```
 
 ## ⭐ Stargazers
