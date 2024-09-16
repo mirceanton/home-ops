@@ -24,11 +24,8 @@ jobs:
   markdownlint:
     uses: mirceanton/reusable-workflows/.github/workflows/reusable-markdownlint.yaml@v3.4.1
     secrets: inherit
+    
 
   commitlint:
     uses: mirceanton/reusable-workflows/.github/workflows/reusable-commitlint.yaml@v3.4.1
-    secrets: inherit
-
-  terraform:
-    uses: mirceanton/reusable-workflows/.github/workflows/reusable-terraform-ci.yaml@feat/terraform-lint
     secrets: inherit
