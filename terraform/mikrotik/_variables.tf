@@ -1,0 +1,63 @@
+## ================================================================================================
+## Mikrotik Variables
+## ================================================================================================
+variable "mikrotik_router_username" {
+  type        = string
+  default     = "admin"
+  description = "The username to authenticate against the RouterOS API."
+}
+variable "mikrotik_router_password" {
+  type        = string
+  description = "The password to authenticate against the RouterOS API."
+  sensitive   = true
+}
+
+
+## ================================================================================================
+## BitWarden Variables
+## ================================================================================================
+variable "bitwarden_server_url" {
+  type        = string
+  description = "The URL for the BitWarden server."
+  default     = "https://vault.bitwarden.com"
+}
+variable "bitwarden_email" {
+  type        = string
+  description = "The email address to authenticate against the BitWarden server."
+  sensitive   = true
+}
+variable "bitwarden_client_id" {
+  type        = string
+  description = "The client ID to authenticate against the BitWarden server."
+  sensitive   = true
+}
+variable "bitwarden_client_secret" {
+  type        = string
+  description = "The client secret to authenticate against the BitWarden server."
+  sensitive   = true
+}
+variable "bitwarden_master_password" {
+  type        = string
+  description = "The master password to authenticate against the BitWarden server."
+  sensitive   = true
+}
+
+
+## ================================================================================================
+## Cloudflare Variables
+## ================================================================================================
+variable "cloudflare_token" {
+  type        = string
+  description = "The token to authenticate against the Cloudflare API."
+  sensitive   = true
+}
+
+
+## ================================================================================================
+## Discord Variables
+## ================================================================================================
+variable "discord_webhook_url" {
+  type        = string
+  description = "The URL for the Discord webhook."
+  sensitive   = true
+}
