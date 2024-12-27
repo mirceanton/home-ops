@@ -6,7 +6,7 @@ terraform {
     }
     bitwarden = {
       source  = "maxlaverse/bitwarden"
-      version = "0.8.0"
+      version = "0.12.1"
     }
     random = {
       source  = "hashicorp/random"
