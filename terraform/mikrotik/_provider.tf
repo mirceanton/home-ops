@@ -1,3 +1,6 @@
+# =================================================================================================
+# Provider Configuration
+# =================================================================================================
 terraform {
   required_providers {
     routeros = {
@@ -15,13 +18,39 @@ terraform {
   }
 }
 
+
+# =================================================================================================
+# Mikrotik Devices
+# =================================================================================================
 provider "routeros" {
-  hosturl  = var.mikrotik_router_url
+  alias = "rb5009"
+
+  hosturl  = "https://192.168.88.1"
   username = var.mikrotik_router_username
   password = var.mikrotik_router_password
-  insecure = var.mikrotik_router_insecure_skip_tls_verify
+  insecure = true
+}
+provider "routeros" {
+  alias = "crs326"
+
+  hosturl  = "https://192.168.88.2"
+  username = var.mikrotik_router_username
+  password = var.mikrotik_router_password
+  insecure = true
+}
+provider "routeros" {
+  alias = "crs317"
+
+  hosturl  = "https://192.168.88.3"
+  username = var.mikrotik_router_username
+  password = var.mikrotik_router_password
+  insecure = true
 }
 
+
+# =================================================================================================
+# Bitwarden
+# =================================================================================================
 provider "bitwarden" {
   server          = var.bitwarden_server_url
   email           = var.bitwarden_email
