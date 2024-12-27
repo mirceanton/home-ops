@@ -2,7 +2,7 @@ terraform {
   required_providers {
     routeros = {
       source  = "terraform-routeros/routeros"
-      version = "1.61.0"
+      version = "1.72.0"
     }
     bitwarden = {
       source  = "maxlaverse/bitwarden"
