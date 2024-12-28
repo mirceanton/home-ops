@@ -41,7 +41,7 @@ resource "cloudflare_record" "mirceanton_github_pages" {
   type    = each.value.type
   name    = each.value.name
   content = each.value.content
-  comment = "Terraform: ${each.key}"
+  comment = "Terraform: GitHub Pages ${each.key}"
 }
 
 # =================================================================================================
