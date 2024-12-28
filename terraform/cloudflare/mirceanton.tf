@@ -8,7 +8,7 @@ data "cloudflare_zone" "mirceanton" {
 resource "cloudflare_record" "mirceanton_TXT_verifications" {
   for_each = {
     "Discord Verification" = { name = "_discord.com", content = "\"${var.discord_verification_mirceanton}\"" },
-    "Google Verification"  = { name = "mirceanton.com", content = "\"${var.google_verification_mirceanton}\"" }
+    "Google Verification"  = { name = "@", content = "\"${var.google_verification_mirceanton}\"" }
   }
 
   zone_id = data.cloudflare_zone.mirceanton.id
@@ -29,10 +29,10 @@ resource "cloudflare_record" "mirceanton_github_pages" {
 
     "Verification" = { name = "_github-pages-challenge-mirceanton", type = "TXT", content = "\"${var.github_verification_mirceanton}\"" }
 
-    "A1" = { name = "mirceanton.com", type = "A", content = "185.199.111.153" }
-    "A2" = { name = "mirceanton.com", type = "A", content = "185.199.110.153" }
-    "A3" = { name = "mirceanton.com", type = "A", content = "185.199.109.153" }
-    "A4" = { name = "mirceanton.com", type = "A", content = "185.199.108.153" }
+    "A1" = { name = "@", type = "A", content = "185.199.111.153" }
+    "A2" = { name = "@", type = "A", content = "185.199.110.153" }
+    "A3" = { name = "@", type = "A", content = "185.199.109.153" }
+    "A4" = { name = "@", type = "A", content = "185.199.108.153" }
   }
 
   zone_id = data.cloudflare_zone.mirceanton.id
@@ -49,8 +49,8 @@ resource "cloudflare_record" "mirceanton_github_pages" {
 # =================================================================================================
 resource "cloudflare_record" "mirceanton_migadu_TXT" {
   for_each = {
-    "Verification" = { name = "mirceanton.com", content = "\"${var.migadu_verification_mirceanton}\"" }
-    "SPF"          = { name = "mirceanton.com", content = "\"v=spf1 include:spf.migadu.com -all\"" }
+    "Verification" = { name = "@", content = "\"${var.migadu_verification_mirceanton}\"" }
+    "SPF"          = { name = "@", content = "\"v=spf1 include:spf.migadu.com -all\"" }
     "DMARC"        = { name = "_dmarc", content = "\"v=DMARC1; p=quarantine;\"" }
   }
   zone_id = data.cloudflare_zone.mirceanton.id
@@ -101,8 +101,8 @@ resource "cloudflare_record" "mirceanton_migadu_SRV" {
 
 resource "cloudflare_record" "mirceanton_migadu_MX" {
   for_each = {
-    "Primary MX Host"                          = { priority = 10, content = "aspmx1.migadu.com", name = "mirceanton.com" }
-    "Secondary MX Host"                        = { priority = 20, content = "aspmx2.migadu.com", name = "mirceanton.com" }
+    "Primary MX Host"                          = { priority = 10, content = "aspmx1.migadu.com", name = "@" }
+    "Secondary MX Host"                        = { priority = 20, content = "aspmx2.migadu.com", name = "@" }
     "Primary MX Host (Subdomain Addressing)"   = { priority = 10, content = "aspmx1.migadu.com", name = "*" }
     "Secondary MX Host (Subdomain Addressing)" = { priority = 20, content = "aspmx2.migadu.com", name = "*" }
   }

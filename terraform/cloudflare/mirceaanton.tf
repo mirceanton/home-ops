@@ -7,7 +7,7 @@ data "cloudflare_zone" "mirceaanton" {
 # =================================================================================================
 resource "cloudflare_record" "mirceaanton_TXT_verifications" {
   for_each = {
-    "Google Verification" = { name = "mirceaanton.com", content = "\"${var.google_verification_mirceaanton}\"" }
+    "Google Verification" = { name = "@", content = "\"${var.google_verification_mirceaanton}\"" }
   }
 
   zone_id = data.cloudflare_zone.mirceaanton.id
@@ -44,8 +44,8 @@ resource "cloudflare_record" "mirceaanton_redirects" {
 # =================================================================================================
 resource "cloudflare_record" "mirceaanton_migadu_TXT" {
   for_each = {
-    "Verification" = { name = "mirceaanton.com", content = "\"${var.migadu_verification_mirceaanton}\"" }
-    "SPF"          = { name = "mirceaanton.com", content = "\"v=spf1 include:spf.migadu.com -all\"" }
+    "Verification" = { name = "@", content = "\"${var.migadu_verification_mirceaanton}\"" }
+    "SPF"          = { name = "@", content = "\"v=spf1 include:spf.migadu.com -all\"" }
     "DMARC"        = { name = "_dmarc", content = "\"v=DMARC1; p=quarantine;\"" }
   }
   zone_id = data.cloudflare_zone.mirceaanton.id
@@ -96,8 +96,8 @@ resource "cloudflare_record" "mirceaanton_migadu_SRV" {
 
 resource "cloudflare_record" "mirceaanton_migadu_MX" {
   for_each = {
-    "Primary MX Host"                          = { priority = 10, content = "aspmx1.migadu.com", name = "mirceaanton.com" }
-    "Secondary MX Host"                        = { priority = 20, content = "aspmx2.migadu.com", name = "mirceaanton.com" }
+    "Primary MX Host"                          = { priority = 10, content = "aspmx1.migadu.com", name = "@" }
+    "Secondary MX Host"                        = { priority = 20, content = "aspmx2.migadu.com", name = "@" }
     "Primary MX Host (Subdomain Addressing)"   = { priority = 10, content = "aspmx1.migadu.com", name = "*" }
     "Secondary MX Host (Subdomain Addressing)" = { priority = 20, content = "aspmx2.migadu.com", name = "*" }
   }
