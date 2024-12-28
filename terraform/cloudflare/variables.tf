@@ -15,11 +15,6 @@ variable "google_verification_mirceanton" {
   sensitive   = true
   description = "Content for the TXT record needed for Google verification."
 }
-variable "google_verification_mirceaanton" {
-  type        = string
-  sensitive   = true
-  description = "Content for the TXT record needed for Google verification."
-}
 variable "migadu_verification_mirceanton" {
   type        = string
   sensitive   = true
@@ -29,4 +24,15 @@ variable "discord_verification_mirceanton" {
   type        = string
   sensitive   = true
   description = "Content for the TXT record needed for Discord verification."
+}
+
+variable "google_verification_mirceaanton" {
+  type        = string
+  sensitive   = true
+  description = "Content for the TXT record needed for Google verification."
+}
+variable "migadu_verification_mirceaanton" {
+  type        = string
+  sensitive   = true
+  description = "Content for the TXT record needed for Migadu verification."
 }
