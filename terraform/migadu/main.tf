@@ -2,6 +2,17 @@ locals {
   domain = "mirceanton.com"
 }
 
+module "primary_domain_dns" {
+  source              = "./modules/dns"
+  domain_name         = "mirceanton.com"
+  migadu_verification = var.migadu_verification_mirceanton
+}
+module "secondary_domain_dns" {
+  source              = "./modules/dns"
+  domain_name         = "mirceaanton.com"
+  migadu_verification = var.migadu_verification_mirceaanton
+}
+
 module "personal_mailbox" {
   source                  = "./modules/mailbox"
   name                    = "Personal"
