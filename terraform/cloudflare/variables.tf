@@ -1,10 +1,15 @@
+# =================================================================================================
+# Provider Configuration
+# =================================================================================================
 variable "cloudflare_api_token" {
   type        = string
   sensitive   = true
   description = "API Token to authenticate against CloudFlare"
 }
 
-
+# =================================================================================================
+# Main Domain Verifications
+# =================================================================================================
 variable "github_verification_mirceanton" {
   type        = string
   sensitive   = true
@@ -26,6 +31,9 @@ variable "discord_verification_mirceanton" {
   description = "Content for the TXT record needed for Discord verification."
 }
 
+# =================================================================================================
+# Secondary Domain Verifications
+# =================================================================================================
 variable "google_verification_mirceaanton" {
   type        = string
   sensitive   = true
