@@ -9,17 +9,17 @@ resource "routeros_interface_ethernet" "wan" {
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "sploinkhole" {
+resource "routeros_interface_ethernet" "living_room" {
   factory_name = "ether2"
   name         = "ether2"
-  comment      = "Sploinkhole (Access Port - Trusted VLAN)"
+  comment      = "Living Room Switch"
   l2mtu        = 1514
 }
 
-resource "routeros_interface_ethernet" "living_room" {
+resource "routeros_interface_ethernet" "sploinkhole" {
   factory_name = "ether3"
   name         = "ether3"
-  comment      = "Living Room Switch (Trunk Port)"
+  comment      = "Sploinkhole"
   l2mtu        = 1514
 }
 
@@ -47,10 +47,10 @@ resource "routeros_interface_ethernet" "ether7" {
   disabled     = true
 }
 
-resource "routeros_interface_ethernet" "wireless" {
+resource "routeros_interface_ethernet" "access_point" {
   factory_name = "ether8"
   name         = "ether8"
-  comment      = "cAP AX (Access Port - Untrusted VLAN)"
+  comment      = "cAP AX"
   l2mtu        = 1514
 }
 
