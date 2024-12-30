@@ -6,6 +6,7 @@ module "rb5009" {
   mikrotik_insecure   = true
   digi_pppoe_password = var.digi_pppoe_password
   digi_pppoe_username = var.digi_pppoe_username
+  wifi_password       = var.wifi_password
 }
 
 module "crs317" {
