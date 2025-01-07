@@ -15,3 +15,13 @@ resource "routeros_ip_dns" "dns-server" {
     routeros_interface_vlan.untrusted.name
   ]
 }
+
+# =================================================================================================
+# AdList
+# https://registry.terraform.io/providers/terraform-routeros/routeros/latest/docs/resources/ip_dns_adlist
+# =================================================================================================
+resource "routeros_ip_dns_adlist" "dns_blocker" {
+  disabled   = false
+  url        = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+  ssl_verify = false
+}
