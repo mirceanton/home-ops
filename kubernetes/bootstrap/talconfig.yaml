@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+clusterName: home-cluster
+endpoint: https://10.0.10.20:6443
+
+# renovate: datasource=github-releases depName=siderolabs/talos
+talosVersion: v1.9.2
+
+# renovate: datasource=github-releases depName=kubernetes/kubernetes
+kubernetesVersion: v1.32.1
+
+allowSchedulingOnControlPlanes: true
+cniConfig: {name: flannel}
+
+nodes:
+  - hostname: hkc-01.k8s.h.mirceanton.com # 3U Node
+    ipAddress: 10.0.10.21
+    controlPlane: true
+    installDiskSelector:
+      model: "CT240BX500SSD1"
+
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "74:56:3c:9e:bf:1a"
+        dhcp: true
+        vip: &vip
+          ip: 10.0.10.20
+
+    schematic: &amdSchematic
+      customization:
+        extraKernelArgs:
+          - apparmor=0 # Less security, more speed
+          - init_on_alloc=0 # Less security, more speed
+          - init_on_free=0 # Less security, more speed
+          - mitigations=off # Less security, more speed
+          - security=none # Less security, more speed
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/amd-ucode
+            - siderolabs/amdgpu
+            - siderolabs/chelsio-drivers
+            - siderolabs/chelsio-firmware
+            - siderolabs/realtek-firmware
+
+  - hostname: hkc-02.k8s.h.mirceanton.com # 2U Bottom Node
+    ipAddress: 10.0.10.22
+    controlPlane: true
+    installDiskSelector:
+      model: "SAMSUNG MZ7PD128"
+    schematic: *amdSchematic
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "74:56:3c:99:5b:ce"
+        dhcp: true
+        vip: *vip
+
+  - hostname: hkc-03.k8s.h.mirceanton.com # 2U Top Node
+    ipAddress: 10.0.10.23
+    controlPlane: true
+    installDiskSelector:
+      model: "SAMSUNG MZ7PD128"
+    schematic: *amdSchematic
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "74:56:3c:99:5b:ce"
+        dhcp: true
+        vip: *vip
+
+patches:
+  - |- #? Disable default API server admission plugins.
+    - op: remove
+      path: /cluster/apiServer/admissionControl
+
+  - |- #? Disable CoreDNS and KubeProxy
+    cluster:
+      coreDNS:
+        disabled: true
+      proxy:
+        disabled: true
+
+  - |- #? Enable KubePrism
+    machine:
+      features:
+        kubePrism:
+          enabled: true
+          port: 7445
+
+  - |- #? Rotate kubelet server certs
+    machine:
+      kubelet:
+        extraArgs:
+          rotate-server-certificates: "true"
+worker:
+  patches: []
+controlPlane:
+  patches: []
+
+additionalApiServerCertSans: &sans
+  - 10.0.10.20
+  - 127.0.0.1 # KubePrism
+additionalMachineCertSans: *sans
