@@ -10,7 +10,7 @@ talosVersion: v1.9.2
 kubernetesVersion: v1.32.1
 
 allowSchedulingOnControlPlanes: true
-cniConfig: {name: flannel}
+cniConfig: { name: flannel }
 
 nodes:
   - hostname: hkc-01.k8s.h.mirceanton.com # 3U Node
@@ -71,29 +71,11 @@ patches:
     - op: remove
       path: /cluster/apiServer/admissionControl
 
-  - |- #? Disable CoreDNS and KubeProxy
-    cluster:
-      coreDNS:
-        disabled: true
-      proxy:
-        disabled: true
-
-  - |- #? Enable KubePrism
-    machine:
-      features:
-        kubePrism:
-          enabled: true
-          port: 7445
-
-  - |- #? Rotate kubelet server certs
-    machine:
-      kubelet:
-        extraArgs:
-          rotate-server-certificates: "true"
 worker:
   patches: []
 controlPlane:
   patches: []
+
 
 additionalApiServerCertSans: &sans
   - 10.0.10.20
