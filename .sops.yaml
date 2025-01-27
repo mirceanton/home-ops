@@ -4,12 +4,10 @@ creation_rules:
   - path_regex: .*\/(talsecret)(\.sops)?\.yaml
     encrypted_regex: "^(id|secret|bootstraptoken|secretboxencryptionsecret|token|ca|crt|key)$"
     key_groups:
-      - age:
-          - age1ghlphrjhpdlt83clr4y33efd3cu7v2ysl88fhq7c6hw2xpnl5gpq9jq2mg
+      - age: ["age1hu8zgn88ll2gvg887j6r9yweqa0652zquzvmd0ujkjxsgn9p932q6ppd8c"]
 
   # Generic Kubernetes Secrets
   - path_regex: .*\.secret(\.sops)?\.yaml
     encrypted_regex: "^(data|stringData)$"
     key_groups:
-      - age:
-          - age1ghlphrjhpdlt83clr4y33efd3cu7v2ysl88fhq7c6hw2xpnl5gpq9jq2mg
+      - age: ["age1hu8zgn88ll2gvg887j6r9yweqa0652zquzvmd0ujkjxsgn9p932q6ppd8c"]
