@@ -1,7 +1,7 @@
 [env]
-SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
-KUBECONFIG = '{{config_root}}/kubernetes/bootstrap/talos/clusterconfig/kubeconfig'
-TALOSCONFIG = '{{config_root}}/kubernetes/bootstrap/talos/clusterconfig/talosconfig'
+SOPS_AGE_KEY_FILE = '{{config_root}}/.age.key'
+KUBECONFIG = '{{config_root}}/kubernetes/bootstrap/clusterconfig/kubeconfig'
+TALOSCONFIG = '{{config_root}}/kubernetes/bootstrap/clusterconfig/talosconfig'
 
 
 [tools]
