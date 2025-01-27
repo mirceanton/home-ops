@@ -1,0 +1,60 @@
+[env]
+SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
+KUBECONFIG = '{{config_root}}/kubernetes/bootstrap/talos/clusterconfig/kubeconfig'
+TALOSCONFIG = '{{config_root}}/kubernetes/bootstrap/talos/clusterconfig/talosconfig'
+
+
+[tools]
+# Runtimes
+python = "3.13.1"
+uv = "0.5.21"
+
+# Terraform Stuff: https://mise.jdx.dev/mise-cookbook/terraform.html
+terraform = "1.10.4"
+
+# Secret Encryption Stuff
+"aqua:getsops/sops" = "3.9.3"
+"aqua:FiloSottile/age" = "1.2.1"
+
+# Flux Stuff
+"aqua:fluxcd/flux2" = "2.4.0"
+"aqua:flux-iac/tofu-controller/tfctl" = "0.15.1"
+
+# Kubectl + Plugins
+"aqua:kubernetes/kubectl" = "1.32.1"
+"aqua:kubecolor" = "0.0.25"
+"aqua:CrunchyData/postgres-operator-client" = "0.5.1"
+
+# Misc K8S Tools
+"aqua:kubernetes-sigs/kustomize" = "5.6.0"
+"aqua:helm/helm" = "3.13.0"
+"aqua:helmfile/helmfile" = "0.170.1"
+"aqua:derailed/k9s" = "0.32.7"
+"aqua:stern/stern" = "1.31.0"
+
+# Talos Stuff
+"aqua:siderolabs/talos" = "1.9.0"
+"aqua:budimanjojo/talhelper" = "3.0.15"
+
+# Misc Tools
+"aqua:go-task/task" = "3.38.0"
+"aqua:minio/mc" = "RELEASE.2024-10-08T09-37-26Z"
+"aqua:cert-manager/cmctl" = "2.1.1"
+
+# Linters
+"pipx:yamllint" = "1.35.1"
+"aqua:mikefarah/yq" = "4.45.1"
+"aqua:jqlang/jq" = "1.7.1"
+
+
+[tasks."encrypt"]
+description = "Encrypt all sops files."
+run = "bash ${MISE_PROJECT_ROOT}/scripts/sops-encrypt-all.sh"
+
+[tasks."decrypt"]
+description = "Decrypt all sops files."
+run = "bash ${MISE_PROJECT_ROOT}/scripts/sops-decrypt-all.sh"
+
+[tasks."delete-stuck-ns"]
+description = "Delete all namespaces that are stuck in a terminating state."
+run = "bash scripts/delete-stuck-ns.sh"
