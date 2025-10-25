@@ -1,11 +1,7 @@
 # Fetch the Talos extension versions for the specified Talos version
 data "talos_image_factory_extensions_versions" "this" {
   talos_version = var.talos_version
-  filters = {
-    names = [
-      "qemu-guest-agent"
-    ]
-  }
+  filters = { names = [ "qemu-guest-agent" ] }
 }
 
 

@@ -17,7 +17,7 @@ locals {
 
 terraform { source = find_in_parent_folders("modules/talos-node") }
 inputs = {
-  node_name = "wrk-02"
+  node_name = "wrk-03"
   node_role = "worker"
 
   # Talos Info
@@ -32,11 +32,11 @@ inputs = {
   cluster_endpoint = local.root.locals.cluster_endpoint
 
   # Proxmox Info
-  proxmox_node             = local.root.locals.pve_nodes[1]
+  proxmox_node             = local.root.locals.pve_nodes[2]
   proxmox_resource_pool_id = dependency.prepare.outputs.resource_pool_id
 
   # VM Specs
-  vm_id          = local.wrk.locals.base_vm_id + 1
+  vm_id          = local.wrk.locals.base_vm_id + 2
   cpu_cores      = local.wrk.locals.cpu_cores
   cpu_type       = local.wrk.locals.cpu_type
   cpu_arch       = local.root.locals.architecture
@@ -47,6 +47,6 @@ inputs = {
   network_bridge = local.wrk.locals.network_bridge
 
   # Network Info
-  ip_address = "${local.root.locals.worker_ips[1]}/24"
+  ip_address = "${local.root.locals.worker_ips[2]}/24"
   gateway    = local.root.locals.gateway
 }
