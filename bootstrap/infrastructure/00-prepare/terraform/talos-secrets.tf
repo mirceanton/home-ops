@@ -10,3 +10,8 @@ output "talos_machine_secrets" {
   value       = talos_machine_secrets.cluster.machine_secrets
   sensitive   = true
 }
+output "talos_client_configuration" {
+  description = "Talos client configuration for the cluster"
+  value       = talos_machine_secrets.cluster.client_configuration
+  sensitive   = true
+}
