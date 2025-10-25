@@ -39,4 +39,8 @@ variable "architecture" {
   description = "Talos architecture (e.g., amd64, arm64)"
   type        = string
   default     = "amd64"
+  validation {
+    condition     = contains(["amd64", "arm64"], var.architecture)
+    error_message = "architecture must be either 'amd64' or 'arm64'"
+  }
 }
