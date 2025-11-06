@@ -9,9 +9,9 @@ tasks:
   sops:encrypt:
     desc: Encrypt all sops files in this repository.
     aliases: [sops:enc, sops:e]
-    cmd: bash {{.ROOT_DIR}}/scripts/sops-encrypt-all.sh
+    cmd: bash {{.ROOT_DIR}}/.scripts/sops-encrypt-all.sh
 
   sops:decrypt:
     desc: Decrypt all sops files in this repository.
     aliases: [sops:dec, sops:d]
-    cmd: bash {{.ROOT_DIR}}/scripts/sops-decrypt-all.sh {{.CLI_ARGS}}
+    cmd: bash {{.ROOT_DIR}}/.scripts/sops-decrypt-all.sh {{.CLI_ARGS}}
