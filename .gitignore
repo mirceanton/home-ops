@@ -2,10 +2,6 @@
 talsecret.yaml
 clusterconfig/
 
-# Kustomize helm charts
-charts/
-
-
 # Ignore Unencrypted Kubernetes Secrets
 *.secret.yaml
 
@@ -18,4 +14,13 @@ terraform.tfstate.backup
 
 # Age Encryption key
 .age.key
-.DS_Store
+
+# Random shit
+.private/
+.pytest_cache/
+.task/
+.venv/
+*.crt
+*.env
+*.iso
+*.key
