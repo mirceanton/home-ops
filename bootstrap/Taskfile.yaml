@@ -1,0 +1,14 @@
+---
+version: '3'
+
+tasks:
+  talos:setup:
+    desc: Setup Talos cluster
+    cmds:
+      - talhelper genconfig
+      - talhelper gencommand apply --extra-flags --insecure | bash -
+      - sleep 180
+      - talhelper gencommand bootstrap | bash -
+      - sleep 120
+      - talhelper gencommand health | bash -
+      - talhelper gencommand kubeconfig --extra-flags ./clusterconfig/kubeconfig.yaml | bash -

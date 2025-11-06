@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+clusterName: automaton
+endpoint: "https://10.0.0.15:6443"
+
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.11.3
+
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.34.1
+
+additionalApiServerCertSans: &san
+  - 10.0.0.15
+  - automaton.mgmt.h.mirceanton.com
+additionalMachineCertSans: *san
+
+allowSchedulingOnControlPlanes: true
+cniConfig:
+  name: flannel
+
+nodes:
+  - hostname: automaton
+    ipAddress: 10.0.0.15
+    controlPlane: true
+
+    installDisk: /dev/nvme0n1
+    machineDisks:
+      - device: /dev/nvme1n1
+        partitions:
+          - mountpoint: /var/mnt/data
+
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "70:85:c2:58:8d:31"
+        dhcp: true
+      - deviceSelector:
+          hardwareAddr: "24:2f:d0:7f:fa:1f"
+        dhcp: true
+
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/intel-ucode
+
+    patches:
+      - |-  # Extra disks
+        machine:
+          kubelet:
+            extraMounts:
+              - destination: /var/mnt/data
+                type: bind
+                source: /var/mnt/data
+                options: [rbind, rshared, rw]
