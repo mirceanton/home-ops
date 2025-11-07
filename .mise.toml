@@ -11,7 +11,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 
 # Talos Stuff
 "aqua:talosctl" = "1.11.3"
-"aqua:talhelper" = "3.0.15"
+"aqua:talhelper" = "3.0.38"
 
 # Terraform Stuff
 "aqua:terraform" = "1.13"
