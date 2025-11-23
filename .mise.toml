@@ -14,7 +14,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 "aqua:talhelper" = "3.0.39"
 
 # Terraform Stuff
-"aqua:terraform" = "1.13"
+"aqua:terraform" = "1.14.0"
 
 # Misc Tools
 "aqua:go-task/task" = "3.45.5"
