@@ -17,6 +17,6 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 "aqua:terraform" = "1.14.3"
 
 # Misc Tools
-"aqua:go-task/task" = "3.45.5"
+"aqua:go-task/task" = "3.46.3"
 "aqua:getsops/sops" = "3.11.0"
 "aqua:FiloSottile/age" = "1.2.1"
