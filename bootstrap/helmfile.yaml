@@ -1,0 +1,29 @@
+---
+helmDefaults:
+  wait: true
+  waitForJobs: true
+  timeout: 600
+
+releases:
+  # ============================================================================
+  # Flux Operator
+  # Manages the lifecycle of Flux CD controllers
+  # https://github.com/controlplaneio-fluxcd/flux-operator
+  # ============================================================================
+  - name: flux-operator
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
+    version: 0.38.1
+    values: ["templates/values.yaml.gotmpl"]
+    createNamespace: true
+
+  # ============================================================================
+  # Flux Instance
+  # Deploys and configures the Flux controllers
+  # ============================================================================
+  - name: flux-instance
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    version: 0.38.1
+    needs: ["flux-system/flux-operator"]
+    values: ["templates/values.yaml.gotmpl"]
