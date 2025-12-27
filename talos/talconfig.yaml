@@ -1,0 +1,234 @@
+---
+clusterName: homeassistant
+endpoint: "https://k8s-homeassistant.mgmt.h.mirceanton.com:6443"
+
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.12.0
+
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.35.0
+
+additionalApiServerCertSans: &san
+  - k8s-homeassistant.mgmt.h.mirceanton.com
+  - 10.0.0.16
+  - 127.0.0.1 # KubePrism
+additionalMachineCertSans: *san
+
+allowSchedulingOnControlPlanes: true
+cniConfig: {name: flannel}
+
+nodes:
+  - hostname: lenovo-tiny
+    ipAddress: 10.0.0.16
+    controlPlane: true
+    installDiskSelector:
+      model: "INTEL SSDPEKKF256G7L" # Intel 256GB NVMe
+
+    networkInterfaces:
+      - interface: enp0s31f6
+        dhcp: true
+        dhcpOptions: {routeMetric: 1024}
+        vlans:
+          - vlanId: 1010
+            dhcp: true
+            dhcpOptions: {routeMetric: 4095}
+
+    schematic:
+      customization:
+        #? ERROR: install.extraKernelArgs and install.grubUseUKICmdline can't be used together
+        # extraKernelArgs:
+        #   - intel_iommu=on # Enable IOMMU for GPU/USB passthrough
+        #   - iommu=pt # Set IOMMU to passthrough mode for better performance
+        #   - mitigations=off # Disable CPU vuln. mitigations for better performance
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/i915
+            - siderolabs/intel-ucode
+            - siderolabs/usb-modem-drivers # USB serial drivers for Zigbee/Z-Wave dongles
+
+patches:
+  # ============================================================================
+  # CLUSTER DISCOVERY CONFIGURATION
+  # Disable cluster discovery to prevent automatic node detection.
+  # For a single-node cluster, discovery is unnecessary.
+  # ============================================================================
+  - |-
+    cluster:
+      discovery:
+        enabled: false
+        registries:
+          kubernetes:
+            disabled: true
+          service:
+            disabled: false
+
+  # ============================================================================
+  # KUBELET PERFORMANCE TUNING
+  # Optimize kubelet for higher pod density and faster deployments
+  # - maxPods: Increase from default 110 to 200 to allow more pods on a single node
+  # - serializeImagePulls: Disable serialization to pull images in parallel
+  # ============================================================================
+  - |-
+    machine:
+      kubelet:
+        extraConfig:
+          maxPods: 200
+          serializeImagePulls: false
+
+  # ============================================================================
+  # NETWORK SEARCH DOMAIN
+  # Disable automatic search domain configuration in /etc/resolv.conf.
+  # This prevents DNS resolution issues where short hostnames get the cluster's
+  # search domain appended, which can cause unexpected behavior with external
+  # DNS lookups and slow down DNS resolution.
+  # ============================================================================
+  - |-
+    machine:
+      network:
+        disableSearchDomain: true
+
+  # ============================================================================
+  # KUBEPRISM - LOCAL API SERVER LOAD BALANCER
+  # ============================================================================
+  - |-
+    machine:
+      features:
+        kubePrism:
+          enabled: true
+          port: 7445
+
+  # ============================================================================
+  # NETWORK INTERFACE BINDING
+  # Ensure all management services bind to the correct network interface.
+  # ============================================================================
+  - |-
+    machine:
+      kubelet:
+        nodeIP:
+          validSubnets: ["10.0.0.0/24"]
+    cluster:
+      etcd:
+        extraArgs:
+          listen-metrics-urls: http://0.0.0.0:2381
+        advertisedSubnets: ["10.0.0.0/24"]
+
+  # ============================================================================
+  # HOST DNS CONFIGURATION
+  # Enable Talos host-level DNS features:
+  # - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
+  #                         preventing potential DNS loops and maintaining isolation
+  # - resolveMemberNames: Enable resolution of cluster member hostnames,
+  #                       useful for debugging and inter-node communication
+  # ============================================================================
+  - |-
+    machine:
+      features:
+        hostDNS:
+          enabled: true
+          forwardKubeDNSToHost: false
+          resolveMemberNames: true
+
+  # ============================================================================
+  # DISABLE API SERVER ADMISSION CONTROL
+  # Remove default admission control plugins from the API server.
+  # ============================================================================
+  - |-
+    cluster:
+      apiServer:
+        admissionControl:
+          $$patch: delete
+
+  # ============================================================================
+  # KUBELET SERVING CERTIFICATE ROTATION
+  # Enable automatic rotation of kubelet serving certificates:
+  # Requires a CSR approver (deployed via extraManifests) to automatically approve
+  # the kubelet CSRs, otherwise certs must be manually approved via kubectl.
+  # ============================================================================
+  - |-
+    machine:
+      kubelet:
+        extraArgs:
+          rotate-server-certificates: "true"
+    cluster:
+      extraManifests:
+        - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/refs/tags/v0.10.1/deploy/standalone-install.yaml
+
+  # ============================================================================
+  # KERNEL SYSCTLS FOR PERFORMANCE AND FILE WATCHING
+  # ============================================================================
+  - |-
+    machine:
+      sysctls:
+        # Inotify limits - essential for file-watching apps
+        fs.inotify.max_user_instances: "8192"
+        fs.inotify.max_user_watches: "1048576"
+
+        # BBR congestion control - Google's algorithm for better throughput & lower latency
+        net.ipv4.tcp_congestion_control: bbr
+        # Socket backlog - max pending connections (useful for services with many clients)
+        net.core.somaxconn: "65535"
+
+        # Fair queue scheduler - required for BBR congestion control
+        net.core.default_qdisc: fq
+
+        # Socket buffer sizes - increased for better network throughput
+        net.core.rmem_max: "16777216"
+        net.core.wmem_max: "16777216"
+
+        # Allow unprivileged containers to use ping
+        net.ipv4.ping_group_range: 0 2147483647
+
+        # TCP Fast Open - reduces latency by sending data in SYN packet (3 = enabled for both client & server)
+        net.ipv4.tcp_fastopen: "3"
+
+        # Path MTU discovery - helps avoid fragmentation issues
+        net.ipv4.tcp_mtu_probing: "1"
+
+        # TCP buffer sizes (min, default, max) - tuned for better throughput
+        net.ipv4.tcp_rmem: 4096 87380 16777216
+        net.ipv4.tcp_wmem: 4096 65536 16777216
+
+        # Disable slow start after idle - better for bursty IoT traffic patterns
+        net.ipv4.tcp_slow_start_after_idle: "0"
+
+  # ============================================================================
+  # CONTAINER REGISTRY MIRROR/PROXY CONFIGURATION
+  # Configure a pull-through cache proxy for container images.
+  # ============================================================================
+  - |-
+    machine:
+      registries:
+        config:
+          ${registry_hostname}:
+            auth:
+              username: ${registry_username}
+              password: ${registry_password}
+        mirrors:
+          docker.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/docker.io/"]
+            overridePath: true
+          registry-1.docker.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/registry-1.docker.io/"]
+            overridePath: true
+          ghcr.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/ghcr.io/"]
+            overridePath: true
+          gcr.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/gcr.io/"]
+            overridePath: true
+          quay.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/quay.io/"]
+            overridePath: true
+          registry.k8s.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/registry.k8s.io/"]
+            overridePath: true
+          oci.external-secrets.io:
+            skipFallback: true
+            endpoints: ["https://${registry_hostname}/v2/oci.external-secrets.io/"]
+            overridePath: true
