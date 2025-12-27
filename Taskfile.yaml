@@ -1,0 +1,26 @@
+---
+version: '3'
+
+includes:
+  lint: .taskfiles/lint.yaml
+  sops: .taskfiles/sops.yaml
+
+tasks:
+  default:
+    silent: true
+    cmd: task -l
+
+  ansible:reboot:
+    desc: Reboot all PVE nodes
+    cmds:
+      - ansible-playbook -i ansible/inventory.ini ansible/reboot.yaml
+
+  ansible:shutdown:
+    desc: Shutdown all PVE nodes
+    cmds:
+      - ansible-playbook -i ansible/inventory.ini ansible/shutdown.yaml
+
+  ansible:update:
+    desc: Update packages on all PVE nodes
+    cmds:
+      - ansible-playbook -i ansible/inventory.ini ansible/update-packages.yaml

@@ -1,0 +1,38 @@
+---
+version: '3'
+
+tasks:
+  default:
+    desc: Run all linters.
+    alias: ["fix", "all"]
+    cmds:
+      - task: actions
+      - task: yaml
+      - task: tofu
+      - task: terragrunt
+
+  check:
+    desc: Check all files for linting issues without modifying them
+    cmds:
+      - task lint:actions
+      - task lint:yaml -- -lint
+      - task lint:tofu -- -check
+      - task lint:terragrunt -- --check
+
+  actions:
+    desc: Lint GitHub Actions workflow files
+    cmd: actionlint {{.CLI_ARGS}}
+
+  terragrunt:
+    desc: Format Terragrunt HCL configuration files
+    cmd: terragrunt hcl format {{.CLI_ARGS}}
+    dir: infrastructure
+
+  tofu:
+    desc: Format OpenTofu/Terraform configuration files
+    cmd: tofu fmt -recursive {{.CLI_ARGS}}
+    dir: infrastructure
+
+  yaml:
+    desc: Format YAML files across the project
+    cmd: yamlfmt {{.CLI_ARGS}} **/*.yaml
