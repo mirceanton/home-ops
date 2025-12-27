@@ -1,0 +1,33 @@
+.envrc
+
+# Talos Generated Configuration Files
+talsecret.yaml
+talenv.yaml
+clusterconfig/
+
+# Ignore Unencrypted Kubernetes Secrets
+*.secret.yaml
+
+# Random shit
+.private/
+.pytest_cache/
+.task/
+.venv/
+*.crt
+*.env
+*.iso
+*.key
+
+# Terraform stuff
+.terragrunt-cache/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.auto.tfvars
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+.terraform.tfstate.lock.info
+.terraformrc
+terraform.rc
