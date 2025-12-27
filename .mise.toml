@@ -2,28 +2,31 @@
 SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 
 [tools]
-# Kubectl + Plugins
+# Kubectl + Tools + Plugins
 "aqua:kubectl" = "1.35.0"
-"aqua:fluxcd/flux2" = "2.8.1"
+"github:mirceanton/kubectl-switch" = "v2.4.3"
 "aqua:kustomize" = "latest"
-"aqua:helm" = "latest"
 "aqua:derailed/k9s" = "latest"
+"aqua:fluxcd/flux2" = "2.7.5"
+
+# Helm + Plugins
+"aqua:helm" = "latest"
+helmfile = "latest"
+
+# CAPI Tools
 clusterctl = "latest"
 
 # Talos Stuff
 "aqua:talosctl" = "1.12.0"
 "aqua:talhelper" = "3.0.43"
-
-# Terraform Stuff
-terragrunt = "latest"
-opentofu = "latest"
-op = "latest"
+"github:mirceanton/talswitcher" = "latest"
 
 # Misc Tools
 task = "latest"
 sops = "latest"
 age = "latest"
 direnv = "latest"
+op = "latest"
 
 # Linters
 yamlfmt = "latest"
