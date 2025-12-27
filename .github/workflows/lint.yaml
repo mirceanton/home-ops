@@ -1,0 +1,20 @@
+---
+name: Lint
+permissions: { contents: read }
+
+on:
+  workflow_dispatch: {}
+  push: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup mise
+        uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3.5.1
+
+      - name: Run linters
+        run: task lint:check
