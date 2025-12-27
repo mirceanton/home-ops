@@ -1,0 +1,19 @@
+---
+doublestar: true
+
+exclude:
+  - "**/*.sops.yaml"
+  - "**/*/clusterconfig/*.yaml"
+
+formatter:
+  type: basic
+  indent: 2
+  include_document_start: true
+  eof_newline: true
+  retain_line_breaks_single: true
+  max_line_length: 200
+  drop_merge_tag: true
+  disable_alias_key_correction: true
+  scan_folded_as_literal: true
+  trim_trailing_whitespace: true
+
