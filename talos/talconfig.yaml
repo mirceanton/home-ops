@@ -33,6 +33,16 @@ nodes:
             dhcp: true
             dhcpOptions: {routeMetric: 4095}
 
+    userVolumes:
+      - name: data # Mounted at /var/mnt/data for OpenEBS
+        provisioning:
+          diskSelector:
+            match: disk.model == "CT240BX500SSD1" # Crucial BX500 240GB SATA SSD
+          grow: true
+          maxSize: 240GB
+        filesystem:
+          type: xfs
+
     schematic:
       customization:
         #? ERROR: install.extraKernelArgs and install.grubUseUKICmdline can't be used together
