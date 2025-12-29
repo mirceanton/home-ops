@@ -1,0 +1,159 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: cert-manager
+
+  values:
+    # =============================================================================================
+    # Component - Controller
+    # =============================================================================================
+    crds: {enabled: true}
+    dns01RecursiveNameservers: https://1.1.1.1:443/dns-query,https://1.0.0.1:443/dns-query
+    dns01RecursiveNameserversOnly: true
+
+    # ====================== Scaling and Scheduling ======================
+    replicaCount: 1 #! TODO: Set to 2 or more when adding more nodes
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        #! FIXME Should be DoNotSchedule but single node clusters can't satisfy that
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: cert-manager
+            app.kubernetes.io/component: controller
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+
+    # ======================= Resource Allocations =======================
+    resources:
+      requests:
+        cpu: 20m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+    # ============================= Security =============================
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: ["ALL"]
+
+    # =============================================================================================
+    # Component - Webhook
+    # =============================================================================================
+    webhook:
+      # ====================== Scaling and Scheduling ======================
+      replicaCount: 1 #! TODO: Set to 2 or more when adding more nodes
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          #! FIXME Should be DoNotSchedule but single node clusters can't satisfy that
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cert-manager
+              app.kubernetes.io/component: webhook
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+
+      # ======================= Resource Allocations =======================
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+      # ============================= Security =============================
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+
+    # =============================================================================================
+    # Component - Webhook
+    # =============================================================================================
+    cainjector:
+      enabled: true
+      # ====================== Scaling and Scheduling ======================
+      replicaCount: 1 #! TODO: Set to 2 or more when adding more nodes
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          #! FIXME Should be DoNotSchedule but single node clusters can't satisfy that
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cert-manager
+              app.kubernetes.io/component: cainjector
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+
+      # ======================= Resource Allocations =======================
+      resources:
+        requests:
+          cpu: 25m
+          memory: 32Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+
+      # ============================= Security =============================
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+
+    # =============================================================================================
+    # Component - Startup API Check
+    # =============================================================================================
+    startupapicheck:
+      enabled: true
+      timeout: 1m
+
+      # ======================= Resource Allocations =======================
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+      # ============================= Security =============================
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
