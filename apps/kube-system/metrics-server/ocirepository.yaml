@@ -1,0 +1,14 @@
+---
+
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: metrics-server
+spec:
+  url: oci://ghcr.io/home-operations/charts-mirror/metrics-server
+  interval: 15m
+  ref: {tag: 3.13.0}
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy

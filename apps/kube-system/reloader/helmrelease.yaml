@@ -1,0 +1,53 @@
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reloader
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: reloader
+
+  values:
+    fullnameOverride: reloader
+
+    reloader:
+      # =========================== App Settings ===========================
+      reloadOnCreate: true
+      reloadOnDelete: true
+      syncAfterRestart: true
+      enableHA: true #! Enable for more than 1 replica
+
+      deployment:
+        # ==================== Scaling and Scheduling ====================
+        replicas: 1 #! TODO: Set to 2 or more when adding more nodes
+        topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: kubernetes.io/hostname
+            #!FIXME Should be DoNotSchedule but single node clusters can't satisfy that
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: reloader
+                app.kubernetes.io/instance: reloader
+        podDisruptionBudget:
+          enabled: true
+          minAvailable: 1
+
+        # ===================== Resource Allocations =====================
+        resources:
+          limits:
+            cpu: 100m
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+
+        # =========================== Security ===========================
+        containerSecurityContext:
+          capabilities:
+            drop: ["ALL"]
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
