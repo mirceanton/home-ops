@@ -19,4 +19,4 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 # Misc Tools
 "aqua:go-task/task" = "3.46.4"
 "aqua:getsops/sops" = "3.11.0"
-"aqua:FiloSottile/age" = "1.2.1"
+"aqua:FiloSottile/age" = "1.3.1"
