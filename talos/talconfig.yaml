@@ -123,6 +123,16 @@ patches:
         advertisedSubnets: ["10.0.0.0/24"]
 
   # ============================================================================
+  # Enable mutating admission policies in the API server.
+  # ============================================================================
+  - |-
+    cluster:
+      apiServer:
+        extraArgs:
+          feature-gates: MutatingAdmissionPolicy=true
+          runtime-config: admissionregistration.k8s.io/v1beta1=true
+
+  # ============================================================================
   # HOST DNS CONFIGURATION
   # Enable Talos host-level DNS features:
   # - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
