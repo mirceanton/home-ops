@@ -1,0 +1,63 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: cert-manager
+
+  values:
+    # =============================================================================================
+    # Component - Controller
+    # =============================================================================================
+    crds: {enabled: true}
+    dns01RecursiveNameservers: https://1.1.1.1:443/dns-query,https://1.0.0.1:443/dns-query
+    dns01RecursiveNameserversOnly: true
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 20m
+        memory: 32Mi
+      limits:
+        memory: 64Mi
+
+    # =============================================================================================
+    # Component - Webhook
+    # =============================================================================================
+    webhook:
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+
+    # =============================================================================================
+    # Component - CAInjector
+    # =============================================================================================
+    cainjector:
+      enabled: true
+      replicaCount: 1
+      resources:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+
+    # =============================================================================================
+    # Component - Startup API Check
+    # =============================================================================================
+    startupapicheck:
+      enabled: true
+      timeout: 1m
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          memory: 256Mi

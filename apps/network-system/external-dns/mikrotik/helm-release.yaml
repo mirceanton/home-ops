@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-mikrotik
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: external-dns-mikrotik
+
+  values:
+    fullnameOverride: external-dns-mikrotik
+
+    logLevel: debug
+    logFormat: text
+
+    interval: 1m
+    triggerLoopOnEvent: true
+
+    policy: sync
+
+    sources: [gateway-httproute, service, ingress, crd]
+    managedRecordTypes: [A, CNAME]
+
+    txtOwnerId: iot
+    txtPrefix: k8s.iot.
+
+    domainFilters: ["home.mirceanton.com"]
+    excludeDomains: []
+
+    resources:
+      requests:
+        cpu: 20m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
+
+    provider:
+      name: webhook
+      webhook:
+        image:
+          repository: ghcr.io/mirceanton/external-dns-provider-mikrotik
+          tag: v1.5.3
+        env:
+          - name: LOG_FORMAT
+            value: text
+          - name: LOG_LEVEL
+            value: debug
+
+          - name: MIKROTIK_BASEURL
+            value: "https://10.0.0.1:443"
+          - name: MIKROTIK_SKIP_TLS_VERIFY
+            value: "true"
+          - name: MIKROTIK_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mikrotik-credentials
+                key: password
+          - name: MIKROTIK_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mikrotik-credentials
+                key: username
+
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
