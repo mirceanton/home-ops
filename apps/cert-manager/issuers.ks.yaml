@@ -16,5 +16,8 @@ spec:
   timeout: 5m
   targetNamespace: cert-manager
 
+  decryption:
+    provider: sops
+
   dependsOn:
     - name: cert-manager
