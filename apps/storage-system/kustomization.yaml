@@ -7,3 +7,4 @@ resources:
   - ./namespace.yaml
   - ./openebs
   - ./snapshot-controller
+  - ./volsync
