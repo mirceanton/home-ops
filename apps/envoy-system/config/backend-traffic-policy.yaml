@@ -1,0 +1,27 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: default-backend-policy
+spec:
+  # Enable response compression with modern algorithms prioritized
+  # Zstd/Brotli offer better compression than Gzip but fall back gracefully
+  compression:
+    - type: Zstd
+    - type: Brotli
+    - type: Gzip
+
+  # Apply this policy to all Gateway resources in the namespace
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+
+  # Enable TCP keepalive to prevent idle connections from being dropped
+  # by intermediate network devices (firewalls, NAT, load balancers)
+  tcpKeepalive: {}
+
+  # Disable request timeout (0s = unlimited) to support long-lived connections
+  # Required for WebSockets, SSE, and long-polling (e.g., Home Assistant frontend)
+  timeout:
+    http:
+      requestTimeout: 0s

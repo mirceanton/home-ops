@@ -1,0 +1,35 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: default-client-policy
+spec:
+  # Apply this policy to all Gateway resources in the namespace
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+
+  # Trust X-Forwarded-For headers only from the internal pod network
+  clientIPDetection:
+    xForwardedFor:
+      trustedCIDRs:
+        - 10.42.0.0/16
+
+  # On malformed HTTP/2 messages, terminate only the affected stream
+  # rather than closing the entire connection
+  http2:
+    onInvalidMessage: TerminateStream
+
+  # Enable HTTP/3 (QUIC) for faster connection establishment and
+  # improved performance on unreliable networks
+  http3: {}
+
+  # Enable TCP keepalive to maintain persistent client connections
+  tcpKeepalive: {}
+
+  tls:
+    # Enforce TLS 1.2 minimum - TLS 1.0/1.1 are deprecated and insecure
+    minVersion: "1.2"
+    # Advertise supported protocols during TLS handshake (ALPN)
+    # h2 = HTTP/2, http/1.1 = fallback for older clients
+    alpnProtocols: [h2, http/1.1]
