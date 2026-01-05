@@ -13,7 +13,7 @@ spec:
   clientIPDetection:
     xForwardedFor:
       trustedCIDRs:
-        - 10.42.0.0/16
+        - 10.244.0.0/24
 
   # On malformed HTTP/2 messages, terminate only the affected stream
   # rather than closing the entire connection

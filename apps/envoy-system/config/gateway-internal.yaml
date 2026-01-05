@@ -4,14 +4,13 @@ kind: Gateway
 metadata:
   name: envoy-internal
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname home.mirceanton.com
+    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.10.250
 spec:
   gatewayClassName: envoy
 
   infrastructure:
     annotations:
-      external-dns.alpha.kubernetes.io/hostname: *hostname
-      metallb.io/loadBalancerIPs: 10.0.10.250
+      metallb.io/loadBalancerIPs: *loadbalancerIP
 
   listeners:
     - name: http

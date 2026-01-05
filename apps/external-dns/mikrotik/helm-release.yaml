@@ -13,6 +13,9 @@ spec:
   values:
     fullnameOverride: external-dns-mikrotik
 
+    logLevel: debug
+    logFormat: text
+
     triggerLoopOnEvent: true
     interval: 10s
     policy: sync
@@ -28,6 +31,11 @@ spec:
           repository: ghcr.io/mirceanton/external-dns-provider-mikrotik
           tag: v1.5.3
         env:
+          - name: LOG_FORMAT
+            value: text
+          - name: LOG_LEVEL
+            value: debug
+
           - name: MIKROTIK_BASEURL
             value: "https://10.0.0.1:443"
           - name: MIKROTIK_SKIP_TLS_VERIFY
