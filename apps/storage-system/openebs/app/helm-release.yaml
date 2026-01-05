@@ -14,17 +14,13 @@ spec:
     localpv-provisioner:
       localpv:
         basePath: &hostPath /var/mnt/data
-        enableLeaderElection: true #! Required for more than 1 replica
-        replicas: 1 #! TODO: Set to 2 or more when adding more nodes
-
-        # ===================== Resource Allocations =====================
+        replicas: 1
         requests:
           cpu: 20m
           memory: 32Mi
         limits:
           memory: 128Mi
 
-      # ========================== StorageClass ==========================
       hostpathClass:
         enabled: true
         name: openebs-hostpath
