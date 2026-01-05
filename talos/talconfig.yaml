@@ -149,21 +149,6 @@ patches:
           $$patch: delete
 
   # ============================================================================
-  # KUBELET SERVING CERTIFICATE ROTATION
-  # Enable automatic rotation of kubelet serving certificates:
-  # Requires a CSR approver (deployed via extraManifests) to automatically approve
-  # the kubelet CSRs, otherwise certs must be manually approved via kubectl.
-  # ============================================================================
-  - |-
-    machine:
-      kubelet:
-        extraArgs:
-          rotate-server-certificates: "true"
-    cluster:
-      extraManifests:
-        - https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/refs/tags/v0.10.1/deploy/standalone-install.yaml
-
-  # ============================================================================
   # KERNEL SYSCTLS FOR PERFORMANCE AND FILE WATCHING
   # ============================================================================
   - |-
