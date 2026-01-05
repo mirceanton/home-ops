@@ -69,9 +69,6 @@ spec:
 
           - # Enable in-memory kustomize builds
             patch: |
-              - op: add
-                path: /spec/template/spec/containers/0/args/-
-                value: --concurrent=20
               - op: replace
                 path: /spec/template/spec/volumes/0
                 value:
