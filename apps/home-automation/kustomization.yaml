@@ -6,3 +6,4 @@ namespace: home-automation
 resources:
   - ./namespace.yaml
   - ./home-assistant
+  - ./mosquitto
