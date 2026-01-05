@@ -7,9 +7,11 @@ metadata:
     external-dns.alpha.kubernetes.io/target: &hostname home.mirceanton.com
 spec:
   gatewayClassName: envoy
+
   infrastructure:
     annotations:
       external-dns.alpha.kubernetes.io/hostname: *hostname
+      metallb.io/loadBalancerIPs: 10.0.10.250
 
   listeners:
     - name: http
