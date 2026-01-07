@@ -53,6 +53,8 @@ spec:
             value: "https://10.0.0.1:443"
           - name: MIKROTIK_SKIP_TLS_VERIFY
             value: "true"
+          - name: MIKROTIK_DEFAULT_COMMENT
+            value: "Managed by ExternalDNS"
           - name: MIKROTIK_PASSWORD
             valueFrom:
               secretKeyRef:
