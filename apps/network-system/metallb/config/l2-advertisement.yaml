@@ -3,4 +3,6 @@ kind: L2Advertisement
 metadata:
   name: l2-advertisement
 spec:
-  ipAddressPools: ["pool"]
+  ipAddressPools:
+    - services-pool
+    - admin-pool

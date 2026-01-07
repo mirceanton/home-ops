@@ -1,7 +1,17 @@
+---
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: pool
+  name: services-pool
 spec:
   addresses: ["10.0.10.250/32"]
+  autoAssign: false
+
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: admin-pool
+spec:
+  addresses: ["10.0.0.250/32"]
   autoAssign: false
