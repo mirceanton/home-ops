@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+#! This helmfile is for extracting and installing Custom Resource Definitions (CRDs) from Helm charts.
+#! It is not intended to be used with helmfile apply or helmfile sync.
+#! Use helmfile template -q | kubectl apply --server-side --force-conflicts -f -
+
+helmDefaults:
+  args:
+    - --include-crds
+    - --no-hooks
+  postRendererArgs:
+    - -c
+    - yq ea -e 'select(.kind == "CustomResourceDefinition")'
+
+releases:
+  - name: grafana-operator
+    namespace: monitoring-system
+    chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
+    version: 5.21.4
+
+  - name: kube-prometheus-stack
+    namespace: monitoring-system
+    chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+    version: 80.13.0
