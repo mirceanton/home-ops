@@ -27,18 +27,21 @@ spec:
           cpu: 20m
           memory: 32Mi
         limits:
+          cpu: null
           memory: 64Mi
       metricServer:
         requests:
           cpu: 20m
           memory: 32Mi
         limits:
+          cpu: null
           memory: 64Mi
       webhooks:
         requests:
           cpu: 20m
           memory: 32Mi
         limits:
+          cpu: null
           memory: 64Mi
 
     logging:
