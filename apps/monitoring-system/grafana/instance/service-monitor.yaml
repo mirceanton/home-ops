@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: grafana
+spec:
+  jobLabel: grafana
+
+  endpoints:
+    - port: grafana
+      path: /metrics
+      honorLabels: true
+
+  namespaceSelector:
+    matchNames: ["monitoring-system"]
+
+  selector:
+    matchLabels:
+      grafana.internal/instance: grafana

@@ -1,0 +1,207 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: kube-prometheus-stack
+
+  values:
+    crds: {enabled: true}
+    cleanPrometheusOperatorObjectNames: true
+
+    # ==========================================================================
+    # Alertmanager
+    # ==========================================================================
+    alertmanager:
+      enabled: true
+      route:
+        main:
+          enabled: true
+          hostnames: ["alertmanager.home.mirceanton.com"]
+          parentRefs:
+            - name: envoy-admin
+              namespace: network-system
+
+      alertmanagerSpec:
+        # alertmanagerConfiguration: {name: alertmanager}
+        # =======================================
+        # App Settings
+        # =======================================
+        externalUrl: "https://alertmanager.home.mirceanton.com"
+        logFormat: json
+        logLevel: info
+
+        # =======================================
+        # Resources
+        # =======================================
+        replicas: 1
+        resources:
+          requests:
+            cpu: 20m
+            memory: 32Mi
+          limits:
+            memory: 128Mi
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: openebs-hostpath
+              resources:
+                requests:
+                  storage: 1Gi
+
+    # ==========================================================================
+    # Prometheus Operator
+    # ==========================================================================
+    prometheusOperator:
+      enabled: true
+      # =======================================
+      # App Settings
+      # =======================================
+      logFormat: json
+      logLevel: info
+
+      # =======================================
+      # Resources
+      # =======================================
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    # ==========================================================================
+    # Prometheus
+    # ==========================================================================
+    prometheus:
+      enabled: true
+      route:
+        main:
+          enabled: true
+          hostnames: ["prometheus.home.mirceanton.com"]
+          parentRefs:
+            - name: envoy-admin
+              namespace: network-system
+
+      prometheusSpec:
+        # =======================================
+        # App Settings
+        # =======================================
+        externalUrl: "https://prometheus.home.mirceanton.com"
+        retention: 14d
+        retentionSize: 50GB
+        logLevel: info
+        logFormat: json
+
+        # =======================================
+        #? Replace default Prometheus image with prompp and
+        #? override 'unsupported Prometheus version' error
+        # =======================================
+        version: v2.55.1
+        image:
+          registry: mirror.gcr.io
+          repository: prompp/prompp
+          tag: 0.7.2
+
+        # =======================================
+        # Security
+        # =======================================
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 64535
+          runAsGroup: 64535
+          fsGroup: 64535
+
+        # =======================================
+        #? Disable prometheus resource to be created with selectors based on 
+        #? values in the helm deployment if a nil or {} value is provided
+        # =======================================
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        ruleSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+
+        # =======================================
+        # Resources
+        # =======================================
+        replicas: 1
+        shards: 1
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 1Gi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: openebs-hostpath
+              resources:
+                requests:
+                  storage: 50Gi
+
+
+    # ==========================================================================
+    # Grafana
+    # ==========================================================================
+    grafana:
+      enabled: false
+      forceDeployDashboards: true
+      operator:
+        dashboardsConfigMapRefEnabled: true
+        folder: monitoring-system
+        matchLabels:
+          grafana.internal/instance: grafana
+
+    # ==========================================================================
+    # Exporters
+    # ==========================================================================
+    coreDns: {enabled: true}
+    kubelet: {enabled: true}
+    kubeApiServer: {enabled: true}
+    kubeControllerManager: {enabled: true}
+    kubeScheduler: {enabled: true}
+    kubeProxy: {enabled: true}
+    kubeEtcd:
+      enabled: true
+      service:
+        selector:
+          component: kube-apiserver
+
+    nodeExporter: {enabled: true}
+    prometheus-node-exporter:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+
+    kubeStateMetrics: {enabled: true}
+    kube-state-metrics:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    # ==========================================================================
+    # Additional Settings
+    # ==========================================================================
+    additionalPrometheusRulesMap:
+      oom-rules:
+        groups:
+          - name: oom
+            rules:
+              - alert: OomKilled
+                annotations:
+                  summary: Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
+                expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
+                labels:
+                  severity: critical
