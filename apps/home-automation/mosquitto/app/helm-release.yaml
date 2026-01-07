@@ -14,7 +14,7 @@ spec:
       mosquitto:
         type: statefulset
         containers:
-          app:
+          mosquitto:
             image:
               repository: public.ecr.aws/docker/library/eclipse-mosquitto
               tag: 2.0.22
