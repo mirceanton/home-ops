@@ -1,0 +1,53 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keda
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: keda
+
+  values:
+    crds: {install: true}
+    networkPolicy: {enabled: false}
+
+    certificates:
+      certManager:
+        enabled: true
+
+    operator: {replicaCount: 1}
+    metricServer: {replicaCount: 1}
+    webhooks: {replicaCount: 1}
+
+    resources:
+      operator:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+      metricServer:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+      webhooks:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+
+    logging:
+      operator:
+        format: json
+        level: info
+      metricServer:
+        zapEncoder: json
+        zapLevel: info
+      webhooks:
+        format: json
+        level: info
