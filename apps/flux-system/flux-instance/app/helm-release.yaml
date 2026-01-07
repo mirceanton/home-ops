@@ -65,10 +65,11 @@ spec:
                             cpu: 20m
                             memory: 256Mi
                           limits:
+                            cpu: null
                             memory: 2Gi
             target:
               kind: Deployment
-              name: (kustomize-controller|helm-controller|source-controller)
+              name: (kustomize-controller|helm-controller|source-controller|notification-controller)
 
           - # Enable in-memory kustomize builds
             patch: |
