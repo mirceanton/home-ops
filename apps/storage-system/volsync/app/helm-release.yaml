@@ -16,14 +16,13 @@ spec:
     replicaCount: 1
     resources:
       requests:
-        cpu: 100m
-        memory: 64Mi
+        cpu: 20m
+        memory: 128Mi
       limits:
-        memory: 1Gi
+        memory: 256Mi
     kube-rbac-proxy-resources:
       limits:
-        cpu: 500m
-        memory: 128Mi
+        memory: 96Mi
       requests:
         cpu: 5m
         memory: 64Mi
