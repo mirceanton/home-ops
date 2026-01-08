@@ -1,0 +1,17 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: mikrotik-dashboard
+spec:
+  folderRef: mikrotik
+  url: https://grafana.com/api/dashboards/13679/revisions/23/download
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

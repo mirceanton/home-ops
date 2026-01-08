@@ -7,3 +7,4 @@ resources:
   - ./namespace.yaml
   - ./grafana
   - ./kube-prometheus-stack
+  - ./mikrotik-exporter

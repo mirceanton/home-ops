@@ -1,0 +1,76 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mikrotik-exporter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: mktxp
+
+  values:
+    controllers:
+      mktxp:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          mktxp:
+            image:
+              repository: ghcr.io/akpw/mktxp
+              tag: 1.2.16
+            command: ["mktxp"]
+            args: ["--cfg-dir", "/mktxp_config", "export"]
+
+            resources:
+              requests:
+                cpu: 20m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      mktxp:
+        ports:
+          http:
+            port: 49090
+
+    serviceMonitor:
+      mktxp:
+        serviceName: mikrotik-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /
+            interval: 1m
+            scrapeTimeout: 10s
+
+    persistence:
+      config:
+        type: configMap
+        name: mktxp-config
+        globalMounts:
+          - path: /mktxp_config/mktxp.conf
+            subPath: mktxp.conf
+          - path: /mktxp_config/_mktxp.conf
+            subPath: _mktxp.conf
+      credentials:
+        type: secret
+        name: mktxp-credentials
+        globalMounts:
+          - path: /mktxp_credentials
