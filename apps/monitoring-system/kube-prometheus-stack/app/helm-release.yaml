@@ -92,6 +92,7 @@ spec:
         # App Settings
         # =======================================
         externalUrl: "https://prometheus.home.mirceanton.com"
+        enableAdminAPI: true
         retention: 14d
         retentionSize: 50GB
         logLevel: info
