@@ -61,7 +61,9 @@ spec:
 
     persistence:
       config:
-        existingClaim: home-assistant-config
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/HomeAssistant_Config
         globalMounts:
           - path: /config
       config-cache:
@@ -70,3 +72,5 @@ spec:
           - path: /config/.venv
       tmp:
         type: emptyDir
+        globalMounts:
+          - path: /tmp

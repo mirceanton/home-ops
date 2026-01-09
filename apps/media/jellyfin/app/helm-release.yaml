@@ -78,7 +78,11 @@ spec:
 
     persistence:
       config:
-        existingClaim: jellyfin-config
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Jellyfin_Config
+        globalMounts:
+          - path: /config
       data:
         type: nfs
         server: nas.stor.h.mirceanton.com
