@@ -1,0 +1,100 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: jellyfin
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: jellyfin
+
+  values:
+    controllers:
+      jellyfin:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        type: statefulset
+        containers:
+          main:
+            image:
+              repository: jellyfin/jellyfin
+              tag: 10.11.5
+            env:
+              TZ: "Europe/Bucharest"
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_FFmpeg__probesize: 50000000
+              JELLYFIN_FFmpeg__analyzeduration: 50000000
+              JELLYFIN_PublishedServerUrl: &url "jellyfin.home.mirceanton.com"
+            resources:
+              requests:
+                cpu: 500m
+                memory: 4Gi
+              limits:
+                memory: 8Gi
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8096
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 30
+              readiness: *probe
+              startup: *probe
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        hostnames: [*url]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: jellyfin-config
+      data:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Jellyfin/
+        globalMounts:
+          - path: /nfs-media
+            readOnly: true
+      transcode:
+        type: emptyDir
+        globalMounts:
+          - path: /transcode
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
