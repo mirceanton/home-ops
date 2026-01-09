@@ -12,43 +12,26 @@ spec:
   values:
     controllers:
       zigbee:
-        annotations:
-          reloader.stakater.com/auto: "true"
+        annotations: {reloader.stakater.com/auto: "true"}
+
         containers:
           z2m:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
               tag: 2.7.2@sha256:60a295b40f4e7fb7ab4d995932369e50f2529837272fa4979e986ec1ffdb7fce
-            env:
-              TZ: Europe/Bucharest
-              ZIGBEE2MQTT_DATA: /config
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LAST_SEEN: ISO_8601
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: info # debug
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_OUTPUT: '["console"]'
-              ZIGBEE2MQTT_CONFIG_AVAILABILITY_ACTIVE_TIMEOUT: 60
-              ZIGBEE2MQTT_CONFIG_AVAILABILITY_PASSIVE_TIMEOUT: 2000
-              ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_RETAIN: "true"
-              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 8080
-              ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://z2m.home.mirceanton.com
-              ZIGBEE2MQTT_CONFIG_HOMEASSISTANT_ENABLED: true
-              ZIGBEE2MQTT_CONFIG_HOMEASSISTANT_DISCOVERY_TOPIC: homeassistant
-              ZIGBEE2MQTT_CONFIG_HOMEASSISTANT_STATUS_TOPIC: homeassistant/status
-              ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
-              ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: 60
-              ZIGBEE2MQTT_CONFIG_MQTT_REJECT_UNAUTHORIZED: "true"
-              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto.home-automation.svc.cluster.local:1883
-              ZIGBEE2MQTT_CONFIG_MQTT_VERSION: 5
-              ZIGBEE2MQTT_CONFIG_PERMIT_JOIN: "false"
-              ZIGBEE2MQTT_CONFIG_SERIAL_BAUDRATE: 115200
-              ZIGBEE2MQTT_CONFIG_SERIAL_DISABLE_LED: "false"
-              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://10.0.0.99
-              ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER: zstack
+            envFrom:
+              - secretRef: {name: z2m-secret}
+              - configMapRef: {name: z2m-config}
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
 
             probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
+              liveness: {enabled: true}
+              readiness: {enabled: true}
               startup:
                 enabled: true
                 spec:
@@ -59,13 +42,6 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: {drop: ["ALL"]}
-
-            resources:
-              requests:
-                cpu: 50m
-                memory: 128Mi
-              limits:
-                memory: 512Mi
 
     defaultPodOptions:
       securityContext:
@@ -78,15 +54,16 @@ spec:
     service:
       app:
         ports:
-          http:
-            port: *port
+          http: {port: 80}
+          onboard: {port: 8080}
+
     route:
       app:
-        hostnames:
-          - "z2m.home.mirceanton.com"
+        hostnames: ["z2m.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
+
     persistence:
       config:
         existingClaim: zigbee2mqtt-config

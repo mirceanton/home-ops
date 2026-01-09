@@ -13,5 +13,7 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  decryption: {provider: sops}
   dependsOn:
     - name: mosquitto
+
