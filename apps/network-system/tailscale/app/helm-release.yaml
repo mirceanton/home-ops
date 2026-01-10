@@ -1,0 +1,50 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: tailscale-operator
+
+  valuesFrom:
+    - kind: Secret
+      name: tailscale-oauth
+      valuesKey: clientID
+      targetPath: oauth.clientId
+    - kind: Secret
+      name: tailscale-oauth
+      valuesKey: clientSecret
+      targetPath: oauth.clientSecret
+
+  values:
+    installCRDs: true
+    apiServerProxyConfig: {mode: false}
+    ingressClass: {enabled: false}
+
+    proxyConfig:
+      defaultTags: "tag:k8s-homeops"
+    operatorConfig:
+      hostname: "home-ops"
+      defaultTags: ["tag:k8s-homeops"]
+      logging: "info" # debug
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: operator
+            patch: |
+              - op: replace
+                path: /metadata/name
+                value: tailscale-operator
