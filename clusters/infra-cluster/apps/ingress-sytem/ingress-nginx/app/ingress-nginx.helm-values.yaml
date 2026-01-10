@@ -1,9 +1,0 @@
----
-controller:
-  replicaCount: 1
-
-  ingressClass: nginx
-  ingressClassResource:
-    name: nginx
-    enabled: true
-    default: true
