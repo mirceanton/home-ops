@@ -1,0 +1,29 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: envoy-internal
+  annotations:
+    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.10.250
+spec:
+  gatewayClassName: envoy-internal
+
+  infrastructure:
+    annotations:
+      metallb.io/loadBalancerIPs: *loadbalancerIP
+
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces: {from: Same} #? same namespace only, for https redirect
+    - name: https
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces: {from: All} #? allow all namespaces for https
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: home-tls

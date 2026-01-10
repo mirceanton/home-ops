@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./admin  # -> local network, admin access
+  - ./home   # -> local network, client access
+  - ./remote # -> tailscale
+
+  - ./backend-traffic-policy.yaml
+  - ./client-traffic-policy.yaml
+  - ./https-redirect.http-route.yaml

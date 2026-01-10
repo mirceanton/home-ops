@@ -2,15 +2,9 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: envoy-admin
-  annotations:
-    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.0.250
+  name: envoy-tailscale
 spec:
-  gatewayClassName: envoy
-
-  infrastructure:
-    annotations:
-      metallb.io/loadBalancerIPs: *loadbalancerIP
+  gatewayClassName: envoy-tailscale
 
   listeners:
     - name: http
@@ -26,4 +20,4 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            name: internal-tls
+            name: tailscale-tls

@@ -2,9 +2,9 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: envoy-internal
+  name: envoy-admin
   annotations:
-    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.10.250
+    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.0.250
 spec:
   gatewayClassName: envoy
 
@@ -26,4 +26,4 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            name: internal-tls
+            name: admin-tls

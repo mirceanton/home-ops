@@ -3,13 +3,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: internal
+  name: tailscale
 spec:
-  secretName: internal-tls
+  secretName: tailscale-tls
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: home.mirceanton.com
+  commonName: ts.mirceanton.com
   dnsNames:
-    - home.mirceanton.com
-    - "*.home.mirceanton.com"
+    - ts.mirceanton.com
+    - "*.ts.mirceanton.com"

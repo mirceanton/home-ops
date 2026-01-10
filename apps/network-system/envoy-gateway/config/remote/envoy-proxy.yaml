@@ -2,7 +2,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: envoy
+  name: envoy-tailscale
 spec:
   logging:
     level:
@@ -21,7 +21,7 @@ spec:
             limits:
               memory: 1Gi
       envoyService:
-        externalTrafficPolicy: Local
+        type: ClusterIP
 
   shutdown:
     drainTimeout: 180s

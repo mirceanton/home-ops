@@ -11,6 +11,12 @@ spec:
     - name: envoy-internal
       namespace: network-system
       sectionName: http
+    - name: envoy-admin
+      namespace: network-system
+      sectionName: http
+    - name: envoy-tailscale
+      namespace: network-system
+      sectionName: http
 
   # Redirect all HTTP traffic to HTTPS
   rules:
