@@ -1,12 +1,12 @@
-# HomeOps: IoT Cluster
+# HomeOps
 
-GitOps repository for my IoT Cluster.
+GitOps repository for my Kubernetes Cluster.
 
 ## ⭐ Stargazers
 
 <div align="center">
-    <a href="https://star-history.com/#mirceanton/home-ops-iot&Date">
-        <img src="https://api.star-history.com/svg?repos=mirceanton/home-ops-iot&type=Date">
+    <a href="https://star-history.com/#mirceanton/home-ops&Date">
+        <img src="https://api.star-history.com/svg?repos=mirceanton/home-ops&type=Date">
     </a>
 </div>
 
@@ -18,4 +18,4 @@ Thanks to all the people who donate their time to the [Home Operations](https://
 
 ## 📜 Changelog
 
-See my _awful_ [commit history](https://github.com/mirceanton/home-ops-iot/commits/main)
+See my _awful_ [commit history](https://github.com/mirceanton/home-ops/commits/main)
