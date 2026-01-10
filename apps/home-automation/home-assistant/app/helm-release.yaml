@@ -52,11 +52,16 @@ spec:
             port: 8123
 
     route:
-      app:
+      home:
         hostnames:
           - homeassistant.home.mirceanton.com
         parentRefs:
           - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["hass.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
             namespace: network-system
 
     persistence:

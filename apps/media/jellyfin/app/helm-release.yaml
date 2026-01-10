@@ -26,7 +26,6 @@ spec:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 50000000
               JELLYFIN_FFmpeg__analyzeduration: 50000000
-              JELLYFIN_PublishedServerUrl: &url "jellyfin.home.mirceanton.com"
             resources:
               requests:
                 cpu: 500m
@@ -70,10 +69,15 @@ spec:
             port: *port
 
     route:
-      app:
-        hostnames: [*url]
+      home:
+        hostnames: ["jellyfin.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["jellyfin.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
             namespace: network-system
 
     persistence:
