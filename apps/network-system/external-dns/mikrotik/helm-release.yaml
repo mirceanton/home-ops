@@ -27,7 +27,7 @@ spec:
     txtOwnerId: iot
     txtPrefix: k8s.iot.
 
-    domainFilters: ["home.mirceanton.com"]
+    domainFilters: ["home.mirceanton.com", "admin.mirceanton.com"]
     excludeDomains: []
 
     resources:
