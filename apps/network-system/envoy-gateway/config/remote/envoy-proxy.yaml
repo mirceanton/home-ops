@@ -22,7 +22,7 @@ spec:
             limits:
               memory: 1Gi
       envoyService:
-        type: ClusterIP
+        loadBalancerClass: "tailscale"
 
   shutdown:
     drainTimeout: 180s
