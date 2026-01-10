@@ -1,0 +1,137 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: firefly
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: firefly
+
+  values:
+    controllers:
+      firefly:
+        containers:
+          firefly:
+            image:
+              repository: fireflyiii/core
+              tag: version-6.4.15
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
+            probes:
+              startup:
+                enabled: true
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+
+            envFrom:
+              - secretRef: {name: firefly-keys}
+              - configMapRef: {name: firefly-settings}
+
+          cronjob:
+            image:
+              repository: alpine
+              tag: 3.23.0
+              pullPolicy: IfNotPresent
+            command:
+              - sh
+            args:
+              - -c
+              - >-
+                echo "0 */3 * * * wget -qO- http://firefly:8080/api/v1/cron/$(STATIC_CRON_TOKEN)"
+                | crontab -
+                && crond -f -L /dev/stdout
+            env:
+              - name: STATIC_CRON_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-keys
+                    key: STATIC_CRON_TOKEN
+
+      data-importer:
+        containers:
+          main:
+            image:
+              repository: docker.io/fireflyiii/data-importer
+              tag: version-2.0.3
+            env:
+              TZ: "Europe/Bucharest"
+              FIREFLY_III_URL: "http://firefly.default.svc.cluster.local"
+            resources:
+              requests:
+                cpu: 20m
+                memory: 32Mi
+              limits:
+                memory: 1Gi
+
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+
+    service:
+      firefly:
+        controller: firefly
+        ports:
+          http:
+            port: 8080
+      data-importer:
+        controller: data-importer
+        ports:
+          http:
+            port: 8080
+
+    route:
+      home:
+        hostnames: ["firefly.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly
+                port: 8080
+      tailscale:
+        hostnames: ["firefly.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly
+                port: 8080
+      importer:
+        hostnames: ["firefly-importer.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly-data-importer
+                port: 8080
+
+    persistence:
+      data:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Firefly
+        advancedMounts:
+          firefly:
+            main:
+              - subPath: data
+                path: /var/www/html/storage
+              - subPath: upload
+                path: /var/www/html/storage/upload
+          data-importer:
+            main:
+              - subPath: importer
+                path: /var/www/html/storage/uploads

@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: firefly-settings
+data:
+  TZ: "Europe/Bucharest"
+  SEND_TELEMETRY: "false"
+  TRUSTED_PROXIES: "**"
+  DEFAULT_LANGUAGE: "en_US"
+  DEFAULT_LOCALE: "equal"
+
+  DB_CONNECTION: "sqlite"
+  CACHE_DRIVER: "file"
+  SESSION_DRIVER: "file"
+
+  SEND_REGISTRATION_MAIL: "false"
+  SEND_ERROR_MESSAGE: "false"
+  SEND_LOGIN_NEW_IP_WARNING: "false"
+
+  LOG_CHANNEL: "stdout"
+  AUDIT_LOG_CHANNEL: "stdout"
+  APP_LOG_LEVEL: "notice"

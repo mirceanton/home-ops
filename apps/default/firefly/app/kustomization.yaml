@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
+  - ./firefly-settings.configmap.yaml
+  - ./firefly-keys.secret.yaml
