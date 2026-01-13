@@ -15,7 +15,7 @@ additionalApiServerCertSans: &san
 additionalMachineCertSans: *san
 
 allowSchedulingOnControlPlanes: true
-cniConfig: {name: flannel}
+cniConfig: {name: none}
 
 nodes:
   - hostname: lenovo-tiny
@@ -57,6 +57,14 @@ nodes:
             - siderolabs/usb-modem-drivers # USB serial drivers for Zigbee/Z-Wave dongles
 
 patches:
+  # ============================================================================
+  # DISABLE KUBE-PROXY -> replaced by Cilium
+  # ============================================================================
+  - |-
+    cluster:
+      proxy:
+        disabled: true
+
   # ============================================================================
   # CLUSTER DISCOVERY CONFIGURATION
   # Disable cluster discovery to prevent automatic node detection.

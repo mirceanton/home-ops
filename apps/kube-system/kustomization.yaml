@@ -5,6 +5,7 @@ namespace: kube-system
 
 resources:
   - ./namespace.yaml
+  - ./cilium
   - ./descheduler
   - ./keda
   - ./metrics-server
