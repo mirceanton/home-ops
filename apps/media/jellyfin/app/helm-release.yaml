@@ -87,12 +87,19 @@ spec:
         path: /mnt/tank/Apps/Jellyfin_Config
         globalMounts:
           - path: /config
-      data:
+      tvshows:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Jellyfin/
+        path: /mnt/tank/Media/TV_Shows
         globalMounts:
-          - path: /nfs-media
+          - path: /nfs-media/TV_Shows
+            readOnly: true
+      movies:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Movies
+        globalMounts:
+          - path: /nfs-media/Movies
             readOnly: true
       transcode:
         type: emptyDir
