@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app flaresolverr
+  name: flaresolverr
 spec:
   interval: 30m
   chartRef:
@@ -15,13 +15,13 @@ spec:
       flaresolverr:
         annotations:
           reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            fsGroup: 2000
-            fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 2000
-            runAsNonRoot: true
-            runAsUser: 2000
+        # pod:
+        #   securityContext:
+        #     fsGroup: 2000
+        #     fsGroupChangePolicy: OnRootMismatch
+        #     runAsGroup: 2000
+        #     runAsNonRoot: true
+        #     runAsUser: 2000
         containers:
           app:
             image:
@@ -33,11 +33,11 @@ spec:
             #     memory: 100Mi
             #   limits:
             #     memory: 1Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false #FIXME
-              capabilities:
-                drop: ["ALL"]
+            # securityContext:
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: false #FIXME
+            #   capabilities:
+            #     drop: ["ALL"]
 
     service:
       app:
