@@ -5,12 +5,10 @@ namespace: downloads
 
 resources:
   - ./namespace.yaml
-  - ./autobrr
   - ./bazarr
   - ./flaresolverr
   - ./lidarr
   - ./prowlarr
   - ./qbittorrent
   - ./radarr
-  - ./sabnzbd
   - ./sonarr
