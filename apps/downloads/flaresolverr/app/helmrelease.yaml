@@ -35,7 +35,7 @@ spec:
             #     memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false #FIXME
               capabilities:
                 drop: ["ALL"]
 
@@ -44,7 +44,3 @@ spec:
         ports:
           http:
             port: 8191
-
-    persistence:
-      tmp:
-        type: emptyDir
