@@ -27,22 +27,22 @@ spec:
               QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: 51478
             nameOverride: qbittorrent
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-            resources:
-              requests:
-                cpu: 200m
-                memory: 1Gi
-              limits:
-                memory: 6Gi
+            # probes:
+            #   liveness:
+            #     enabled: true
+            #   readiness:
+            #     enabled: true
+            #   startup:
+            #     enabled: true
+            #     spec:
+            #       failureThreshold: 30
+            #       periodSeconds: 5
+            # resources:
+            #   requests:
+            #     cpu: 200m
+            #     memory: 1Gi
+            #   limits:
+            #     memory: 6Gi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
