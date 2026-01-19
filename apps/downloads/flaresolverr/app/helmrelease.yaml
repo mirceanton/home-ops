@@ -44,3 +44,7 @@ spec:
         ports:
           http:
             port: 8191
+
+    persistence:
+      tmp:
+        type: emptyDir
