@@ -1,0 +1,22 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: pgo
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: pgo
+
+  values:
+    replicas: 1
+    debug: false
+
+    resources:
+      controller:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 256Mi

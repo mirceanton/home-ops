@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dragonfly-operator
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: dragonfly-operator
+
+  values:
+    replicas: 1
+
+    rbacProxy:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
+    manager:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+
+
+    serviceMonitor:
+      enabled: true
+    grafanaDashboard:
+      enabled: false
