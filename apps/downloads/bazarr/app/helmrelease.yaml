@@ -59,7 +59,7 @@ spec:
       app:
         ports:
           http:
-            port: *port
+            port: 6767
 
     persistence:
       config:
