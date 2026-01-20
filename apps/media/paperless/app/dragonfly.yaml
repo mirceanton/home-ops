@@ -1,0 +1,15 @@
+---
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: paperless-dragonfly
+spec:
+  replicas: 1
+  args:
+    - --proactor_threads=1 #? Optimize for low RAM usage
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      memory: 128Mi
