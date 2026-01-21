@@ -13,7 +13,6 @@ spec:
   values:
     controllers:
       navidrome:
-        type: statefulset
         containers:
           navidrome:
             image:

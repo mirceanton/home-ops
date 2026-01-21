@@ -15,7 +15,6 @@ spec:
   values:
     controllers:
       booklore:
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
