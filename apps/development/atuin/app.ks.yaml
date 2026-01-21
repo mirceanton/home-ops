@@ -4,12 +4,12 @@ kind: Kustomization
 metadata:
   name: atuin
 spec:
-  path: ./apps/default/atuin/app
+  path: ./apps/development/atuin/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: default
+  targetNamespace: development
   interval: 10m
   timeout: 5m
   prune: true
