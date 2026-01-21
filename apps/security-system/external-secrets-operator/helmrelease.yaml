@@ -1,0 +1,128 @@
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-secrets
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+
+  values:
+    # =============================================================================================
+    # Component - Main App
+    # =============================================================================================
+    installCRDs: true
+    leaderElect: true #! Required for more than 1 replica
+    concurrent: 8
+    log: {level: info}
+
+    replicaCount: 1
+    # topologySpreadConstraints:
+    #   - maxSkew: 1
+    #     topologyKey: kubernetes.io/hostname
+    #     whenUnsatisfiable: DoNotSchedule
+    #     labelSelector:
+    #       matchLabels:
+    #         app.kubernetes.io/name: external-secrets
+    #         app.kubernetes.io/instance: external-secrets
+    # podDisruptionBudget:
+    #   enabled: true
+    #   minAvailable: 1
+
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
+
+    podSecurityContext: {fsGroup: 1000}
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+
+    # =============================================================================================
+    # Component - Cert Controller
+    # =============================================================================================
+    certController:
+      create: true
+
+      replicaCount: 1
+      # topologySpreadConstraints:
+      #   - maxSkew: 1
+      #     topologyKey: kubernetes.io/hostname
+      #     whenUnsatisfiable: DoNotSchedule
+      #     labelSelector:
+      #       matchLabels:
+      #         app.kubernetes.io/name: external-secrets-cert-controller
+      #         app.kubernetes.io/instance: external-secrets
+      # podDisruptionBudget:
+      #   enabled: true
+      #   minAvailable: 1
+
+      resources:
+        requests:
+          cpu: 25m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
+
+      podSecurityContext: {fsGroup: 1000}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+    # =============================================================================================
+    # Component - Webhook
+    # =============================================================================================
+    webhook:
+      create: true
+
+      replicaCount: 1
+      # topologySpreadConstraints:
+      #   - maxSkew: 1
+      #     topologyKey: kubernetes.io/hostname
+      #     whenUnsatisfiable: DoNotSchedule
+      #     labelSelector:
+      #       matchLabels:
+      #         app.kubernetes.io/name: external-secrets-webhook
+      #         app.kubernetes.io/instance: external-secrets
+      # podDisruptionBudget:
+      #   enabled: true
+      #   minAvailable: 1
+
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
+
+      podSecurityContext: {fsGroup: 1000}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault

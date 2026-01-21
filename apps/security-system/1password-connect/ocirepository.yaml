@@ -1,0 +1,14 @@
+---
+
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: onepassword
+spec:
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  interval: 15m
+  ref: {tag: 4.4.0}
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
