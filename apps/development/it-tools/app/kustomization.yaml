@@ -1,9 +1,7 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: development
 
 resources:
-  - ./namespace.yaml
-  - ./atuin
-  - ./it-tools
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
