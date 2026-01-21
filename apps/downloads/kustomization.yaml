@@ -10,4 +10,5 @@ resources:
   - ./prowlarr
   - ./qbittorrent
   - ./radarr
+  - ./shelfmark
   - ./sonarr

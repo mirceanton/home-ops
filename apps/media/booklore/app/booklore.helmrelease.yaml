@@ -1,0 +1,182 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: booklore
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: booklore
+
+  dependsOn:
+    - name: booklore-mariadb
+
+  values:
+    controllers:
+      booklore:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          nginx-config:
+            image:
+              repository: ghcr.io/booklore-app/booklore
+              tag: v1.17.0@sha256:5b594a607fb0d9533d06a850156e2b54877ed0ddd0da8cd1f0240cb38bb6ac70
+            command:
+              - /bin/sh
+              - -c
+            args:
+              - "envsubst '$${BOOKLORE_PORT}' < /etc/nginx/nginx.conf > /config/nginx.conf"
+            env:
+              BOOKLORE_PORT: &httpPort 6060
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: true
+              runAsUser: 100
+              runAsGroup: 101
+              fsGroup: 101
+
+        containers:
+          booklore:
+            image:
+              repository: ghcr.io/booklore-app/booklore
+              tag: v1.17.0@sha256:5b594a607fb0d9533d06a850156e2b54877ed0ddd0da8cd1f0240cb38bb6ac70
+            command: ["java"]
+            args: ["-jar", "/app/app.jar"]
+            env:
+              DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
+              DATABASE_USERNAME: booklore
+              DATABASE_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: booklore-secret
+                    key: mariadb_password
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/healthcheck
+                    port: 8080
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/healthcheck
+                    port: 8080
+                  failureThreshold: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: true
+
+          nginx:
+            image:
+              repository: ghcr.io/booklore-app/booklore
+              tag: v1.17.0@sha256:5b594a607fb0d9533d06a850156e2b54877ed0ddd0da8cd1f0240cb38bb6ac70
+            command: ["nginx"]
+            args: ["-c", "/config/nginx.conf", "-g", "daemon off;"]
+            probes:
+              liveness: &nginxProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *httpPort
+              readiness: *nginxProbe
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: true
+              runAsUser: 100
+              runAsGroup: 101
+              fsGroup: 101
+
+    service:
+      app:
+        ports:
+          http:
+            port: *httpPort
+
+    persistence:
+      data:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Booklore_Data
+        advancedMounts:
+          booklore:
+            booklore:
+              - path: /app/data
+      books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        advancedMounts:
+          booklore:
+            booklore:
+              - path: /books
+      bookdrop:
+        type: emptyDir
+        advancedMounts:
+          booklore:
+            booklore:
+              - path: /bookdrop
+      nginx:
+        type: emptyDir
+        sizeLimit: 200Mi
+        advancedMounts:
+          booklore:
+            nginx:
+              - path: /config
+                subPath: config
+              - path: /var/lib/nginx/logs
+                subPath: log
+              - path: /var/lib/nginx/tmp
+                subPath: tmp
+            nginx-config:
+              - path: /config
+                subPath: config
+      nginx-run:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 100Mi
+        advancedMounts:
+          booklore:
+            nginx:
+              - path: /run/nginx
+      tmpfs:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 100Mi
+        advancedMounts:
+          booklore:
+            booklore:
+              - path: /tmp
+
+    route:
+      home:
+        hostnames: ["booklore.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["booklore.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system

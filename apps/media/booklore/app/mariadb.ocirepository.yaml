@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: booklore-mariadb
+spec:
+  interval: 15m
+  url: oci://registry-1.docker.io/cloudpirates/mariadb
+  ref:
+    tag: 0.12.1
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
