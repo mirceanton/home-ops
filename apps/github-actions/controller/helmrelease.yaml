@@ -1,0 +1,38 @@
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: actions-runner-controller
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: gha-runner-scale-set-controller
+
+  values:
+    fullnameOverride: actions-runner-controller
+    flags:
+      logLevel: info # debug, info, warn, error
+      logFormat: text # json, text
+      runnerMaxConcurrentReconciles: 5
+      updateStrategy: immediate # immediate, eventual
+
+    replicaCount: 1
+    topologySpreadConstraints: []
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+    podSecurityContext: {fsGroup: 1000}
+    securityContext:
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000

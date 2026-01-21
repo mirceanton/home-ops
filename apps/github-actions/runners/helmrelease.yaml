@@ -1,0 +1,63 @@
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: infra-runners
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: gha-runner-scale-set
+
+  values:
+    githubConfigUrl: https://github.com/mirceanton
+    githubConfigSecret: github-org-token
+    minRunners: 1
+    maxRunners: 5
+
+    containerMode:
+      type: kubernetes
+      kubernetesModeWorkVolumeClaim:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: openebs-hostpath
+        resources:
+          requests:
+            storage: 25Gi
+
+    # listenerTemplate is the PodSpec for each listener Pod
+    # For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+    listenerTemplate:
+      spec:
+        containers:
+          - name: listener
+            securityContext:
+              runAsUser: 1000
+            resources:
+              requests:
+                cpu: 20m
+                memory: 32Mi
+              limits:
+                cpu: 100m
+                memory: 64Gi
+
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/home-operations/actions-runner:2.330.0@sha256:92a45e47f4b349f4da2307ebaaea5443cc86d1ce625d37acf2c61b3b09192e47
+            command: ["/home/runner/run.sh"]
+            env:
+              - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+                value: "false"
+              - name: NODE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
