@@ -7,4 +7,3 @@ resources:
   - ./namespace.yaml
   - ./jellyfin
   - ./navidrome
-  - ./paperless
