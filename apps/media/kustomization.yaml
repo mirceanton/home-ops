@@ -7,4 +7,5 @@ resources:
   - ./namespace.yaml
   - ./booklore
   - ./jellyfin
+  - ./karakeep
   - ./navidrome

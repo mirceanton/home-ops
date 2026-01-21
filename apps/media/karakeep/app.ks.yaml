@@ -4,12 +4,12 @@ kind: Kustomization
 metadata:
   name: karakeep
 spec:
-  path: ./apps/default/karakeep/app
+  path: ./apps/media/karakeep/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: default
+  targetNamespace: media
   interval: 10m
   timeout: 5m
   prune: true
