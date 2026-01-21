@@ -1,0 +1,78 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: firefly-postgres-restore
+spec:
+  suspend: true # Disabled - to be triggered manually when needed
+  schedule: "0 0 31 2 *" # February 31st = never runs
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+
+          containers:
+            - name: restore
+              image: docker.io/library/postgres:17.5
+              command: ["/bin/bash", "/scripts/restore.sh"]
+              env:
+                - name: BACKUP_DIR
+                  value: /backup
+                - name: PGHOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: firefly-postgres-pguser-firefly
+                      key: host
+                - name: PGPORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: firefly-postgres-pguser-firefly
+                      key: port
+                - name: PGUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: firefly-postgres-pguser-firefly
+                      key: user
+                - name: PGDATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: firefly-postgres-pguser-firefly
+                      key: dbname
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: firefly-postgres-pguser-firefly
+                      key: password
+
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: backup
+                  mountPath: /backup
+                  readOnly: true
+
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+
+          volumes:
+            - name: scripts
+              configMap:
+                name: firefly-postgres-scripts
+                defaultMode: 0755
+            - name: backup
+              nfs:
+                server: nas.stor.h.mirceanton.com
+                path: /mnt/tank/Apps/Firefly_Backup

@@ -10,7 +10,7 @@ data:
   DEFAULT_LANGUAGE: "en_US"
   DEFAULT_LOCALE: "equal"
 
-  DB_CONNECTION: "sqlite"
+  DB_CONNECTION: "pgsql"
   CACHE_DRIVER: "file"
   SESSION_DRIVER: "file"
 

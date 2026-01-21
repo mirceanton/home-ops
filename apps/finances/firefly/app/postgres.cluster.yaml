@@ -1,0 +1,28 @@
+---
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: firefly-postgres
+spec:
+  postgresVersion: 17
+
+  users:
+    - name: firefly
+      databases: ["firefly"]
+      options: "SUPERUSER"
+
+  instances:
+    - name: firefly
+      replicas: 1
+      dataVolumeClaimSpec:
+        storageClassName: openebs-hostpath
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 8Gi
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          memory: 512Mi

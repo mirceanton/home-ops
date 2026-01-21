@@ -3,7 +3,20 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ./helmrelease.yaml
-  - ./ocirepository.yaml
+  - ./firefly.ocirepository.yaml
+  - ./firefly.helmrelease.yaml
   - ./firefly-settings.configmap.yaml
   - ./firefly-keys.secret.sops.yaml
+
+  - ./postgres.cluster.yaml
+  - ./postgres-backup.cronjob.yaml
+  - ./postgres-restore.cronjob.yaml
+
+configMapGenerator:
+  - name: firefly-postgres-scripts
+    files:
+      - scripts/backup.sh
+      - scripts/restore.sh
+
+generatorOptions:
+  disableNameSuffixHash: true

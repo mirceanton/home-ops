@@ -1,0 +1,183 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: firefly
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: firefly
+
+  values:
+    controllers:
+      firefly:
+        containers:
+          app:
+            image:
+              repository: fireflyiii/core
+              tag: version-6.4.15
+            envFrom:
+              - secretRef:
+                  name: firefly-keys
+              - configMapRef:
+                  name: firefly-settings
+            env:
+              DB_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-pguser-firefly
+                    key: host
+              DB_PORT:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-pguser-firefly
+                    key: port
+              DB_DATABASE:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-pguser-firefly
+                    key: dbname
+              DB_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-pguser-firefly
+                    key: user
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-pguser-firefly
+                    key: password
+            probes:
+              startup:
+                enabled: true
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+      cron:
+        type: cronjob
+        cronjob:
+          schedule: "0 */3 * * *" # Every 3 hours
+          successfulJobsHistory: 1
+          failedJobsHistory: 3
+          concurrencyPolicy: Forbid
+        containers:
+          cron:
+            image:
+              repository: curlimages/curl
+              tag: 8.14.1
+            command:
+              - sh
+              - -c
+              - |
+                curl -sS "http://firefly.finances.svc.cluster.local:8080/api/v1/cron/${STATIC_CRON_TOKEN}"
+            env:
+              - name: STATIC_CRON_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-keys
+                    key: STATIC_CRON_TOKEN
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+
+      # NOTE: Uncomment data-importer once you have a Personal Access Token
+      # Generate one at: https://firefly.home.mirceanton.com/profile -> OAuth -> Personal Access Tokens
+      # Then add DATA_IMPORTER_ACCESS_TOKEN to firefly-keys secret and re-encrypt with SOPS
+      # data-importer:
+      #   containers:
+      #     main:
+      #       image:
+      #         repository: fireflyiii/data-importer
+      #         tag: version-2.0.3
+      #       envFrom:
+      #         - configMapRef:
+      #             name: firefly-settings
+      #       env:
+      #         FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
+      #         VANITY_URL: "https://firefly.home.mirceanton.com"
+      #         FIREFLY_III_ACCESS_TOKEN:
+      #           valueFrom:
+      #             secretKeyRef:
+      #               name: firefly-keys
+      #               key: DATA_IMPORTER_ACCESS_TOKEN
+      #       probes:
+      #         liveness:
+      #           enabled: true
+      #         readiness:
+      #           enabled: true
+      #       resources:
+      #         requests:
+      #           cpu: 20m
+      #           memory: 64Mi
+      #         limits:
+      #           memory: 1Gi
+
+    service:
+      firefly:
+        controller: firefly
+        ports:
+          http:
+            port: 8080
+      # data-importer:
+      #   controller: data-importer
+      #   ports:
+      #     http:
+      #       port: 8080
+
+    route:
+      home:
+        hostnames: ["firefly.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly
+                port: 8080
+      tailscale:
+        hostnames: ["firefly.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly
+                port: 8080
+      # importer:
+      #   hostnames: ["firefly-importer.home.mirceanton.com"]
+      #   parentRefs:
+      #     - name: envoy-internal
+      #       namespace: network-system
+      #   rules:
+      #     - backendRefs:
+      #         - name: firefly-data-importer
+      #           port: 8080
+
+    persistence:
+      data:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Firefly
+        advancedMounts:
+          firefly:
+            app:
+              - subPath: data
+                path: /var/www/html/storage
+              - subPath: upload
+                path: /var/www/html/storage/upload
+          # data-importer:
+          #   main:
+          #     - subPath: importer
+          #       path: /var/www/html/storage/uploads
