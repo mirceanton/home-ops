@@ -1,11 +1,10 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: firefly
 spec:
-  interval: 10m
+  interval: 30m
   chartRef:
     kind: OCIRepository
     name: firefly
@@ -18,12 +17,11 @@ spec:
             image:
               repository: fireflyiii/core
               tag: version-6.4.15
-            resources:
-              requests:
-                cpu: 20m
-                memory: 128Mi
-              limits:
-                memory: 256Mi
+            envFrom:
+              - secretRef:
+                  name: firefly-keys
+              - configMapRef:
+                  name: firefly-settings
             probes:
               startup:
                 enabled: true
@@ -31,10 +29,12 @@ spec:
                 enabled: true
               readiness:
                 enabled: true
-
-            envFrom:
-              - secretRef: {name: firefly-keys}
-              - configMapRef: {name: firefly-settings}
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
 
           cronjob:
             image:
@@ -64,19 +64,18 @@ spec:
               tag: version-2.0.3
             env:
               TZ: "Europe/Bucharest"
-              FIREFLY_III_URL: "http://firefly.default.svc.cluster.local"
+              FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             resources:
               requests:
                 cpu: 20m
                 memory: 32Mi
               limits:
                 memory: 1Gi
-
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
 
     service:
       firefly:
