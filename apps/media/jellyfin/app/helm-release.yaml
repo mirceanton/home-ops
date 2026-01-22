@@ -18,7 +18,7 @@ spec:
           main:
             image:
               repository: jellyfin/jellyfin
-              tag: 10.11.5
+              tag: 10.11.6
             env:
               TZ: "Europe/Bucharest"
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
