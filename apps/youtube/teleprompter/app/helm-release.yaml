@@ -1,0 +1,174 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: teleprompter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: teleprompter
+
+  dependsOn:
+    - name: dragonfly-operator
+      namespace: database-system
+
+  values:
+    controllers:
+      backend:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/mirceanton/teleprompter-backend
+              tag: latest
+
+            env:
+              TZ: "Europe/Bucharest"
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            probes:
+              liveness: &backendProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: &backendPort 8001
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *backendProbe
+              startup: *backendProbe
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+      frontend:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/mirceanton/teleprompter-frontend
+              tag: latest
+
+            env:
+              TZ: "Europe/Bucharest"
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+
+            probes:
+              liveness: &frontendProbe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &frontendPort 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *frontendProbe
+              startup: *frontendProbe
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      backend:
+        controller: backend
+        ports:
+          http:
+            port: *backendPort
+      frontend:
+        controller: frontend
+        ports:
+          http:
+            port: *frontendPort
+
+    route:
+      main:
+        hostnames: ["teleprompter.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /api
+            backendRefs:
+              - name: teleprompter-backend
+                port: *backendPort
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /
+            backendRefs:
+              - name: teleprompter-frontend
+                port: *frontendPort
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      frontend-cache:
+        type: emptyDir
+        advancedMounts:
+          frontend:
+            main:
+              - path: /var/cache/nginx
+      frontend-run:
+        type: emptyDir
+        advancedMounts:
+          frontend:
+            main:
+              - path: /var/run
+      frontend-config:
+        type: configMap
+        name: teleprompter-frontend-config
+        advancedMounts:
+          frontend:
+            main:
+              - path: /usr/share/nginx/html/config.json
+                subPath: config.json
+                readOnly: true
+
+    configMaps:
+      frontend-config:
+        data:
+          config.json: |
+            {
+              "backendUrl": "https://teleprompter.home.mirceanton.com"
+            }
