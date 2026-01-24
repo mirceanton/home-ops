@@ -7,7 +7,7 @@ spec:
   interval: 15m
   url: oci://registry-1.docker.io/cloudpirates/mariadb
   ref:
-    tag: 0.12.1
+    tag: 0.13.1
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
