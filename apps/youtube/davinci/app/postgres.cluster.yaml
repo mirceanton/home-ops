@@ -11,6 +11,12 @@ spec:
       databases: ["davinci"]
       options: "SUPERUSER"
 
+  service:
+    type: LoadBalancer
+    metadata:
+      annotations:
+        metallb.io/loadBalancerIPs: 10.0.10.251
+
   instances:
     - name: davinci
       replicas: 1

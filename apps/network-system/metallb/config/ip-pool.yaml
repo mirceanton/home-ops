@@ -4,8 +4,10 @@ kind: IPAddressPool
 metadata:
   name: services-pool
 spec:
-  addresses: ["10.0.10.250/32"]
   autoAssign: false
+  addresses:
+    - 10.0.10.250/32 # envoy-services
+    - 10.0.10.251/32 # davinci-postgres
 
 ---
 apiVersion: metallb.io/v1beta1
@@ -13,5 +15,6 @@ kind: IPAddressPool
 metadata:
   name: admin-pool
 spec:
-  addresses: ["10.0.0.250/32"]
   autoAssign: false
+  addresses:
+    - "10.0.0.250/32" # envoy-admin
