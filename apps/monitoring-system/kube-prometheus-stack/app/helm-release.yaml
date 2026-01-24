@@ -106,7 +106,7 @@ spec:
         image:
           registry: mirror.gcr.io
           repository: prompp/prompp
-          tag: 0.7.2
+          tag: 0.7.4
 
         # =======================================
         # Security
