@@ -1,0 +1,19 @@
+---
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: teleprompter-dragonfly
+spec:
+  replicas: 1
+
+  args:
+    - --proactor_threads=1
+    - --version_check=false
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 320Mi
