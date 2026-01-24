@@ -16,8 +16,6 @@ spec:
 
     controllers:
       karakeep:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -61,8 +59,6 @@ spec:
                 drop: ["ALL"]
 
       chrome:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -90,30 +86,12 @@ spec:
                 drop: ["ALL"]
 
       meilisearch:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          affinity:
-            podAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app.kubernetes.io/name
-                        operator: In
-                        values:
-                          - karakeep
-                      - key: app.kubernetes.io/controller
-                        operator: In
-                        values:
-                          - karakeep
-                  topologyKey: kubernetes.io/hostname
         containers:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
               tag: v1.33.1
-            args:
-              - /bin/meilisearch
+            args: ["/bin/meilisearch"]
             env:
               MEILI_NO_ANALYTICS: true
               MEILI_MASTER_KEY:
@@ -137,18 +115,15 @@ spec:
       app:
         controller: karakeep
         ports:
-          http:
-            port: 3000
+          http: {port: 3000}
       chrome:
         controller: chrome
         ports:
-          http:
-            port: 9222
+          http: {port: 9222}
       meilisearch:
         controller: meilisearch
         ports:
-          http:
-            port: 7700
+          http: {port: 7700}
 
     persistence:
       data:
@@ -157,8 +132,7 @@ spec:
         path: /mnt/tank/Apps/Karakeep_Data
         advancedMounts:
           karakeep:
-            app:
-              - path: /data
+            app: [{path: /data}]
       meilisearch-data:
         type: persistentVolumeClaim
         accessMode: ReadWriteOnce
@@ -166,17 +140,14 @@ spec:
         storageClass: openebs-hostpath
         advancedMounts:
           meilisearch:
-            app:
-              - path: /meili_data
+            app: [{path: /meili_data}]
       tmp:
         type: emptyDir
         advancedMounts:
           karakeep:
-            app:
-              - path: /tmp
+            app: [{path: /tmp}]
           meilisearch:
-            app:
-              - path: /tmp
+            app: [{path: /tmp}]
 
     route:
       home:
