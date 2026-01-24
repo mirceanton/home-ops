@@ -22,7 +22,7 @@ spec:
 
           containers:
             - name: restore
-              image: docker.io/library/postgres:17.5
+              image: docker.io/library/postgres:17.7
               command: ["/bin/bash", "/scripts/restore.sh"]
               env:
                 - name: APP_NAME

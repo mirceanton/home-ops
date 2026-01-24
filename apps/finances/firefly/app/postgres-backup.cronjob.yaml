@@ -21,7 +21,7 @@ spec:
 
           containers:
             - name: backup
-              image: docker.io/library/postgres:17.5
+              image: docker.io/library/postgres:17.7
               command: ["/bin/bash", "/scripts/backup.sh"]
               env:
                 - name: APP_NAME
