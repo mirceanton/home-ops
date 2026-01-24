@@ -24,8 +24,10 @@ spec:
               image: docker.io/library/postgres:17.5
               command: ["/bin/bash", "/scripts/backup.sh"]
               env:
+                - name: APP_NAME
+                  value: davinci
                 - name: BACKUP_DIR
-                  value: /backup
+                  value: /backup/davinci
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
@@ -73,4 +75,4 @@ spec:
             - name: backup
               nfs:
                 server: nas.stor.h.mirceanton.com
-                path: /mnt/tank/Apps/Davinci_Backup
+                path: /mnt/tank/Apps/Database_Backups

@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-BACKUP_FILE="${BACKUP_DIR}/booklore-$(date +%Y%m%d-%H%M%S).sql.gz"
+mkdir -p "${BACKUP_DIR}"
+
+BACKUP_FILE="${BACKUP_DIR}/${APP_NAME}-$(date +%Y%m%d-%H%M%S).sql.gz"
 echo "Starting backup to ${BACKUP_FILE}..."
 
 mariadb-dump \
@@ -18,6 +20,6 @@ mariadb-dump \
 echo "Backup completed: ${BACKUP_FILE}"
 
 # Keep only the last 7 backups
-ls -t "${BACKUP_DIR}"/booklore-*.sql.gz | tail -n +8 | xargs -r rm -f
+ls -t "${BACKUP_DIR}"/${APP_NAME}-*.sql.gz 2>/dev/null | tail -n +8 | xargs -r rm -f
 echo "Cleanup completed. Remaining backups:"
-ls -la "${BACKUP_DIR}"/booklore-*.sql.gz
+ls -la "${BACKUP_DIR}"/${APP_NAME}-*.sql.gz 2>/dev/null || echo "No backups found"

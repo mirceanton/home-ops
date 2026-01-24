@@ -15,8 +15,8 @@ resources:
 configMapGenerator:
   - name: booklore-mariadb-scripts
     files:
-      - scripts/backup.sh
-      - scripts/restore.sh
+      - backup.sh=../../../../.scripts/mariadb/backup.sh
+      - restore.sh=../../../../.scripts/mariadb/restore.sh
 
 generatorOptions:
   disableNameSuffixHash: true

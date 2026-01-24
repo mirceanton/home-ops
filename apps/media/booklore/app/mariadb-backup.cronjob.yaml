@@ -24,8 +24,10 @@ spec:
               image: docker.io/library/mariadb:12.1.2-noble
               command: ["/bin/bash", "/scripts/backup.sh"]
               env:
+                - name: APP_NAME
+                  value: booklore
                 - name: BACKUP_DIR
-                  value: /backup
+                  value: /backup/booklore
                 - name: MARIADB_HOST
                   value: booklore-mariadb
                 - name: MARIADB_PORT
@@ -61,4 +63,4 @@ spec:
             - name: backup
               nfs:
                 server: nas.stor.h.mirceanton.com
-                path: /mnt/tank/Apps/Booklore_Backup
+                path: /mnt/tank/Apps/Database_Backups

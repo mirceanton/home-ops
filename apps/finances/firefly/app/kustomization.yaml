@@ -15,8 +15,8 @@ resources:
 configMapGenerator:
   - name: firefly-postgres-scripts
     files:
-      - scripts/backup.sh
-      - scripts/restore.sh
+      - backup.sh=../../../../.scripts/postgres/backup.sh
+      - restore.sh=../../../../.scripts/postgres/restore.sh
 
 generatorOptions:
   disableNameSuffixHash: true
