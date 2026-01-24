@@ -7,7 +7,7 @@ metadata:
 spec:
   url: oci://ghcr.io/bjw-s-labs/helm/app-template
   interval: 15m
-  ref: {tag: 4.4.0}
+  ref: {tag: 4.6.2}
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
