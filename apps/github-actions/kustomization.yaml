@@ -6,5 +6,5 @@ namespace: github-actions
 
 resources:
   - ./namespace.yaml
-  - ./controller.ks.yaml
-  - ./runners.ks.yaml
+  # - ./controller.ks.yaml
+  # - ./runners.ks.yaml
