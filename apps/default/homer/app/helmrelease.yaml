@@ -1,0 +1,99 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: homer
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: homer
+  interval: 30m
+
+  values:
+    controllers:
+      homer:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 568
+            runAsUser: 568
+        initContainers:
+          git-sync:
+            image:
+              repository: registry.k8s.io/git-sync/git-sync
+              tag: v4.4.0
+            args:
+              - --repo=https://github.com/homarr-labs/dashboard-icons.git
+              - --root=/tmp/git
+              - --link=icons
+              - --one-time
+              - --depth=1
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bastienwirtz/homer
+              tag: v24.05.1
+
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 128Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+    service:
+      app:
+        ports:
+          http: {port: 8080}
+
+    persistence:
+      config:
+        type: configMap
+        name: homer-config
+        advancedMounts:
+          homer:
+            app:
+              - path: /www/assets/config.yml
+                subPath: config.yml
+                readOnly: true
+      icons:
+        type: emptyDir
+        advancedMounts:
+          homer:
+            git-sync:
+              - path: /tmp/git
+            app:
+              - path: /www/assets/icons
+                subPath: icons/svg
+                readOnly: true
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          homer:
+            git-sync:
+              - path: /tmp
+
+    route:
+      home:
+        hostnames: ["home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
