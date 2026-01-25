@@ -1,6 +1,6 @@
 title: "Home Dashboard"
 subtitle: ""
-header: false
+header: true
 footer: false
 columns: 5
 connectivityCheck: true
