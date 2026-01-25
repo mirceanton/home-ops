@@ -45,7 +45,7 @@ spec:
           app:
             image:
               repository: ghcr.io/bastienwirtz/homer
-              tag: v24.05.1
+              tag: v25.11.1
 
             resources:
               requests:
