@@ -1,8 +1,8 @@
 title: "Home Dashboard"
-subtitle: "mirceanton.com"
-header: true
+subtitle: ""
+header: false
 footer: false
-columns: 3
+columns: 5
 connectivityCheck: true
 
 links: []
