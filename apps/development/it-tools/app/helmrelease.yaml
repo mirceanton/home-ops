@@ -53,7 +53,7 @@ spec:
 
     route:
       home:
-        hostnames: ["it-tools.home.mirceanton.com"]
+        hostnames: ["tools.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
