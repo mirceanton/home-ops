@@ -68,7 +68,7 @@ spec:
       downloads:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Torrent_Downloads
+        path: /mnt/scratch/Torrent_Downloads
         globalMounts:
           - path: /downloads
       tmp:
