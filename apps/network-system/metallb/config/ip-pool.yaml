@@ -8,6 +8,7 @@ spec:
   addresses:
     - 10.0.10.250/32 # envoy-services
     - 10.0.10.251/32 # davinci-postgres
+    - 10.0.10.252/32 # mosquitto
 
 ---
 apiVersion: metallb.io/v1beta1

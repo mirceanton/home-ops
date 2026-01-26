@@ -48,6 +48,9 @@ spec:
 
     service:
       app:
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: 10.0.10.252
         ports:
           mqtt:
             port: 1883
