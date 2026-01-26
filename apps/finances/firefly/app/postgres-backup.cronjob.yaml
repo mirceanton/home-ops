@@ -75,4 +75,4 @@ spec:
             - name: backup
               nfs:
                 server: nas.stor.h.mirceanton.com
-                path: /mnt/tank/Apps/Database_Backups
+                path: /mnt/tank/Backups/HomeOps
