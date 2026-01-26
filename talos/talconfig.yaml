@@ -32,6 +32,9 @@ nodes:
           - vlanId: 1010
             dhcp: true
             dhcpOptions: {routeMetric: 4095}
+          - vlanId: 1255
+            dhcp: true
+            dhcpOptions: {routeMetric: 4095}
 
     userVolumes:
       - name: data # Mounted at /var/mnt/data for OpenEBS
