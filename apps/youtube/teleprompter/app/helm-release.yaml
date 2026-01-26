@@ -27,7 +27,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter-backend
-              tag: v2.11.0
+              tag: v2.11.1
 
             env:
               TZ: "Europe/Bucharest"
