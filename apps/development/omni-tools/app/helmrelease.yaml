@@ -25,15 +25,17 @@ spec:
                 matchLabels:
                   app.kubernetes.io/controller: omni-tools
           securityContext:
-            fsGroup: 568
+            runAsUser: 101
+            runAsGroup: 101
+            fsGroup: 101
             fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 568
-            runAsUser: 568
         containers:
           app:
             image:
               repository: iib0011/omni-tools
               tag: 0.6.0
+            command: ["nginx"]
+            args: ["-g", "daemon off;"]
 
             resources:
               requests:
@@ -52,13 +54,21 @@ spec:
       app:
         ports:
           http:
-            port: 8080
+            port: 80
 
     persistence:
       tmp:
         type: emptyDir
         globalMounts:
           - path: /tmp
+      nginx-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /var/cache/nginx
+      nginx-run:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
 
     route:
       home:
