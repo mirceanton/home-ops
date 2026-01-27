@@ -19,7 +19,16 @@ spec:
 
   instances:
     - name: davinci
-      replicas: 1
+      replicas: 3
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  postgres-operator.crunchydata.com/cluster: davinci-postgres
+                  postgres-operator.crunchydata.com/instance-set: davinci
+
       dataVolumeClaimSpec:
         storageClassName: openebs-hostpath
         accessModes: ["ReadWriteOnce"]
@@ -32,9 +41,26 @@ spec:
         resources:
           requests:
             storage: 2Gi
+
       resources:
         requests:
           cpu: 20m
-          memory: 128Mi
+          memory: 256Mi
         limits:
           memory: 512Mi
+      sidecars:
+        replicaCertCopy:
+          resources:
+            requests:
+              cpu: 5m
+              memory: 10Mi
+            limits:
+              memory: 20Mi
+
+  patroni:
+    dynamicConfiguration:
+      synchronous_mode: true
+      postgresql:
+        synchronous_commit: "on"
+        pg_hba:
+          - host all all 0.0.0.0/0 scram-sha-256
