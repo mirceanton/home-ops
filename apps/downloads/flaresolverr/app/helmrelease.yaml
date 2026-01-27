@@ -27,12 +27,12 @@ spec:
             image:
               repository: ghcr.io/flaresolverr/flaresolverr
               tag: v3.4.6
-            # resources:
-            #   requests:
-            #     cpu: 20m
-            #     memory: 100Mi
-            #   limits:
-            #     memory: 1Gi
+            resources:
+              requests:
+                cpu: 20m
+                memory: 100Mi
+              limits:
+                memory: 1Gi
             # securityContext:
             #   allowPrivilegeEscalation: false
             #   readOnlyRootFilesystem: false #FIXME
