@@ -13,3 +13,6 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  dependsOn:
+    - name: dragonfly-operator
+      namespace: database-system

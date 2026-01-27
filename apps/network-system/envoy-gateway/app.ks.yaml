@@ -13,3 +13,5 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  dependsOn:
+    - name: cert-manager-issuers

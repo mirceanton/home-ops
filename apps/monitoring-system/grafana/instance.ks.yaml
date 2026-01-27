@@ -15,3 +15,5 @@ spec:
   wait: true
   dependsOn:
     - name: grafana-operator
+    - name: openebs
+      namespace: storage-system

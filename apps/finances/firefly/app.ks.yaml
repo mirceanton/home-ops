@@ -14,5 +14,10 @@ spec:
   timeout: 5m
   prune: true
   wait: true
+  dependsOn:
+    - name: crunchy-postgres-operator
+      namespace: database-system
+    - name: openebs
+      namespace: storage-system
   decryption:
     provider: sops
