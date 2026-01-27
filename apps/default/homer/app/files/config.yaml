@@ -92,8 +92,8 @@ services:
   - name: "Miscellaneous"
     icon: "fas fa-code"
     items:
-      - name: "IT-Tools"
+      - name: "Omni-Tools"
         subtitle: "Various Utilities"
         url: "https://tools.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/it-tools.svg"
+        logo: "assets/icons/omni-tools.svg"
