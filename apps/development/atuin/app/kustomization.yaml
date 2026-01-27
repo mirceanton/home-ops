@@ -5,3 +5,15 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+  - ./postgres.cluster.yaml
+  - ./postgres-backup.cronjob.yaml
+  - ./postgres-restore.cronjob.yaml
+
+configMapGenerator:
+  - name: atuin-postgres-scripts
+    files:
+      - backup.sh=../../../../.scripts/postgres/backup.sh
+      - restore.sh=../../../../.scripts/postgres/restore.sh
+
+generatorOptions:
+  disableNameSuffixHash: true

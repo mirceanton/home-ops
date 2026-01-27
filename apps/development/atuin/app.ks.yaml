@@ -15,5 +15,9 @@ spec:
   prune: true
   wait: true
   dependsOn:
+    - name: crunchy-postgres-operator
+      namespace: database-system
+    - name: openebs
+      namespace: storage-system
     - name: envoy-gateway
       namespace: network-system

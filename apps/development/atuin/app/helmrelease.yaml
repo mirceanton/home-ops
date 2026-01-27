@@ -12,6 +12,16 @@ spec:
   values:
     controllers:
       atuin:
+        replicas: 2
+        strategy: RollingUpdate
+        pod:
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/controller: atuin
         containers:
           app:
             image:
@@ -22,7 +32,11 @@ spec:
               ATUIN_HOST: "0.0.0.0"
               ATUIN_PORT: &port 80
               ATUIN_OPEN_REGISTRATION: "true"
-              ATUIN_DB_URI: sqlite:///config/atuin.db
+              ATUIN_DB_URI:
+                valueFrom:
+                  secretKeyRef:
+                    name: atuin-postgres-pguser-atuin
+                    key: uri
               TZ: Europe/Bucharest
             probes:
               liveness: &probes
@@ -40,9 +54,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 192Mi
+                memory: 32Mi
               limits:
-                memory: 256Mi
+                memory: 128Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -77,8 +91,6 @@ spec:
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Atuin_Config
+        type: emptyDir
         globalMounts:
           - path: /config

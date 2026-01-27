@@ -1,0 +1,78 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: atuin-postgres-backup
+spec:
+  schedule: "0 3 * * *" # Daily at 3 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+
+          containers:
+            - name: backup
+              image: docker.io/library/postgres:17.7
+              command: ["/bin/bash", "/scripts/backup.sh"]
+              env:
+                - name: APP_NAME
+                  value: atuin
+                - name: BACKUP_DIR
+                  value: /backup/atuin
+                - name: PGHOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: atuin-postgres-pguser-atuin
+                      key: host
+                - name: PGPORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: atuin-postgres-pguser-atuin
+                      key: port
+                - name: PGUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: atuin-postgres-pguser-atuin
+                      key: user
+                - name: PGDATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: atuin-postgres-pguser-atuin
+                      key: dbname
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: atuin-postgres-pguser-atuin
+                      key: password
+
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: backup
+                  mountPath: /backup
+
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+                readOnlyRootFilesystem: true
+
+          volumes:
+            - name: scripts
+              configMap:
+                name: atuin-postgres-scripts
+                defaultMode: 0755
+            - name: backup
+              nfs:
+                server: nas.stor.h.mirceanton.com
+                path: /mnt/tank/Backups/HomeOps
