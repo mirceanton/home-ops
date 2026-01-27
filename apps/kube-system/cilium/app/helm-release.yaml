@@ -60,31 +60,13 @@ spec:
     # HUBBLE - NETWORK OBSERVABILITY
     # -----------------------------------------------------------------------------
     hubble:
-      enabled: true
-      relay:
-        enabled: true
-        replicas: 1
-        resources:
-          requests:
-            cpu: 20m
-            memory: 64Mi
-          limits:
-            memory: 256Mi
-      ui:
-        enabled: false
-      metrics:
-        serviceMonitor:
-          enabled: true
-        dashboards:
-          enabled: true
-          annotations:
-            grafana_folder: Cilium
+      enabled: false
 
     # -----------------------------------------------------------------------------
     # OPERATOR CONFIGURATION
     # -----------------------------------------------------------------------------
     operator:
-      replicas: 1
+      replicas: 2
       resources:
         requests:
           cpu: 20m
