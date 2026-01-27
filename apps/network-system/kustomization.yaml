@@ -10,4 +10,4 @@ resources:
   - ./external-dns
   - ./metallb
   - ./openspeedtest
-  - ./tailscale
+  # - ./tailscale
