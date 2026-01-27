@@ -1,0 +1,84 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: buildkit
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: buildkit
+
+  values:
+    controllers:
+      buildkit:
+        type: statefulset
+        replicas: 1
+        containers:
+          app:
+            image:
+              repository: moby/buildkit
+              tag: v0.27.0
+            args:
+              - --addr
+              - unix:///run/buildkit/buildkitd.sock
+              - --addr
+              - tcp://0.0.0.0:1234
+            ports:
+              - name: tcp
+                containerPort: 1234
+                protocol: TCP
+
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [buildctl, debug, workers]
+                  initialDelaySeconds: 5
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: [buildctl, debug, workers]
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 2Gi
+              limits:
+                memory: 8Gi
+
+            securityContext:
+              privileged: true
+
+    service:
+      app:
+        controller: buildkit
+        ports:
+          tcp:
+            port: 1234
+            targetPort: 1234
+            protocol: TCP
+
+    persistence:
+      buildkit-socket:
+        type: emptyDir
+        globalMounts:
+          - path: /run/buildkit
+      buildkit-cache:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 50Gi
+        storageClass: openebs-hostpath
+        globalMounts:
+          - path: /var/lib/buildkit
