@@ -14,6 +14,11 @@ helmDefaults:
     - --no-hooks
 
 releases:
+  - name: envoy-gateway
+    namespace: network-system
+    chart: oci://docker.io/envoyproxy/gateway-helm
+    version: 1.6.3
+
   - name: keda
     namespace: kube-system
     chart: oci://ghcr.io/home-operations/charts-mirror/keda
