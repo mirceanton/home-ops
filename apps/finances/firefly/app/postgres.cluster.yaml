@@ -57,4 +57,4 @@ spec:
       postgresql:
         synchronous_commit: "on"
         pg_hba:
-          - host all all 10.241.0.0/16 scram-sha-256
+          - host all all 10.244.0.0/16 scram-sha-256
