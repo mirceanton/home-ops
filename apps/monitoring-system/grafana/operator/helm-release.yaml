@@ -10,22 +10,13 @@ spec:
     name: grafana-operator
 
   values:
-    replicas: 2
-    leaderElect: true
+    replicas: 1
     resources:
       requests:
         cpu: 20m
         memory: 32Mi
       limits:
         memory: 64Mi
-
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: grafana-operator
 
     serviceMonitor: {enabled: true}
     dashboard: {enabled: true}
@@ -34,14 +25,3 @@ spec:
     logging:
       level: info
       encoder: json
-
-    extraObjects:
-      - apiVersion: policy/v1
-        kind: PodDisruptionBudget
-        metadata:
-          name: grafana-operator
-        spec:
-          minAvailable: 1
-          selector:
-            matchLabels:
-              app.kubernetes.io/name: grafana-operator
