@@ -13,6 +13,10 @@ spec:
     cluster:
       id: 0
       name: home-ops
+    tls:
+      secretsNamespace:
+        name: kube-system
+        create: false
 
     # -----------------------------------------------------------------------------
     # KUBE-PROXY REPLACEMENT

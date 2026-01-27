@@ -27,6 +27,7 @@ sops = "latest"
 age = "latest"
 direnv = "latest"
 op = "latest"
+yq = "latest"
 
 # Linters
 yamlfmt = "latest"

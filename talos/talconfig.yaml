@@ -1,16 +1,16 @@
 ---
-clusterName: homeassistant
-endpoint: "https://k8s-homeassistant.mgmt.h.mirceanton.com:6443"
+clusterName: home-ops
+endpoint: "https://k8s-home.mgmt.h.mirceanton.com:6443"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.12.0
+talosVersion: v1.12.2
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetesVersion: v1.35.0
 
 additionalApiServerCertSans: &san
-  - k8s-homeassistant.mgmt.h.mirceanton.com
-  - 10.0.0.16
+  - k8s-home.mgmt.h.mirceanton.com
+  - 10.0.0.30
   - 127.0.0.1 # KubePrism
 additionalMachineCertSans: *san
 
@@ -18,46 +18,67 @@ allowSchedulingOnControlPlanes: true
 cniConfig: {name: none}
 
 nodes:
-  - hostname: lenovo-tiny
-    ipAddress: 10.0.0.16
+  - hostname: hops-01
+    ipAddress: 10.0.0.31
     controlPlane: true
-    installDiskSelector:
-      model: "INTEL SSDPEKKF256G7L" # Intel 256GB NVMe
+    installDiskSelector: {size: "<=110GB"}
 
     networkInterfaces:
-      - interface: enp0s31f6
+      - interface: ens18 #? Management
         dhcp: true
         dhcpOptions: {routeMetric: 1024}
-        vlans:
-          - vlanId: 1010
-            dhcp: true
-            dhcpOptions: {routeMetric: 4095}
-          - vlanId: 1255
-            dhcp: true
-            dhcpOptions: {routeMetric: 4095}
+        vip: {ip: 10.0.0.30}
+      - interface: ens19 #? Services
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+      - interface: ens20 #? Storage
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+        mtu: 9000
 
-    userVolumes:
-      - name: data # Mounted at /var/mnt/data for OpenEBS
-        provisioning:
-          diskSelector:
-            match: disk.model == "CT240BX500SSD1" # Crucial BX500 240GB SATA SSD
-          grow: true
-          maxSize: 240GB
-        filesystem:
-          type: xfs
+  - hostname: hops-02
+    ipAddress: 10.0.0.32
+    controlPlane: true
+    installDiskSelector: {size: "<=110GB"}
 
-    schematic:
-      customization:
-        #? ERROR: install.extraKernelArgs and install.grubUseUKICmdline can't be used together
-        # extraKernelArgs:
-        #   - intel_iommu=on # Enable IOMMU for GPU/USB passthrough
-        #   - iommu=pt # Set IOMMU to passthrough mode for better performance
-        #   - mitigations=off # Disable CPU vuln. mitigations for better performance
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/i915
-            - siderolabs/intel-ucode
-            - siderolabs/usb-modem-drivers # USB serial drivers for Zigbee/Z-Wave dongles
+    networkInterfaces:
+      - interface: ens18 #? Management
+        dhcp: true
+        dhcpOptions: {routeMetric: 1024}
+        vip: {ip: 10.0.0.30}
+      - interface: ens19 #? Services
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+      - interface: ens20 #? Storage
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+        mtu: 9000
+
+  - hostname: hops-03
+    ipAddress: 10.0.0.33
+    controlPlane: true
+    installDiskSelector: {size: "<=110GB"}
+
+    networkInterfaces:
+      - interface: ens18 #? Management
+        dhcp: true
+        dhcpOptions: {routeMetric: 1024}
+        vip: {ip: 10.0.0.30}
+      - interface: ens19 #? Services
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+      - interface: ens20 #? Storage
+        dhcp: true
+        dhcpOptions: {routeMetric: 4095}
+        mtu: 9000
+
+controlPlane:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/qemu-guest-agent
+          - siderolabs/amd-ucode
 
 patches:
   # ============================================================================
@@ -69,19 +90,43 @@ patches:
         disabled: true
 
   # ============================================================================
-  # CLUSTER DISCOVERY CONFIGURATION
-  # Disable cluster discovery to prevent automatic node detection.
-  # For a single-node cluster, discovery is unnecessary.
+  # CLUSTER DISCOVERY CONFIGURATION w/ KUBERNETES REGISTRY
+  # Enable cluster discovery for multi-node cluster coordination.
+  # Uses Kubernetes registry which requires additional RBAC permissions below.
   # ============================================================================
   - |-
     cluster:
       discovery:
-        enabled: false
+        enabled: true
         registries:
           kubernetes:
-            disabled: true
-          service:
             disabled: false
+          service:
+            disabled: true
+      inlineManifests:
+        - name: kubernetes-discovery-rbac
+          contents: |
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRole
+            metadata:
+              name: system:node-discovery
+            rules:
+              - apiGroups: [""]
+                resources: ["nodes"]
+                verbs: ["list", "watch"]
+            ---
+            apiVersion: rbac.authorization.k8s.io/v1
+            kind: ClusterRoleBinding
+            metadata:
+              name: system:node-discovery
+            roleRef:
+              apiGroup: rbac.authorization.k8s.io
+              kind: ClusterRole
+              name: system:node-discovery
+            subjects:
+              - kind: Group
+                name: system:nodes
+                apiGroup: rbac.authorization.k8s.io
 
   # ============================================================================
   # KUBELET PERFORMANCE TUNING
