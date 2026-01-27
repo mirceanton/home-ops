@@ -6,7 +6,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.0.250
 spec:
-  gatewayClassName: envoy
+  gatewayClassName: envoy-admin
 
   infrastructure:
     annotations:
