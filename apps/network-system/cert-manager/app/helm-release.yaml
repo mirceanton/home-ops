@@ -16,7 +16,18 @@ spec:
     crds: {enabled: true}
     dns01RecursiveNameservers: https://1.1.1.1:443/dns-query,https://1.0.0.1:443/dns-query
     dns01RecursiveNameserversOnly: true
-    replicaCount: 1
+    replicaCount: 2
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: cert-manager
+            app.kubernetes.io/component: controller
     resources:
       requests:
         cpu: 20m
@@ -28,7 +39,18 @@ spec:
     # Component - Webhook
     # =============================================================================================
     webhook:
-      replicaCount: 1
+      replicaCount: 2
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: webhook
+              app.kubernetes.io/component: webhook
       resources:
         requests:
           cpu: 20m
@@ -41,7 +63,18 @@ spec:
     # =============================================================================================
     cainjector:
       enabled: true
-      replicaCount: 1
+      replicaCount: 2
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: cainjector
+              app.kubernetes.io/component: cainjector
       resources:
         requests:
           cpu: 20m
