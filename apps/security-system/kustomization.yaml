@@ -1,10 +1,9 @@
 ---
-
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: security-system
 
 resources:
   - ./namespace.yaml
-  - ./external-secrets-operator.ks.yaml
-  - ./1password-connect.ks.yaml
+  - ./1password-connect
+  - ./external-secrets-operator

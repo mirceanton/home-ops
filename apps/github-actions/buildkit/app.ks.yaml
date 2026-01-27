@@ -1,21 +1,16 @@
 ---
-
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: external-secrets-operator
+  name: buildkit
 spec:
-  path: ./apps/security-system/external-secrets-operator
+  path: ./apps/github-actions/buildkit/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-
+  targetNamespace: github-actions
   interval: 10m
+  timeout: 5m
   prune: true
   wait: true
-  targetNamespace: security-system
-
-  dependsOn:
-    - name: cert-manager
-      namespace: network-system

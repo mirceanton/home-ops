@@ -1,23 +1,21 @@
 ---
-
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: github-actions-runners
+  name: actions-runner-scaleset
 spec:
-  path: ./apps/github-actions/runners
+  path: ./apps/github-actions/runners/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-
+  targetNamespace: github-actions
   interval: 10m
+  timeout: 5m
   prune: true
   wait: false
-  targetNamespace: github-actions
   decryption: {provider: sops}
-
   dependsOn:
-    - name: github-actions-controller
+    - name: actions-runner-controller
     - name: openebs
       namespace: storage-system

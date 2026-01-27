@@ -2,15 +2,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: github-actions-buildkit
+  name: actions-runner-controller
 spec:
-  path: ./apps/github-actions/buildkit
+  path: ./apps/github-actions/controller/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-
+  targetNamespace: github-actions
   interval: 10m
+  timeout: 5m
   prune: true
   wait: true
-  targetNamespace: github-actions
+  dependsOn:
+    - name: cert-manager
+      namespace: network-system
