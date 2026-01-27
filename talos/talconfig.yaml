@@ -72,7 +72,6 @@ nodes:
         dhcpOptions: {routeMetric: 4095}
         mtu: 9000
 
-
 controlPlane:
   schematic:
     customization:
