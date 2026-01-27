@@ -2,9 +2,9 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: it-tools
+  name: omni-tools
 spec:
-  path: ./apps/development/it-tools/app
+  path: ./apps/development/omni-tools/app
   sourceRef:
     kind: GitRepository
     name: flux-system
