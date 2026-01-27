@@ -18,13 +18,20 @@ spec:
       runnerMaxConcurrentReconciles: 5
       updateStrategy: immediate # immediate, eventual
 
-    replicaCount: 1
-    topologySpreadConstraints: []
+    replicaCount: 2
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/component: controller-manager
+            app.kubernetes.io/instance: actions-runner-controller
 
     resources:
       requests:
         cpu: 50m
-        memory: 128Mi
+        memory: 64Mi
       limits:
         cpu: 200m
         memory: 256Mi

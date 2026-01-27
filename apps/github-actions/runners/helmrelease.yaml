@@ -13,7 +13,7 @@ spec:
   values:
     githubConfigUrl: https://github.com/mirceanton
     githubConfigSecret: github-org-token
-    minRunners: 5
+    minRunners: 10
     maxRunners: 100
 
     containerMode:
@@ -23,7 +23,7 @@ spec:
         storageClassName: openebs-hostpath
         resources:
           requests:
-            storage: 25Gi
+            storage: 4Gi
 
     # listenerTemplate is the PodSpec for each listener Pod
     # For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
