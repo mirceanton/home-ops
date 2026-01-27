@@ -10,8 +10,16 @@ spec:
     name: pgo
 
   values:
-    replicas: 1
+    replicas: 2
     debug: false
+
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: pgo
 
     resources:
       controller:
