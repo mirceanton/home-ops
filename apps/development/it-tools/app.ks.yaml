@@ -14,3 +14,6 @@ spec:
   timeout: 5m
   prune: true
   wait: true
+  dependsOn:
+    - name: envoy-gateway
+      namespace: network-system

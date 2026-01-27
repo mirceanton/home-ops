@@ -16,4 +16,6 @@ spec:
   decryption: {provider: sops}
   dependsOn:
     - name: mosquitto
+    - name: envoy-gateway
+      namespace: network-system
 

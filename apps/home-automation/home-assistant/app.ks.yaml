@@ -13,3 +13,7 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  dependsOn:
+    - name: envoy-gateway
+      namespace: network-system
+    - name: zigbee2mqtt

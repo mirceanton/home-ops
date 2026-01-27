@@ -15,5 +15,7 @@ spec:
   wait: true
   dependsOn:
     - name: grafana-operator
+    - name: envoy-gateway
+      namespace: network-system
     - name: openebs
       namespace: storage-system

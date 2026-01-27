@@ -15,3 +15,6 @@ spec:
   prune: true
   wait: true
   decryption: {provider: sops}
+  dependsOn:
+    - name: envoy-gateway
+      namespace: network-system

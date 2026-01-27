@@ -14,5 +14,8 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  decryption:
-    provider: sops
+  decryption: {provider: sops}
+  dependsOn:
+    #? wait for the gateways to be ready to accept external-dns records
+    - name: envoy-gateway
+      namespace: network-system

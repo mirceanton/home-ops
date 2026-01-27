@@ -16,3 +16,5 @@ spec:
   dependsOn:
     - name: openebs
       namespace: storage-system
+    - name: envoy-gateway
+      namespace: network-system
