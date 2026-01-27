@@ -9,6 +9,5 @@ resources:
   - ./envoy-gateway
   - ./external-dns
   - ./metallb
-  - ./echo-server
   - ./openspeedtest
   - ./tailscale
