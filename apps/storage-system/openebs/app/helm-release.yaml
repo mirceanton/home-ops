@@ -14,12 +14,20 @@ spec:
     localpv-provisioner:
       localpv:
         basePath: &hostPath /var/mnt/data
-        replicas: 1
+        replicas: 2
+        enableLeaderElection: true
         requests:
           cpu: 20m
           memory: 64Mi
         limits:
           memory: 128Mi
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - labelSelector:
+                  matchLabels:
+                    name: openebs-localpv-provisioner
+                topologyKey: kubernetes.io/hostname
 
       hostpathClass:
         enabled: true
