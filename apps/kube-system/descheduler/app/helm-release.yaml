@@ -13,7 +13,18 @@ spec:
     kind: Deployment # CronJob or Deployment
     deschedulingInterval: 5m #! Required when running as a Deployment
 
-    replicas: 1
+    replicas: 2
+    leaderElection: {enabled: true}
+
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: descheduler
+            app.kubernetes.io/instance: descheduler
+
     resources:
       requests:
         cpu: 25m
