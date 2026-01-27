@@ -12,10 +12,20 @@ spec:
   values:
     controller:
       enabled: true
-      replicaCount: 1
+      replicaCount: 2
       resources:
         requests:
           cpu: 20m
           memory: 64Mi
         limits:
           memory: 128Mi
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: snapshot-controller
+              app.kubernetes.io/component: controller
+      pdb:
+        minAvailable: 1
