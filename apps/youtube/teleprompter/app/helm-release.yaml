@@ -14,6 +14,16 @@ spec:
   values:
     controllers:
       backend:
+        replicas: 2
+        strategy: RollingUpdate
+        pod:
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/controller: backend
         initContainers:
           wait-for-dragonfly:
             image:
@@ -62,6 +72,16 @@ spec:
               capabilities: { drop: ["ALL"] }
 
       frontend:
+        replicas: 2
+        strategy: RollingUpdate
+        pod:
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/controller: frontend
         containers:
           main:
             image:
