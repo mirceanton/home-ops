@@ -3,17 +3,22 @@
 
 #! This helmfile is for extracting and installing Custom Resource Definitions (CRDs) from Helm charts.
 #! It is not intended to be used with helmfile apply or helmfile sync.
-#! Use helmfile template -q | kubectl apply --server-side --force-conflicts -f -
+#! Use helmfile template -q | yq ea 'select(.kind == "CustomResourceDefinition")' - | kubectl apply --server-side --force-conflicts -f -
 
 helmDefaults:
+  cleanupOnFail: true
+  wait: true
+  waitForJobs: true
   args:
     - --include-crds
     - --no-hooks
-  postRendererArgs:
-    - -c
-    - yq ea -e 'select(.kind == "CustomResourceDefinition")'
 
 releases:
+  - name: keda
+    namespace: kube-system
+    chart: oci://ghcr.io/home-operations/charts-mirror/keda
+    version: 2.18.3
+
   - name: grafana-operator
     namespace: monitoring-system
     chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
