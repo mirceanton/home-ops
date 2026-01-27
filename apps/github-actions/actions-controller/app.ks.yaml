@@ -4,7 +4,7 @@ kind: Kustomization
 metadata:
   name: actions-runner-controller
 spec:
-  path: ./apps/github-actions/controller/app
+  path: ./apps/github-actions/actions-controller/app
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -4,7 +4,7 @@ kind: Kustomization
 metadata:
   name: actions-runner-scaleset
 spec:
-  path: ./apps/github-actions/runners/app
+  path: ./apps/github-actions/actions-runners/app
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -5,6 +5,6 @@ namespace: github-actions
 
 resources:
   - ./namespace.yaml
+  - ./actions-controller
+  - ./actions-runners
   - ./buildkit
-  - ./controller
-  - ./runners
