@@ -36,6 +36,12 @@ spec:
               - "envsubst '$${BOOKLORE_PORT}' < /etc/nginx/nginx.conf > /config/nginx.conf"
             env:
               BOOKLORE_PORT: &httpPort 6060
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -77,6 +83,12 @@ spec:
                     path: /api/v1/healthcheck
                     port: 8080
                   failureThreshold: 10
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -98,6 +110,12 @@ spec:
                     path: /
                     port: *httpPort
               readiness: *nginxProbe
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
