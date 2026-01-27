@@ -13,7 +13,16 @@ spec:
   values:
     manageCRDs: true
 
-    replicaCount: 1
+    replicaCount: 2
+
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: volsync
+            topologyKey: kubernetes.io/hostname
+
     resources:
       requests:
         cpu: 20m
