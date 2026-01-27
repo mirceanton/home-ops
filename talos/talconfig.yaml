@@ -21,7 +21,18 @@ nodes:
   - hostname: hops-01
     ipAddress: 10.0.0.31
     controlPlane: true
-    installDiskSelector: {size: "<=110GB"}
+
+    installDiskSelector:
+      busPath: /dev/sda
+    userVolumes:
+      - name: data # Mounted at /var/mnt/data for OpenEBS
+        provisioning:
+          diskSelector:
+            match: disk.dev_path == "/dev/sdb"
+          minSize: 1GB
+          grow: true
+        filesystem:
+          type: xfs
 
     networkInterfaces:
       - interface: ens18 #? Management
@@ -39,7 +50,18 @@ nodes:
   - hostname: hops-02
     ipAddress: 10.0.0.32
     controlPlane: true
-    installDiskSelector: {size: "<=110GB"}
+
+    installDiskSelector:
+      busPath: /dev/sda
+    userVolumes:
+      - name: data # Mounted at /var/mnt/data for OpenEBS
+        provisioning:
+          diskSelector:
+            match: disk.dev_path == "/dev/sdb"
+          minSize: 1GB
+          grow: true
+        filesystem:
+          type: xfs
 
     networkInterfaces:
       - interface: ens18 #? Management
@@ -57,7 +79,18 @@ nodes:
   - hostname: hops-03
     ipAddress: 10.0.0.33
     controlPlane: true
-    installDiskSelector: {size: "<=110GB"}
+
+    installDiskSelector:
+      busPath: /dev/sda
+    userVolumes:
+      - name: data # Mounted at /var/mnt/data for OpenEBS
+        provisioning:
+          diskSelector:
+            match: disk.dev_path == "/dev/sdb"
+          minSize: 1GB
+          grow: true
+        filesystem:
+          type: xfs
 
     networkInterfaces:
       - interface: ens18 #? Management
