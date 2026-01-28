@@ -1,0 +1,80 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: penpot-postgres-restore
+spec:
+  suspend: true # Disabled - to be triggered manually when needed
+  schedule: "0 0 31 2 *" # February 31st = never runs
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+
+          containers:
+            - name: restore
+              image: docker.io/library/postgres:17.7
+              command: ["/bin/bash", "/scripts/restore.sh"]
+              env:
+                - name: APP_NAME
+                  value: penpot
+                - name: BACKUP_DIR
+                  value: /backup/penpot
+                - name: PGHOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: penpot-postgres-pguser-penpot
+                      key: host
+                - name: PGPORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: penpot-postgres-pguser-penpot
+                      key: port
+                - name: PGUSER
+                  valueFrom:
+                    secretKeyRef:
+                      name: penpot-postgres-pguser-penpot
+                      key: user
+                - name: PGDATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: penpot-postgres-pguser-penpot
+                      key: dbname
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: penpot-postgres-pguser-penpot
+                      key: password
+
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: backup
+                  mountPath: /backup
+                  readOnly: true
+
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+
+          volumes:
+            - name: scripts
+              configMap:
+                name: penpot-postgres-scripts
+                defaultMode: 0755
+            - name: backup
+              nfs:
+                server: nas.stor.h.mirceanton.com
+                path: /mnt/tank/Backups/HomeOps

@@ -1,0 +1,116 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: penpot
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: penpot
+      version: 0.32.0
+      sourceRef:
+        kind: HelmRepository
+        name: penpot
+
+  dependsOn: []
+
+  values:
+    global:
+      postgresqlEnabled: false
+      valkeyEnabled: false
+      redisEnabled: false
+
+    config:
+      publicUri: "https://penpot.home.mirceanton.com"
+      flags: "disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
+      telemetryEnabled: false
+
+      # Use existing secret for API key
+      existingSecret: "penpot-secret"
+      secretKeys:
+        apiSecretKey: "secret-key"
+
+      # External PostgreSQL (CPGO)
+      postgresql:
+        host: "penpot-postgres-primary.youtube.svc"
+        port: 5432
+        database: "penpot"
+        existingSecret: "penpot-postgres-pguser-penpot"
+        secretKeys:
+          usernameKey: "user"
+          passwordKey: "password"
+
+      # External Redis (Dragonfly)
+      redis:
+        host: "penpot-dragonfly"
+        port: 6379
+        database: "0"
+
+      # Object storage - filesystem
+      objectsStorage:
+        storageBackend: "fs"
+        filesystem:
+          directory: "/opt/data/assets"
+
+    # Frontend configuration
+    frontend:
+      replicaCount: 2
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: frontend
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 512Mi
+
+    # Backend configuration
+    backend:
+      replicaCount: 2
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: backend
+      resources:
+        requests:
+          cpu: 50m
+          memory: 512Mi
+        limits:
+          memory: 2Gi
+
+    # Exporter configuration
+    exporter:
+      replicaCount: 2
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: exporter
+      resources:
+        requests:
+          cpu: 10m
+          memory: 256Mi
+        limits:
+          memory: 2Gi
+
+    # Use existing NFS-backed PVC for assets
+    persistence:
+      assets:
+        enabled: true
+        existingClaim: "penpot-assets"
+
+    # Ingress disabled - using separate HTTPRoute for Gateway API
+    ingress:
+      enabled: false
