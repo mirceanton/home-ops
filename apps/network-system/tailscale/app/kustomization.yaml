@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
-  - ./tailscale-oauth.secret.sops.yaml
+  - ./tailscale-oauth.externalsecret.yaml
