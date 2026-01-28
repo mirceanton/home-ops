@@ -16,6 +16,7 @@ spec:
     metadata:
       annotations:
         metallb.io/loadBalancerIPs: 10.0.10.251
+        external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
 
   instances:
     - name: davinci
