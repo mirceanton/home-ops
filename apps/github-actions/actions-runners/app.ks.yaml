@@ -14,8 +14,10 @@ spec:
   timeout: 5m
   prune: true
   wait: false
-  decryption: {provider: sops}
   dependsOn:
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system
     - name: actions-runner-controller
     - name: openebs
       namespace: storage-system
