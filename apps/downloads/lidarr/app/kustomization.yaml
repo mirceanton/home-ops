@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
-  - ./lidarr.secret.sops.yaml
+  - ./lidarr.externalsecret.yaml

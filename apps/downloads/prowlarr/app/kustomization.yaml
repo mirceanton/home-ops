@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
-  - ./prowlarr.secret.sops.yaml
+  - ./prowlarr.externalsecret.yaml
