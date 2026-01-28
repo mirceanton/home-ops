@@ -90,7 +90,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.34.1
+              tag: v1.34.2
             args: ["/bin/meilisearch"]
             env:
               MEILI_NO_ANALYTICS: true
