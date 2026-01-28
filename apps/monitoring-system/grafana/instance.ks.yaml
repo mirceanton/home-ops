@@ -14,6 +14,9 @@ spec:
   prune: true
   wait: true
   dependsOn:
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system
     - name: grafana-operator
     - name: envoy-gateway
       namespace: network-system
