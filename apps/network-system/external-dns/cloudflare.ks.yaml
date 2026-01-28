@@ -16,6 +16,9 @@ spec:
   wait: true
   decryption: {provider: sops}
   dependsOn:
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system
     #? wait for the gateways to be ready to accept external-dns records
     - name: envoy-gateway
       namespace: network-system

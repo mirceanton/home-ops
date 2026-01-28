@@ -15,6 +15,9 @@ spec:
   prune: true
   wait: true
   dependsOn:
+    #? wait for the CRDs to be installed
     - name: cert-manager
-  decryption:
-    provider: sops
+
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system

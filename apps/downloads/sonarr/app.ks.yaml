@@ -13,8 +13,9 @@ spec:
   interval: 10m
   prune: true
   wait: true
-  decryption:
-    provider: sops
   dependsOn:
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system
     - name: envoy-gateway
       namespace: network-system
