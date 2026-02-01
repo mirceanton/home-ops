@@ -10,7 +10,7 @@ spec:
     name: pgo
 
   values:
-    replicas: 2
+    replicas: 1
     debug: false
 
     affinity:

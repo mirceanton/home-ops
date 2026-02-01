@@ -10,7 +10,7 @@ spec:
     name: dragonfly-operator
 
   values:
-    replicaCount: 2
+    replicaCount: 1
 
     rbacProxy:
       resources:
@@ -28,11 +28,6 @@ spec:
           memory: 64Mi
         limits:
           memory: 256Mi
-
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
 
     serviceMonitor:
       enabled: true

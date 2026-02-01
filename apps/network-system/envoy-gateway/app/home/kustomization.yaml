@@ -7,4 +7,3 @@ resources:
   - ./envoy-proxy.yaml
   - ./gateway-class.yaml
   - ./gateway.yaml
-  - ./pdb.yaml

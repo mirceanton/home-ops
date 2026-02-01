@@ -14,7 +14,7 @@ spec:
     localpv-provisioner:
       localpv:
         basePath: &hostPath /var/mnt/data
-        replicas: 2
+        replicas: 1
         enableLeaderElection: true
         requests:
           cpu: 20m

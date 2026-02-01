@@ -40,40 +40,9 @@ spec:
           cpu: null
           memory: 64Mi
 
-    operator: {replicaCount: 2}
-    metricsServer: {replicaCount: 2}
-    webhooks: {replicaCount: 2}
-
-    podDisruptionBudget:
-      operator: {minAvailable: 1}
-      metricServer: {minAvailable: 1}
-      webhooks: {minAvailable: 1}
-
-    topologySpreadConstraints:
-      operator:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: keda-operator
-              app.kubernetes.io/instance: keda
-      metricsServer:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: keda-operator-metrics-apiserver
-              app.kubernetes.io/instance: keda
-      webhooks:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: keda-admission-webhooks
-              app.kubernetes.io/instance: keda
+    operator: {replicaCount: 1}
+    metricsServer: {replicaCount: 1}
+    webhooks: {replicaCount: 1}
 
     logging:
       operator:

@@ -12,16 +12,8 @@ spec:
   values:
     controllers:
       firefly:
-        replicas: 2
+        replicas: 1
         strategy: RollingUpdate
-        pod:
-          topologySpreadConstraints:
-            - maxSkew: 1
-              topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/controller: firefly
         containers:
           app:
             image:

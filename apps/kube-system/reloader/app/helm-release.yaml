@@ -19,22 +19,10 @@ spec:
       syncAfterRestart: true
 
       deployment:
-        replicas: 2
-        topologySpreadConstraints:
-          - maxSkew: 1
-            topologyKey: kubernetes.io/hostname
-            whenUnsatisfiable: DoNotSchedule
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: reloader
-                app.kubernetes.io/instance: reloader
+        replicas: 1
         resources:
           requests:
             cpu: 20m
             memory: 64Mi
           limits:
             memory: 128Mi
-
-      podDisruptionBudget:
-        enabled: true
-        minAvailable: 1

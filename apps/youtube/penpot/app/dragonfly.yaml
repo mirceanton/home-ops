@@ -4,15 +4,7 @@ kind: Dragonfly
 metadata:
   name: penpot-dragonfly
 spec:
-  replicas: 3
-
-  affinity:
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - topologyKey: kubernetes.io/hostname
-          labelSelector:
-            matchLabels:
-              app: penpot-dragonfly
+  replicas: 1
 
   args:
     - --proactor_threads=1

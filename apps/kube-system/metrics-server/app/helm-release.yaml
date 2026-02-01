@@ -10,18 +10,7 @@ spec:
     name: metrics-server
 
   values:
-    replicas: 2
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: metrics-server
-            app.kubernetes.io/instance: metrics-server
-    podDisruptionBudget:
-      enabled: true
-      minAvailable: 1
+    replicas: 1
 
     resources:
       requests:

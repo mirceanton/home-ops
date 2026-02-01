@@ -11,15 +11,7 @@ spec:
 
   values:
     deployment:
-      replicas: 2
-      pod:
-        topologySpreadConstraints:
-          - maxSkew: 1
-            topologyKey: kubernetes.io/hostname
-            whenUnsatisfiable: DoNotSchedule
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: envoy-gateway
+      replicas: 1
       envoyGateway:
         resources:
           requests:
@@ -27,9 +19,6 @@ spec:
             memory: 128Mi
           limits:
             memory: 256Mi
-
-    podDisruptionBudget:
-      minAvailable: 1
 
     config:
       envoyGateway:
