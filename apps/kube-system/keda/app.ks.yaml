@@ -4,6 +4,9 @@ kind: Kustomization
 metadata:
   name: keda
 spec:
+  dependsOn:
+    - name: cert-manager
+      namespace: flux-system
   path: ./apps/kube-system/keda/app
   sourceRef:
     kind: GitRepository
