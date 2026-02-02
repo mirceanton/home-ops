@@ -1,6 +1,6 @@
 ---
 clusterName: home-ops
-endpoint: "https://k8s-home.mgmt.h.mirceanton.com:6443"
+endpoint: "https://homeops.mgmt.h.mirceanton.com:6443"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
 talosVersion: v1.12.2
@@ -9,26 +9,26 @@ talosVersion: v1.12.2
 kubernetesVersion: v1.35.0
 
 additionalApiServerCertSans: &san
-  - k8s-home.mgmt.h.mirceanton.com
+  - homeops.mgmt.h.mirceanton.com
   - 10.0.0.30
   - 127.0.0.1 # KubePrism
 additionalMachineCertSans: *san
 
 allowSchedulingOnControlPlanes: true
-cniConfig: {name: none}
+cniConfig: {name: flannel}
 
 nodes:
   - hostname: hops-01
-    ipAddress: 10.0.0.31
+    ipAddress: 10.0.0.30
     controlPlane: true
 
     installDiskSelector:
-      busPath: /dev/sda
+      size: '<= 120GB'
     userVolumes:
       - name: data # Mounted at /var/mnt/data for OpenEBS
         provisioning:
           diskSelector:
-            match: disk.dev_path == "/dev/sdb"
+            match: disk.size > 120u * GB
           minSize: 1GB
           grow: true
         filesystem:
@@ -38,68 +38,8 @@ nodes:
       - interface: ens18 #? Management
         dhcp: true
         dhcpOptions: {routeMetric: 1024}
-        vip: {ip: 10.0.0.30}
       - interface: ens19 #? Services
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
-      - interface: ens20 #? Storage
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
-        mtu: 9000
-
-  - hostname: hops-02
-    ipAddress: 10.0.0.32
-    controlPlane: true
-
-    installDiskSelector:
-      busPath: /dev/sda
-    userVolumes:
-      - name: data # Mounted at /var/mnt/data for OpenEBS
-        provisioning:
-          diskSelector:
-            match: disk.dev_path == "/dev/sdb"
-          minSize: 1GB
-          grow: true
-        filesystem:
-          type: xfs
-
-    networkInterfaces:
-      - interface: ens18 #? Management
-        dhcp: true
-        dhcpOptions: {routeMetric: 1024}
-        vip: {ip: 10.0.0.30}
-      - interface: ens19 #? Services
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
-      - interface: ens20 #? Storage
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
-        mtu: 9000
-
-  - hostname: hops-03
-    ipAddress: 10.0.0.33
-    controlPlane: true
-
-    installDiskSelector:
-      busPath: /dev/sda
-    userVolumes:
-      - name: data # Mounted at /var/mnt/data for OpenEBS
-        provisioning:
-          diskSelector:
-            match: disk.dev_path == "/dev/sdb"
-          minSize: 1GB
-          grow: true
-        filesystem:
-          type: xfs
-
-    networkInterfaces:
-      - interface: ens18 #? Management
-        dhcp: true
-        dhcpOptions: {routeMetric: 1024}
-        vip: {ip: 10.0.0.30}
-      - interface: ens19 #? Services
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
+        dhcp: false
       - interface: ens20 #? Storage
         dhcp: true
         dhcpOptions: {routeMetric: 4095}
@@ -111,218 +51,15 @@ controlPlane:
       systemExtensions:
         officialExtensions:
           - siderolabs/qemu-guest-agent
-          - siderolabs/amd-ucode
 
 patches:
-  # ============================================================================
-  # DISABLE KUBE-PROXY -> replaced by Cilium
-  # ============================================================================
-  - |-
-    cluster:
-      proxy:
-        disabled: true
-
-  # ============================================================================
-  # CLUSTER DISCOVERY CONFIGURATION w/ KUBERNETES REGISTRY
-  # Enable cluster discovery for multi-node cluster coordination.
-  # Uses Kubernetes registry which requires additional RBAC permissions below.
-  # ============================================================================
-  - |-
-    cluster:
-      discovery:
-        enabled: true
-        registries:
-          kubernetes:
-            disabled: false
-          service:
-            disabled: true
-      inlineManifests:
-        - name: kubernetes-discovery-rbac
-          contents: |
-            apiVersion: rbac.authorization.k8s.io/v1
-            kind: ClusterRole
-            metadata:
-              name: system:node-discovery
-            rules:
-              - apiGroups: [""]
-                resources: ["nodes"]
-                verbs: ["list", "watch"]
-            ---
-            apiVersion: rbac.authorization.k8s.io/v1
-            kind: ClusterRoleBinding
-            metadata:
-              name: system:node-discovery
-            roleRef:
-              apiGroup: rbac.authorization.k8s.io
-              kind: ClusterRole
-              name: system:node-discovery
-            subjects:
-              - kind: Group
-                name: system:nodes
-                apiGroup: rbac.authorization.k8s.io
-
-  # ============================================================================
-  # KUBELET PERFORMANCE TUNING
-  # Optimize kubelet for higher pod density and faster deployments
-  # - maxPods: Increase from default 110 to 200 to allow more pods on a single node
-  # - serializeImagePulls: Disable serialization to pull images in parallel
-  # ============================================================================
-  - |-
-    machine:
-      kubelet:
-        extraConfig:
-          maxPods: 200
-          serializeImagePulls: false
-
-  # ============================================================================
-  # NETWORK SEARCH DOMAIN
-  # Disable automatic search domain configuration in /etc/resolv.conf.
-  # This prevents DNS resolution issues where short hostnames get the cluster's
-  # search domain appended, which can cause unexpected behavior with external
-  # DNS lookups and slow down DNS resolution.
-  # ============================================================================
-  - |-
-    machine:
-      network:
-        disableSearchDomain: true
-
-  # ============================================================================
-  # KUBEPRISM - LOCAL API SERVER LOAD BALANCER
-  # ============================================================================
-  - |-
-    machine:
-      features:
-        kubePrism:
-          enabled: true
-          port: 7445
-
-  # ============================================================================
-  # NETWORK INTERFACE BINDING
-  # Ensure all management services bind to the correct network interface.
-  # ============================================================================
-  - |-
-    machine:
-      kubelet:
-        nodeIP:
-          validSubnets: ["10.0.0.0/24"]
-    cluster:
-      etcd:
-        extraArgs:
-          listen-metrics-urls: http://0.0.0.0:2381
-        advertisedSubnets: ["10.0.0.0/24"]
-
-  # ============================================================================
-  # Enable mutating admission policies in the API server.
-  # ============================================================================
-  - |-
-    cluster:
-      apiServer:
-        extraArgs:
-          feature-gates: MutatingAdmissionPolicy=true
-          runtime-config: admissionregistration.k8s.io/v1beta1=true
-
-  # ============================================================================
-  # HOST DNS CONFIGURATION
-  # Enable Talos host-level DNS features:
-  # - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
-  #                         preventing potential DNS loops and maintaining isolation
-  # - resolveMemberNames: Enable resolution of cluster member hostnames,
-  #                       useful for debugging and inter-node communication
-  # ============================================================================
-  - |-
-    machine:
-      features:
-        hostDNS:
-          enabled: true
-          forwardKubeDNSToHost: false
-          resolveMemberNames: true
-
-  # ============================================================================
-  # DISABLE API SERVER ADMISSION CONTROL
-  # Remove default admission control plugins from the API server.
-  # ============================================================================
-  - |-
-    cluster:
-      apiServer:
-        admissionControl:
-          $$patch: delete
-
-  # ============================================================================
-  # KERNEL SYSCTLS FOR PERFORMANCE AND FILE WATCHING
-  # ============================================================================
-  - |-
-    machine:
-      sysctls:
-        # Inotify limits - essential for file-watching apps
-        fs.inotify.max_user_instances: "8192"
-        fs.inotify.max_user_watches: "1048576"
-
-        # BBR congestion control - Google's algorithm for better throughput & lower latency
-        net.ipv4.tcp_congestion_control: bbr
-        # Socket backlog - max pending connections (useful for services with many clients)
-        net.core.somaxconn: "65535"
-
-        # Fair queue scheduler - required for BBR congestion control
-        net.core.default_qdisc: fq
-
-        # Socket buffer sizes - increased for better network throughput
-        net.core.rmem_max: "16777216"
-        net.core.wmem_max: "16777216"
-
-        # Allow unprivileged containers to use ping
-        net.ipv4.ping_group_range: 0 2147483647
-
-        # TCP Fast Open - reduces latency by sending data in SYN packet (3 = enabled for both client & server)
-        net.ipv4.tcp_fastopen: "3"
-
-        # Path MTU discovery - helps avoid fragmentation issues
-        net.ipv4.tcp_mtu_probing: "1"
-
-        # TCP buffer sizes (min, default, max) - tuned for better throughput
-        net.ipv4.tcp_rmem: 4096 87380 16777216
-        net.ipv4.tcp_wmem: 4096 65536 16777216
-
-        # Disable slow start after idle - better for bursty IoT traffic patterns
-        net.ipv4.tcp_slow_start_after_idle: "0"
-
-  # ============================================================================
-  # CONTAINER REGISTRY MIRROR/PROXY CONFIGURATION
-  # Configure a pull-through cache proxy for container images.
-  # ============================================================================
-  - |-
-    machine:
-      registries:
-        config:
-          ${registry_hostname}:
-            auth:
-              username: ${registry_username}
-              password: ${registry_password}
-        mirrors:
-          docker.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/docker.io/"]
-            overridePath: true
-          registry-1.docker.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/registry-1.docker.io/"]
-            overridePath: true
-          ghcr.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/ghcr.io/"]
-            overridePath: true
-          gcr.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/gcr.io/"]
-            overridePath: true
-          quay.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/quay.io/"]
-            overridePath: true
-          registry.k8s.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/registry.k8s.io/"]
-            overridePath: true
-          oci.external-secrets.io:
-            skipFallback: true
-            endpoints: ["https://${registry_hostname}/v2/oci.external-secrets.io/"]
-            overridePath: true
+  - "@./patches/cluster-discovery.yaml"
+  - "@./patches/kubelet-tuning.yaml"
+  - "@./patches/disable-search-domain.yaml"
+  - "@./patches/kubeprism.yaml"
+  - "@./patches/network-binding.yaml"
+  - "@./patches/mutating-admission.yaml"
+  - "@./patches/host-dns.yaml"
+  - "@./patches/disable-admission-control.yaml"
+  - "@./patches/sysctls.yaml"
+  # - "@./patches/registry-mirrors.yaml"

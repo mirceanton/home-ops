@@ -1,0 +1,34 @@
+---
+machine:
+  sysctls:
+    # Inotify limits - essential for file-watching apps
+    fs.inotify.max_user_instances: "8192"
+    fs.inotify.max_user_watches: "1048576"
+
+    # BBR congestion control - Google's algorithm for better throughput & lower latency
+    net.ipv4.tcp_congestion_control: bbr
+    # Socket backlog - max pending connections (useful for services with many clients)
+    net.core.somaxconn: "65535"
+
+    # Fair queue scheduler - required for BBR congestion control
+    net.core.default_qdisc: fq
+
+    # Socket buffer sizes - increased for better network throughput
+    net.core.rmem_max: "16777216"
+    net.core.wmem_max: "16777216"
+
+    # Allow unprivileged containers to use ping
+    net.ipv4.ping_group_range: 0 2147483647
+
+    # TCP Fast Open - reduces latency by sending data in SYN packet (3 = enabled for both client & server)
+    net.ipv4.tcp_fastopen: "3"
+
+    # Path MTU discovery - helps avoid fragmentation issues
+    net.ipv4.tcp_mtu_probing: "1"
+
+    # TCP buffer sizes (min, default, max) - tuned for better throughput
+    net.ipv4.tcp_rmem: 4096 87380 16777216
+    net.ipv4.tcp_wmem: 4096 65536 16777216
+
+    # Disable slow start after idle - better for bursty traffic patterns
+    net.ipv4.tcp_slow_start_after_idle: "0"

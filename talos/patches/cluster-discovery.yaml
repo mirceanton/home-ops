@@ -1,0 +1,35 @@
+---
+# Cluster discovery using Kubernetes registry.
+# Requires additional RBAC permissions for nodes to list/watch each other.
+cluster:
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: false
+      service:
+        disabled: true
+  inlineManifests:
+    - name: kubernetes-discovery-rbac
+      contents: |
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          name: system:node-discovery
+        rules:
+          - apiGroups: [""]
+            resources: ["nodes"]
+            verbs: ["list", "watch"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: system:node-discovery
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: system:node-discovery
+        subjects:
+          - kind: Group
+            name: system:nodes
+            apiGroup: rbac.authorization.k8s.io

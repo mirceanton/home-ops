@@ -1,0 +1,11 @@
+---
+#? Bind the kubelet and etcd to the management network subnet
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets: ["10.0.0.0/24"]
+cluster:
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+    advertisedSubnets: ["10.0.0.0/24"]

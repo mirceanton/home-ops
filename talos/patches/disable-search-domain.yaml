@@ -1,0 +1,7 @@
+---
+# Disable search domain in /etc/resolv.conf.
+# Prevents DNS issues where short hostnames get the cluster's search domain
+# appended, causing unexpected behavior with external DNS lookups.
+machine:
+  network:
+    disableSearchDomain: true

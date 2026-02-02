@@ -1,0 +1,11 @@
+---
+# Host DNS configuration:
+# - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
+#   preventing potential DNS loops and maintaining isolation
+# - resolveMemberNames: Enable resolution of cluster member hostnames
+machine:
+  features:
+    hostDNS:
+      enabled: true
+      forwardKubeDNSToHost: false
+      resolveMemberNames: true
