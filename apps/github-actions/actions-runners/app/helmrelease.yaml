@@ -13,8 +13,8 @@ spec:
   values:
     githubConfigUrl: https://github.com/mirceanton
     githubConfigSecret: github-org-token
-    minRunners: 10
-    maxRunners: 100
+    minRunners: 1
+    maxRunners: 3
 
     containerMode:
       type: kubernetes
