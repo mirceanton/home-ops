@@ -56,14 +56,7 @@ spec:
 
     # Frontend configuration
     frontend:
-      replicaCount: 2
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/component: frontend
+      replicaCount: 1
       resources:
         requests:
           cpu: 10m
@@ -73,14 +66,7 @@ spec:
 
     # Backend configuration
     backend:
-      replicaCount: 2
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/component: backend
+      replicaCount: 1
       resources:
         requests:
           cpu: 50m
@@ -90,14 +76,7 @@ spec:
 
     # Exporter configuration
     exporter:
-      replicaCount: 2
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/component: exporter
+      replicaCount: 1
       resources:
         requests:
           cpu: 10m
