@@ -6,7 +6,7 @@ metadata:
 spec:
   dependsOn:
     - name: cert-manager
-      namespace: flux-system
+      namespace: network-system
   path: ./apps/kube-system/keda/app
   sourceRef:
     kind: GitRepository

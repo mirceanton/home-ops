@@ -13,3 +13,8 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  dependsOn:
+    - name: openebs
+      namespace: storage-system
+    - name: metallb
+      namespace: network-system

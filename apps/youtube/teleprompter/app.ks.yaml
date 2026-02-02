@@ -16,3 +16,5 @@ spec:
   dependsOn:
     - name: dragonfly-operator
       namespace: database-system
+    - name: envoy-gateway
+      namespace: network-system

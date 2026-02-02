@@ -20,3 +20,5 @@ spec:
       namespace: database-system
     - name: openebs
       namespace: storage-system
+    - name: 1password-connect
+      namespace: security-system
