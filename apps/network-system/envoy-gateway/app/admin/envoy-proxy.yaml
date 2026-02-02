@@ -13,9 +13,8 @@ spec:
     kubernetes:
       envoyDeployment:
         replicas: 1
-        pod:
-          container:
-            imageRepository: mirror.gcr.io/envoyproxy/envoy
+        container:
+          imageRepository: mirror.gcr.io/envoyproxy/envoy
           resources:
             requests:
               cpu: 100m
