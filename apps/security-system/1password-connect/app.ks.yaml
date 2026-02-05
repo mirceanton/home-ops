@@ -10,8 +10,8 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: security-system
-  interval: 10m
-  timeout: 5m
+  interval: 1m30s
+  timeout: 1m
   prune: true
   wait: true
   decryption: {provider: sops}
