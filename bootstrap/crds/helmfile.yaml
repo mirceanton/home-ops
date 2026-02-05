@@ -17,7 +17,7 @@ releases:
   - name: envoy-gateway
     namespace: network-system
     chart: oci://docker.io/envoyproxy/gateway-helm
-    version: 1.6.3
+    version: 1.7.0
 
   - name: keda
     namespace: kube-system
