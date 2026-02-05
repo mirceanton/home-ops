@@ -57,11 +57,11 @@ spec:
               PGID: "568"
             resources:
               requests:
-                cpu: 100m
-                memory: 512Mi
+                cpu: 1000m
+                memory: 1.5Gi
                 nvidia.com/gpu: 1
               limits:
-                memory: 10Gi
+                memory: 3Gi
                 nvidia.com/gpu: 1
 
     service:
