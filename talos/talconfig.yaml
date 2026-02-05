@@ -43,7 +43,8 @@ nodes:
         dhcpOptions: { routeMetric: 4095 }
         mtu: 9000
       - interface: ens20 #? Services
-        dhcp: false
+        dhcp: true
+        dhcpOptions: { routeMetric: 4095 }
 
   - hostname: hops-02
     ipAddress: 10.0.0.32
