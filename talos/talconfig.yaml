@@ -15,13 +15,13 @@ additionalApiServerCertSans: &san
 additionalMachineCertSans: *san
 
 allowSchedulingOnControlPlanes: true
-cniConfig: { name: none }
+cniConfig: {name: none}
 
 nodes:
   - hostname: hops-01
     ipAddress: 10.0.0.31
     controlPlane: true
-    installDiskSelector: { size: "<= 110GB" }
+    installDiskSelector: {size: "<= 110GB"}
     userVolumes: &userVolumes
       - name: data # Mounted at /var/mnt/data for OpenEBS
         provisioning:
@@ -34,15 +34,15 @@ nodes:
     networkInterfaces: &networkInterfaces
       - interface: ens18 #? Management
         dhcp: true
-        dhcpOptions: { routeMetric: 1024 }
-        vip: { ip: 10.0.0.30 }
+        dhcpOptions: {routeMetric: 1024}
+        vip: {ip: 10.0.0.30}
       - interface: ens19 #? Storage
         dhcp: true
-        dhcpOptions: { routeMetric: 4095 }
+        dhcpOptions: {routeMetric: 4095}
         mtu: 9000
       - interface: ens20 #? Services
         dhcp: true
-        dhcpOptions: { routeMetric: 4095 }
+        dhcpOptions: {routeMetric: 4095}
 
     patches: ["@./patches/nvidia.yaml"]
     schematic: &gpuSchematic
@@ -58,7 +58,7 @@ nodes:
   - hostname: hops-02
     ipAddress: 10.0.0.32
     controlPlane: true
-    installDiskSelector: { size: "<= 110GB" }
+    installDiskSelector: {size: "<= 110GB"}
     userVolumes: *userVolumes
     networkInterfaces: *networkInterfaces
     patches: ["@./patches/nvidia.yaml"]
@@ -67,7 +67,7 @@ nodes:
   - hostname: hops-03
     ipAddress: 10.0.0.33
     controlPlane: true
-    installDiskSelector: { size: "<= 110GB" }
+    installDiskSelector: {size: "<= 110GB"}
     userVolumes: *userVolumes
     networkInterfaces: *networkInterfaces
     schematic:
