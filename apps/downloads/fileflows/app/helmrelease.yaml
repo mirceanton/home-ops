@@ -12,23 +12,16 @@ spec:
 
   values:
     defaultPodOptions:
-      # runtimeClassName: nvidia
-      # affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #       nodeSelectorTerms:
-      #         - matchExpressions:
-      #             - key: nvidia.com/gpu
-      #               operator: In
-      #               values: ["true"]
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #       - weight: 100
-      #         preference:
-      #           matchExpressions:
-      #             - key: kubernetes.io/hostname
-      #               operator: In
-      #               values:
-      #                 - control-1
+      runtimeClassName: nvidia
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values: ["hops-01", "hops-02"]
       securityContext:
         runAsUser: 0
         runAsGroup: 0
@@ -66,10 +59,10 @@ spec:
               requests:
                 cpu: 100m
                 memory: 512Mi
-                # nvidia.com/gpu: 1
+                nvidia.com/gpu: 1
               limits:
                 memory: 10Gi
-                # nvidia.com/gpu: 1
+                nvidia.com/gpu: 1
 
     service:
       fileflows:
