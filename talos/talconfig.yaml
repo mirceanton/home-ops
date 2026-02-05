@@ -21,7 +21,6 @@ nodes:
   - hostname: hops-01
     ipAddress: 10.0.0.31
     controlPlane: true
-
     installDiskSelector: { size: "<= 110GB" }
     userVolumes: &userVolumes
       - name: data # Mounted at /var/mnt/data for OpenEBS
@@ -32,7 +31,6 @@ nodes:
           grow: true
         filesystem:
           type: xfs
-
     networkInterfaces: &networkInterfaces
       - interface: ens18 #? Management
         dhcp: true
@@ -46,12 +44,25 @@ nodes:
         dhcp: true
         dhcpOptions: { routeMetric: 4095 }
 
+    patches: ["@./patches/nvidia.yaml"]
+    schematic: &gpuSchematic
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/qemu-guest-agent
+            - siderolabs/amd-ucode
+            - siderolabs/amdgpu
+            - siderolabs/nvidia-container-toolkit-lts
+            - siderolabs/nonfree-kmod-nvidia-lts
+
   - hostname: hops-02
     ipAddress: 10.0.0.32
     controlPlane: true
     installDiskSelector: { size: "<= 110GB" }
     userVolumes: *userVolumes
     networkInterfaces: *networkInterfaces
+    patches: ["@./patches/nvidia.yaml"]
+    schematic: *gpuSchematic
 
   - hostname: hops-03
     ipAddress: 10.0.0.33
@@ -59,28 +70,23 @@ nodes:
     installDiskSelector: { size: "<= 110GB" }
     userVolumes: *userVolumes
     networkInterfaces: *networkInterfaces
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/qemu-guest-agent
+            - siderolabs/amd-ucode
 
 controlPlane:
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/qemu-guest-agent
-          - siderolabs/amd-ucode
-          - siderolabs/amdgpu
-          # - siderolabs/nonfree-kmod-nvidia-lts
-          # - siderolabs/nvidia-container-toolkit-lts
-
-patches:
-  - "@./patches/cluster-discovery.yaml"
-  - "@./patches/kubelet-tuning.yaml"
-  - "@./patches/disable-search-domain.yaml"
-  - "@./patches/kubeprism.yaml"
-  - "@./patches/network-binding.yaml"
-  - "@./patches/mutating-admission.yaml"
-  - "@./patches/host-dns.yaml"
-  - "@./patches/disable-admission-control.yaml"
-  - "@./patches/sysctls.yaml"
-  - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
-  # - "@./patches/nvidia.yaml"
-  # - "@./patches/registry-mirrors.yaml"
+  patches:
+    - "@./patches/cluster-discovery.yaml"
+    - "@./patches/kubelet-tuning.yaml"
+    - "@./patches/disable-search-domain.yaml"
+    - "@./patches/kubeprism.yaml"
+    - "@./patches/network-binding.yaml"
+    - "@./patches/mutating-admission.yaml"
+    - "@./patches/host-dns.yaml"
+    - "@./patches/disable-admission-control.yaml"
+    - "@./patches/sysctls.yaml"
+    - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
+    # - "@./patches/registry-mirrors.yaml"
