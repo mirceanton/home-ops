@@ -44,7 +44,7 @@ nodes:
         dhcp: true
         dhcpOptions: {routeMetric: 4095}
 
-    patches: ["@./patches/nvidia.yaml"]
+    # patches: ["@./patches/nvidia.yaml"]
     schematic: &gpuSchematic
       customization:
         systemExtensions:
@@ -52,8 +52,8 @@ nodes:
             - siderolabs/qemu-guest-agent
             - siderolabs/amd-ucode
             - siderolabs/amdgpu
-            - siderolabs/nvidia-container-toolkit-lts
-            - siderolabs/nonfree-kmod-nvidia-lts
+            # - siderolabs/nvidia-container-toolkit-lts
+            # - siderolabs/nonfree-kmod-nvidia-lts
 
   - hostname: hops-02
     ipAddress: 10.0.0.32
@@ -61,7 +61,7 @@ nodes:
     installDiskSelector: {size: "<= 110GB"}
     userVolumes: *userVolumes
     networkInterfaces: *networkInterfaces
-    patches: ["@./patches/nvidia.yaml"]
+    # patches: ["@./patches/nvidia.yaml"]
     schematic: *gpuSchematic
 
   - hostname: hops-03

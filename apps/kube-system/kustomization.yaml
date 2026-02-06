@@ -9,5 +9,5 @@ resources:
   - ./descheduler
   - ./keda
   - ./metrics-server
-  - ./nvidia-device-plugin
+  # - ./nvidia-device-plugin
   - ./reloader
