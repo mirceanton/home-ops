@@ -7,6 +7,7 @@ resources:
   - ./firefly.helmrelease.yaml
   - ./firefly-settings.configmap.yaml
   - ./firefly-keys.secret.sops.yaml
+  - ./firefly-data-importer-token.secret.sops.yaml
 
   - ./postgres.cluster.yaml
   - ./postgres-backup.cronjob.yaml

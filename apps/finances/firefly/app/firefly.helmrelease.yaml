@@ -94,37 +94,34 @@ spec:
               limits:
                 memory: 64Mi
 
-      # NOTE: Uncomment data-importer once you have a Personal Access Token
-      # Generate one at: https://firefly.home.mirceanton.com/profile -> OAuth -> Personal Access Tokens
-      # Then add DATA_IMPORTER_ACCESS_TOKEN to firefly-keys secret and re-encrypt with SOPS
-      # data-importer:
-      #   containers:
-      #     main:
-      #       image:
-      #         repository: fireflyiii/data-importer
-      #         tag: version-2.0.3
-      #       envFrom:
-      #         - configMapRef:
-      #             name: firefly-settings
-      #       env:
-      #         FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
-      #         VANITY_URL: "https://firefly.home.mirceanton.com"
-      #         FIREFLY_III_ACCESS_TOKEN:
-      #           valueFrom:
-      #             secretKeyRef:
-      #               name: firefly-keys
-      #               key: DATA_IMPORTER_ACCESS_TOKEN
-      #       probes:
-      #         liveness:
-      #           enabled: true
-      #         readiness:
-      #           enabled: true
-      #       resources:
-      #         requests:
-      #           cpu: 20m
-      #           memory: 64Mi
-      #         limits:
-      #           memory: 1Gi
+      data-importer:
+        containers:
+          main:
+            image:
+              repository: fireflyiii/data-importer
+              tag: version-2.0.3
+            envFrom:
+              - configMapRef:
+                  name: firefly-settings
+            env:
+              FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
+              VANITY_URL: "https://firefly.home.mirceanton.com"
+              FIREFLY_III_ACCESS_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-data-importer-token
+                    key: IMPORTER_TOKEN
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 20m
+                memory: 64Mi
+              limits:
+                memory: 1Gi
 
     service:
       firefly:
@@ -132,11 +129,11 @@ spec:
         ports:
           http:
             port: 8080
-      # data-importer:
-      #   controller: data-importer
-      #   ports:
-      #     http:
-      #       port: 8080
+      data-importer:
+        controller: data-importer
+        ports:
+          http:
+            port: 8080
 
     route:
       home:
@@ -157,15 +154,15 @@ spec:
           - backendRefs:
               - name: firefly
                 port: 8080
-      # importer:
-      #   hostnames: ["firefly-importer.home.mirceanton.com"]
-      #   parentRefs:
-      #     - name: envoy-internal
-      #       namespace: network-system
-      #   rules:
-      #     - backendRefs:
-      #         - name: firefly-data-importer
-      #           port: 8080
+      importer:
+        hostnames: ["firefly-importer.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - name: firefly-data-importer
+                port: 8080
 
     persistence:
       data:
@@ -179,7 +176,7 @@ spec:
                 path: /var/www/html/storage
               - subPath: upload
                 path: /var/www/html/storage/upload
-          # data-importer:
-          #   main:
-          #     - subPath: importer
-          #       path: /var/www/html/storage/uploads
+          data-importer:
+            main:
+              - subPath: importer
+                path: /var/www/html/storage/uploads
