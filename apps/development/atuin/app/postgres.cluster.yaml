@@ -13,7 +13,16 @@ spec:
 
   instances:
     - name: atuin
-      replicas: 1
+      replicas: 3
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: postgres-operator.crunchydata.com/instance-set
+                    operator: In
+                    values: ["atuin"]
 
       dataVolumeClaimSpec:
         storageClassName: openebs-hostpath
@@ -33,7 +42,7 @@ spec:
           cpu: 20m
           memory: 128Mi
         limits:
-          memory: 512Mi
+          memory: 256Mi
       sidecars:
         replicaCertCopy:
           resources:
