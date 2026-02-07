@@ -35,8 +35,8 @@ spec:
                   values: ["booklore-mariadb"]
     podDisruptionBudget:
       enabled: true
-      minAvailable: 2
-      maxUnavailable: 1
+      minAvailable: "2"
+      maxUnavailable: "1"
 
     resources:
       requests:

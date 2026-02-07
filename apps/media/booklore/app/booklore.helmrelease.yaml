@@ -131,6 +131,18 @@ spec:
           http:
             port: *httpPort
 
+    route:
+      home:
+        hostnames: ["booklore.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["booklore.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+
     persistence:
       data:
         type: nfs
@@ -148,6 +160,7 @@ spec:
           booklore:
             booklore:
               - path: /books
+
       bookdrop:
         type: emptyDir
         advancedMounts:
@@ -185,15 +198,3 @@ spec:
           booklore:
             booklore:
               - path: /tmp
-
-    route:
-      home:
-        hostnames: ["booklore.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-      tailscale:
-        hostnames: ["booklore.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
