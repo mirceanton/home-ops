@@ -13,7 +13,16 @@ spec:
 
   instances:
     - name: penpot
-      replicas: 1
+      replicas: 3
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: postgres-operator.crunchydata.com/instance-set
+                    operator: In
+                    values: ["penpot"]
 
       dataVolumeClaimSpec:
         storageClassName: openebs-hostpath

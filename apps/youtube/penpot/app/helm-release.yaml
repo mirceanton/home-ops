@@ -56,7 +56,8 @@ spec:
 
     # Frontend configuration
     frontend:
-      replicaCount: 1
+      replicaCount: 2
+      # TODO: PDB and affinity
       resources:
         requests:
           cpu: 10m
@@ -66,7 +67,9 @@ spec:
 
     # Backend configuration
     backend:
-      replicaCount: 1
+      replicaCount: 2
+      # TODO: PDB and affinity
+      # TODO: init container to wait for Postgres and Redis
       resources:
         requests:
           cpu: 50m
@@ -76,7 +79,9 @@ spec:
 
     # Exporter configuration
     exporter:
-      replicaCount: 1
+      replicaCount: 2
+      # TODO: PDB and affinity
+      # TODO: init container to wait for Postgres and Redis
       resources:
         requests:
           cpu: 10m

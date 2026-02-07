@@ -14,8 +14,9 @@ spec:
   values:
     controllers:
       backend:
-        replicas: 1
+        replicas: 2
         strategy: RollingUpdate
+        # TODO: PDB and affinity
         initContainers:
           wait-for-dragonfly:
             image:
@@ -64,8 +65,9 @@ spec:
               capabilities: { drop: ["ALL"] }
 
       frontend:
-        replicas: 1
+        replicas: 2
         strategy: RollingUpdate
+        # TODO: PDB and affinity
         containers:
           main:
             image:
