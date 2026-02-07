@@ -23,7 +23,7 @@ spec:
                   app.kubernetes.io/name: rabbitmq-operator
       pdb:
         enabled: true
-        minAvailable: 1
+        minAvailable: "1"
 
       resources:
         requests:
@@ -49,7 +49,7 @@ spec:
                   app.kubernetes.io/name: rabbitmq-operator
       pdb:
         enabled: true
-        minAvailable: 1
+        minAvailable: "1"
 
       resources:
         requests:
