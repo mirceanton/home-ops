@@ -20,6 +20,24 @@ spec:
         rootPasswordKey: mariadb_root_password
         userPasswordKey: mariadb_password
 
+    galera:
+      enabled: true
+      replicaCount: 3
+
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values: ["booklore-mariadb"]
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 2
+      maxUnavailable: 1
+
     resources:
       requests:
         memory: 256Mi
