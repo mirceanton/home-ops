@@ -99,13 +99,6 @@ spec:
         globalMounts:
           - path: /nfs-media/Movies
             readOnly: true
-      anime:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Anime
-        globalMounts:
-          - path: /nfs-media/Anime
-            readOnly: true
       transcode:
         type: emptyDir
         globalMounts:
