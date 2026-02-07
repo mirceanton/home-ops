@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: rabbitmq-operator
+spec:
+  interval: 15m
+  url: oci://registry-1.docker.io/cloudpirates/rabbitmq-cluster-operator
+  ref:
+    tag: 0.1.5
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy

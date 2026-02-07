@@ -1,0 +1,65 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rabbitmq-operator
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: rabbitmq-operator
+
+  values:
+    # fullnameOverride: ""
+
+    clusterOperator:
+      replicaCount: 2
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: rabbitmq-operator
+      pdb:
+        enabled: true
+        minAvailable: 1
+
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+
+      networkPolicy: {enabled: false}
+      metrics:
+        service: {enabled: true}
+        serviceMonitor: {enabled: true}
+        podMonitor: {enabled: true}
+
+    msgTopologyOperator:
+      replicaCount: 1
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: rabbitmq-operator
+      pdb:
+        enabled: true
+        minAvailable: 1
+
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+
+      networkPolicy: {enabled: false}
+      metrics:
+        service: {enabled: true}
+        serviceMonitor: {enabled: true}
+        podMonitor: {enabled: true}
