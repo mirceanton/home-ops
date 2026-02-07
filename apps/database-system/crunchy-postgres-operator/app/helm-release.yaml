@@ -10,9 +10,9 @@ spec:
     name: pgo
 
   values:
-    replicas: 1
     debug: false
 
+    replicas: 2
     affinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

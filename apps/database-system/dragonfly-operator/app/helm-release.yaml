@@ -10,7 +10,23 @@ spec:
     name: dragonfly-operator
 
   values:
-    replicaCount: 1
+    replicaCount: 2
+
+    manager:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: dragonfly-operator
+
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
 
     rbacProxy:
       resources:
@@ -20,14 +36,6 @@ spec:
         limits:
           cpu: 200m
           memory: 128Mi
-
-    manager:
-      resources:
-        requests:
-          cpu: 20m
-          memory: 64Mi
-        limits:
-          memory: 256Mi
 
     serviceMonitor:
       enabled: true
