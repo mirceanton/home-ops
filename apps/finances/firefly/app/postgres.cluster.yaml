@@ -13,7 +13,16 @@ spec:
 
   instances:
     - name: firefly
-      replicas: 1
+      replicas: 3
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                  - key: postgres-operator.crunchydata.com/instance-set
+                    operator: In
+                    values: ["firefly"]
 
       dataVolumeClaimSpec:
         storageClassName: openebs-hostpath
