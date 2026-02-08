@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: feishin
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: feishin
+
+  values:
+    controllers:
+      feishin:
+        containers:
+          feishin:
+            image:
+              repository: ghcr.io/jeffvli/feishin
+              tag: 1.4.2
+            env:
+              SERVER_LOCK: true
+              SERVER_NAME: Navidrome
+              SERVER_TYPE: navidrome
+              SERVER_URL: https://navidrome.home.mirceanton.com
+              ANALYTICS_DISABLED: true
+              LEGACY_AUTHENTICATION: false
+              TZ: Europe/Bucharest
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 32Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      app:
+        ports:
+          http:
+            port: 9180
+
+    route:
+      home:
+        hostnames: ["feishin.home.mirceanton.com", "music.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      cache:
+        type: emptyDir
+        advancedMounts:
+          feishin:
+            init-permissions:
+              - path: /var/cache/nginx
+            feishin:
+              - path: /var/cache/nginx
+      run:
+        type: emptyDir
+        advancedMounts:
+          feishin:
+            init-permissions:
+              - path: /var/run
+            feishin:
+              - path: /var/run
+      logs:
+        type: emptyDir
+        advancedMounts:
+          feishin:
+            init-permissions:
+              - path: /var/log/nginx
+            feishin:
+              - path: /var/log/nginx
+      nginx-conf:
+        type: emptyDir
+        globalMounts:
+          - path: /etc/nginx/conf.d

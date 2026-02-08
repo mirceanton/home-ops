@@ -6,6 +6,7 @@ namespace: media
 resources:
   - ./namespace.yaml
   - ./booklore
+  - ./feishin
   - ./jellyfin
   - ./karakeep
   - ./navidrome
