@@ -68,12 +68,12 @@ spec:
 
     route:
       home:
-        hostnames: ["jellyfin.home.mirceanton.com"]
+        hostnames: ["jellyfin.home.mirceanton.com", "movies.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
       tailscale:
-        hostnames: ["jellyfin.ts.mirceanton.com"]
+        hostnames: ["jellyfin.ts.mirceanton.com", "movies.ts.mirceanton.com"]
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system
