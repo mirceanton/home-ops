@@ -82,12 +82,12 @@ spec:
 
     route:
       home:
-        hostnames: ["qui.home.mirceanton.com"]
+        hostnames: ["torrent.home.mirceanton.com", "qui.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
       tailscale:
-        hostnames: ["qui.ts.mirceanton.com"]
+        hostnames: ["torrent.ts.mirceanton.com", "qui.ts.mirceanton.com"]
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system

@@ -76,12 +76,12 @@ spec:
 
     route:
       home:
-        hostnames: ["torrent.home.mirceanton.com"]
+        hostnames: ["qbit.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
       tailscale:
-        hostnames: ["torrent.ts.mirceanton.com"]
+        hostnames: ["qbit.ts.mirceanton.com"]
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system
