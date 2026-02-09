@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: mc-router
+spec:
+  interval: 5m
+  url: oci://ghcr.io/itzg/minecraft-server-charts/mc-router
+  ref:
+    tag: 1.4.1
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
