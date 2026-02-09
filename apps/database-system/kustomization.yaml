@@ -6,5 +6,6 @@ namespace: database-system
 resources:
   - ./namespace.yaml
   - ./crunchy-postgres-operator
+  - ./cloudnative-pg-operator
   - ./dragonfly-operator
   - ./rabbitmq-operator
