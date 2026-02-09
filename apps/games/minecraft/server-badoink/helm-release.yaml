@@ -10,12 +10,6 @@ spec:
     kind: OCIRepository
     name: minecraft
 
-  valuesFrom:
-  - kind: Secret
-    name: *app
-    valuesKey: RCON_PASSWORD
-    targetPath: minecraftServer.rcon.password
-
   values:
     fullnameOverride: *app
 
@@ -23,23 +17,40 @@ spec:
       repository: ghcr.io/itzg/minecraft-server
       tag: 2026.2.0@sha256:84d4238e570ace1a48a00b9a626d1a01ce92026c92443b7a1edd3f40cd293d74
 
+    replicaCount: 1 #! minecraft is not horizontally scalable
+    workloadAsStatefulSet: true
+    strategyType: OnDelete
+
     resources:
       requests:
         cpu: 200m
+        mremory: 1Gi
       limits:
         cpu: 2000m
         memory: 4Gi
 
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+      runAsNonRoot: true
+      fsGroup: 2000
+      seccompProfile:
+        type: RuntimeDefault
+
     securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
       runAsUser: 1000
       fsGroup: 100
+      capabilities:
+        drop: ["ALL"]
 
     livenessProbe:
       initialDelaySeconds: 30
     readinessProbe:
       initialDelaySeconds: 30
     startupProbe:
-        enabled: true
+      enabled: true
 
     extraEnv:
       TZ: Europe/Bucharest
@@ -59,16 +70,19 @@ spec:
       type: PAPER
       overrideServerProperties: true
       jvmXXOpts: "-XX:MaxRAMPercentage=75"
-      difficulty: normal
+      difficulty: normal #? peaceful, easy, normal, hard
       spawnProtection: 0
-      gameMode: survival
+      gameMode: survival #? creative, survival, adventure, spectator
       pvp: false
       onlineMode: true
-      ops: "Mircea"
+      ops: "mirceanton" #? comma separated list of operators
       motd: "Badoink Minecraft Server"
       worldSaveName: "Badoink"
       viewDistance: 16
+
       spigetResources:
         - 36618 #Prom Exporter
       rcon:
         enabled: true
+        existingSecret: *app
+        secretKey: RCON_PASSWORD

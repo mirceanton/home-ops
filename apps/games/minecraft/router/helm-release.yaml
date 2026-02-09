@@ -10,13 +10,32 @@ spec:
     name: mc-router
 
   values:
+    fullnameOverride: minecraft-router
+
     image:
       repository: ghcr.io/itzg/mc-router
       tag: 1.39.1@sha256:be109433f1a67a6d925d93842018ae4d9dcb37f9df5ef3b246925343782233ab
       pullPolicy: IfNotPresent
+    extraArgs: ["--in-kube-cluster"]
 
-    extraArgs:
-      - --in-kube-cluster
+    replicaCount: 1
+    autoscaling: {enabled: false}
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+    podSecurityContext:
+      fsGroup: 1000
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      capabilities:
+        drop: ["ALL"]
 
     services:
       minecraft:
@@ -24,3 +43,9 @@ spec:
         annotations:
           metallb.universe.tf/loadBalancerIPs: 10.0.10.253
           external-dns.alpha.kubernetes.io/hostname: badoink-mc.home.mirceanton.com
+
+    minecraftRouter:
+      autoScale:
+        up: {enabled: true}
+        down: {enabled: true, after: 15m}
+        configObject: Secret
