@@ -22,6 +22,8 @@ nodes:
     ipAddress: 10.0.0.15
     controlPlane: true
     installDiskSelector: {size: "<= 300Gb"}
+    nodeLabels:
+      nvidia.com/gpu.present: "true"
     userVolumes:
       - name: data # Mounted at /var/mnt/data for OpenEBS
         provisioning:
