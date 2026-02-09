@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: minecraft-server-badoink
+spec:
+  path: ./apps/games/minecraft/server-badoink/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: games
+  interval: 10m
+  prune: true
+  wait: true
+  dependsOn:
+    - name: minecraft-router
+    - name: openebs
+      namespace: storage-system

@@ -1,0 +1,84 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app minecraft-server-badoink
+spec:
+  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: minecraft
+
+  values:
+    fullnameOverride: *app
+
+    image:
+      repository: ghcr.io/itzg/minecraft-server
+      tag: 2026.2.0@sha256:84d4238e570ace1a48a00b9a626d1a01ce92026c92443b7a1edd3f40cd293d74
+
+    resources:
+      requests:
+        cpu: 200m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+      runAsNonRoot: true
+      fsGroup: 2000
+      seccompProfile:
+        type: RuntimeDefault
+
+    securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsUser: 1000
+      fsGroup: 100
+      capabilities:
+        drop: ["ALL"]
+
+    livenessProbe:
+      initialDelaySeconds: 30
+    readinessProbe:
+      initialDelaySeconds: 30
+    startupProbe:
+      enabled: true
+
+    extraEnv:
+      TZ: Europe/Bucharest
+
+    persistence:
+      dataDir:
+        enabled: true
+        existingClaim: *app
+
+    serviceAnnotations:
+      mc-router.itzg.me/externalServerName: badoink-mc.home.mirceanton.com
+
+    minecraftServer:
+      eula: true
+      # renovate: datasource=custom.minecraft-release
+      version: 1.21.11
+      type: PAPER
+      overrideServerProperties: true
+      jvmXXOpts: "-XX:MaxRAMPercentage=75"
+      difficulty: normal #? peaceful, easy, normal, hard
+      spawnProtection: 0
+      gameMode: survival #? creative, survival, adventure, spectator
+      pvp: false
+      onlineMode: true
+      ops: "MrBorboto" #? comma separated list of operators
+      motd: "Badoink Minecraft Server"
+      worldSaveName: "Badoink"
+      viewDistance: 16
+
+      spigetResources:
+        - 36618 #Prom Exporter
+      rcon:
+        enabled: true
+        existingSecret: *app
+        secretKey: RCON_PASSWORD
