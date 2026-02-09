@@ -4,16 +4,7 @@ kind: Dragonfly
 metadata:
   name: teleprompter-dragonfly
 spec:
-  replicas: 3
-  affinity:
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - topologyKey: kubernetes.io/hostname
-          labelSelector:
-            matchExpressions:
-              - key: app
-                operator: In
-                values: ["teleprompter-dragonfly"]
+  replicas: 1
 
   args:
     - --proactor_threads=1

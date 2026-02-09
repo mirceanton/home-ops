@@ -10,17 +10,8 @@ spec:
     name: dragonfly-operator
 
   values:
-    replicaCount: 2
-
+    replicaCount: 1
     manager:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: dragonfly-operator
-
       resources:
         requests:
           cpu: 20m

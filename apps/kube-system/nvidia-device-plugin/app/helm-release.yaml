@@ -24,15 +24,6 @@ spec:
       limits:
         memory: 128Mi
 
-    affinity:
-      nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values: ["hops-01", "hops-02"]
-
     config:
       map:
         default: |-

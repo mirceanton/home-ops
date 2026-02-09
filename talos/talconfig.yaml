@@ -1,16 +1,16 @@
 ---
 clusterName: home-ops
-endpoint: "https://k8s-homeops.mgmt.h.mirceanton.com:6443"
+endpoint: "https://home-ops.mgmt.h.mirceanton.com:6443"
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.12.2
+talosVersion: v1.12.3
 
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 kubernetesVersion: v1.35.0
 
 additionalApiServerCertSans: &san
-  - k8s-homeops.mgmt.h.mirceanton.com
-  - 10.0.0.30
+  - home-ops.mgmt.h.mirceanton.com
+  - 10.0.0.15
   - 127.0.0.1 # KubePrism
 additionalMachineCertSans: *san
 
@@ -18,64 +18,52 @@ allowSchedulingOnControlPlanes: true
 cniConfig: {name: none}
 
 nodes:
-  - hostname: hops-01
-    ipAddress: 10.0.0.31
+  - hostname: home-ops
+    ipAddress: 10.0.0.15
     controlPlane: true
-    installDiskSelector: {size: "<= 110GB"}
-    userVolumes: &userVolumes
+    installDiskSelector: {size: "<= 300Gb"}
+    userVolumes:
       - name: data # Mounted at /var/mnt/data for OpenEBS
         provisioning:
           diskSelector:
-            match: disk.size > 110u * GB
+            match: disk.size > 300u * GB
           minSize: 1GB
           grow: true
         filesystem:
           type: xfs
-    networkInterfaces: &networkInterfaces
-      - interface: ens18 #? Management
+    networkInterfaces:
+      - interface: enp6s0 #? Management
         dhcp: true
         dhcpOptions: {routeMetric: 1024}
-        vip: {ip: 10.0.0.30}
-      - interface: ens19 #? Storage
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
+
+      - interface: bond0
         mtu: 9000
-      - interface: ens20 #? Services
-        dhcp: true
-        dhcpOptions: {routeMetric: 4095}
+        dhcp: false
+        bond:
+          mode: 802.3ad
+          lacpRate: fast
+          interfaces: [enp4s0, enp4s0d1]
+          xmitHashPolicy: layer3+4
+          miimon: 100
+          updelay: 200
+          downdelay: 200
+        vlans:
+          - vlanId: 1255
+            dhcp: true
+            dhcpOptions: {routeMetric: 4095}
+          - vlanId: 1010
+            dhcp: true
+            dhcpOptions: {routeMetric: 4095}
 
-    # patches: ["@./patches/nvidia.yaml"]
-    schematic: &gpuSchematic
-      customization:
-        systemExtensions:
-          officialExtensions:
-            - siderolabs/qemu-guest-agent
-            - siderolabs/amd-ucode
-            - siderolabs/amdgpu
-            # - siderolabs/nvidia-container-toolkit-lts
-            # - siderolabs/nonfree-kmod-nvidia-lts
-
-  - hostname: hops-02
-    ipAddress: 10.0.0.32
-    controlPlane: true
-    installDiskSelector: {size: "<= 110GB"}
-    userVolumes: *userVolumes
-    networkInterfaces: *networkInterfaces
-    # patches: ["@./patches/nvidia.yaml"]
-    schematic: *gpuSchematic
-
-  - hostname: hops-03
-    ipAddress: 10.0.0.33
-    controlPlane: true
-    installDiskSelector: {size: "<= 110GB"}
-    userVolumes: *userVolumes
-    networkInterfaces: *networkInterfaces
+    patches: ["@./patches/nvidia.yaml"]
     schematic:
       customization:
         systemExtensions:
           officialExtensions:
-            - siderolabs/qemu-guest-agent
             - siderolabs/amd-ucode
+            - siderolabs/amdgpu
+            - siderolabs/nvidia-container-toolkit-lts
+            - siderolabs/nonfree-kmod-nvidia-lts
 
 controlPlane:
   patches:

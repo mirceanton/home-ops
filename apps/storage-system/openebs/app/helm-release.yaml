@@ -21,13 +21,6 @@ spec:
           memory: 64Mi
         limits:
           memory: 128Mi
-        affinity:
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              - labelSelector:
-                  matchLabels:
-                    name: openebs-localpv-provisioner
-                topologyKey: kubernetes.io/hostname
 
       hostpathClass:
         enabled: true

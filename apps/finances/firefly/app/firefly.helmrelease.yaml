@@ -13,7 +13,6 @@ spec:
     controllers:
       firefly:
         replicas: 1
-        strategy: RollingUpdate
         containers:
           app:
             image:

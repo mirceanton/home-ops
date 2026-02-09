@@ -13,19 +13,7 @@ spec:
     # fullnameOverride: ""
 
     clusterOperator:
-      replicaCount: 2
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: rabbitmq-cluster-operator
-                  app.kubernetes.io/component: rabbitmq-operator
-      pdb:
-        enabled: true
-        minAvailable: "1"
-
+      replicaCount: 1
       resources:
         requests:
           cpu: 20m
@@ -40,19 +28,7 @@ spec:
         podMonitor: {enabled: true}
 
     msgTopologyOperator:
-      replicaCount: 2
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: rabbitmq-cluster-operator
-                  app.kubernetes.io/component: messaging-topology-operator
-      pdb:
-        enabled: true
-        minAvailable: "1"
-
+      replicaCount: 1
       resources:
         requests:
           cpu: 20m

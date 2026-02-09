@@ -13,7 +13,6 @@ spec:
     controllers:
       homer:
         replicas: 1
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
