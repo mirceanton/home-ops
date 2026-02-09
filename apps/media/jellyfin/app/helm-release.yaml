@@ -28,8 +28,10 @@ spec:
               requests:
                 cpu: 500m
                 memory: 1Gi
+                nvidia.com/gpu: 1
               limits:
-                memory: 8Gi
+                memory: 4Gi
+                nvidia.com/gpu: 1
 
             probes:
               liveness: &probe
@@ -52,6 +54,7 @@ spec:
               capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
+      runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
