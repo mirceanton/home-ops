@@ -12,16 +12,7 @@ spec:
 
   values:
     defaultPodOptions:
-    #   runtimeClassName: nvidia
-    #   affinity:
-    #     nodeAffinity:
-    #       preferredDuringSchedulingIgnoredDuringExecution:
-    #         - weight: 100
-    #           preference:
-    #             matchExpressions:
-    #               - key: kubernetes.io/hostname
-    #                 operator: In
-    #                 values: ["hops-01", "hops-02"]
+      runtimeClassName: nvidia
       securityContext:
         runAsUser: 0
         runAsGroup: 0
@@ -57,10 +48,12 @@ spec:
               PGID: "568"
             resources:
               requests:
-                cpu: 1000m
-                memory: 1.5Gi
+                cpu: 250m
+                memory: 2Gi
+                nvidia.com/gpu: 1
               limits:
-                memory: 8Gi
+                memory: 4Gi
+                nvidia.com/gpu: 1
 
     service:
       fileflows:
