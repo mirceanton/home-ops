@@ -10,8 +10,7 @@ spec:
     name: rabbitmq-operator
 
   values:
-    # fullnameOverride: ""
-
+    fullnameOverride: rabbitmq-cluster-operator
     clusterOperator:
       replicaCount: 1
       resources:
@@ -28,6 +27,7 @@ spec:
         podMonitor: {enabled: true}
 
     msgTopologyOperator:
+      fullnameOverride: rabbitmq-topology-operator
       replicaCount: 1
       resources:
         requests:
