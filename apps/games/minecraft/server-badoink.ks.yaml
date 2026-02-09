@@ -15,3 +15,5 @@ spec:
   wait: true
   dependsOn:
     - name: minecraft-router
+    - name: openebs
+      namespace: storage-system
