@@ -4,7 +4,7 @@ kind: Kustomization
 metadata:
   name: cloudnative-pg-operator
 spec:
-  path: ./apps/database-system/cloudnative-pg-operator
+  path: ./apps/database-system/cloudnative-pg-operator/app/
   sourceRef:
     kind: GitRepository
     name: flux-system
