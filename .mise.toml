@@ -3,7 +3,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 
 [tools]
 # Kubectl + Tools + Plugins
-"aqua:kubectl" = "1.35.0"
+"aqua:kubectl" = "1.35.1"
 "github:mirceanton/kubectl-switch" = "v2.4.3"
 "aqua:kustomize" = "latest"
 "aqua:derailed/k9s" = "latest"
