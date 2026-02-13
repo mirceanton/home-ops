@@ -17,7 +17,7 @@ helmfile = "latest"
 clusterctl = "latest"
 
 # Talos Stuff
-"aqua:talosctl" = "1.12.3"
+"aqua:talosctl" = "1.12.4"
 "aqua:talhelper" = "3.1.4"
 "github:mirceanton/talswitcher" = "latest"
 
