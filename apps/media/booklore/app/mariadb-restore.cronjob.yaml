@@ -22,7 +22,7 @@ spec:
 
           containers:
             - name: restore
-              image: docker.io/library/mariadb:12.1.2-noble
+              image: docker.io/library/mariadb:12.2.2-noble
               command: ["/bin/bash", "/scripts/restore.sh"]
               env:
                 - name: APP_NAME
