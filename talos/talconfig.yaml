@@ -79,4 +79,4 @@ controlPlane:
     - "@./patches/disable-admission-control.yaml"
     - "@./patches/sysctls.yaml"
     - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
-    # - "@./patches/registry-mirrors.yaml"
+    - "@./patches/registry-mirrors.yaml"
