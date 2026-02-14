@@ -6,3 +6,4 @@ resources:
   - ./github-org-token.externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+  - ./cache.pvc.yaml

@@ -48,12 +48,24 @@ spec:
             image: ghcr.io/home-operations/actions-runner:2.331.0@sha256:17e4be4e4664067b9a5f2e43d0e66e0a249654f3783a0a3f17448844a5422be5
             command: ["/home/runner/run.sh"]
             env:
+              - name: MISE_CACHE_DIR
+                value: /cache/mise
+              - name: PIP_CACHE_DIR
+                value: /cache/pip
+              - name: NPM_CONFIG_CACHE
+                value: /cache/npm
+
               - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
                 value: "false"
               - name: NODE
                 valueFrom:
                   fieldRef:
                     fieldPath: status.hostIP
+
+            volumeMounts:
+              - name: cache
+                mountPath: /cache
+
             resources:
               requests:
                 cpu: 100m
@@ -61,3 +73,8 @@ spec:
               limits:
                 cpu: 4000m
                 memory: 4Gi
+
+        volumes:
+          - name: cache
+            persistentVolumeClaim:
+              claimName: github-runners-cache
