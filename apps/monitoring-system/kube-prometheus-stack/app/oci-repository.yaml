@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 15m
   url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-  ref: {tag: 82.0.0}
+  ref: {tag: 82.0.1}
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
