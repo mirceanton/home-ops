@@ -3,6 +3,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: davinci-postgres
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
