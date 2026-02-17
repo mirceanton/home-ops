@@ -9,7 +9,6 @@ resources:
   - ./http-route.yaml
   - ./penpot-secret.secret.sops.yaml
   - ./assets.pvc.yaml
-  - ./postgres.cluster.yaml
   - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml

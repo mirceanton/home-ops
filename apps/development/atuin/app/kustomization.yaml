@@ -5,7 +5,6 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-  - ./postgres.cluster.yaml
   - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
