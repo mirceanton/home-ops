@@ -18,6 +18,8 @@ spec:
   dependsOn:
     - name: crunchy-postgres-operator
       namespace: database-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
     - name: openebs
       namespace: storage-system
     - name: 1password-connect

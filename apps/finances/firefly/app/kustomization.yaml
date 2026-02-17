@@ -10,6 +10,7 @@ resources:
   - ./firefly-data-importer-token.secret.sops.yaml
 
   - ./postgres.cluster.yaml
+  - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
 

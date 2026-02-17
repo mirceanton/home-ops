@@ -1,0 +1,61 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: davinci-postgres
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  bootstrap:
+    initdb:
+      database: davinci
+      owner: davinci
+      import:
+        type: microservice
+        databases: ["davinci"]
+        source:
+          externalCluster: cpgo
+
+  externalClusters:
+    - name: cpgo
+      connectionParameters:
+        host: davinci-postgres-primary
+        user: davinci
+        dbname: davinci
+      password:
+        name: davinci-postgres-pguser-davinci
+        key: password
+
+  managed:
+    services:
+      additional:
+        - selectorType: rw
+          serviceTemplate:
+            metadata:
+              name: davinci-postgres-lb
+              annotations:
+                metallb.io/loadBalancerIPs: 10.0.10.251
+                external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
+            spec:
+              type: LoadBalancer
+
+  storage:
+    storageClass: openebs-hostpath
+    size: 4Gi
+
+  walStorage:
+    storageClass: openebs-hostpath
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+  postgresql:
+    shared_preload_libraries:
+      - pgaudit
+    pg_hba:
+      - host all all 0.0.0.0/0 scram-sha-256

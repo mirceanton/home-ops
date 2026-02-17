@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ./postgres.cluster.yaml
+  - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
   - ./davinci-postgres-password.secret.sops.yaml

@@ -1,0 +1,48 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: atuin-postgres
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  bootstrap:
+    initdb:
+      database: atuin
+      owner: atuin
+      import:
+        type: microservice
+        databases: ["atuin"]
+        source:
+          externalCluster: cpgo
+
+  externalClusters:
+    - name: cpgo
+      connectionParameters:
+        host: atuin-postgres-primary
+        user: atuin
+        dbname: atuin
+      password:
+        name: atuin-postgres-pguser-atuin
+        key: password
+
+  storage:
+    storageClass: openebs-hostpath
+    size: 4Gi
+
+  walStorage:
+    storageClass: openebs-hostpath
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  postgresql:
+    shared_preload_libraries:
+      - pgaudit
+    pg_hba:
+      - host all all 10.244.0.0/16 scram-sha-256

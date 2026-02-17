@@ -1,0 +1,48 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: firefly-postgres
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  bootstrap:
+    initdb:
+      database: firefly
+      owner: firefly
+      import:
+        type: microservice
+        databases: ["firefly"]
+        source:
+          externalCluster: cpgo
+
+  externalClusters:
+    - name: cpgo
+      connectionParameters:
+        host: firefly-postgres-primary
+        user: firefly
+        dbname: firefly
+      password:
+        name: firefly-postgres-pguser-firefly
+        key: password
+
+  storage:
+    storageClass: openebs-hostpath
+    size: 8Gi
+
+  walStorage:
+    storageClass: openebs-hostpath
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+
+  postgresql:
+    shared_preload_libraries:
+      - pgaudit
+    pg_hba:
+      - host all all 10.244.0.0/16 scram-sha-256
