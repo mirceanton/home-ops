@@ -32,14 +32,14 @@ spec:
       secretKeys:
         apiSecretKey: "secret-key"
 
-      # External PostgreSQL (CPGO)
+      # External PostgreSQL (CNPG)
       postgresql:
-        host: "penpot-postgres-primary.youtube.svc"
+        host: "penpot-postgres-rw"
         port: 5432
         database: "penpot"
-        existingSecret: "penpot-postgres-pguser-penpot"
+        existingSecret: "penpot-postgres-app"
         secretKeys:
-          usernameKey: "user"
+          usernameKey: "username"
           passwordKey: "password"
 
       # External Redis (Dragonfly)

@@ -32,27 +32,27 @@ spec:
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
-                      name: davinci-postgres-pguser-davinci
+                      name: davinci-postgres-app
                       key: host
                 - name: PGPORT
                   valueFrom:
                     secretKeyRef:
-                      name: davinci-postgres-pguser-davinci
+                      name: davinci-postgres-app
                       key: port
                 - name: PGUSER
                   valueFrom:
                     secretKeyRef:
-                      name: davinci-postgres-pguser-davinci
-                      key: user
+                      name: davinci-postgres-app
+                      key: username
                 - name: PGDATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: davinci-postgres-pguser-davinci
+                      name: davinci-postgres-app
                       key: dbname
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: davinci-postgres-pguser-davinci
+                      name: davinci-postgres-app
                       key: password
 
               volumeMounts:

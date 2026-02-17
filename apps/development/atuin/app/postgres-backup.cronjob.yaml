@@ -31,27 +31,27 @@ spec:
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-pguser-atuin
+                      name: atuin-postgres-app
                       key: host
                 - name: PGPORT
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-pguser-atuin
+                      name: atuin-postgres-app
                       key: port
                 - name: PGUSER
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-pguser-atuin
-                      key: user
+                      name: atuin-postgres-app
+                      key: username
                 - name: PGDATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-pguser-atuin
+                      name: atuin-postgres-app
                       key: dbname
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-pguser-atuin
+                      name: atuin-postgres-app
                       key: password
 
               volumeMounts:

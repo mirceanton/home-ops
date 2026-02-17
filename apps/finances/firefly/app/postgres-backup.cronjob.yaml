@@ -31,27 +31,27 @@ spec:
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
-                      name: firefly-postgres-pguser-firefly
+                      name: firefly-postgres-app
                       key: host
                 - name: PGPORT
                   valueFrom:
                     secretKeyRef:
-                      name: firefly-postgres-pguser-firefly
+                      name: firefly-postgres-app
                       key: port
                 - name: PGUSER
                   valueFrom:
                     secretKeyRef:
-                      name: firefly-postgres-pguser-firefly
-                      key: user
+                      name: firefly-postgres-app
+                      key: username
                 - name: PGDATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: firefly-postgres-pguser-firefly
+                      name: firefly-postgres-app
                       key: dbname
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: firefly-postgres-pguser-firefly
+                      name: firefly-postgres-app
                       key: password
 
               volumeMounts:

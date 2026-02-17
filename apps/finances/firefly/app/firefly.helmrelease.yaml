@@ -27,27 +27,27 @@ spec:
               DB_HOST:
                 valueFrom:
                   secretKeyRef:
-                    name: firefly-postgres-pguser-firefly
+                    name: firefly-postgres-app
                     key: host
               DB_PORT:
                 valueFrom:
                   secretKeyRef:
-                    name: firefly-postgres-pguser-firefly
+                    name: firefly-postgres-app
                     key: port
               DB_DATABASE:
                 valueFrom:
                   secretKeyRef:
-                    name: firefly-postgres-pguser-firefly
+                    name: firefly-postgres-app
                     key: dbname
               DB_USERNAME:
                 valueFrom:
                   secretKeyRef:
-                    name: firefly-postgres-pguser-firefly
-                    key: user
+                    name: firefly-postgres-app
+                    key: username
               DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: firefly-postgres-pguser-firefly
+                    name: firefly-postgres-app
                     key: password
             probes:
               startup:

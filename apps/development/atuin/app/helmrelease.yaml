@@ -26,7 +26,7 @@ spec:
               ATUIN_DB_URI:
                 valueFrom:
                   secretKeyRef:
-                    name: atuin-postgres-pguser-atuin
+                    name: atuin-postgres-app
                     key: uri
               TZ: Europe/Bucharest
             probes:

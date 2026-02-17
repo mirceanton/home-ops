@@ -31,27 +31,27 @@ spec:
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
-                      name: penpot-postgres-pguser-penpot
+                      name: penpot-postgres-app
                       key: host
                 - name: PGPORT
                   valueFrom:
                     secretKeyRef:
-                      name: penpot-postgres-pguser-penpot
+                      name: penpot-postgres-app
                       key: port
                 - name: PGUSER
                   valueFrom:
                     secretKeyRef:
-                      name: penpot-postgres-pguser-penpot
-                      key: user
+                      name: penpot-postgres-app
+                      key: username
                 - name: PGDATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: penpot-postgres-pguser-penpot
+                      name: penpot-postgres-app
                       key: dbname
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: penpot-postgres-pguser-penpot
+                      name: penpot-postgres-app
                       key: password
 
               volumeMounts:
