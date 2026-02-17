@@ -16,8 +16,6 @@ spec:
   wait: true
   decryption: {provider: sops}
   dependsOn:
-    - name: crunchy-postgres-operator
-      namespace: database-system
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: openebs

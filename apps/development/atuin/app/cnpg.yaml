@@ -10,21 +10,6 @@ spec:
     initdb:
       database: atuin
       owner: atuin
-      import:
-        type: microservice
-        databases: ["atuin"]
-        source:
-          externalCluster: cpgo
-
-  externalClusters:
-    - name: cpgo
-      connectionParameters:
-        host: atuin-postgres-primary
-        user: atuin
-        dbname: atuin
-      password:
-        name: atuin-postgres-pguser-atuin
-        key: password
 
   storage:
     storageClass: openebs-hostpath

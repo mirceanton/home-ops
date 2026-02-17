@@ -10,21 +10,6 @@ spec:
     initdb:
       database: penpot
       owner: penpot
-      import:
-        type: microservice
-        databases: ["penpot"]
-        source:
-          externalCluster: cpgo
-
-  externalClusters:
-    - name: cpgo
-      connectionParameters:
-        host: penpot-postgres-primary
-        user: penpot
-        dbname: penpot
-      password:
-        name: penpot-postgres-pguser-penpot
-        key: password
 
   storage:
     storageClass: openebs-hostpath

@@ -10,21 +10,6 @@ spec:
     initdb:
       database: davinci
       owner: davinci
-      import:
-        type: microservice
-        databases: ["davinci"]
-        source:
-          externalCluster: cpgo
-
-  externalClusters:
-    - name: cpgo
-      connectionParameters:
-        host: davinci-postgres-primary
-        user: davinci
-        dbname: davinci
-      password:
-        name: davinci-postgres-pguser-davinci
-        key: password
 
   managed:
     services:
