@@ -134,10 +134,7 @@ spec:
           karakeep:
             app: [{path: /data}]
       meilisearch-data:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 8Gi
-        storageClass: openebs-hostpath
+        type: emptyDir
         advancedMounts:
           meilisearch:
             app: [{path: /meili_data}]
