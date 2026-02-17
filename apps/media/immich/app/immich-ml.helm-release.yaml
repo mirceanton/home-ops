@@ -1,0 +1,83 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich-machine-learning
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: immich
+
+  values:
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      enableServiceLinks: false
+
+    controllers:
+      immich-machine-learning:
+        strategy: Recreate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/immich-app/immich-machine-learning
+              # renovate: datasource=github-releases depName=immich-app/immich
+              tag: v2.5.6-cuda
+            env:
+              TZ: "Europe/Bucharest"
+              REDIS_HOSTNAME: immich-dragonfly
+              IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+              TRANSFORMERS_CACHE: /cache
+              MPLCONFIGDIR: /cache/matplotlib-config
+              HF_XET_CACHE: /cache/huggingface-xet
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-postgres-app
+                    key: uri
+
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 4000m
+                memory: 4Gi
+                nvidia.com/gpu: 1
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &port 3003
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  periodSeconds: 10
+                  failureThreshold: 60
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    persistence:
+      cache:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 10Gi
+        globalMounts:
+          - path: /cache

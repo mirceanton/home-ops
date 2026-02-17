@@ -1,0 +1,81 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgres
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
+
+  bootstrap:
+    initdb:
+      owner: immich
+
+  storage:
+    storageClass: openebs-hostpath
+    size: 8Gi
+
+  walStorage:
+    storageClass: openebs-hostpath
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 1000m
+      memory: 4Gi
+    limits:
+      memory: 4Gi
+
+  postgresql:
+    pg_hba:
+      - host all all 10.244.0.0/16 scram-sha-256
+
+    shared_preload_libraries:
+      - "vchord.so"
+      - "timescaledb"
+
+    parameters:
+      timescaledb.telemetry_level: "off"
+      max_locks_per_transaction: "128"
+
+    extensions:
+      - name: pgvector
+        image:
+          # renovate: suite=trixie-pgdg depName=postgresql-18-pgvector
+          reference: ghcr.io/cloudnative-pg/pgvector:0.8.1-18-trixie
+      - name: postgis
+        ld_library_path: [system]
+        image:
+          reference: ghcr.io/cloudnative-pg/postgis-extension-testing:3.6.0-18-trixie@sha256:ec21540f5799561a9b05ca188fd28ce32852a826f48d80329260940855f5f558
+      - name: vchord
+        image:
+          reference: ghcr.io/tensorchord/vchord-scratch:pg18-v0.5.3@sha256:c310ede47f7f82bd257c3e53806d60680d5899c318ca946fb313efad9a90a78e
+        dynamic_library_path: ["/usr/lib/postgresql/18/lib"]
+        extension_control_path: ["/usr/share/postgresql/18/"]
+      - name: timescaledb
+        image:
+          reference: ghcr.io/shusaan/timescaledb-testing:2.23.1-18-trixie@sha256:4709935bed4cce5977bc4b1858a94e2e80f22f0303217163a9e97b8898e33ee2
+
+  managed:
+    roles:
+      - name: immich
+        ensure: present
+        login: true
+        superuser: true
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: immich
+spec:
+  name: immich
+  owner: immich
+  cluster:
+    name: immich-postgres
+  extensions:
+    - name: vector
+    - name: vchord
+    - name: cube
+    - name: earthdistance

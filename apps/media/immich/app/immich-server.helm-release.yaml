@@ -1,0 +1,118 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich-server
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: immich
+
+  values:
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      enableServiceLinks: false
+
+    controllers:
+      immich-server:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args:
+              - postgresql
+              - $(DB_URL)
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-postgres-app
+                    key: uri
+          wait-for-dragonfly:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args:
+              - redis
+              - redis://immich-dragonfly:6379
+        containers:
+          main:
+            image:
+              repository: ghcr.io/immich-app/immich-server
+              tag: v2.5.6
+            env:
+              TZ: "Europe/Bucharest"
+              REDIS_HOSTNAME: immich-dragonfly
+              IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
+              IMMICH_TELEMETRY_INCLUDE: all
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-postgres-app
+                    key: uri
+
+            resources:
+              requests:
+                cpu: 2000m
+                memory: 2Gi
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/server/ping
+                    port: &port 2283
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/server/ping
+                    port: *port
+                  periodSeconds: 10
+                  failureThreshold: 30
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+          metrics-api:
+            port: 8081
+          metrics-ms:
+            port: 8082
+
+    route:
+      home:
+        hostnames: ["photos.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["photos.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: immich-data
+        globalMounts:
+          - path: /data
+      photos:
+        existingClaim: photos
+        globalMounts:
+          - path: /mnt/external/media_photos
+            readOnly: true
