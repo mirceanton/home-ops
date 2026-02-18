@@ -11,6 +11,5 @@ resources:
   - ./qbittorrent
   - ./qui
   - ./radarr
-  - ./fileflows
   - ./shelfmark
   - ./sonarr
