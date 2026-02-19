@@ -5,6 +5,7 @@ namespace: downloads
 
 resources:
   - ./namespace.yaml
+  - ./bazarr
   - ./flaresolverr
   - ./lidarr
   - ./prowlarr
