@@ -19,8 +19,8 @@ spec:
               repository: fireflyiii/core
               tag: version-6.4.15
             envFrom:
-              - secretRef: { name: firefly-keys }
-              - configMapRef: { name: firefly-settings }
+              - secretRef: {name: firefly-keys}
+              - configMapRef: {name: firefly-settings}
             env:
               CACHE_DRIVER: "redis"
               SESSION_DRIVER: "redis"
@@ -54,9 +54,9 @@ spec:
                     name: firefly-postgres-app
                     key: password
             probes:
-              startup: { enabled: true }
-              liveness: { enabled: true }
-              readiness: { enabled: true }
+              startup: {enabled: true}
+              liveness: {enabled: true}
+              readiness: {enabled: true}
 
             resources:
               requests:
@@ -116,8 +116,8 @@ spec:
                     key: IMPORTER_TOKEN
 
             probes:
-              liveness: { enabled: true }
-              readiness: { enabled: true }
+              liveness: {enabled: true}
+              readiness: {enabled: true}
 
             resources:
               requests:

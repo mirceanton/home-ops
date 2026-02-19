@@ -44,7 +44,7 @@ spec:
           - target:
               kind: Deployment
               name: operator
-            patch: |
+            patch: |-
               - op: replace
                 path: /metadata/name
                 value: tailscale-operator

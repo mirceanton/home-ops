@@ -6,8 +6,8 @@ resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
 
-  - ./admin  # -> local network, admin access
-  - ./home   # -> local network, client access
+  - ./admin # -> local network, admin access
+  - ./home # -> local network, client access
   - ./remote # -> tailscale
 
   - ./backend-traffic-policy.yaml

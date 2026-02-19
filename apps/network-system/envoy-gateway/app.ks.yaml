@@ -19,6 +19,6 @@ spec:
 
     #? needed for the TLS certs
     - name: cert-manager-issuers
-    
+
     #? needed for the Tailscale integration when provisioning the tailscale gateway
     - name: tailscale-operator

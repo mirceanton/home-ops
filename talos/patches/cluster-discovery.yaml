@@ -11,7 +11,7 @@ cluster:
         disabled: true
   inlineManifests:
     - name: kubernetes-discovery-rbac
-      contents: |
+      contents: |-
         apiVersion: rbac.authorization.k8s.io/v1
         kind: ClusterRole
         metadata:

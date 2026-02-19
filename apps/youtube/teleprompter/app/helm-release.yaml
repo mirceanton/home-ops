@@ -60,7 +60,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: {drop: ["ALL"]}
 
       frontend:
         replicas: 1
@@ -97,7 +97,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
+              capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
       enableServiceLinks: false
@@ -169,5 +169,5 @@ spec:
     configMaps:
       frontend-config:
         data:
-          config.json: |
+          config.json: |-
             { "backendUrl": "https://teleprompter.home.mirceanton.com" }

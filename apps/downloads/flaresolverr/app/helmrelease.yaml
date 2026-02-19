@@ -33,11 +33,11 @@ spec:
                 memory: 100Mi
               limits:
                 memory: 1Gi
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   readOnlyRootFilesystem: false #FIXME
-            #   capabilities:
-            #     drop: ["ALL"]
+                # securityContext:
+                #   allowPrivilegeEscalation: false
+                #   readOnlyRootFilesystem: false #FIXME
+                #   capabilities:
+                #     drop: ["ALL"]
 
     service:
       app:
