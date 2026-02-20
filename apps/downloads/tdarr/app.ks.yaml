@@ -11,7 +11,7 @@ spec:
 
   path: ./apps/downloads/tdarr/app
   components:
-      - ../../../../components/volsync/
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
