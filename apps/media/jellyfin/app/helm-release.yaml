@@ -83,9 +83,7 @@ spec:
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Jellyfin_Config
+        existingClaim: jellyfin
         globalMounts:
           - path: /config
       tvshows:

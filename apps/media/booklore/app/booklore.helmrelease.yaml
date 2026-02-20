@@ -145,9 +145,7 @@ spec:
 
     persistence:
       data:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Booklore_Data
+        existingClaim: booklore
         advancedMounts:
           booklore:
             booklore:

@@ -127,9 +127,7 @@ spec:
 
     persistence:
       data:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Karakeep_Data
+        existingClaim: karakeep
         advancedMounts:
           karakeep:
             app: [{path: /data}]

@@ -90,7 +90,7 @@ spec:
     persistence:
       assets:
         enabled: true
-        existingClaim: "penpot-assets"
+        existingClaim: penpot
 
     # Ingress disabled - using separate HTTPRoute for Gateway API
     ingress:
