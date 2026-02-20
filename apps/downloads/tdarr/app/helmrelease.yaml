@@ -21,8 +21,8 @@ spec:
               tag: 2.58.02@sha256:20a5656c4af4854e1877046294f77113f949d27e35940a9a65f231423d063207
             env:
               TZ: Europe/Bucharest
-              PUID: 568
-              PGID: 568
+              PUID: ${VOLSYNC_PUID}
+              PGID: ${VOLSYNC_PGID}
               serverBindIP: true
               serverIP: 0.0.0.0
               serverPort: &serverPort 8266
@@ -68,7 +68,7 @@ spec:
       runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
-        fsGroup: 568
+        fsGroup: ${VOLSYNC_PUID}
         fsGroupChangePolicy: "OnRootMismatch"
 
     service:
@@ -95,11 +95,15 @@ spec:
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Tdarr_Config
-        globalMounts:
-          - path: /config
+        existingClaim: ${APP}
+        advancedMounts:
+          tdarr:
+            app:
+              - path: /app/configs
+                subPath: config
+              - path: /app/server
+                subPath: server
+
       movies:
         type: nfs
         server: nas.stor.h.mirceanton.com
@@ -112,6 +116,7 @@ spec:
         path: /mnt/tank/Media/TV_Shows
         globalMounts:
           - path: /data/media/tv
+
       shared:
         type: nfs
         server: nas.stor.h.mirceanton.com
