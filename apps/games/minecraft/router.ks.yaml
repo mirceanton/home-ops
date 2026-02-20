@@ -4,13 +4,15 @@ kind: Kustomization
 metadata:
   name: minecraft-router
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: games
+
   path: ./apps/games/minecraft/router/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: games
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn: []

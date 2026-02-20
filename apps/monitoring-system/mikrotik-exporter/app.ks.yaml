@@ -4,15 +4,17 @@ kind: Kustomization
 metadata:
   name: mikrotik-exporter
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: monitoring-system
+
   path: ./apps/monitoring-system/mikrotik-exporter/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: monitoring-system
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect

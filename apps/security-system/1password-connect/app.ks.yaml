@@ -4,16 +4,17 @@ kind: Kustomization
 metadata:
   name: 1password-connect
 spec:
+  interval: 1m30s
+  prune: true
+  wait: true
+  targetNamespace: security-system
+
   path: ./apps/security-system/1password-connect/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: security-system
-  interval: 1m30s
-  timeout: 1m
-  prune: true
-  wait: true
+
   decryption: {provider: sops}
   dependsOn:
     - name: external-secrets-operator

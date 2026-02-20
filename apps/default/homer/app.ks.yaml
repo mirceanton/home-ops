@@ -4,16 +4,15 @@ kind: Kustomization
 metadata:
   name: homer
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: default
+
   path: ./apps/default/homer/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: default
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network-system
+
+  dependsOn: []

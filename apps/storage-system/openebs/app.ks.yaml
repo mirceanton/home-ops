@@ -4,12 +4,15 @@ kind: Kustomization
 metadata:
   name: openebs
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: storage-system
+
   path: ./apps/storage-system/openebs/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: storage-system
-  interval: 10m
-  prune: true
-  wait: true
+
+  dependsOn: []

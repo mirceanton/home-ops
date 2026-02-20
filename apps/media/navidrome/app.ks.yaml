@@ -26,8 +26,6 @@ spec:
 
   decryption: {provider: sops}
   dependsOn:
-    - name: envoy-gateway
-      namespace: network-system
     - name: 1password-connect
       namespace: security-system
     - name: volsync

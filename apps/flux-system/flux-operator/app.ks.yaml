@@ -4,16 +4,18 @@ kind: Kustomization
 metadata:
   name: flux-operator
 spec:
+  interval: 1h
+  prune: false # Never delete this
+  wait: false
+  targetNamespace: flux-system
+
   path: ./apps/flux-system/flux-operator/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: flux-system
-  interval: 1h
-  timeout: 5m
-  prune: false # Never delete this
-  wait: false
+
+  dependsOn: []
   commonMetadata:
     labels:
       app.kubernetes.io/name: flux-operator

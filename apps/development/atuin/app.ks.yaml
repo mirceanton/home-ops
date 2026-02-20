@@ -4,20 +4,20 @@ kind: Kustomization
 metadata:
   name: atuin
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: development
+
   path: ./apps/development/atuin/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: development
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: openebs
       namespace: storage-system
-    - name: envoy-gateway
-      namespace: network-system
+

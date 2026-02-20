@@ -4,12 +4,15 @@ kind: Kustomization
 metadata:
   name: cloudnative-pg-operator
 spec:
-  path: ./apps/database-system/cloudnative-pg-operator/app/
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: database-system
+
+  path: ./apps/database-system/cloudnative-pg-operator/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: database-system
-  interval: 10m
-  prune: true
-  wait: true
+
+  dependsOn: []

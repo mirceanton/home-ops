@@ -4,15 +4,17 @@ kind: Kustomization
 metadata:
   name: mosquitto
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: home-automation
+
   path: ./apps/home-automation/mosquitto/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: home-automation
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: openebs
       namespace: storage-system

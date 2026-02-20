@@ -26,8 +26,6 @@ spec:
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: dragonfly-operator
-      namespace: database-system
     - name: openebs
       namespace: storage-system
     - name: 1password-connect
