@@ -71,17 +71,6 @@ spec:
         ports:
           http:
             port: *port
-
-    persistence:
-      config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Prowlarr_Config
-        globalMounts:
-          - path: /config
-      tmp:
-        type: emptyDir
-
     route:
       home:
         hostnames: ["prowlarr.home.mirceanton.com"]
@@ -93,3 +82,11 @@ spec:
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      tmp:
+        type: emptyDir

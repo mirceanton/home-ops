@@ -4,12 +4,13 @@ kind: Kustomization
 metadata:
   name: flaresolverr
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: downloads
+
   path: ./apps/downloads/flaresolverr/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: downloads
-  interval: 10m
-  prune: true
-  wait: true

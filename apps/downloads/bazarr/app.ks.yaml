@@ -20,7 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 1Gi #!TODO 256Mi?
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
 

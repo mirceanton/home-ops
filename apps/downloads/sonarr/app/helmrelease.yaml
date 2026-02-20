@@ -71,12 +71,21 @@ spec:
         ports:
           http:
             port: *port
+    route:
+      home:
+        hostnames: ["sonarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["sonarr.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Sonarr_Config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       media:
@@ -93,15 +102,3 @@ spec:
           - path: /downloads
       tmp:
         type: emptyDir
-
-    route:
-      home:
-        hostnames: ["sonarr.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-      tailscale:
-        hostnames: ["sonarr.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
