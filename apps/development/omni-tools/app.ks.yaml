@@ -4,16 +4,15 @@ kind: Kustomization
 metadata:
   name: omni-tools
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: development
+
   path: ./apps/development/omni-tools/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: development
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network-system
+
+  dependsOn: []

@@ -4,17 +4,18 @@ kind: Kustomization
 metadata:
   name: kube-prometheus-stack
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: monitoring-system
+
   path: ./apps/monitoring-system/kube-prometheus-stack/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: monitoring-system
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: openebs
       namespace: storage-system
-    - name: envoy-gateway
-      namespace: network-system
+

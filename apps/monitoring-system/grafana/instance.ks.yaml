@@ -4,21 +4,21 @@ kind: Kustomization
 metadata:
   name: grafana-instance
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: monitoring-system
+
   path: ./apps/monitoring-system/grafana/instance
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: monitoring-system
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect
       namespace: security-system
     - name: grafana-operator
-    - name: envoy-gateway
-      namespace: network-system
     - name: openebs
       namespace: storage-system

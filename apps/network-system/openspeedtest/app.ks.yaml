@@ -4,17 +4,15 @@ kind: Kustomization
 metadata:
   name: openspeedtest
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: network-system
+
   path: ./apps/network-system/openspeedtest/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: network-system
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   decryption: {provider: sops}
-  dependsOn:
-    - name: envoy-gateway
-      namespace: network-system

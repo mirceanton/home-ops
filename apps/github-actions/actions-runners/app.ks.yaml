@@ -4,16 +4,17 @@ kind: Kustomization
 metadata:
   name: actions-runner-scaleset
 spec:
+  interval: 10m
+  prune: true
+  wait: false
+  targetNamespace: github-actions
+
   path: ./apps/github-actions/actions-runners/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: github-actions
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: false
+
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect

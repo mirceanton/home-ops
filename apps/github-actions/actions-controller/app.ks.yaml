@@ -4,16 +4,17 @@ kind: Kustomization
 metadata:
   name: actions-runner-controller
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: github-actions
+
   path: ./apps/github-actions/actions-controller/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: github-actions
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: cert-manager
       namespace: network-system

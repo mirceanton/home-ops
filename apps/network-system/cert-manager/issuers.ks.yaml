@@ -4,16 +4,17 @@ kind: Kustomization
 metadata:
   name: cert-manager-issuers
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: network-system
+
   path: ./apps/network-system/cert-manager/issuers
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: network-system
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   dependsOn:
     #? wait for the CRDs to be installed
     - name: cert-manager

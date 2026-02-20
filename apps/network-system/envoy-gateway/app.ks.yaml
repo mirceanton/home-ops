@@ -4,15 +4,17 @@ kind: Kustomization
 metadata:
   name: envoy-gateway
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: network-system
+
   path: ./apps/network-system/envoy-gateway/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: network-system
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     #? needed for the LoadBalancer IPs
     - name: metallb

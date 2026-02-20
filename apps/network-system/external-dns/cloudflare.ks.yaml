@@ -4,21 +4,20 @@ kind: Kustomization
 metadata:
   name: external-dns-cloudflare
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: network-system
+
   path: ./apps/network-system/external-dns/cloudflare
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: network-system
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   decryption: {provider: sops}
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect
       namespace: security-system
-    #? wait for the gateways to be ready to accept external-dns records
-    - name: envoy-gateway
-      namespace: network-system
+

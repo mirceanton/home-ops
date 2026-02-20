@@ -4,16 +4,17 @@ kind: Kustomization
 metadata:
   name: davinci
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: youtube
+
   path: ./apps/youtube/davinci/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: youtube
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   decryption: {provider: sops}
   dependsOn:
     - name: cloudnative-pg-operator

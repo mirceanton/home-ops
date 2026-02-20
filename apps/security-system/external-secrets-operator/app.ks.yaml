@@ -4,14 +4,15 @@ kind: Kustomization
 metadata:
   name: external-secrets-operator
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: security-system
+
   path: ./apps/security-system/external-secrets-operator/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: security-system
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
   dependsOn: []

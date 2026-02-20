@@ -4,17 +4,18 @@ kind: Kustomization
 metadata:
   name: immich
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: media
+
   path: ./apps/media/immich/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: media
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: envoy-gateway
-      namespace: network-system
+

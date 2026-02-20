@@ -4,12 +4,15 @@ kind: Kustomization
 metadata:
   name: metrics-server
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: kube-system
+
   path: ./apps/kube-system/metrics-server/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: kube-system
-  interval: 10m
-  prune: true
-  wait: true
+
+  dependsOn: []

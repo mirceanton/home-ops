@@ -4,17 +4,18 @@ kind: Kustomization
 metadata:
   name: teleprompter
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: youtube
+
   path: ./apps/youtube/teleprompter/app
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: youtube
-  interval: 10m
-  prune: true
-  wait: true
+
   dependsOn:
     - name: dragonfly-operator
       namespace: database-system
-    - name: envoy-gateway
-      namespace: network-system
+
