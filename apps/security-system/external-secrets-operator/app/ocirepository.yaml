@@ -7,7 +7,7 @@ metadata:
 spec:
   url: oci://ghcr.io/external-secrets/charts/external-secrets
   interval: 15m
-  ref: {tag: 2.0.0}
+  ref: {tag: 2.0.1}
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
