@@ -7,7 +7,7 @@ clusterconfig/
 
 # Ignore Unencrypted Kubernetes Secrets
 *.secret.yaml
-
+bak/
 # Random shit
 .private/
 .pytest_cache/

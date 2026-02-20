@@ -2,17 +2,30 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: shelfmark
+  name: &app shelfmark
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: downloads
+
   path: ./apps/downloads/shelfmark/app
+  components:
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: downloads
-  interval: 10m
-  prune: true
-  wait: true
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 64Mi
+      VOLSYNC_PUID: "568"
+      VOLSYNC_PGID: "568"
+
   dependsOn:
-    - name: envoy-gateway
-      namespace: network-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system

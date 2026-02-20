@@ -72,12 +72,21 @@ spec:
         ports:
           http:
             port: *port
+    route:
+      home:
+        hostnames: ["radarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["radarr.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Radarr_Config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       media:
@@ -94,15 +103,3 @@ spec:
           - path: /downloads
       tmp:
         type: emptyDir
-
-    route:
-      home:
-        hostnames: ["radarr.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-      tailscale:
-        hostnames: ["radarr.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system

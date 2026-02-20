@@ -66,12 +66,21 @@ spec:
         ports:
           http:
             port: *port
+    route:
+      home:
+        hostnames: ["shelfmark.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["shelfmark.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Shelfmark_Config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       books:
@@ -86,7 +95,7 @@ spec:
         path: /mnt/scratch/Torrent_Downloads
         globalMounts:
           - path: /downloads
-      tmpfs:
+      tmp:
         type: emptyDir
         sizeLimit: 1Gi
         globalMounts:
@@ -94,15 +103,3 @@ spec:
             subPath: tmp
           - path: /var/log
             subPath: var-log
-
-    route:
-      home:
-        hostnames: ["shelfmark.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-      tailscale:
-        hostnames: ["shelfmark.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system

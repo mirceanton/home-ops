@@ -57,23 +57,6 @@ spec:
         ports:
           http:
             port: *port
-
-    persistence:
-      config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/qBittorrent_Config
-        globalMounts:
-          - path: /config
-      downloads:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/scratch/Torrent_Downloads
-        globalMounts:
-          - path: /downloads
-      tmp:
-        type: emptyDir
-
     route:
       home:
         hostnames: ["qbit.home.mirceanton.com"]
@@ -85,3 +68,17 @@ spec:
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      downloads:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/scratch/Torrent_Downloads
+        globalMounts:
+          - path: /downloads
+      tmp:
+        type: emptyDir
