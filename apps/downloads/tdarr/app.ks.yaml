@@ -21,6 +21,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_PUID: 568
+      VOLSYNC_PGID: 568
 
   dependsOn:
     - name: 1password-connect
