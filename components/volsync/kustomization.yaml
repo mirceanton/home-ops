@@ -5,5 +5,5 @@ kind: Component
 resources:
   - external-secret.yaml
   - replication-source.yaml
-  - replication-destination.yaml
-  - ./pvc.yaml
+  # - replication-destination.yaml
+  - pvc.yaml
