@@ -9,10 +9,10 @@ spec:
   storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"
   accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
 
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: "${APP}-dst"
+  # dataSourceRef:
+  #   kind: ReplicationDestination
+  #   apiGroup: volsync.backube
+  #   name: "${APP}-dst"
 
   resources:
     requests:
