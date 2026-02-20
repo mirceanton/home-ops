@@ -68,12 +68,21 @@ spec:
         ports:
           http:
             port: *port
+    route:
+      home:
+        hostnames: ["bazarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["bazarr.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Bazarr_Config
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       media:
@@ -90,15 +99,3 @@ spec:
           - path: /downloads
       tmp:
         type: emptyDir
-
-    route:
-      home:
-        hostnames: ["bazarr.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-      tailscale:
-        hostnames: ["bazarr.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
