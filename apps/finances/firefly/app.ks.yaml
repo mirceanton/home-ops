@@ -2,18 +2,27 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: firefly
+  name: &app firefly
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: finances
+
   path: ./apps/finances/firefly/app
+  components:
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: finances
-  interval: 10m
-  timeout: 5m
-  prune: true
-  wait: true
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 8Mi
+
+  decryption: {provider: sops}
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
@@ -21,7 +30,7 @@ spec:
       namespace: database-system
     - name: openebs
       namespace: storage-system
-    - name: envoy-gateway
-      namespace: network-system
-  decryption:
-    provider: sops
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system

@@ -2,19 +2,33 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: booklore
+  name: &app booklore
 spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: media
+
   path: ./apps/media/booklore/app
+  components:
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: media
-  interval: 10m
-  prune: true
-  wait: true
-  decryption:
-    provider: sops
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 32Mi
+      VOLSYNC_PUID: "568"
+      VOLSYNC_PGID: "568"
+
+  decryption: {provider: sops}
   dependsOn:
     - name: envoy-gateway
       namespace: network-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
