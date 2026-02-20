@@ -95,11 +95,15 @@ spec:
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Tdarr_Config
-        globalMounts:
-          - path: /config
+        existingClaim: ${APP}
+        advancedMounts:
+          tdarr:
+            app:
+              - path: /app/configs
+                subPath: config
+              - path: /app/server
+                subPath: server
+
       movies:
         type: nfs
         server: nas.stor.h.mirceanton.com
@@ -112,6 +116,7 @@ spec:
         path: /mnt/tank/Media/TV_Shows
         globalMounts:
           - path: /data/media/tv
+
       shared:
         type: nfs
         server: nas.stor.h.mirceanton.com
