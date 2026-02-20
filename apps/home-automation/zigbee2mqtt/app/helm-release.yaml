@@ -71,8 +71,6 @@ spec:
 
     persistence:
       config:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Z2M_Config
+        existingClaim: zigbee2mqtt
         globalMounts:
           - path: /config

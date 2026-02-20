@@ -8,7 +8,6 @@ resources:
   - ./helm-repository.yaml
   - ./http-route.yaml
   - ./penpot-secret.secret.sops.yaml
-  - ./assets.pvc.yaml
   - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml

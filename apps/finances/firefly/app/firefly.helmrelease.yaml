@@ -171,9 +171,7 @@ spec:
 
     persistence:
       data:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Firefly
+        existingClaim: firefly
         advancedMounts:
           firefly:
             app:
