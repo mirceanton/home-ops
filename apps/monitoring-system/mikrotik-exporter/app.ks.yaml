@@ -15,6 +15,9 @@ spec:
     name: flux-system
     namespace: flux-system
 
+  postBuild:
+    substitute: {}
+
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect

@@ -15,4 +15,7 @@ spec:
     name: flux-system
     namespace: flux-system
 
+  postBuild:
+    substitute: {}
+
   decryption: {provider: sops}

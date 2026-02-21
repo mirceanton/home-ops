@@ -16,6 +16,9 @@ spec:
     namespace: flux-system
 
   decryption: {provider: sops}
+  postBuild:
+    substitute: {}
+
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
     - name: 1password-connect

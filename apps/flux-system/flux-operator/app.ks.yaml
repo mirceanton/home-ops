@@ -15,6 +15,9 @@ spec:
     name: flux-system
     namespace: flux-system
 
+  postBuild:
+    substitute: {}
+
   dependsOn: []
   commonMetadata:
     labels:
