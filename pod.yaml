@@ -1,0 +1,70 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zfs-setup-script
+data:
+  setup.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    DATA_POOL="data-pool"
+    DATA_DISK1="/dev/disk/by-id/ata-CT500MX500SSD1_2048E4D4E15C"
+    DATA_DISK2="/dev/disk/by-id/ata-CT500MX500SSD1_2336E87416C5"
+
+    CACHE_POOL="cache-pool"
+    CACHE_DISK="/dev/disk/by-id/ata-Samsung_SSD_860_EVO_500GB_S3Z2NB1K729005X"
+
+    setup_pool() {
+      local name="$1"
+      shift
+
+      if zpool list "$name" > /dev/null 2>&1; then
+        echo "Pool $name already exists, updating properties..."
+      else
+        echo "Creating pool $name..."
+        zpool create -f -o ashift=12 "$name" "$@"
+      fi
+
+      zpool set autotrim=on "$name"
+      zfs set atime=off "$name"
+      zfs set compression=zstd "$name"
+      echo "Pool $name ready."
+    }
+
+    setup_pool "$DATA_POOL" mirror "$DATA_DISK1" "$DATA_DISK2"
+    setup_pool "$CACHE_POOL" "$CACHE_DISK"
+
+    echo ""
+    zpool list
+    zpool status
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zfs-shell
+spec:
+  nodeName: home-ops
+  hostIPC: true
+  hostNetwork: true
+  hostPID: true
+  containers:
+    - name: shell
+      image: docker.io/debian
+      command: ["/bin/bash", "-c", "sleep infinity"]
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: host-dev
+          mountPath: /dev
+  volumes:
+    - name: scripts
+      configMap:
+        name: zfs-setup-script
+        defaultMode: 0755
+    - name: host-dev
+      hostPath:
+        path: /dev
