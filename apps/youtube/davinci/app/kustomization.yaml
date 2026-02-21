@@ -6,7 +6,6 @@ resources:
   - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
-  - ./davinci-postgres-password.secret.sops.yaml
   - ./davinci-postgres.pushsecret.yaml
 
 configMapGenerator:
