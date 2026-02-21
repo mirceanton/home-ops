@@ -1,0 +1,5 @@
+---
+machine:
+  kernel:
+    modules:
+      - name: zfs
