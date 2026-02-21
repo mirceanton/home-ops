@@ -21,6 +21,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 8Gi
+      VOLSYNC_CACHE_CAPACITY: 8Gi #!FIXME
 
   decryption: {provider: sops}
   dependsOn:
