@@ -6,7 +6,7 @@ metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
-  storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"
+  storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-zfs}"
   accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
 
   dataSourceRef:

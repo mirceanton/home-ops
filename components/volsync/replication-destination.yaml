@@ -11,10 +11,10 @@ spec:
   restic:
     repository: "${APP}-volsync-secret"
     copyMethod: Direct
-    cacheStorageClassName: "${VOLSYNC_CACHE_STORAGECLASS:=openebs-hostpath}"
+    cacheStorageClassName: "${VOLSYNC_CACHE_STORAGECLASS:=openebs-zfs}"
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
     cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=5Gi}"
-    storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"
+    storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-zfs}"
     accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
     capacity: "${VOLSYNC_CAPACITY:=5Gi}"
 

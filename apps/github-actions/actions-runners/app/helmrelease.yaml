@@ -20,7 +20,7 @@ spec:
       type: kubernetes
       kubernetesModeWorkVolumeClaim:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: openebs-hostpath
+        storageClassName: openebs-zfs
         resources:
           requests:
             storage: 4Gi

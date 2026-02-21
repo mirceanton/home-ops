@@ -14,11 +14,11 @@ spec:
       owner: firefly
 
   storage:
-    storageClass: openebs-hostpath
+    storageClass: openebs-zfs
     size: 8Gi
 
   walStorage:
-    storageClass: openebs-hostpath
+    storageClass: openebs-zfs
     size: 2Gi
 
   resources:
