@@ -79,6 +79,6 @@ spec:
         type: persistentVolumeClaim
         accessMode: ReadWriteOnce
         size: 50Gi
-        storageClass: openebs-zfs
+        storageClass: openebs-zfs-cache
         globalMounts:
           - path: /var/lib/buildkit
