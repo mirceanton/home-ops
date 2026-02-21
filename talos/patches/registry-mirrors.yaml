@@ -1,38 +1,38 @@
 ---
-#! Uses talhelper variables: ${registry_hostname}, ${registry_username}, ${registry_password}
+#! Uses talhelper variables: registry.nas.svc.h.mirceanton.com, ${registry_username}, ${registry_password}
 machine:
   registries:
     config:
-      ${registry_hostname}:
+      registry.nas.svc.h.mirceanton.com:
         auth:
           username: ${registry_username}
           password: ${registry_password}
     mirrors:
       docker.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/docker.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/docker.io/"]
         overridePath: true
       registry-1.docker.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/registry-1.docker.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/registry-1.docker.io/"]
         overridePath: true
       ghcr.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/ghcr.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/ghcr.io/"]
         overridePath: true
       gcr.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/gcr.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/gcr.io/"]
         overridePath: true
       quay.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/quay.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/quay.io/"]
         overridePath: true
       registry.k8s.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/registry.k8s.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/registry.k8s.io/"]
         overridePath: true
       oci.external-secrets.io:
         skipFallback: true
-        endpoints: ["https://${registry_hostname}/v2/oci.external-secrets.io/"]
+        endpoints: ["https://registry.nas.svc.h.mirceanton.com/v2/oci.external-secrets.io/"]
         overridePath: true
