@@ -55,6 +55,9 @@ spec:
                 memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
               capabilities:
                 drop: ["ALL"]
 
