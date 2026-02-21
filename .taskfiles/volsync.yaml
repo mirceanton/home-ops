@@ -35,6 +35,15 @@ tasks:
         msg: "ReplicationSource '{{.APP}}' not found in namespace '{{.NS}}'"
     cmd: bash {{.ROOT_DIR}}/.scripts/volsync-backup.sh {{.APP}} {{.NS}} {{.TRIGGER}}
 
+  backup-all:
+    desc: |
+      Trigger a manual volsync backup for all apps.
+      Usage: task volsync:backup-all [NS=<ns>]
+    silent: true
+    vars:
+      NS: '{{.NS | default ""}}'
+    cmd: bash {{.ROOT_DIR}}/.scripts/volsync-backup-all.sh {{.NS}}
+
   restore:
     desc: |
       Trigger a volsync restore.
