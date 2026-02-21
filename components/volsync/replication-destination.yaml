@@ -10,6 +10,7 @@ spec:
     manual: restore-once
   restic:
     repository: "${APP}-volsync-secret"
+    destinationPVC: "${APP}"  # point at existing PVC
     copyMethod: Direct
     cacheStorageClassName: "${VOLSYNC_CACHE_STORAGECLASS:=openebs-hostpath}"
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
