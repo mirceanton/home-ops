@@ -13,6 +13,23 @@ spec:
     controllers:
       firefly:
         replicas: 1
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-postgres-app
+                    key: uri
+          wait-for-dragonfly:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["redis", "redis://firefly-dragonfly:6379"]
         containers:
           app:
             image:

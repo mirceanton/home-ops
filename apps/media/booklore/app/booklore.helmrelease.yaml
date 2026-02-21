@@ -25,6 +25,17 @@ spec:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
         initContainers:
+          wait-for-mariadb:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["mysql", "mysql://booklore:$(DB_PASSWORD)@tcp(booklore-mariadb:3306)/booklore"]
+            env:
+              DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: booklore-secret
+                    key: mariadb_password
           nginx-config:
             image:
               repository: ghcr.io/booklore-app/booklore

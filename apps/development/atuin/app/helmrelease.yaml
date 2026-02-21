@@ -13,6 +13,18 @@ spec:
     controllers:
       atuin:
         replicas: 1
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: atuin-postgres-app
+                    key: uri
         containers:
           app:
             image:

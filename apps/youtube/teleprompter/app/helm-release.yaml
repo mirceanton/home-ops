@@ -20,9 +20,7 @@ spec:
             image:
               repository: wait4x/wait4x
               tag: 3.6.0
-            args:
-              - redis
-              - redis://teleprompter-dragonfly:6379
+            args: ["redis", "redis://teleprompter-dragonfly:6379"]
 
         containers:
           main:

@@ -25,9 +25,7 @@ spec:
             image:
               repository: wait4x/wait4x
               tag: 3.6.0
-            args:
-              - postgresql
-              - $(DB_URL)
+            args: ["postgresql", "$(DB_URL)"]
             env:
               DB_URL:
                 valueFrom:
@@ -38,9 +36,7 @@ spec:
             image:
               repository: wait4x/wait4x
               tag: 3.6.0
-            args:
-              - redis
-              - redis://immich-dragonfly:6379
+            args: ["redis", "redis://immich-dragonfly:6379"]
         containers:
           main:
             image:
