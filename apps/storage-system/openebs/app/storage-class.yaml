@@ -12,7 +12,7 @@ parameters:
   dedup: "off"
   fstype: "zfs"
   poolname: "data-pool"
-  shared: "no"
+  shared: "yes"
   recordsize: "16k"
 
 ---
@@ -27,5 +27,5 @@ parameters:
   dedup: "off"
   fstype: "zfs"
   poolname: "cache-pool"
-  shared: "no"
+  shared: "yes"
   recordsize: "128k"
