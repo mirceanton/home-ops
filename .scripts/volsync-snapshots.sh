@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+CYAN='\033[1;36m'
+RED='\033[1;31m'
+NC='\033[0m'
+
 APP="$1"
 NS="$2"
 
@@ -27,7 +31,7 @@ for i in $(seq 1 30); do
     if [ "${PHASE}" = "Succeeded" ]; then
         break
     elif [ "${PHASE}" = "Failed" ] || ([ -n "${WAITING}" ] && [ "${WAITING}" != "ContainerCreating" ]); then
-        echo "ERROR: Pod failed to start (phase=${PHASE:-Pending}, reason=${WAITING:-unknown})"
+        echo -e "${RED}ERROR: Pod failed to start (phase=${PHASE:-Pending}, reason=${WAITING:-unknown})${NC}"
         kubectl delete pod/volsync-snapshots-${APP} -n "${NS}" --ignore-not-found &>/dev/null
         exit 1
     fi
