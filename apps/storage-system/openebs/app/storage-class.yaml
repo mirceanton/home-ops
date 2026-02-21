@@ -11,7 +11,7 @@ parameters:
   fstype: "zfs"
   poolname: "data-pool"
   shared: "no"
-  recordsize: "8k"
+  recordsize: "16k"
 
 ---
 apiVersion: storage.k8s.io/v1

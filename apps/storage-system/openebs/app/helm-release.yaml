@@ -11,15 +11,40 @@ spec:
 
   values:
     localpv-provisioner:
-      localpv: {enabled: false}
-      hostpathClass: { enabled: false }
-      analytics: { enabled: false }
+      localpv:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+      hostpathClass:
+        enabled: true
+        name: openebs-hostpath
+        isDefaultClass: false
 
     zfs-localpv:
-      resources: {}
+      zfsNode:
+        # /home is read-only on Talos; use a writable path under /var
+        encrKeysDir: /var/local/openebs/keys
+      zfs:
+        # Talos installs ZFS at a non-standard path
+        bin: /usr/local/sbin/zfs
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
       zfsController:
         replicas: 1
-        resources: {}
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
 
     # ====================================================================
     # ====================== Disable EVERYTHING Else =====================
