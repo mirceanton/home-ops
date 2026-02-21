@@ -12,3 +12,18 @@ parameters:
   poolname: "data-pool"
   shared: "no"
   recordsize: "8k"
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-zfs-cache
+provisioner: zfs.csi.openebs.io
+allowVolumeExpansion: true
+parameters:
+  compression: "zstd"
+  dedup: "off"
+  fstype: "zfs"
+  poolname: "cache-pool"
+  shared: "no"
+  recordsize: "128k"
