@@ -7,6 +7,7 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  timeout: 15m
   targetNamespace: downloads
 
   path: ./apps/downloads/sonarr/app
