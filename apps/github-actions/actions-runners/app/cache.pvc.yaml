@@ -4,8 +4,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: github-runners-cache
 spec:
-  accessModes:
-    - ReadWriteOnce
+  storageClassName: openebs-zfs
+  accessModes: ["ReadWriteOnce"]
   resources:
     requests:
-      storage: 10Gi
+      storage: 20Gi

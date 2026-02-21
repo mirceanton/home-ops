@@ -68,8 +68,8 @@ spec:
   persistentVolumeClaim:
     spec:
       accessModes: ["ReadWriteOnce"]
+      storageClassName: openebs-zfs
       resources:
         requests:
-          storage: 10Gi
-      storageClassName: openebs-hostpath
+          storage: 4Gi
   disableDefaultSecurityContext: All

@@ -14,11 +14,11 @@ spec:
       owner: atuin
 
   storage:
-    storageClass: openebs-hostpath
+    storageClass: openebs-zfs
     size: 4Gi
 
   walStorage:
-    storageClass: openebs-hostpath
+    storageClass: openebs-zfs
     size: 2Gi
 
   resources:

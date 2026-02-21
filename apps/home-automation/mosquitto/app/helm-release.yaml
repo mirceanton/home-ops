@@ -34,7 +34,7 @@ spec:
         statefulset:
           volumeClaimTemplates:
             - name: config
-              storageClass: openebs-hostpath
+              storageClass: openebs-zfs
               accessMode: ReadWriteOnce
               size: 5Gi
 
