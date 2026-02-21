@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.m00nlit.dev/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
@@ -9,14 +10,15 @@ spec:
     schedule: "0 */2 * * *"
 
   restic:
-    copyMethod: Direct
+    copyMethod: "${VOLSYNC_COPYMETHOD:=Snapshot}"
     pruneIntervalDays: 14
     repository: "${APP}-volsync-secret"
+    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=openebs-snapshots}"
     cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=5Gi}"
-    cacheStorageClassName: "${VOLSYNC_CACHE_STORAGECLASS:=openebs-hostpath}"
+    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:=openebs-zfs}"
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
-    storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"
-    accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
+    storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-zfs}"
+    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:=ReadWriteOnce}"]
 
     moverSecurityContext:
       runAsUser: ${VOLSYNC_PUID:=1000}

@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: "${APP}"
+  name: "${VOLSYNC_PVC:=${APP}}"
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
-  storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-hostpath}"
+  storageClassName: "${VOLSYNC_STORAGECLASS:=openebs-zfs}"
   accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
 
-  # dataSourceRef:
-  #   kind: ReplicationDestination
-  #   apiGroup: volsync.backube
-  #   name: "${APP}-dst"
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: "${APP}-dst"
 
   resources:
     requests:
-      storage: "${VOLSYNC_CACHE_CAPACITY:=5Gi}"
+      storage: "${VOLSYNC_CAPACITY:=5Gi}"
