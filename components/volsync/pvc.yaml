@@ -16,4 +16,4 @@ spec:
 
   resources:
     requests:
-      storage: "${VOLSYNC_CACHE_CAPACITY:=5Gi}"
+      storage: "${VOLSYNC_CAPACITY:=5Gi}"
