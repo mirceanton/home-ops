@@ -4,9 +4,8 @@ kind: Kustomization
 
 resources:
   - ./dragonfly.yaml
+  - ./oci-repository.yaml
   - ./helm-release.yaml
-  - ./helm-repository.yaml
-  - ./http-route.yaml
   - ./penpot-secret.secret.sops.yaml
   - ./cnpg.yaml
   - ./postgres-backup.cronjob.yaml

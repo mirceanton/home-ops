@@ -1,97 +1,176 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: penpot
 spec:
   interval: 10m
-  chart:
-    spec:
-      chart: penpot
-      version: 0.35.0
-      sourceRef:
-        kind: HelmRepository
-        name: penpot
-
-  dependsOn: []
+  chartRef:
+    kind: OCIRepository
+    name: penpot
 
   values:
-    global:
-      postgresqlEnabled: false
-      valkeyEnabled: false
-      redisEnabled: false
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
 
-    config:
-      publicUri: "https://penpot.home.mirceanton.com"
-      flags: "disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
-      telemetryEnabled: false
+    controllers:
+      frontend:
+        containers:
+          app:
+            image:
+              repository: penpotapp/frontend
+              tag: "2.13.3"
+            env:
+              PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
+              PENPOT_TERMS_OF_SERVICE_URI: ""
+              PENPOT_PRIVACY_POLICY_URI: ""
+              PENPOT_PUBLIC_URI: "https://penpot.home.mirceanton.com"
+              PENPOT_BACKEND_URI: "http://penpot-backend:6060"
+              PENPOT_EXPORTER_URI: "http://penpot-exporter:6061"
+              PENPOT_INTERNAL_RESOLVER:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
 
-      # Use existing secret for API key
-      existingSecret: "penpot-secret"
-      secretKeys:
-        apiSecretKey: "secret-key"
+      backend:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: penpot-postgres-app
+                    key: uri
+          wait-for-dragonfly:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["redis", "redis://penpot-dragonfly:6379"]
+        containers:
+          app:
+            image:
+              repository: penpotapp/backend
+              tag: "2.13.3"
+            env:
+              PENPOT_PUBLIC_URI: "https://penpot.home.mirceanton.com"
+              PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
+              PENPOT_TELEMETRY_ENABLED: "false"
+              PENPOT_TELEMETRY_REFERER: "kubernetes"
+              PENPOT_REDIS_URI: "redis://penpot-dragonfly:6379/0"
+              PENPOT_OBJECTS_STORAGE_BACKEND: "fs"
+              PENPOT_OBJECTS_STORAGE_FS_DIRECTORY: "/opt/data/assets"
+              PENPOT_FILE_DATA_BACKEND: "legacy-db"
+              PENPOT_AUTO_FILE_SNAPSHOT_EVERY: "5"
+              PENPOT_AUTO_FILE_SNAPSHOT_TIMEOUT: "3h"
+              PENPOT_DATABASE_URI: "postgresql://penpot-postgres-rw:5432/penpot"
+              PENPOT_DATABASE_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: penpot-postgres-app
+                    key: username
+              PENPOT_DATABASE_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: penpot-postgres-app
+                    key: password
+              PENPOT_SECRET_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: penpot-secret
+                    key: secret-key
+            resources:
+              requests:
+                cpu: 50m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
 
-      # External PostgreSQL (CNPG)
-      postgresql:
-        host: "penpot-postgres-rw"
-        port: 5432
-        database: "penpot"
-        existingSecret: "penpot-postgres-app"
-        secretKeys:
-          usernameKey: "username"
-          passwordKey: "password"
+      exporter:
+        initContainers:
+          wait-for-dragonfly:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["redis", "redis://penpot-dragonfly:6379"]
+        containers:
+          app:
+            image:
+              repository: penpotapp/exporter
+              tag: "2.13.3"
+            env:
+              PENPOT_PUBLIC_URI: "http://penpot-frontend:8080"
+              PENPOT_REDIS_URI: "redis://penpot-dragonfly:6379/0"
+              PENPOT_TEMPDIR: "/tmp/penpot-exporter"
+              PENPOT_SECRET_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: penpot-secret
+                    key: secret-key
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
 
-      # External Redis (Dragonfly)
-      redis:
-        host: "penpot-dragonfly"
-        port: 6379
-        database: "0"
+    service:
+      frontend:
+        controller: frontend
+        ports:
+          http:
+            port: 8080
+      backend:
+        controller: backend
+        ports:
+          http:
+            port: 6060
+      exporter:
+        controller: exporter
+        ports:
+          http:
+            port: 6061
 
-      # Object storage - filesystem
-      objectsStorage:
-        storageBackend: "fs"
-        filesystem:
-          directory: "/opt/data/assets"
+    route:
+      home:
+        hostnames: ["penpot.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: frontend
+                port: http
 
-    # Frontend configuration
-    frontend:
-      replicaCount: 1
-      resources:
-        requests:
-          cpu: 10m
-          memory: 128Mi
-        limits:
-          memory: 512Mi
-
-    # Backend configuration
-    backend:
-      replicaCount: 1
-      # TODO: init container to wait for Postgres and Redis
-      resources:
-        requests:
-          cpu: 50m
-          memory: 512Mi
-        limits:
-          memory: 2Gi
-
-    # Exporter configuration
-    exporter:
-      replicaCount: 1
-      # TODO: init container to wait for Postgres and Redis
-      resources:
-        requests:
-          cpu: 10m
-          memory: 256Mi
-        limits:
-          memory: 2Gi
-
-    # Use existing NFS-backed PVC for assets
     persistence:
       assets:
-        enabled: true
         existingClaim: penpot
-
-    # Ingress disabled - using separate HTTPRoute for Gateway API
-    ingress:
-      enabled: false
+        advancedMounts:
+          frontend:
+            app:
+              - path: /opt/data/assets
+          backend:
+            app:
+              - path: /opt/data/assets
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          exporter:
+            app:
+              - path: /tmp/penpot-exporter
