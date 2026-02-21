@@ -21,6 +21,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 8Mi
+      VOLSYNC_PUID: "33"
+      VOLSYNC_PGID: "33"
 
   decryption: {provider: sops}
   dependsOn:
