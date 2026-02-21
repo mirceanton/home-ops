@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Find the latest backup if BACKUP_FILE is not specified
 if [ -z "${BACKUP_FILE:-}" ]; then
-  BACKUP_FILE=$(ls -t "${BACKUP_DIR}"/${APP_NAME}-*.sql.gz 2>/dev/null | head -1)
+  BACKUP_FILE=$(ls -t "${BACKUP_DIR}"/${APP_NAME}-*.sql.gz 2>/dev/null | head -1 || true)
   if [ -z "${BACKUP_FILE}" ]; then
     echo "ERROR: No backup files found in ${BACKUP_DIR}"
     exit 1
