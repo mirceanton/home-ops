@@ -9,7 +9,7 @@ TS="${4:-}"
 echo "[1/5] Suspending ${APP} HelmRelease in ${NS}..."
 flux suspend helmrelease "${APP}" -n "${NS}"
 
-echo "[2/5] Scaling down application pods fpr ${APP} in ${NS}...:
+echo "[2/5] Scaling down application pods for ${APP} in ${NS}..."
 kubectl scale deployment -l "app.kubernetes.io/instance=${APP}" -n "${NS}" --replicas=0
 kubectl wait pod -l "app.kubernetes.io/instance=${APP}" -n "${NS}" \
     --for=delete --timeout=120s 2>/dev/null || true
