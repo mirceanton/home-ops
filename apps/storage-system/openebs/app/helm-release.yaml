@@ -1,5 +1,4 @@
 ---
-
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -12,22 +11,15 @@ spec:
 
   values:
     localpv-provisioner:
-      localpv:
-        basePath: &hostPath /var/mnt/data
-        replicas: 1
-        enableLeaderElection: true
-        requests:
-          cpu: 20m
-          memory: 64Mi
-        limits:
-          memory: 128Mi
+      localpv: {enabled: false}
+      hostpathClass: { enabled: false }
+      analytics: { enabled: false }
 
-      hostpathClass:
-        enabled: true
-        name: openebs-hostpath
-        reclaimPolicy: Delete
-        isDefaultClass: true
-        basePath: *hostPath
+    zfs-localpv:
+      resources: {}
+      zfsController:
+        replicas: 1
+        resources: {}
 
     # ====================================================================
     # ====================== Disable EVERYTHING Else =====================
@@ -37,12 +29,13 @@ spec:
     loki: {enabled: false}
     engines:
       local:
+        zfs: {enabled: true}
         lvm: {enabled: false}
-        zfs: {enabled: false}
+        rawfile: {enabled: false}
       replicated:
         mayastor: {enabled: false}
     openebs-crds:
       csi:
         volumeSnapshots:
-          enabled: false
+          enabled: false  # CRDs deployed by snapshot-controller
           keep: false
