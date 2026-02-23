@@ -59,7 +59,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/v1/healthcheck
-                    port: 8080
+                    port: 6060
               readiness: *probe
               startup:
                 enabled: true
@@ -67,7 +67,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/v1/healthcheck
-                    port: 8080
+                    port: 6060
                   failureThreshold: 10
             resources:
               requests:
@@ -85,7 +85,7 @@ spec:
       app:
         ports:
           http:
-            port: 8080
+            port: 6060
 
     route:
       home:
