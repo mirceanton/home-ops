@@ -71,7 +71,7 @@ spec:
       gameMode: survival #? creative, survival, adventure, spectator
       pvp: false
       onlineMode: true
-      ops: "MrBorboto" #? comma separated list of operators
+      ops: "MrBorboto,bomkii" #? comma separated list of operators
       motd: "Badoink Minecraft Server"
       worldSaveName: "Badoink"
       viewDistance: 16
