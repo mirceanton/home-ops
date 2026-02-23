@@ -36,31 +36,6 @@ spec:
                   secretKeyRef:
                     name: booklore-secret
                     key: mariadb_password
-          nginx-config:
-            image:
-              repository: ghcr.io/booklore-app/booklore
-              tag: v2.0.0@sha256:954e4128d7ac1335b995b08bfc2d24362b416bf8b4204e9bee0c99b4cb8d1fd1
-            command:
-              - /bin/sh
-              - -c
-            args:
-              - "envsubst '$${BOOKLORE_PORT}' < /etc/nginx/nginx.conf > /config/nginx.conf"
-            env:
-              BOOKLORE_PORT: &httpPort 6060
-            resources:
-              requests:
-                cpu: 10m
-                memory: 32Mi
-              limits:
-                memory: 64Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ["ALL"]
-              readOnlyRootFilesystem: true
-              runAsUser: 100
-              runAsGroup: 101
-              fsGroup: 101
 
         containers:
           booklore:
@@ -106,41 +81,11 @@ spec:
                 drop: ["ALL"]
               readOnlyRootFilesystem: true
 
-          nginx:
-            image:
-              repository: ghcr.io/booklore-app/booklore
-              tag: v2.0.0@sha256:954e4128d7ac1335b995b08bfc2d24362b416bf8b4204e9bee0c99b4cb8d1fd1
-            command: ["nginx"]
-            args: ["-c", "/config/nginx.conf", "-g", "daemon off;"]
-            probes:
-              liveness: &nginxProbe
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /
-                    port: *httpPort
-              readiness: *nginxProbe
-            resources:
-              requests:
-                cpu: 10m
-                memory: 32Mi
-              limits:
-                memory: 64Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ["ALL"]
-              readOnlyRootFilesystem: true
-              runAsUser: 100
-              runAsGroup: 101
-              fsGroup: 101
-
     service:
       app:
         ports:
           http:
-            port: *httpPort
+            port: 8080
 
     route:
       home:
@@ -176,29 +121,6 @@ spec:
           booklore:
             booklore:
               - path: /bookdrop
-      nginx:
-        type: emptyDir
-        sizeLimit: 200Mi
-        advancedMounts:
-          booklore:
-            nginx:
-              - path: /config
-                subPath: config
-              - path: /var/lib/nginx/logs
-                subPath: log
-              - path: /var/lib/nginx/tmp
-                subPath: tmp
-            nginx-config:
-              - path: /config
-                subPath: config
-      nginx-run:
-        type: emptyDir
-        medium: Memory
-        sizeLimit: 100Mi
-        advancedMounts:
-          booklore:
-            nginx:
-              - path: /run/nginx
       tmpfs:
         type: emptyDir
         medium: Memory
