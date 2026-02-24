@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app whisper
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: whisper
+
+  values:
+    controllers:
+      whisper:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: onerahmet/openai-whisper-asr-webservice
+              tag: v1.9.1-gpu
+            env:
+              TZ: Europe/Bucharest
+              ASR_MODEL: small # tiny, base, small, medium, large, large-v2, large-v3
+              ASR_ENGINE: faster_whisper # faster_whisper or openai_whisper
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /docs
+                    port: &port 9000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+              readiness: *probe
+              startup: *probe
+
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+                nvidia.com/gpu: 1
+              limits:
+                #? RAM spikes during load, especially with large models, but should be released after init
+                memory: 8Gi
+                nvidia.com/gpu: 1
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              #? the NVIDIA container runtime injects CUDA libraries into the container at startup
+              readOnlyRootFilesystem: false
+              # capabilities:
+              #   drop: ["ALL"]
+
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      enableServiceLinks: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: whisper
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["whisper.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      cache:
+        existingClaim: whisper-cache
+        globalMounts:
+          - path: /root/.cache/
+            subPath: cache
+          - path: /root/.config
+            subPath: config
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
