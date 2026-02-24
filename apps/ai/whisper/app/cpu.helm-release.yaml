@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app whisper
+  name: &app whisper-cpu
 spec:
   interval: 30m
   chartRef:
@@ -12,20 +12,20 @@ spec:
 
   values:
     controllers:
-      whisper:
+      whisper-cpu:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
               repository: onerahmet/openai-whisper-asr-webservice
-              tag: v1.9.1-gpu
+              tag: v1.9.1
             env:
               # https://ahmetoner.com/whisper-asr-webservice/
               TZ: Europe/Bucharest
-              ASR_MODEL: small # tiny, base, small, medium, large, large-v2, large-v3
+              ASR_MODEL: large # tiny, base, small, medium, large, large-v2, large-v3
               ASR_ENGINE: faster_whisper # faster_whisper, openai_whisper, whisperx
-              MODEL_IDLE_TIMEOUT: 300 # seconds to keep the model loaded after last request, set to 0 to disable unloading
+              MODEL_IDLE_TIMEOUT: 60 # seconds to keep the model loaded after last request, set to 0 to disable unloading
               HF_TOKEN:
                 valueFrom:
                   secretKeyRef:
@@ -50,21 +50,14 @@ spec:
               requests:
                 cpu: 500m
                 memory: 1Gi
-                nvidia.com/gpu: 1
               limits:
-                #? RAM spikes during load, especially with large models, but should be released after init
                 memory: 8Gi
-                nvidia.com/gpu: 1
 
             securityContext:
               allowPrivilegeEscalation: false
-              #? the NVIDIA container runtime injects CUDA libraries into the container at startup
               readOnlyRootFilesystem: false
-              # capabilities:
-              #   drop: ["ALL"]
 
     defaultPodOptions:
-      runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
         seccompProfile:
@@ -72,14 +65,14 @@ spec:
 
     service:
       app:
-        controller: whisper
+        controller: whisper-cpu
         ports:
           http:
             port: *port
 
     route:
       home:
-        hostnames: ["whisper.home.mirceanton.com"]
+        hostnames: ["whisper-cpu.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
