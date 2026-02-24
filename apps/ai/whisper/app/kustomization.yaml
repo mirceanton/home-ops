@@ -4,8 +4,6 @@ kind: Kustomization
 
 resources:
   - ./externalsecret.yaml
+  - ./helm-release.yaml
   - ./oci-repository.yaml
   - ./pvc.yaml
-
-  - ./cpu.helm-release.yaml
-  - ./gpu.helm-release.yaml
