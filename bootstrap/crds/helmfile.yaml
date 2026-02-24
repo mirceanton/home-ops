@@ -27,7 +27,7 @@ releases:
   - name: grafana-operator
     namespace: monitoring-system
     chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
-    version: 5.21.4
+    version: 5.22.0
 
   - name: kube-prometheus-stack
     namespace: monitoring-system
