@@ -24,6 +24,7 @@ spec:
               TZ: Europe/Bucharest
               ASR_MODEL: small # tiny, base, small, medium, large, large-v2, large-v3
               ASR_ENGINE: faster_whisper # faster_whisper or openai_whisper
+              MODEL_IDLE_TIMEOUT: 300 # seconds to keep the model loaded after last request, set to 0 to disable unloading
 
             probes:
               liveness: &probe
