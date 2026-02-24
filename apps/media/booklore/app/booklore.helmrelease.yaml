@@ -41,7 +41,7 @@ spec:
           booklore:
             image:
               repository: ghcr.io/booklore-app/booklore
-              tag: v2.0.0@sha256:954e4128d7ac1335b995b08bfc2d24362b416bf8b4204e9bee0c99b4cb8d1fd1
+              tag: v2.0.1@sha256:e5c51133c0c50e97004bf711a34521c698e4b27b6847e54fe304c08ff4aa8ee1
             command: ["java"]
             args: ["-jar", "/app/app.jar"]
             env:
