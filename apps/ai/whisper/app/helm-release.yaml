@@ -21,9 +21,10 @@ spec:
               repository: onerahmet/openai-whisper-asr-webservice
               tag: v1.9.1-gpu
             env:
+              # https://ahmetoner.com/whisper-asr-webservice/
               TZ: Europe/Bucharest
-              ASR_MODEL: small # tiny, base, small, medium, large, large-v2, large-v3
-              ASR_ENGINE: whisperx # faster_whisper, openai_whisper, whisperx
+              ASR_MODEL: medium # tiny, base, small, medium, large, large-v2, large-v3
+              ASR_ENGINE: faster_whisper # faster_whisper, openai_whisper, whisperx
               MODEL_IDLE_TIMEOUT: 300 # seconds to keep the model loaded after last request, set to 0 to disable unloading
               HF_TOKEN:
                 valueFrom:
