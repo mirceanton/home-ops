@@ -13,6 +13,7 @@ spec:
     controllers:
       homer:
         replicas: 1
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -83,7 +84,7 @@ spec:
               - path: /tmp/git
             app:
               - path: /www/assets/icons
-                subPath: icons/svg
+                subPath: icons
                 readOnly: true
       tmp:
         type: emptyDir
