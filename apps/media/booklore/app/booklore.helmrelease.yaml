@@ -89,12 +89,12 @@ spec:
 
     route:
       home:
-        hostnames: ["booklore.home.mirceanton.com"]
+        hostnames: ["booklore.home.mirceanton.com", "books.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
       tailscale:
-        hostnames: ["booklore.ts.mirceanton.com"]
+        hostnames: ["booklore.ts.mirceanton.com", "books.ts.mirceanton.com"]
         parentRefs:
           - name: envoy-tailscale
             namespace: network-system
