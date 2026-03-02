@@ -25,6 +25,7 @@ spec:
       DRAGONFLY_CPU_REQUEST: 1000m
       DRAGONFLY_MEMORY_REQUEST: 2Gi
       DRAGONFLY_MEMORY_LIMIT: 2Gi
+      DRAGONFLY_PROACTOR_THREADS: 4
 
   dependsOn:
     - name: dragonfly-operator

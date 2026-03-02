@@ -20,7 +20,7 @@ spec:
     - --maxmemory=$(MAX_MEMORY)Mi
     - --dbnum=1
     - --dbfilename=
-    - --proactor_threads=4
+    - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:-1}
     - --version_check=false
     - --cluster_mode=emulated
     - --lock_on_hashtags
