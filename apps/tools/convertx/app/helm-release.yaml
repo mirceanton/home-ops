@@ -23,8 +23,8 @@ spec:
             env:
               TZ: Europe/Bucharest
               AUTO_DELETE_EVERY_N_HOURS: "1"
-              ALLOW_UNAUTHENTICATED: "false"
-              ACCOUNT_REGISTRATION: "true"
+              ALLOW_UNAUTHENTICATED: "true"
+              ACCOUNT_REGISTRATION: "false"
               HTTP_ALLOWED: "false"
               JWT_SECRET:
                 valueFrom:
