@@ -9,7 +9,6 @@ resources:
   - ./oci-repository.yaml
   - ./immich-server.helm-release.yaml
   - ./immich-ml.helm-release.yaml
-  - ./pvc.yaml
 
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
