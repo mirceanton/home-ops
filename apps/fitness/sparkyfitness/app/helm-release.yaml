@@ -1,0 +1,207 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sparkyfitness
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: sparkyfitness
+
+  values:
+    controllers:
+      server:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: uri
+        containers:
+          app:
+            image:
+              repository: docker.io/codewithcj/sparkyfitness_server
+              tag: latest
+            env:
+              SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
+              SPARKY_FITNESS_DISABLE_SIGNUP: "false"
+              SPARKY_FITNESS_EXTRA_TRUSTED_ORIGINS: ""
+              ALLOW_PRIVATE_NETWORK_CORS: "false"
+              SPARKY_FITNESS_LOG_LEVEL: info
+
+              # SPARKY_FITNESS_ADMIN_EMAIL: ${SPARKY_FITNESS_ADMIN_EMAIL} #User with this email can access the admin panel
+              # SPARKY_FITNESS_EMAIL_HOST: ${SPARKY_FITNESS_EMAIL_HOST}
+              # SPARKY_FITNESS_EMAIL_PORT: ${SPARKY_FITNESS_EMAIL_PORT}
+              # SPARKY_FITNESS_EMAIL_SECURE: ${SPARKY_FITNESS_EMAIL_SECURE}
+              # SPARKY_FITNESS_EMAIL_USER: ${SPARKY_FITNESS_EMAIL_USER}
+              # SPARKY_FITNESS_EMAIL_PASS: ${SPARKY_FITNESS_EMAIL_PASS}
+              # SPARKY_FITNESS_EMAIL_FROM: ${SPARKY_FITNESS_EMAIL_FROM}
+
+              SPARKY_FITNESS_DB_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: host
+              SPARKY_FITNESS_DB_PORT:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: port
+              SPARKY_FITNESS_DB_NAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: dbname
+              SPARKY_FITNESS_DB_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: username
+              SPARKY_FITNESS_DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: password
+              SPARKY_FITNESS_APP_DB_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: username
+              SPARKY_FITNESS_APP_DB_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: password
+
+              SPARKY_FITNESS_API_ENCRYPTION_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-secret
+                    key: SPARKY_FITNESS_API_ENCRYPTION_KEY
+              BETTER_AUTH_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-secret
+                    key: BETTER_AUTH_SECRET
+
+            probes:
+              liveness: { enabled: true }
+              readiness: { enabled: true }
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+      frontend:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/codewithcj/sparkyfitness
+              tag: latest
+            env:
+              SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
+              SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
+              SPARKY_FITNESS_SERVER_PORT: "3010"
+
+            probes:
+              liveness: { enabled: true }
+              readiness: { enabled: true }
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+      garminn:
+        annotations: { reloader.stakater.com/auto: "true" }
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-postgres-app
+                    key: uri
+          wait-for-server:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["http", "http://sparkyfitness-server:3010/health"]
+        containers:
+          app:
+            image:
+              repository: codewithcj/sparkyfitness_garmin
+              tag: latest
+            env:
+              GARMIN_SERVICE_PORT: "8080"
+              GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8080
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+    service:
+      server:
+        controller: server
+        ports: { http: { port: 3010 } }
+      frontend:
+        controller: frontend
+        ports: { http: { port: 80 } }
+      garminn:
+        controller: garminn
+        ports: { http: { port: 8080 } }
+
+    route:
+      home:
+        hostnames: ["fitness.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: frontend
+                port: http
+      tailscale:
+        hostnames: ["fitness.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: frontend
+                port: http
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        advancedMounts:
+          server:
+            app:
+              - subPath: backup
+                path: /app/SparkyFitnessServer/backup
+              - subPath: uploads
+                path: /app/SparkyFitnessServer/uploads

@@ -1,0 +1,39 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: sparkyfitness-postgres
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:18
+
+  bootstrap:
+    initdb:
+      database: sparkyfitness
+      owner: sparkyfitness
+  managed:
+    roles:
+      - name: sparkyfitness
+        ensure: present
+        login: true
+        superuser: true
+
+  storage:
+    storageClass: openebs-zfs
+    size: 5Gi
+
+  walStorage:
+    storageClass: openebs-zfs
+    size: 1Gi
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 128Mi
+    limits:
+      memory: 2Gi
+
+  postgresql:
+    pg_hba:
+      - host all all 10.244.0.0/16 scram-sha-256
