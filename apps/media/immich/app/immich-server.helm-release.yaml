@@ -107,16 +107,3 @@ spec:
         existingClaim: immich
         globalMounts:
           - path: /data
-      # data:
-      #   type: nfs
-      #   server: nas.stor.h.mirceanton.com
-      #   path: /mnt/tank/Apps/Immich
-      #   globalMounts:
-      #     - path: /data
-      # photos:
-      #   type: nfs
-      #   server: nas.stor.h.mirceanton.com
-      #   path: /mnt/tank/Media/Photos
-      #   globalMounts:
-      #     - path: /mnt/external/media_photos
-      #       readOnly: true
