@@ -104,15 +104,19 @@ spec:
 
     persistence:
       data:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Apps/Immich
+        existingClaim: immich
         globalMounts:
           - path: /data
-      photos:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Photos
-        globalMounts:
-          - path: /mnt/external/media_photos
-            readOnly: true
+      # data:
+      #   type: nfs
+      #   server: nas.stor.h.mirceanton.com
+      #   path: /mnt/tank/Apps/Immich
+      #   globalMounts:
+      #     - path: /data
+      # photos:
+      #   type: nfs
+      #   server: nas.stor.h.mirceanton.com
+      #   path: /mnt/tank/Media/Photos
+      #   globalMounts:
+      #     - path: /mnt/external/media_photos
+      #       readOnly: true
