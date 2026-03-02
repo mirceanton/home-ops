@@ -6,3 +6,5 @@ namespace: tools
 resources:
   - ./namespace.yaml
   - ./convertx
+  - ./omni-tools
+  - ./openspeedtest

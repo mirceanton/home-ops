@@ -2,14 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: omni-tools
+  name: openspeedtest
 spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: development
+  targetNamespace: tools
 
-  path: ./apps/development/omni-tools/app
+  path: ./apps/tools/openspeedtest/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -18,4 +18,4 @@ spec:
   postBuild:
     substitute: {}
 
-  dependsOn: []
+  decryption: {provider: sops}

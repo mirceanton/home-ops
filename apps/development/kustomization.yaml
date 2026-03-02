@@ -6,4 +6,3 @@ namespace: development
 resources:
   - ./namespace.yaml
   - ./atuin
-  - ./omni-tools
