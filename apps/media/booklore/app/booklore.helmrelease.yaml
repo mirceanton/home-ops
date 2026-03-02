@@ -101,7 +101,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: booklore
+        existingClaim: ${APP}
         advancedMounts:
           booklore:
             booklore:

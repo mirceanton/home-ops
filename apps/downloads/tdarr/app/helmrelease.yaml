@@ -103,23 +103,16 @@ spec:
                 subPath: config
               - path: /app/server
                 subPath: server
-
-      movies:
+      media:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Movies
+        path: /mnt/tank/Media/
         globalMounts:
-          - path: /data/media/movies
-      tv:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/TV_Shows
-        globalMounts:
-          - path: /data/media/tv
-
-      shared:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/.tdarr
+          - path: /data/media/
+      cache:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
+        size: 10Gi
         globalMounts:
           - path: /mnt/cache

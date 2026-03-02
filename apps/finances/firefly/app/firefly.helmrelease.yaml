@@ -188,7 +188,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: firefly
+        existingClaim: ${APP}
         advancedMounts:
           firefly:
             app:

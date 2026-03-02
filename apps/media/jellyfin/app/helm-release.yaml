@@ -83,7 +83,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: jellyfin
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       tvshows:

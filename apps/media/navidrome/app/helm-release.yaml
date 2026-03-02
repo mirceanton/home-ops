@@ -82,7 +82,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: navidrome
+        existingClaim: ${APP}
         globalMounts:
           - path: /data
       music:

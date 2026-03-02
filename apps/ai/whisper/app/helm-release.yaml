@@ -86,7 +86,10 @@ spec:
 
     persistence:
       cache:
-        existingClaim: whisper-cache
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
+        size: 20Gi
         globalMounts:
           - path: /root/.cache/
             subPath: cache

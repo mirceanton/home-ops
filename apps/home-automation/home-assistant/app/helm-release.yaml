@@ -66,11 +66,14 @@ spec:
 
     persistence:
       config:
-        existingClaim: home-assistant
+        existingClaim: ${APP}
         globalMounts:
           - path: /config
       config-cache:
-        existingClaim: home-assistant-cache
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
+        size: 1Gi
         globalMounts:
           - path: /config/.venv
       tmp:

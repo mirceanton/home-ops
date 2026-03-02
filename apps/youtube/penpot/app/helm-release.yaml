@@ -160,7 +160,7 @@ spec:
 
     persistence:
       assets:
-        existingClaim: penpot
+        existingClaim: ${APP}
         advancedMounts:
           frontend:
             app:

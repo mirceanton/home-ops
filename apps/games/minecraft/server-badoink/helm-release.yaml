@@ -54,7 +54,7 @@ spec:
     persistence:
       dataDir:
         enabled: true
-        existingClaim: *app
+        existingClaim: ${APP}
 
     serviceAnnotations:
       mc-router.itzg.me/externalServerName: badoink-mc.home.mirceanton.com
