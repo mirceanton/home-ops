@@ -6,5 +6,9 @@ namespace: storage-system
 resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
+
+  - ./zfs-scrub.cronjob.yaml
+  - ./zfs-trim.cronjob.yaml
+
   - ./snapshot-class.yaml
   - ./storage-class.yaml

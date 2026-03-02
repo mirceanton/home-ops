@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: zfs-trim-data-pool
+  namespace: storage-system
+spec:
+  schedule: "0 2 1 * *" # 1st of every month at 02:00
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          nodeName: home-ops
+          hostIPC: true
+          hostNetwork: true
+          hostPID: true
+          containers:
+            - name: zfs-trim
+              image: debian
+              command:
+                - sh
+                - -c
+                - |
+                  ZPOOL="nsenter --mount=/proc/1/ns/mnt -- /usr/local/sbin/zpool"
+
+                  if $ZPOOL status data-pool | grep -q "trim in progress"; then
+                    echo "Trim already in progress, exiting."
+                    exit 0
+                  fi
+
+                  $ZPOOL trim data-pool
+                  echo "Trim started, waiting for completion..."
+                  while $ZPOOL status data-pool | grep -q "trim in progress"; do
+                    echo "Trim still in progress, waiting..."
+                    sleep 60
+                  done
+                  $ZPOOL status data-pool
+              securityContext:
+                privileged: true

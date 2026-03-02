@@ -1,0 +1,43 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: zfs-scrub-data-pool
+  namespace: storage-system
+spec:
+  schedule: "0 2 * * 0" # Every Sunday at 02:00
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          nodeName: home-ops
+          hostIPC: true
+          hostNetwork: true
+          hostPID: true
+          containers:
+            - name: zfs-scrub
+              image: debian
+              command:
+                - sh
+                - -c
+                - |
+                  ZPOOL="nsenter --mount=/proc/1/ns/mnt -- /usr/local/sbin/zpool"
+
+                  if $ZPOOL status data-pool | grep -q "scrub in progress"; then
+                    echo "Scrub already in progress, exiting."
+                    exit 0
+                  fi
+
+                  $ZPOOL scrub data-pool
+                  echo "Scrub started, waiting for completion..."
+                  while $ZPOOL status data-pool | grep -q "scrub in progress"; do
+                    echo "Scrub still in progress, waiting..."
+                    sleep 5
+                  done
+                  $ZPOOL status data-pool
+              securityContext:
+                privileged: true
