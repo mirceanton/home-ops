@@ -8,7 +8,7 @@ spec:
   url: oci://ghcr.io/itzg/minecraft-server-charts/minecraft
   interval: 5m
   ref:
-    tag: 5.1.1
+    tag: 5.1.2
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
