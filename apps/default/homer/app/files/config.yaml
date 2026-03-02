@@ -78,14 +78,26 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/firefly-iii.webp"
 
-  - name: "Miscellaneous"
-    icon: "fas fa-code"
+  - name: "Tools"
+    icon: "fas fa-tools"
     items:
+      - name: ConvertX
+        subtitle: "File Converter"
+        url: "https://convert.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/convertx.webp"
+
       - name: "Omni-Tools"
         subtitle: "Various Utilities"
         url: "https://tools.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/omni-tools.webp"
+
+      - name: "OpenSpeedTest"
+        subtitle: "Network Speed Test"
+        url: "https://tools.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/openspeedtest.webp"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
@@ -97,31 +109,31 @@ services:
         logo: "assets/icons/webp/qui.webp"
 
       - name: "Sonarr"
-        subtitle: "TV Shows Management"
+        subtitle: "TV Shows"
         url: "https://sonarr.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/sonarr.webp"
 
       - name: "Radarr"
-        subtitle: "Movie Management"
+        subtitle: "Movies"
         url: "https://radarr.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/radarr.webp"
 
       - name: "Lidarr"
-        subtitle: "Music Management"
+        subtitle: "Music"
         url: "https://lidarr.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/lidarr.webp"
 
-      - name: "Shelfmark"
-        subtitle: "Bookmarks Manager"
+      - name: "Shelfmarrk"
+        subtitle: "Books"
         url: "https://shelfmark.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/shelfmark.webp"
 
       - name: "Bazarr"
-        subtitle: "Subtitle Management"
+        subtitle: "Subtitles"
         url: "https://bazarr.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/bazarr.webp"
@@ -142,7 +154,7 @@ services:
     icon: "fab fa-youtube"
     items:
       - name: "Penpot"
-        subtitle: "Design Tool"
+        subtitle: "Design Tool // Figma Alternative"
         url: "https://penpot.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/penpot.webp"
