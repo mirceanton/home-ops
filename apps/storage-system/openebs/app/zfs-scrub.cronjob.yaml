@@ -2,42 +2,41 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: zfs-scrub-data-pool
-  namespace: storage-system
+  name: data-pool-zfs-scrubber
 spec:
-  schedule: "0 2 * * 0" # Every Sunday at 02:00
-  concurrencyPolicy: Forbid
+  schedule: "0 3 * * 0" # Every Sunday at 3 AM
+
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         spec:
-          restartPolicy: OnFailure
-          nodeName: home-ops
-          hostIPC: true
-          hostNetwork: true
-          hostPID: true
+          nodeSelector: {kubernetes.io/hostname: "home-ops"}
+          restartPolicy: Never
+
           containers:
-            - name: zfs-scrub
-              image: debian
-              command:
-                - sh
-                - -c
-                - |
-                  ZPOOL="nsenter --mount=/proc/1/ns/mnt -- /usr/local/sbin/zpool"
-
-                  if $ZPOOL status data-pool | grep -q "scrub in progress"; then
-                    echo "Scrub already in progress, exiting."
-                    exit 0
-                  fi
-
-                  $ZPOOL scrub data-pool
-                  echo "Scrub started, waiting for completion..."
-                  while $ZPOOL status data-pool | grep -q "scrub in progress"; do
-                    echo "Scrub still in progress, waiting..."
-                    sleep 5
-                  done
-                  $ZPOOL status data-pool
+            - name: zfs-scrubber
+              image: ghcr.io/heavybullets8/zfs-scrubber:1.0.9@sha256:2e63ef0fb0f6a34aff2f48faeffd848e6c693a062bb0436f266d02dee717e114
+              env:
+                - name: "ACTION"
+                  value: "scrub"
+                - name: "ZFS_POOL"
+                  value: "data-pool"
+                - name: "PUSHOVER_NOTIFICATION"
+                  value: "false"
+                - name: "TALOS_VERSION"
+                  value: v1.12.4
               securityContext:
                 privileged: true
+              volumeMounts:
+                - name: dev
+                  mountPath: /dev/zfs
+
+          volumes:
+            - name: dev
+              hostPath:
+                path: /dev/zfs

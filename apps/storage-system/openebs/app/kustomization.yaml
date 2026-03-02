@@ -8,7 +8,6 @@ resources:
   - ./oci-repository.yaml
 
   - ./zfs-scrub.cronjob.yaml
-  - ./zfs-trim.cronjob.yaml
 
   - ./snapshot-class.yaml
   - ./storage-class.yaml
