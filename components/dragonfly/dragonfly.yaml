@@ -1,0 +1,34 @@
+---
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: ${DRAGONFLY_NAME:${APP}-dragonfly}
+spec:
+  image: ghcr.io/dragonflydb/dragonfly:v1.37.0@sha256:84b1009aee0b68327758bce8e99ed514f782d713353acc46caf5738feaa481d6
+  replicas: 1
+
+  env:
+    - name: MAX_MEMORY
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: 1Mi
+
+  args:
+    - "--bind=::"
+    - "--admin_bind=::"
+    - --maxmemory=$(MAX_MEMORY)Mi
+    - --dbnum=1
+    - --dbfilename=
+    - --proactor_threads=4
+    - --version_check=false
+    - --cluster_mode=emulated
+    - --lock_on_hashtags
+    - --default_lua_flags=allow-undeclared-keys
+
+  resources:
+    requests:
+      cpu: ${DRAGONFLY_CPU_REQUEST:-100m}
+      memory: ${DRAGONFLY_MEMORY_REQUEST:-512Mi}
+    limits:
+      memory: ${DRAGONFLY_MEMORY_LIMIT:-512Mi}

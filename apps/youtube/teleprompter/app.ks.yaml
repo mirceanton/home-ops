@@ -10,13 +10,16 @@ spec:
   targetNamespace: youtube
 
   path: ./apps/youtube/teleprompter/app
+  components:
+    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
 
   postBuild:
-    substitute: {}
+    substitute:
+      APP: teleprompter
 
   dependsOn:
     - name: dragonfly-operator

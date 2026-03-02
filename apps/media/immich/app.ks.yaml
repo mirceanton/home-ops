@@ -12,6 +12,7 @@ spec:
   path: ./apps/media/immich/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,7 +22,12 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 100Gi
+      DRAGONFLY_CPU_REQUEST: 1000m
+      DRAGONFLY_MEMORY_REQUEST: 2Gi
+      DRAGONFLY_MEMORY_LIMIT: 2Gi
 
   dependsOn:
+    - name: dragonfly-operator
+      namespace: database-system
     - name: cloudnative-pg-operator
       namespace: database-system

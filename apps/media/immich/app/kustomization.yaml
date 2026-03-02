@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ./cnpg.yaml
-  - ./dragonfly.yaml
 
   - ./oci-repository.yaml
   - ./immich-server.helm-release.yaml

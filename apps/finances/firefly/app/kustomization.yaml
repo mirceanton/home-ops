@@ -13,7 +13,6 @@ resources:
   - ./postgres-backup.cronjob.yaml
   - ./postgres-restore.cronjob.yaml
 
-  - ./dragonfly.yaml
 
 configMapGenerator:
   - name: firefly-postgres-scripts

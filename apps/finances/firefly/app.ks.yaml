@@ -13,6 +13,7 @@ spec:
   path: ./apps/finances/firefly/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -27,6 +28,8 @@ spec:
 
   decryption: {provider: sops}
   dependsOn:
+    - name: dragonfly-operator
+      namespace: database-system
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: openebs

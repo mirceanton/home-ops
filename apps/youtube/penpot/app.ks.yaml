@@ -13,6 +13,7 @@ spec:
   path: ./apps/youtube/penpot/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
