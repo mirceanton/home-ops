@@ -1,0 +1,33 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app convertx
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: tools
+
+  path: ./apps/tools/convertx/app
+  components:
+    - ../../../../components/volsync/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
+
+  decryption: {provider: sops}
+  dependsOn:
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: openebs
+      namespace: storage-system
+    - name: volsync
+      namespace: storage-system
