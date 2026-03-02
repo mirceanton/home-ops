@@ -154,8 +154,8 @@ spec:
               repository: codewithcj/sparkyfitness_garmin
               tag: latest
             env:
-              GARMIN_SERVICE_PORT: "8080"
-              GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8080
+              GARMIN_SERVICE_PORT: "8000"
+              GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000
 
             resources:
               requests:
@@ -173,7 +173,7 @@ spec:
         ports: { http: { port: 80 } }
       garminn:
         controller: garminn
-        ports: { http: { port: 8080 } }
+        ports: { http: { port: 8000 } }
 
     route:
       home:
