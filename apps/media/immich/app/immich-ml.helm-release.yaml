@@ -94,6 +94,7 @@ spec:
       cache:
         type: persistentVolumeClaim
         accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
         size: 10Gi
         globalMounts:
           - path: /cache
