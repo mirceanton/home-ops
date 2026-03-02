@@ -127,7 +127,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: karakeep
+        existingClaim: ${APP}
         advancedMounts:
           karakeep:
             app: [{path: /data}]

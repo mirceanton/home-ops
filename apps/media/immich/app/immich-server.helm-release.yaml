@@ -104,6 +104,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: immich
+        existingClaim: ${APP}
         globalMounts:
           - path: /data
