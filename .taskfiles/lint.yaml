@@ -21,4 +21,4 @@ tasks:
 
   yaml:
     desc: Format YAML files across the project
-    cmd: yamlfmt {{.CLI_ARGS}} **/*.yaml
+    cmd: yamlfmt -dstar **/*.yaml {{.CLI_ARGS}}
