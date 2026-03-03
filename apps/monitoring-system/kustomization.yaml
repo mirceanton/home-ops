@@ -5,7 +5,12 @@ namespace: monitoring-system
 
 resources:
   - ./namespace.yaml
-  - ./grafana
+
+  # Monitoring Stack
   - ./kube-prometheus-stack
+  - ./grafana
+
+  # Exporters
+  - ./ipmi-exporter
   - ./mikrotik-exporter
   - ./zfs-exporter
