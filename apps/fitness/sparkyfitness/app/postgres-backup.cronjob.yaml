@@ -2,13 +2,12 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: atuin-postgres-restore
+  name: sparkyfitness-postgres-backup
 spec:
-  suspend: true # Disabled - to be triggered manually when needed
-  schedule: "0 0 31 2 *" # February 31st = never runs
+  schedule: "0 3 * * *" # Daily at 3 AM
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
 
   jobTemplate:
     spec:
@@ -21,38 +20,38 @@ spec:
             fsGroup: 568
 
           containers:
-            - name: restore
+            - name: backup
               image: docker.io/library/postgres:18
-              command: ["/bin/bash", "/scripts/restore.sh"]
+              command: ["/bin/bash", "/scripts/backup.sh"]
               env:
                 - name: APP_NAME
-                  value: atuin
+                  value: sparkyfitness
                 - name: BACKUP_DIR
-                  value: /backup/atuin
+                  value: /backup/sparkyfitness
                 - name: PGHOST
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-app
+                      name: sparkyfitness-postgres-app
                       key: host
                 - name: PGPORT
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-app
+                      name: sparkyfitness-postgres-app
                       key: port
                 - name: PGUSER
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-app
+                      name: sparkyfitness-postgres-app
                       key: username
                 - name: PGDATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-app
+                      name: sparkyfitness-postgres-app
                       key: dbname
                 - name: PGPASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: atuin-postgres-app
+                      name: sparkyfitness-postgres-app
                       key: password
 
               volumeMounts:
@@ -61,18 +60,17 @@ spec:
                   readOnly: true
                 - name: backup
                   mountPath: /backup
-                  readOnly: true
 
               securityContext:
                 allowPrivilegeEscalation: false
-                readOnlyRootFilesystem: true
                 capabilities:
                   drop: ["ALL"]
+                readOnlyRootFilesystem: true
 
           volumes:
             - name: scripts
               configMap:
-                name: atuin-postgres-scripts
+                name: sparkyfitness-postgres-scripts
                 defaultMode: 0755
             - name: backup
               nfs:

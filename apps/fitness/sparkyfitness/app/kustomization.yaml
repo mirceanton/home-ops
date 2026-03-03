@@ -4,7 +4,20 @@ kind: Kustomization
 
 resources:
   - ./cnpg.yaml
+  - ./postgres-backup.cronjob.yaml
+  - ./postgres-restore.cronjob.yaml
 
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
+
+configMapGenerator:
+  - name: sparkyfitness-postgres-scripts
+    files:
+      - backup.sh=../../../../.scripts/postgres/backup.sh
+      - restore.sh=../../../../.scripts/postgres/restore.sh
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
