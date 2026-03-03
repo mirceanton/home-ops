@@ -9,7 +9,7 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   resyncPeriod: 5m
-  json: >
+  json: >-
     {
       "annotations": {
         "list": [

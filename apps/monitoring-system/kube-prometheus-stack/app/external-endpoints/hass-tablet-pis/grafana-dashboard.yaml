@@ -8,7 +8,7 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   resyncPeriod: 5m
-  json: >
+  json: >-
     {
       "annotations": {
         "list": [
@@ -475,7 +475,8 @@ spec:
                 "type": "prometheus",
                 "uid": "${datasource}"
               },
-              "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"node-exporter\", instance=~\"(livingroom|mirkdesk)-pi.*\", mountpoint=\"/\", fstype!=\"tmpfs\"} / node_filesystem_size_bytes{job=\"node-exporter\", instance=~\"(livingroom|mirkdesk)-pi.*\", mountpoint=\"/\", fstype!=\"tmpfs\"})",
+              "expr": "100 * (1 - node_filesystem_avail_bytes{job=\"node-exporter\", instance=~\"(livingroom|mirkdesk)-pi.*\", mountpoint=\"/\", fstype!=\"tmpfs\"} / node_filesystem_size_bytes{job=\"node-exporter\",
+    instance=~\"(livingroom|mirkdesk)-pi.*\", mountpoint=\"/\", fstype!=\"tmpfs\"})",
               "legendFormat": "{{ instance }}",
               "refId": "A"
             }
