@@ -29,7 +29,5 @@ spec:
       memory: 512Mi
 
   postgresql:
-    shared_preload_libraries:
-      - pgaudit
     pg_hba:
       - host all all 10.244.0.0/16 scram-sha-256
