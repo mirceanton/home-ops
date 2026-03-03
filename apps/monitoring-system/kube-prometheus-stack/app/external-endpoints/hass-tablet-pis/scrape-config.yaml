@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: node-exporter-hass-tablet-pis
+spec:
+  staticConfigs:
+    - targets:
+        - livingroom-pi.utrst.h.mirceanton.com:9100
+        - mirkdesk-pi.utrst.h.mirceanton.com:9100
+      labels:
+        job: node-exporter
+        node_type: raspberry_pi
+  metricsPath: /metrics
+  scrapeInterval: 30s
+  scrapeTimeout: 10s

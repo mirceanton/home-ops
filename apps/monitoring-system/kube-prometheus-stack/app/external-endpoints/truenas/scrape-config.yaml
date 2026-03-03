@@ -1,0 +1,22 @@
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: truenas-exporters
+spec:
+  staticConfigs:
+    - targets:
+        - nas.mgmt.h.mirceanton.com:9100
+      labels:
+        job: node-exporter
+    - targets:
+        - nas.mgmt.h.mirceanton.com:9633
+      labels:
+        job: smartctl-exporter
+    - targets:
+        - nas.mgmt.h.mirceanton.com:8080
+      labels:
+        job: cadvisor
+  metricsPath: /metrics
+  scrapeInterval: 30s
+  scrapeTimeout: 10s

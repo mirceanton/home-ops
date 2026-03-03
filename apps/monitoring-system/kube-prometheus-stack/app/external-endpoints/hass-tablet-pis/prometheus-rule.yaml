@@ -1,0 +1,130 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: raspberry-pi-alerts
+spec:
+  groups:
+    - name: raspberry-pi
+      rules:
+        # -----------------------------------------------------------------------
+        # Availability
+        # -----------------------------------------------------------------------
+        - alert: RaspberryPiDown
+          expr: up{job="node-exporter", node_type="raspberry_pi"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Raspberry Pi {{ $labels.instance }} is unreachable"
+            description: "No metrics received from {{ $labels.instance }} for more than 2 minutes."
+
+        # -----------------------------------------------------------------------
+        # CPU
+        # -----------------------------------------------------------------------
+        - alert: RaspberryPiHighCPU
+          expr: >
+            (1 - avg without(cpu, mode)(
+              rate(node_cpu_seconds_total{mode="idle", job="node-exporter", node_type="raspberry_pi"}[5m])
+            )) * 100 > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU on {{ $labels.instance }}"
+            description: "CPU usage has been above 80% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf \"%.1f\" }}%)"
+
+        - alert: RaspberryPiHighIOWait
+          expr: >
+            avg without(cpu)(
+              rate(node_cpu_seconds_total{mode="iowait", job="node-exporter", node_type="raspberry_pi"}[5m])
+            ) * 100 > 20
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High IO wait on {{ $labels.instance }}"
+            description: "IO wait above 20% for 5 minutes on {{ $labels.instance }} ({{ $value | printf \"%.1f\" }}%) — possible SD card degradation."
+
+        # -----------------------------------------------------------------------
+        # Memory
+        # -----------------------------------------------------------------------
+        - alert: RaspberryPiHighMemory
+          expr: >
+            (1 - (
+              node_memory_MemAvailable_bytes{job="node-exporter", node_type="raspberry_pi"}
+              / node_memory_MemTotal_bytes{job="node-exporter", node_type="raspberry_pi"}
+            )) * 100 > 85
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage on {{ $labels.instance }}"
+            description: "Memory usage above 85% for 5 minutes on {{ $labels.instance }} ({{ $value | printf \"%.1f\" }}%)"
+
+        # -----------------------------------------------------------------------
+        # Disk (SD card health)
+        # -----------------------------------------------------------------------
+        - alert: RaspberryPiLowDiskSpace
+          expr: >
+            (1 - (
+              node_filesystem_avail_bytes{job="node-exporter", node_type="raspberry_pi", fstype!~"tmpfs|overlay|squashfs|ramfs"}
+              / node_filesystem_size_bytes{job="node-exporter", node_type="raspberry_pi", fstype!~"tmpfs|overlay|squashfs|ramfs"}
+            )) * 100 > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Low disk space on {{ $labels.instance }}"
+            description: "{{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full on {{ $labels.instance }}"
+
+        - alert: RaspberryPiCriticalDiskSpace
+          expr: >
+            (1 - (
+              node_filesystem_avail_bytes{job="node-exporter", node_type="raspberry_pi", fstype!~"tmpfs|overlay|squashfs|ramfs"}
+              / node_filesystem_size_bytes{job="node-exporter", node_type="raspberry_pi", fstype!~"tmpfs|overlay|squashfs|ramfs"}
+            )) * 100 > 95
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Disk almost full on {{ $labels.instance }}"
+            description: "{{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full on {{ $labels.instance }}"
+
+        # SD card corruption: filesystem flipped to read-only by the kernel
+        - alert: RaspberryPiFilesystemReadOnly
+          expr: >
+            node_filesystem_readonly{job="node-exporter", node_type="raspberry_pi", fstype!~"tmpfs|overlay|squashfs|ramfs"} == 1
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Filesystem is read-only on {{ $labels.instance }}"
+            description: "{{ $labels.mountpoint }} ({{ $labels.fstype }}) is mounted read-only on {{ $labels.instance }} — likely SD card corruption."
+
+        # -----------------------------------------------------------------------
+        # Temperature (Pi 4 throttles at 80 °C, emergency shutdown ~85 °C)
+        # -----------------------------------------------------------------------
+        - alert: RaspberryPiHighTemperature
+          expr: >
+            max by (instance) (
+              node_thermal_zone_temp{job="node-exporter", node_type="raspberry_pi"}
+            ) > 75
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High temperature on {{ $labels.instance }}"
+            description: "CPU temperature is {{ $value | printf \"%.1f\" }}°C on {{ $labels.instance }} — approaching throttle threshold (80°C)."
+
+        - alert: RaspberryPiCriticalTemperature
+          expr: >
+            max by (instance) (
+              node_thermal_zone_temp{job="node-exporter", node_type="raspberry_pi"}
+            ) > 80
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical temperature on {{ $labels.instance }}"
+            description: "CPU temperature is {{ $value | printf \"%.1f\" }}°C on {{ $labels.instance }} — Pi is throttling. Check cooling."
