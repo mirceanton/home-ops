@@ -1,0 +1,57 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app ipmi-exporter
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: ipmi-exporter
+
+  valuesFrom:
+    - kind: Secret
+      name: ipmi-credentials
+      valuesKey: username
+      targetPath: modules.default.user
+    - kind: Secret
+      name: ipmi-credentials
+      valuesKey: password
+      targetPath: modules.default.pass
+
+  values:
+    fullnameOverride: *app
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+    modules:
+      default:
+        driver: "LAN_2_0"
+        privilege: "user"
+        collectors:
+          - bmc
+          - ipmi # temps, fans, voltages, etc.
+          - chassis # chassis status, power status, etc.
+
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      timeout: 10s
+      telemetryPath: /metrics
+
+    scrapeConfig:
+      enabled: true
+      mode: remote
+      scrapeInterval: 10s
+      scrapeTimeout: 5s
+      metricsPath: /ipmi # default is /metrics for local mode, /ipmi for remote mode
+      scheme: HTTP # HTTP or HTTPS
+      staticConfigs:
+        - targets:
+            - bmc-nas.mgmt.h.mirceanton.com

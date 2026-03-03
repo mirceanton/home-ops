@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: ipmi-exporter
+spec:
+  interval: 15m
+  url: oci://ghcr.io/prometheus-community/charts/prometheus-ipmi-exporter
+  ref:
+    tag: "0.8.0"
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy

@@ -1,0 +1,81 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ipmi-exporter
+spec:
+  groups:
+    - name: ipmi.rules
+      rules:
+        # ---- BMC Reachability ----
+        - alert: IPMITargetDown
+          expr: ipmi_up{collector="ipmi"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "IPMI target {{ $labels.instance }} is unreachable"
+            description: >-
+              The IPMI exporter has been unable to scrape
+              {{ $labels.instance }} for over 5 minutes.
+              Check BMC network connectivity and credentials.
+
+        - alert: IPMIScrapeError
+          expr: up{job=~".*ipmi.*"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "IPMI exporter scrape failing"
+            description: >-
+              Prometheus cannot reach the IPMI exporter pod itself.
+              Check that the exporter deployment is healthy.
+
+        # ---- Temperature ----
+        - alert: IPMITemperatureWarning
+          expr: ipmi_temperature_celsius > 75
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High temperature on {{ $labels.instance }}"
+            description: >-
+              Sensor {{ $labels.name }} on {{ $labels.instance }}
+              is at {{ $value }}°C (threshold: 75°C).
+
+        - alert: IPMITemperatureCritical
+          expr: ipmi_temperature_celsius > 85
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical temperature on {{ $labels.instance }}"
+            description: >-
+              Sensor {{ $labels.name }} on {{ $labels.instance }}
+              is at {{ $value }}°C (threshold: 85°C).
+              Immediate attention required — risk of thermal shutdown.
+
+        - alert: IPMITemperatureSensorState
+          expr: ipmi_temperature_state > 0
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Temperature sensor non-nominal on {{ $labels.instance }}"
+            description: >-
+              Sensor {{ $labels.name }} on {{ $labels.instance }}
+              is reporting a non-nominal state (0=nominal, 1=warning, 2=critical).
+              Current state value: {{ $value }}.
+
+        # ---- Chassis ----
+        - alert: IPMIChassyPowerOff
+          expr: ipmi_chassis_power_state != 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Chassis power off on {{ $labels.instance }}"
+            description: >-
+              {{ $labels.instance }} is reporting chassis power state
+              {{ $value }} (expected: 1 for on). The host may have
+              shut down unexpectedly.
