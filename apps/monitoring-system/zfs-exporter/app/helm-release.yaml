@@ -12,6 +12,10 @@ spec:
   values:
     controllers:
       zfs-exporter:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
         containers:
           zfs-exporter:
             image:
@@ -56,4 +60,3 @@ spec:
         hostPath: /dev/zfs
         globalMounts:
           - path: /dev/zfs
-
