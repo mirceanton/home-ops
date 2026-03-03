@@ -8,3 +8,4 @@ resources:
   - ./grafana
   - ./kube-prometheus-stack
   - ./mikrotik-exporter
+  - ./zfs-exporter

@@ -1,0 +1,59 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: zfs-exporter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: zfs-exporter
+
+  values:
+    controllers:
+      zfs-exporter:
+        containers:
+          zfs-exporter:
+            image:
+              repository: ghcr.io/mirceanton/zfs-exporter
+              tag: 2.3.11@sha256:9c24d083f4add2b078efb3efd070db8db3b577bf2d5ca671c7220da1971385e0
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+
+            #? Needs privileged access to /dev/zfs to query pool/dataset state via libzfs ioctls.
+            #? On Talos, ZFS is loaded as a kernel extension so /dev/zfs is available on the host.
+            securityContext:
+              privileged: true
+
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+
+    service:
+      zfs-exporter:
+        ports:
+          http:
+            port: 9134
+
+    serviceMonitor:
+      zfs-exporter:
+        serviceName: zfs-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
+
+    persistence:
+      dev-zfs:
+        type: hostPath
+        hostPath: /dev/zfs
+        globalMounts:
+          - path: /dev/zfs
+
