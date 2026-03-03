@@ -20,15 +20,15 @@ spec:
     - --maxmemory=$(MAX_MEMORY)Mi
     - --dbnum=1
     - --dbfilename=
-    - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:-1}
-    - --version_check=false
-    - --cluster_mode=emulated
+    - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:=1}
+    - --cluster_mode=${DRAGONFLY_CLUSTER_MODE:=emulated}
     - --lock_on_hashtags
+    - --version_check=false
     - --default_lua_flags=allow-undeclared-keys
 
   resources:
     requests:
-      cpu: ${DRAGONFLY_CPU_REQUEST:-100m}
-      memory: ${DRAGONFLY_MEMORY_REQUEST:-512Mi}
+      cpu: ${DRAGONFLY_CPU_REQUEST:=100m}
+      memory: ${DRAGONFLY_MEMORY_REQUEST:=512Mi}
     limits:
-      memory: ${DRAGONFLY_MEMORY_LIMIT:-512Mi}
+      memory: ${DRAGONFLY_MEMORY_LIMIT:=512Mi}
