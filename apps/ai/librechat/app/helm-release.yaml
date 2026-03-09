@@ -45,7 +45,7 @@ spec:
           app:
             image:
               repository: ghcr.io/danny-avila/librechat-rag-api-dev
-              tag: v0.7.1
+              tag: v0.7.2
             env:
               RAG_OPENAI_BASEURL: http://litellm.ai.svc.cluster.local:4000
               RAG_OPENAI_API_KEY:
