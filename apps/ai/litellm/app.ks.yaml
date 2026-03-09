@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ollama
+  name: &app litellm
 spec:
   interval: 10m
   prune: true
@@ -10,7 +10,7 @@ spec:
   timeout: 15m
   targetNamespace: ai
 
-  path: ./apps/ai/ollama/app
+  path: ./apps/ai/litellm/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,5 +21,9 @@ spec:
       APP: *app
 
   dependsOn:
-    - name: nvidia-device-plugin
-      namespace: kube-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: ollama
+      namespace: ai
