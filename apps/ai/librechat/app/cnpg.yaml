@@ -10,8 +10,7 @@ spec:
 
   bootstrap:
     initdb:
-      database: librachat
-      owner: librachat
+      owner: librechat
 
   storage:
     storageClass: openebs-zfs
@@ -32,14 +31,6 @@ spec:
     pg_hba:
       - host all all 10.244.0.0/16 scram-sha-256
 
-    shared_preload_libraries:
-      - "vchord.so"
-      - "timescaledb"
-
-    parameters:
-      timescaledb.telemetry_level: "off"
-      max_locks_per_transaction: "128"
-
     extensions:
       - name: pgvector
         image:
@@ -48,7 +39,7 @@ spec:
 
   managed:
     roles:
-      - name: immich
+      - name: librechat
         ensure: present
         login: true
         superuser: true
@@ -57,11 +48,11 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: librachat
+  name: librechat
 spec:
-  name: librachat
-  owner: librachat
+  name: librechat
+  owner: librechat
   cluster:
-    name: librachat-postgres
+    name: librechat-postgres
   extensions:
     - name: vector
