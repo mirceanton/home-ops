@@ -110,6 +110,8 @@ spec:
             env:
               HOST: "0.0.0.0"
               PORT: &port 3080
+              DOMAIN_CLIENT: https://chat.home.mirceanton.com
+              DOMAIN_SERVER: https://chat.home.mirceanton.com
               MONGO_URI: mongodb://librechat-mongodb:27017/LibreChat
               CONFIG_PATH: /config/librechat.yaml
               ENDPOINTS: custom
