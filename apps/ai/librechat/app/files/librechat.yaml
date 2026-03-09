@@ -13,11 +13,11 @@ endpoints:
       titleModel: "ollama/qwen3:1.7b"
       summarize: false
 
-# mcpServers:
-#   grafana:
-#     url: http://mcp-grafana.ai.svc.cluster.local:8000/sse
-#     type: sse
+mcpServers:
+  grafana:
+    url: http://mcp-grafana.ai.svc.cluster.local:8000/sse
+    type: sse
 
-#   homeassistant:
-#     url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
-#     type: sse
+  homeassistant:
+    url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
+    type: sse
