@@ -7,6 +7,7 @@ resources:
   - ./namespace.yaml
   - ./librechat
   - ./litellm
+  - ./mcp-grafana
   - ./mcp-homeassistant
   - ./ollama
   - ./whisper
