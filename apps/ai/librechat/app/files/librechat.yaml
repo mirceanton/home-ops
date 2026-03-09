@@ -21,3 +21,4 @@ mcpServers:
   homeassistant:
     url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
     type: sse
+
