@@ -45,16 +45,17 @@ spec:
           app:
             image:
               repository: ghcr.io/danny-avila/librechat-rag-api-dev
-              tag: latest
+              tag: v0.7.1
             env:
               RAG_OPENAI_BASEURL: http://litellm.ai.svc.cluster.local:4000
-              EMBEDDINGS_PROVIDER: openai
-              EMBEDDINGS_MODEL: ollama/qwen3-embedding:0.6b
               RAG_OPENAI_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: librechat-secret
                     key: LITELLM_MASTER_KEY
+              EMBEDDINGS_PROVIDER: openai
+              EMBEDDINGS_MODEL: ollama/qwen3-embedding:0.6b
+              VECTOR_DB_TYPE: pgvector
               POSTGRES_DB:
                 valueFrom:
                   secretKeyRef:
@@ -70,12 +71,12 @@ spec:
                   secretKeyRef:
                     name: librechat-postgres-app
                     key: password
-              POSTGRES_HOST:
+              DB_HOST:
                 valueFrom:
                   secretKeyRef:
                     name: librechat-postgres-app
                     key: host
-              POSTGRES_PORT:
+              DB_PORT:
                 valueFrom:
                   secretKeyRef:
                     name: librechat-postgres-app
