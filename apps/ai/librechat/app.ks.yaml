@@ -26,6 +26,8 @@ spec:
   dependsOn:
     - name: volsync
       namespace: storage-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
     - name: 1password-connect
       namespace: security-system
     - name: litellm

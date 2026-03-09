@@ -28,6 +28,70 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
 
+      rag-api:
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DATABASE_URL)"]
+            env:
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: uri
+        containers:
+          app:
+            image:
+              repository: ghcr.io/danny-avila/librechat-rag-api-dev
+              tag: latest
+            env:
+              RAG_OPENAI_BASEURL: http://litellm.ai.svc.cluster.local:4000
+              EMBEDDINGS_PROVIDER: openai
+              EMBEDDINGS_MODEL: ollama/qwen3-embedding:0.6b
+              RAG_OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-secret
+                    key: LITELLM_MASTER_KEY
+              POSTGRES_DB:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: dbname
+              POSTGRES_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: username
+              POSTGRES_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: password
+              POSTGRES_HOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: host
+              POSTGRES_PORT:
+                valueFrom:
+                  secretKeyRef:
+                    name: librechat-rag-postgres-app
+                    key: port
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+
       librechat:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -48,6 +112,7 @@ spec:
               MONGO_URI: mongodb://librechat-mongodb:27017/LibreChat
               CONFIG_PATH: /config/librechat.yaml
               ENDPOINTS: custom
+              RAG_API_URL: http://librechat-rag-api:8000
               JWT_SECRET:
                 valueFrom:
                   secretKeyRef:
@@ -106,7 +171,7 @@ spec:
           type: RuntimeDefault
 
     service:
-      app:
+      librechat:
         controller: librechat
         ports:
           http:
@@ -116,6 +181,11 @@ spec:
         ports:
           mongodb:
             port: 27017
+      rag-api:
+        controller: rag-api
+        ports:
+          http:
+            port: 8000
 
     route:
       home:
@@ -125,7 +195,7 @@ spec:
             namespace: network-system
         rules:
           - backendRefs:
-              - name: app
+              - name: librechat
                 port: *port
 
     persistence:

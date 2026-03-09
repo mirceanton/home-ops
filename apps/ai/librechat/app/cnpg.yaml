@@ -1,0 +1,67 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: librechat-rag-postgres
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: enabled
+spec:
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
+
+  bootstrap:
+    initdb:
+      database: librechat_rag
+      owner: librechat_rag
+
+  storage:
+    storageClass: openebs-zfs
+    size: 4Gi
+
+  walStorage:
+    storageClass: openebs-zfs
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 1Gi
+    limits:
+      memory: 4Gi
+
+  postgresql:
+    pg_hba:
+      - host all all 10.244.0.0/16 scram-sha-256
+
+    shared_preload_libraries:
+      - "vchord.so"
+      - "timescaledb"
+
+    parameters:
+      timescaledb.telemetry_level: "off"
+      max_locks_per_transaction: "128"
+
+    extensions:
+      - name: pgvector
+        image:
+          # renovate: suite=trixie-pgdg depName=postgresql-18-pgvector
+          reference: ghcr.io/cloudnative-pg/pgvector:0.8.1-18-trixie
+
+  managed:
+    roles:
+      - name: immich
+        ensure: present
+        login: true
+        superuser: true
+
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: librechat_rag
+spec:
+  name: librechat_rag
+  owner: librechat_rag
+  cluster:
+    name: librechat-rag-postgres
+  extensions:
+    - name: vector
