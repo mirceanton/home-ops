@@ -1,7 +1,22 @@
 model_list:
-  - model_name: ollama/*
+  - model_name: ollama/qwen3:4b
     litellm_params:
-      model: ollama/*
+      model: ollama/qwen3:4b
+      api_base: http://ollama.ai.svc.cluster.local:11434
+
+  - model_name: ollama/qwen3:1.7b
+    litellm_params:
+      model: ollama/qwen3:1.7b
+      api_base: http://ollama.ai.svc.cluster.local:11434
+
+  - model_name: ollama/qwen2.5-coder:3b
+    litellm_params:
+      model: ollama/qwen2.5-coder:3b
+      api_base: http://ollama.ai.svc.cluster.local:11434
+
+  - model_name: ollama/qwen3-embedding:0.6b
+    litellm_params:
+      model: ollama/qwen3-embedding:0.6b
       api_base: http://ollama.ai.svc.cluster.local:11434
 
 general_settings:
