@@ -1,0 +1,22 @@
+version: 1
+
+endpoints:
+  custom:
+    - name: LiteLLM
+      apiKey: "${LITELLM_MASTER_KEY}"
+      baseURL: "http://litellm.ai.svc.cluster.local:4000/v1"
+      models:
+        default: ["ollama/qwen3:1.7b"]
+        fetch: true
+      titleConvo: true
+      titleModel: "ollama/qwen3:1.7b"
+      summarize: false
+
+mcpServers:
+  grafana:
+    url: http://mcp-grafana.ai.svc.cluster.local:8000/sse
+    type: sse
+
+  homeassistant:
+    url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
+    type: sse
