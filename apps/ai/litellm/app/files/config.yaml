@@ -1,0 +1,11 @@
+model_list:
+  - model_name: ollama/*
+    litellm_params:
+      model: ollama/*
+      api_base: http://ollama.ai.svc.cluster.local:11434
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+
+litellm_settings:
+  drop_params: true

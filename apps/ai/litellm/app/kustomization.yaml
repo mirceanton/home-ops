@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./cnpg.yaml
+  - ./externalsecret.yaml
+  - ./helm-release.yaml
+  - ./oci-repository.yaml
+
+configMapGenerator:
+  - name: litellm-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - config.yaml=./files/config.yaml
