@@ -39,7 +39,7 @@ spec:
               DATABASE_URL:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: uri
         containers:
           app:
@@ -58,27 +58,27 @@ spec:
               POSTGRES_DB:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: dbname
               POSTGRES_USER:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: username
               POSTGRES_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: password
               POSTGRES_HOST:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: host
               POSTGRES_PORT:
                 valueFrom:
                   secretKeyRef:
-                    name: librechat-rag-postgres-app
+                    name: librachat-postgres-app
                     key: port
 
             resources:

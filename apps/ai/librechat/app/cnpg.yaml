@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: librechat-rag-postgres
+  name: librechat-postgres
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
@@ -10,8 +10,8 @@ spec:
 
   bootstrap:
     initdb:
-      database: librechat_rag
-      owner: librechat_rag
+      database: librachat
+      owner: librachat
 
   storage:
     storageClass: openebs-zfs
@@ -57,11 +57,11 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: librechat_rag
+  name: librachat
 spec:
-  name: librechat_rag
-  owner: librechat_rag
+  name: librachat
+  owner: librachat
   cluster:
-    name: librechat-rag-postgres
+    name: librachat-postgres
   extensions:
     - name: vector
