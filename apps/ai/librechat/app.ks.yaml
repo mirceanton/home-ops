@@ -1,0 +1,34 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app librechat
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: ai
+
+  path: ./apps/ai/librechat/app
+  components:
+    - ../../../../components/volsync/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
+
+  dependsOn:
+    - name: volsync
+      namespace: storage-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: litellm
+      namespace: ai
