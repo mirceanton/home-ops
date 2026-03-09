@@ -49,7 +49,7 @@ spec:
                 memory: 512Mi
                 nvidia.com/gpu: 1
               limits:
-                memory: 2Gi
+                memory: 16Gi
                 nvidia.com/gpu: 1
 
             securityContext:
