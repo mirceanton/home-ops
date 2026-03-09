@@ -114,7 +114,7 @@ spec:
               DOMAIN_SERVER: https://chat.home.mirceanton.com
               MONGO_URI: mongodb://librechat-mongodb:27017/LibreChat
               CONFIG_PATH: /config/librechat.yaml
-              ENDPOINTS: custom
+              ENDPOINTS: custom,agents
               ALLOW_REGISTRATION: "true"
               RAG_API_URL: http://librechat-rag-api:8000
               JWT_SECRET:

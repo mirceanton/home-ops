@@ -21,3 +21,12 @@ mcpServers:
   homeassistant:
     url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
     type: sse
+
+agents:
+  disableBuilder: false
+  recursionLimit: 10
+  capabilities:
+    - execute_code
+    - file_search
+    - tools
+    - actions
