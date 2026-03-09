@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mcp-homeassistant
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: mcp-homeassistant
+
+  values:
+    controllers:
+      mcp-homeassistant:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/homeassistant-ai/ha-mcp
+              tag: 6.7.2@sha256:841f06d286906f727810d4562991f0d90d6fa80441b9d7da0381a4643d755be5
+            command: ["ha-mcp-web"]
+            env:
+              TZ: Europe/Bucharest
+              HOMEASSISTANT_URL: http://home-assistant.home-automation.svc.cluster.local:8123
+              HOMEASSISTANT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: mcp-homeassistant-secret
+                    key: HOMEASSISTANT_TOKEN
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                memory: 512Mi
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: mcp-homeassistant
+        ports:
+          http:
+            port: 8086
+
+    #? do i even need to expose this outside the cluster?
+    # route:
+    #   home:
+    #     hostnames: ["ha-mcp.home.mirceanton.com"]
+    #     parentRefs:
+    #       - name: envoy-internal
+    #         namespace: network-system
