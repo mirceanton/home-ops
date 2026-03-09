@@ -54,7 +54,7 @@ spec:
                     name: librechat-secret
                     key: LITELLM_MASTER_KEY
               EMBEDDINGS_PROVIDER: openai
-              EMBEDDINGS_MODEL: ollama/qwen3-embedding:0.6b
+              EMBEDDINGS_MODEL: ollama/nomic-embed-text
               VECTOR_DB_TYPE: pgvector
               POSTGRES_DB:
                 valueFrom:
