@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: ollama
+  name: ollama-gpu
 spec:
   interval: 30m
   chartRef:
@@ -12,7 +12,7 @@ spec:
 
   values:
     controllers:
-      ollama:
+      ollama-gpu:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -66,17 +66,10 @@ spec:
 
     service:
       app:
-        controller: ollama
+        controller: ollama-gpu
         ports:
           http:
             port: *port
-
-    route:
-      home:
-        hostnames: ["ollama.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
 
     persistence:
       models:
