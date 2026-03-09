@@ -1,0 +1,89 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ollama
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: ollama
+
+  values:
+    controllers:
+      ollama:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ollama/ollama
+              tag: 0.17.7
+            env:
+              TZ: Europe/Bucharest
+              OLLAMA_HOST: "::"
+              OLLAMA_MODELS: /models
+              OLLAMA_NUM_PARALLEL: 1
+              OLLAMA_CONTEXT_LENGTH: 32768
+              OLLAMA_KV_CACHE_TYPE: q8_0
+              OLLAMA_FLASH_ATTENTION: "true"
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 11434
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+              readiness: *probe
+              startup: *probe
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+                nvidia.com/gpu: 1
+              limits:
+                memory: 2Gi
+                nvidia.com/gpu: 1
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      enableServiceLinks: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: ollama
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["ollama.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      models:
+        existingClaim: ollama-models
+        globalMounts:
+          - path: /models
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
