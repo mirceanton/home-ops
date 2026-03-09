@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mcp-grafana
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: mcp-grafana
+
+  values:
+    controllers:
+      mcp-grafana:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: grafana/mcp-grafana
+              tag: 0.11.2
+            env:
+              GRAFANA_URL: http://grafana-service.monitoring-system:3000
+              #! TODO: this has been manually created for now, but I should automate it and store it in the repo as well
+              #! maybe look for a terraform provider for Grafana and manage it that way?
+              GRAFANA_AUTH:
+                valueFrom:
+                  secretKeyRef:
+                    name: mcp-grafana-secret
+                    key: GRAFANA_AUTH
+
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: &port 8000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 6
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        controller: mcp-grafana
+        ports:
+          http:
+            port: *port
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
