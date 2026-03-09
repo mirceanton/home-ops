@@ -115,6 +115,7 @@ spec:
               MONGO_URI: mongodb://librechat-mongodb:27017/LibreChat
               CONFIG_PATH: /config/librechat.yaml
               ENDPOINTS: custom
+              ALLOW_REGISTRATION: "true"
               RAG_API_URL: http://librechat-rag-api:8000
               JWT_SECRET:
                 valueFrom:
