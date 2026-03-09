@@ -123,6 +123,10 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
+        rules:
+          - backendRefs:
+              - name: app
+                port: *port
 
     persistence:
       config:
