@@ -2,24 +2,24 @@ model_list:
   # ===============================================================================================
   # GPU Models
   # ===============================================================================================
-  - model_name: ollama-gpu-gpu/qwen3:4b
+  - model_name: ollama-gpu/qwen3:4b
     litellm_params:
-      model: ollama-gpu-gpu/qwen3:4b
+      model: ollama/qwen3:4b
       api_base: http://ollama-gpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-gpu/qwen3:1.7b
     litellm_params:
-      model: ollama-gpu/qwen3:1.7b
+      model: ollama/qwen3:1.7b
       api_base: http://ollama-gpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-gpu/qwen2.5-coder:3b
     litellm_params:
-      model: ollama-gpu/qwen2.5-coder:3b
+      model: ollama/qwen2.5-coder:3b
       api_base: http://ollama-gpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-gpu/nomic-embed-text
     litellm_params:
-      model: ollama-gpu/nomic-embed-text
+      model: ollama/nomic-embed-text
       api_base: http://ollama-gpu.ai.svc.cluster.local:11434
 
   # ===============================================================================================
@@ -27,22 +27,22 @@ model_list:
   # ===============================================================================================
   - model_name: ollama-cpu/mistral:7b
     litellm_params:
-      model: ollama-cpu/mistral:7b
+      model: ollama/mistral:7b
       api_base: http://ollama-cpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-cpu/qwen3:8b
     litellm_params:
-      model: ollama-cpu/qwen3:8b
+      model: ollama/qwen3:8b
       api_base: http://ollama-cpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-cpu/qwen3:14b
     litellm_params:
-      model: ollama-cpu/qwen3:14b
+      model: ollama/qwen3:14b
       api_base: http://ollama-cpu.ai.svc.cluster.local:11434
 
   - model_name: ollama-cpu/qwen2.5-coder:14b
     litellm_params:
-      model: ollama-cpu/qwen2.5-coder:14b
+      model: ollama/qwen2.5-coder:14b
       api_base: http://ollama-cpu.ai.svc.cluster.local:11434
 
 general_settings:
