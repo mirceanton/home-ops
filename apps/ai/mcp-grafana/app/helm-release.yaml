@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: grafana/mcp-grafana
-              tag: 0.11.2
+              tag: 0.11.3
             env:
               GRAFANA_URL: http://grafana-service.monitoring-system:3000
               #! TODO: this has been manually created for now, but I should automate it and store it in the repo as well
