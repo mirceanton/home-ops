@@ -23,3 +23,5 @@ spec:
       namespace: storage-system
     - name: metallb
       namespace: network-system
+    - name: 1password-connect
+      namespace: security-system

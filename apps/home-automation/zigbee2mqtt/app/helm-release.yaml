@@ -21,6 +21,7 @@ spec:
               tag: 2.9.0@sha256:6cce51b7328afda3670336cd385f53a2f824ac948164e60f304383d1c3c6ef87
             envFrom:
               - secretRef: {name: z2m-secret}
+              - secretRef: {name: z2m-mqtt-secret}
               - configMapRef: {name: z2m-config}
             resources:
               requests:

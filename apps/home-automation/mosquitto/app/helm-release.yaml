@@ -59,10 +59,11 @@ spec:
       config:
         data:
           mosquitto.conf: |-
-            allow_anonymous true
+            allow_anonymous false
             autosave_interval 60
             connection_messages false
             listener 1883
+            password_file /mosquitto/config/passwd
             per_listener_settings false
             persistence true
             persistence_location /config
@@ -74,3 +75,10 @@ spec:
         globalMounts:
           - path: /mosquitto/config/mosquitto.conf
             subPath: mosquitto.conf
+      auth:
+        type: secret
+        name: mosquitto-auth
+        defaultMode: 0400
+        globalMounts:
+          - path: /mosquitto/config/passwd
+            subPath: passwd
