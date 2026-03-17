@@ -17,7 +17,7 @@ spec:
           app:
             image:
               repository: mongo
-              tag: 8.2.5
+              tag: 8.2.6
             resources:
               requests:
                 cpu: 20m
