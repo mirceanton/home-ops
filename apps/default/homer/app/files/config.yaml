@@ -156,3 +156,18 @@ services:
         url: "https://teleprompter.home.mirceanton.com"
         target: "_blank"
         icon: "fas fa-scroll"
+
+  - name: "AI"
+    icon: "fas fa-robot"
+    items:
+      - name: "LibreChat"
+        subtitle: "AI Chat Interface"
+        url: "https://chat.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/librechat.webp"
+
+      - name: "LiteLLM"
+        subtitle: "LLM Proxy"
+        url: "https://litellm.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/litellm.webp"
