@@ -48,7 +48,8 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/karakeep.webp"
 
-  - name: "Home Automation"
+
+  - name: "Misc."
     icon: "fas fa-home"
     items:
       - name: "Home Assistant"
