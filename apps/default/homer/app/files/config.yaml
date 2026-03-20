@@ -168,7 +168,7 @@ services:
 
       - name: "LiteLLM"
         subtitle: "LLM Proxy"
-        url: "https://litellm.home.mirceanton.com"
+        url: "https://litellm.home.mirceanton.com/ui/"
         target: "_blank"
         logo: "assets/icons/webp/litellm.webp"
 
