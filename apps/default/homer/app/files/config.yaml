@@ -95,7 +95,7 @@ services:
 
       - name: "OpenSpeedTest"
         subtitle: "Network Speed Test"
-        url: "https://tools.home.mirceanton.com"
+        url: "https://speedtest.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/openspeedtest.webp"
 
