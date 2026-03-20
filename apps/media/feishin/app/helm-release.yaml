@@ -62,31 +62,18 @@ spec:
             namespace: network-system
 
     persistence:
-      cache:
+      writable:
         type: emptyDir
         advancedMounts:
           feishin:
-            init-permissions:
-              - path: /var/cache/nginx
             feishin:
               - path: /var/cache/nginx
-      run:
-        type: emptyDir
-        advancedMounts:
-          feishin:
-            init-permissions:
+                subPath: cache
               - path: /var/run
-            feishin:
-              - path: /var/run
-      logs:
-        type: emptyDir
-        advancedMounts:
-          feishin:
-            init-permissions:
+                subPath: run
               - path: /var/log/nginx
-            feishin:
-              - path: /var/log/nginx
-      nginx-conf:
-        type: emptyDir
-        globalMounts:
-          - path: /etc/nginx/conf.d
+                subPath: logs
+              - path: /etc/nginx/conf.d
+                subPath: nginx-conf
+              - path: /tmp
+                subPath: tmp
