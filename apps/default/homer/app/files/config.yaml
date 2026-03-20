@@ -49,7 +49,7 @@ services:
         logo: "assets/icons/webp/karakeep.webp"
 
 
-  - name: "Misc."
+  - name: "Home"
     icon: "fas fa-home"
     items:
       - name: "Home Assistant"
