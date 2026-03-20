@@ -171,3 +171,30 @@ services:
         url: "https://litellm.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/litellm.webp"
+
+  - name: "Admin"
+    icon: "fas fa-server"
+    items:
+      - name: "Grafana"
+        subtitle: "Monitoring"
+        url: "https://grafana.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/grafana.webp"
+
+      - name: "Prometheus"
+        subtitle: "Metrics"
+        url: "https://prometheus.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/prometheus.webp"
+
+      - name: "AlertManager"
+        subtitle: "Alerting"
+        url: "https://alertmanager.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/alertmanager.webp"
+
+      - name: "Flux"
+        subtitle: "GitOps"
+        url: "https://flux.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/flux.webp"
