@@ -197,4 +197,4 @@ services:
         subtitle: "GitOps"
         url: "https://flux.admin.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/flux.webp"
+        logo: "assets/icons/webp/flux-cd.webp"
