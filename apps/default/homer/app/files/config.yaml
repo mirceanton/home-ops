@@ -57,26 +57,17 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/home-assistant.webp"
 
-      - name: "Zigbee2MQTT"
-        subtitle: "Zigbee Bridge"
-        url: "https://z2m.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/zigbee2mqtt.webp"
-
-  - name: "Finances"
-    icon: "fas fa-wallet"
-    items:
       - name: "Firefly"
         subtitle: "Financial Manager"
         url: "https://firefly.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/firefly-iii.webp"
 
-      - name: "Firefly Data Importer"
-        subtitle: "Data Importer"
-        url: "https://firefly-importer.home.mirceanton.com"
+      - name: "SparkyFitness"
+        subtitle: "Fitness Tracker"
+        url: "https://fitness.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/firefly-iii.webp"
+        logo: "assets/icons/webp/sparky-fitness.webp"
 
   - name: "Tools"
     icon: "fas fa-tools"
