@@ -1,0 +1,29 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app alpine
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: demo-a
+
+  path: ./apps/demo-a/alpine/app/
+  components:
+    - ../../../../components/volsync/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 1Gi
+
+  dependsOn:
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
