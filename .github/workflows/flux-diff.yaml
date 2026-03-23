@@ -12,26 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  discover:
-    runs-on: infra-runners
-    outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Generate Matrix
-        id: matrix
-        uses: mirceanton/action-folder-matrix@v1
-        with:
-          path: apps/
-
   diff:
-    runs-on: infra-runners
-    needs: discover
-    strategy:
-      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
-      fail-fast: false
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
@@ -42,34 +24,27 @@ jobs:
           app-id: "${{ secrets.BOT_APP_ID }}"
           private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
 
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-
-      - name: Setup mise
-        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+      - name: Setup Flux CLI
+        uses: fluxcd/flux2/action@v2.8.3
 
       - name: Run flux-local diff
+        uses: allenporter/flux-local/action/diff@8.1.0
         id: diff
-        run: |
-          output=$(flux-local diff ks \
-            --path "apps/${{ matrix.directory }}/" \
-            --sources "GitRepository/flux-system=./" \
-            --branch-orig main \
-            2>&1 || true)
-          echo "output<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$output" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+        with:
+          live-branch: main
+          path: apps/
+          resource: kustomization
+          token: "${{ steps.app-token.outputs.token }}"
 
       - name: Post PR Comment
         uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2.8.2
+        if: ${{ steps.diff.outputs.diff != '' }}
         with:
           repo-token: ${{ steps.app-token.outputs.token }}
-          message-id: flux-diff-${{ matrix.directory }}
+          message-id: flux-diff
           message: |
-            ## Flux Diff — `apps/${{ matrix.directory }}`
+            ## Flux Diff
 
             ```diff
-            ${{ steps.diff.outputs.output }}
+            ${{ steps.diff.outputs.diff }}
             ```
