@@ -26,6 +26,34 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Inject namespace from kustomization transformers
+        run: |
+          python3 << 'EOF'
+          import glob, re
+
+          for ks_file in sorted(glob.glob('apps/*/kustomization.yaml')):
+              ns_dir = ks_file.rsplit('/', 1)[0]
+              namespace = next(
+                  (l.split(':', 1)[1].strip() for l in open(ks_file) if l.startswith('namespace:')),
+                  None,
+              )
+              if not namespace:
+                  continue
+              for flux_ks in sorted(glob.glob(f'{ns_dir}/**/*.ks.yaml', recursive=True)):
+                  content = open(flux_ks).read()
+                  if 'kustomize.toolkit.fluxcd.io' not in content:
+                      continue
+                  def add_ns(m, ns=namespace):
+                      return m.group(1) + f'  namespace: {ns}\n'
+                  new = re.sub(
+                      r'(metadata:\n  name:[^\n]*\n)(?!  namespace:)',
+                      add_ns,
+                      content,
+                  )
+                  if new != content:
+                      open(flux_ks, 'w').write(new)
+          EOF
+
       - name: Run flux-local test
         uses: docker://ghcr.io/allenporter/flux-local:v8.1.0
         with:
@@ -63,6 +91,35 @@ jobs:
           ref: "${{ github.event.repository.default_branch }}"
           path: default
           persist-credentials: false
+
+      - name: Inject namespace from kustomization transformers
+        run: |
+          python3 << 'EOF'
+          import glob, re
+
+          for base in ['pull/apps', 'default/apps']:
+              for ks_file in sorted(glob.glob(f'{base}/*/kustomization.yaml')):
+                  ns_dir = ks_file.rsplit('/', 1)[0]
+                  namespace = next(
+                      (l.split(':', 1)[1].strip() for l in open(ks_file) if l.startswith('namespace:')),
+                      None,
+                  )
+                  if not namespace:
+                      continue
+                  for flux_ks in sorted(glob.glob(f'{ns_dir}/**/*.ks.yaml', recursive=True)):
+                      content = open(flux_ks).read()
+                      if 'kustomize.toolkit.fluxcd.io' not in content:
+                          continue
+                      def add_ns(m, ns=namespace):
+                          return m.group(1) + f'  namespace: {ns}\n'
+                      new = re.sub(
+                          r'(metadata:\n  name:[^\n]*\n)(?!  namespace:)',
+                          add_ns,
+                          content,
+                      )
+                      if new != content:
+                          open(flux_ks, 'w').write(new)
+          EOF
 
       - name: Initialize diff output
         run: touch diff.patch
