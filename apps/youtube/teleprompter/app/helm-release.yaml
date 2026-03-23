@@ -67,7 +67,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter-frontend
-              tag: v2.11.1
+              tag: v2.12.0
 
             resources:
               requests:
