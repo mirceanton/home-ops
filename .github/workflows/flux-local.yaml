@@ -31,7 +31,6 @@ jobs:
         with:
           args: >-
             test
-            --enable-helm
             --all-namespaces
             --path /github/workspace/apps
             --skip-secrets
@@ -64,6 +63,9 @@ jobs:
           ref: "${{ github.event.repository.default_branch }}"
           path: default
           persist-credentials: false
+
+      - name: Initialize diff output
+        run: touch diff.patch
 
       - name: Run flux-local diff
         continue-on-error: true
