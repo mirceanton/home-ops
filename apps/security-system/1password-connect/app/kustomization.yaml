@@ -4,7 +4,7 @@ kind: Kustomization
 
 resources:
   - ./clustersecretstore.yaml
-  - ./helmrelease.yaml
-  - ./ocirepository.yaml
+  - ./helm-release.yaml
+  - ./oci-repository.yaml
   - ./op-credentials.secret.sops.yaml
   - ./op-token.secret.sops.yaml

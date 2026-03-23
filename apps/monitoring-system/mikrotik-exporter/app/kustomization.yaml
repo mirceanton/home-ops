@@ -14,7 +14,7 @@ configMapGenerator:
 resources:
   - helm-release.yaml
   - oci-repository.yaml
-  - mktxp-credentials.externalsecret.yaml
+  - external-secret.yaml
 
   - grafana/folder.yaml
   - grafana/dashboard.yaml

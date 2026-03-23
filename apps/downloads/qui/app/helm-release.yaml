@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: qui
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: qui
+
+  values:
+    controllers:
+      qui:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/autobrr/qui
+              tag: v1.15.0@sha256:da33f8c850f7d6f1bfaee26b9553b21411e872639d54193906fa2cec51af1d0f
+            env:
+              QUI__HOST: 0.0.0.0
+              QUI__PORT: &port 80
+              TZ: Europe/Bucharest
+            # envFrom:
+            #   - secretRef: { name: qui-secrets }
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 200m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: true
+              runAsGroup: 568
+              runAsNonRoot: true
+              runAsUser: 568
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["torrent.home.mirceanton.com", "qui.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+      tailscale:
+        hostnames: ["torrent.ts.mirceanton.com", "qui.ts.mirceanton.com"]
+        parentRefs:
+          - name: envoy-tailscale
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      downloads:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/scratch/Torrent_Downloads
+        globalMounts:
+          - path: /downloads

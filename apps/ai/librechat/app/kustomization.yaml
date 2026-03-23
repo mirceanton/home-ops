@@ -4,7 +4,7 @@ kind: Kustomization
 
 resources:
   - ./cnpg.yaml
-  - ./externalsecret.yaml
+  - ./external-secret.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
 
