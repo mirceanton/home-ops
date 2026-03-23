@@ -33,3 +33,7 @@ yq = "latest"
 yamlfmt = "latest"
 actionlint = "latest"
 shellcheck = "latest"
+
+# Python / flux-local
+python = "3.13"
+"pipx:flux-local" = "latest"
