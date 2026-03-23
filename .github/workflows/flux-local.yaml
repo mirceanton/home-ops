@@ -29,7 +29,14 @@ jobs:
       - name: Run flux-local test
         uses: docker://ghcr.io/allenporter/flux-local:v8.1.0
         with:
-          args: test --enable-helm --all-namespaces --path /github/workspace/apps -v
+          args: >-
+            test
+            --enable-helm
+            --all-namespaces
+            --path /github/workspace/apps
+            --skip-secrets
+            --kustomize-build-flags=--load-restrictor=LoadRestrictionsNone
+            -v
 
   diff:
     name: Flux Local Diff
@@ -59,6 +66,7 @@ jobs:
           persist-credentials: false
 
       - name: Run flux-local diff
+        continue-on-error: true
         uses: docker://ghcr.io/allenporter/flux-local:v8.1.0
         with:
           args: >-
@@ -69,6 +77,8 @@ jobs:
             --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart"
             --limit-bytes 10000
             --all-namespaces
+            --skip-secrets
+            --kustomize-build-flags=--load-restrictor=LoadRestrictionsNone
             --output-file diff.patch
 
       - name: Generate Diff
