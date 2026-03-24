@@ -113,7 +113,7 @@ spec:
           app:
             image:
               repository: penpotapp/exporter
-              tag: "2.13.3"
+              tag: "2.14.0"
             env:
               PENPOT_PUBLIC_URI: "http://penpot-frontend:8080"
               PENPOT_REDIS_URI: "redis://penpot-dragonfly:6379/0"
