@@ -166,11 +166,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/librechat.webp"
 
-      - name: "LiteLLM"
-        subtitle: "LLM Proxy"
-        url: "https://litellm.home.mirceanton.com/ui/"
-        target: "_blank"
-        logo: "assets/icons/webp/ollama.webp"
 
   - name: "Admin"
     icon: "fas fa-server"
