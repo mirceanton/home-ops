@@ -12,6 +12,7 @@ spec:
   values:
     controllers:
       alpine:
+        replicas: 2
         containers:
           app:
             image:
