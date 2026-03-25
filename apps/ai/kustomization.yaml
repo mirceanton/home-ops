@@ -7,7 +7,7 @@ namespace: ai
 resources:
   - ./namespace.yaml
   - ./librechat
-- ./mcp-grafana
+  - ./mcp-grafana
   - ./mcp-homeassistant
   - ./ollama
   - ./whisper
