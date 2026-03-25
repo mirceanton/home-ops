@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: omni-tools
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: omni-tools
+  interval: 30m
+
+  values:
+    controllers:
+      omni-tools:
+        replicas: 1
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 101
+            runAsGroup: 101
+            fsGroup: 101
+            fsGroupChangePolicy: OnRootMismatch
+        containers:
+          app:
+            image:
+              repository: iib0011/omni-tools
+              tag: 0.6.0
+            command: ["nginx"]
+            args: ["-g", "daemon off;"]
+
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    service:
+      app:
+        ports:
+          http:
+            port: 80
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      nginx-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /var/cache/nginx
+      nginx-run:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
+
+    route:
+      home:
+        hostnames: ["tools.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system

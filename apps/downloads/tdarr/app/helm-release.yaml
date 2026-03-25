@@ -1,0 +1,116 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tdarr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: tdarr
+
+  values:
+    controllers:
+      tdarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: haveagitgat/tdarr
+              tag: 2.65.01@sha256:94bc18b3e9d3e9a7ae6fe75e86ff080a83905d32c0581529b2de6324fa2dcb53
+            env:
+              TZ: Europe/Bucharest
+              PUID: 568
+              PGID: 568
+              serverBindIP: true
+              serverIP: 0.0.0.0
+              serverPort: &serverPort 8266
+              webUIPort: &port 8265
+              internalNode: "true"
+              inContainer: "true"
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v2/status
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+
+            resources:
+              requests:
+                cpu: 20m
+                memory: 512Mi
+                nvidia.com/gpu: 1
+              limits:
+                memory: 16Gi
+                nvidia.com/gpu: 1
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              # capabilities:
+              #   drop: ["ALL"]
+
+    defaultPodOptions:
+      runtimeClassName: nvidia
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+      server:
+        ports:
+          server:
+            port: *serverPort
+
+    route:
+      home:
+        hostnames: ["tdarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: tdarr-app
+                port: *port
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        advancedMounts:
+          tdarr:
+            app:
+              - path: /app/configs
+                subPath: config
+              - path: /app/server
+                subPath: server
+      media:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/
+        globalMounts:
+          - path: /data/media/
+      cache:
+        existingClaim: tdarr-cache
+        globalMounts:
+          - path: /mnt/cache
