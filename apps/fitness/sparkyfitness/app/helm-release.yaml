@@ -152,7 +152,7 @@ spec:
           app:
             image:
               repository: codewithcj/sparkyfitness_garmin
-              tag: v0.16.5.4
+              tag: v0.16.5.5
             env:
               GARMIN_SERVICE_PORT: "8000"
               GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000
