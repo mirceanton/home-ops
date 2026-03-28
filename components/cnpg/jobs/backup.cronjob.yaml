@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: ${APP}-postgres-backup
 spec:
-  schedule: "0 /2 * * *" # every 2 hours
+  schedule: "0 */2 * * *" # every 2 hours
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
