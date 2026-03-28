@@ -11,6 +11,7 @@ spec:
 
   path: ./apps/media/immich/app
   components:
+    - ../../../../components/cnpg/
     - ../../../../components/volsync/
     - ../../../../components/dragonfly/
   sourceRef:
@@ -22,6 +23,10 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 100Gi
+      CNPG_DATA_STORAGE_SIZE: 8Gi
+      CNPG_CPU_REQUEST: 1000m
+      CNPG_MEMORY_REQUEST: 4Gi
+      CNPG_MEMORY_LIMIT: 4Gi
       DRAGONFLY_CPU_REQUEST: 1000m
       DRAGONFLY_MEMORY_REQUEST: 2Gi
       DRAGONFLY_MEMORY_LIMIT: 2Gi

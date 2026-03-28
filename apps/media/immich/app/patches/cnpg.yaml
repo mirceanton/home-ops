@@ -2,35 +2,9 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: immich-postgres
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: enabled
+  name: ${APP}-postgres
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
-
-  bootstrap:
-    initdb:
-      owner: immich
-
-  storage:
-    storageClass: openebs-zfs
-    size: 8Gi
-
-  walStorage:
-    storageClass: openebs-zfs
-    size: 2Gi
-
-  resources:
-    requests:
-      cpu: 1000m
-      memory: 4Gi
-    limits:
-      memory: 4Gi
-
   postgresql:
-    pg_hba:
-      - host all all 10.244.0.0/16 scram-sha-256
-
     shared_preload_libraries:
       - "vchord.so"
       - "timescaledb"
@@ -68,12 +42,8 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: immich
+  name: ${APP}
 spec:
-  name: immich
-  owner: immich
-  cluster:
-    name: immich-postgres
   extensions:
     - name: vector
     - name: vchord
