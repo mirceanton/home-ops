@@ -4,16 +4,6 @@ kind: Component
 
 resources:
   - cnpg.yaml
+  - scripts.configmap.yaml
   - jobs/backup.cronjob.yaml
   - jobs/restore.cronjob.yaml
-
-configMapGenerator:
-  - name: ${APP}-postgres-scripts
-    files:
-      - backup.sh=scripts/backup.sh
-      - restore.sh=scripts/restore.sh
-
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
