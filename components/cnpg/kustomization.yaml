@@ -8,7 +8,7 @@ resources:
   - jobs/restore.cronjob.yaml
 
 configMapGenerator:
-  - name: atuin-postgres-scripts
+  - name: ${APP}-postgres-scripts
     files:
       - backup.sh=scripts/backup.sh
       - restore.sh=scripts/restore.sh
