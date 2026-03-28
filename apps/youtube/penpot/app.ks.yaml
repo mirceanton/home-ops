@@ -14,6 +14,7 @@ spec:
   components:
     - ../../../../components/volsync/
     - ../../../../components/dragonfly/
+    - ../../../../components/cnpg/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -32,8 +33,6 @@ spec:
       namespace: database-system
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: openebs
-      namespace: storage-system
     - name: 1password-connect
       namespace: security-system
     - name: volsync
