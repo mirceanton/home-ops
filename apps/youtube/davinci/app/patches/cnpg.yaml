@@ -6,13 +6,6 @@ metadata:
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
-
-  bootstrap:
-    initdb:
-      database: davinci
-      owner: davinci
-
   managed:
     services:
       additional:
@@ -25,22 +18,3 @@ spec:
                 external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
             spec:
               type: LoadBalancer
-
-  storage:
-    storageClass: openebs-zfs
-    size: 4Gi
-
-  walStorage:
-    storageClass: openebs-zfs
-    size: 2Gi
-
-  resources:
-    requests:
-      cpu: 20m
-      memory: 256Mi
-    limits:
-      memory: 512Mi
-
-  postgresql:
-    pg_hba:
-      - host all all 0.0.0.0/0 scram-sha-256

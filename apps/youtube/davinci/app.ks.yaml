@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: davinci
+  name: &app davinci
 spec:
   interval: 10m
   prune: true
@@ -10,19 +10,20 @@ spec:
   targetNamespace: youtube
 
   path: ./apps/youtube/davinci/app
+  components:
+    - ../../../../components/cnpg/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
 
   postBuild:
-    substitute: {}
+    substitute:
+      APP: *app
 
   decryption: {provider: sops}
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: openebs
-      namespace: storage-system
     - name: 1password-connect
       namespace: security-system
