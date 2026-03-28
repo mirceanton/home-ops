@@ -2,7 +2,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: davinci-postgres
+  name: ${APP}-postgres
   annotations:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
@@ -12,7 +12,7 @@ spec:
         - selectorType: rw
           serviceTemplate:
             metadata:
-              name: davinci-postgres-lb
+              name: ${APP}-postgres-lb
               annotations:
                 metallb.io/loadBalancerIPs: 10.0.10.251
                 external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
