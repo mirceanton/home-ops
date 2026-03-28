@@ -4,6 +4,7 @@ kind: Component
 
 resources:
   - cnpg.yaml
+  - database.yaml
   - scripts.configmap.yaml
   - jobs/backup.cronjob.yaml
   - jobs/restore.cronjob.yaml
