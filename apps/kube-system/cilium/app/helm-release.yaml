@@ -61,7 +61,34 @@ spec:
     # HUBBLE - NETWORK OBSERVABILITY
     # -----------------------------------------------------------------------------
     hubble:
-      enabled: false
+      enabled: true
+
+      relay:
+        enabled: true
+        rollOutPods: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
+      ui:
+        enabled: true
+        rollOutPods: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+        backend:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
 
     # -----------------------------------------------------------------------------
     # OPERATOR CONFIGURATION
