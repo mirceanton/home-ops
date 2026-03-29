@@ -139,3 +139,12 @@ spec:
             target:
               kind: Deployment
               name: kustomize-controller
+
+          - # Use RC image for kustomize-controller
+            patch: |-
+              - op: replace
+                path: /spec/template/spec/containers/0/image
+                value: ghcr.io/fluxcd/kustomize-controller:rc-203b42e7
+            target:
+              kind: Deployment
+              name: kustomize-controller
