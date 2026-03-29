@@ -53,8 +53,3 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
-      tailscale:
-        hostnames: ["speedtest.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system

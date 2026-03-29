@@ -185,15 +185,6 @@ spec:
           - backendRefs:
               - identifier: frontend
                 port: http
-      tailscale:
-        hostnames: ["fitness.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: frontend
-                port: http
 
     persistence:
       data:

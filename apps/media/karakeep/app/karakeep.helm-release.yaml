@@ -126,6 +126,17 @@ spec:
         ports:
           http: {port: 7700}
 
+    route:
+      home:
+        hostnames: ["karakeep.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http
+
     persistence:
       data:
         existingClaim: ${APP}
@@ -144,23 +155,3 @@ spec:
             app: [{path: /tmp}]
           meilisearch:
             app: [{path: /tmp}]
-
-    route:
-      home:
-        hostnames: ["karakeep.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: http
-      tailscale:
-        hostnames: ["karakeep.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: http

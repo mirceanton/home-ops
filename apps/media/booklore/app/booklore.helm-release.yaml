@@ -94,11 +94,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
-      tailscale:
-        hostnames: ["booklore.ts.mirceanton.com", "books.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
 
     persistence:
       data:

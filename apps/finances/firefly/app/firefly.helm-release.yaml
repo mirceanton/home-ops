@@ -166,17 +166,6 @@ spec:
           - backendRefs:
               - name: firefly
                 port: 8080
-
-      tailscale:
-        hostnames: ["firefly.ts.mirceanton.com"]
-        parentRefs:
-          - name: envoy-tailscale
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - name: firefly
-                port: 8080
-
       importer:
         hostnames: ["firefly-importer.home.mirceanton.com"]
         parentRefs:
