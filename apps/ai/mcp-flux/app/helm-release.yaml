@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mcp-flux
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: mcp-flux
+
+  values:
+    transport: http # sse for server-sent events, http for streamable HTTP
+    readonly: false
+
+    networkPolicy:
+      create: false
+      ingress:
+        namespaces: []
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
