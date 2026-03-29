@@ -22,3 +22,6 @@ mcpServers:
     url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
     type: sse
 
+  flux:
+    url: http://mcp-flux.ai.svc.cluster.local:9090/mcp
+    type: streamable-http
