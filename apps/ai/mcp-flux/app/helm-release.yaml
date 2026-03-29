@@ -11,6 +11,7 @@ spec:
     name: mcp-flux
 
   values:
+    fullnameOverride: mcp-flux
     transport: http # sse for server-sent events, http for streamable HTTP
     readonly: false
 
