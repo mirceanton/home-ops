@@ -9,3 +9,10 @@ resources:
   - ./external-secret.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
+
+configMapGenerator:
+  - name: librechat-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - librechat.yaml=./files/librechat.yaml
