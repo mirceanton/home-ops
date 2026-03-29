@@ -10,6 +10,9 @@ spec:
     kind: OCIRepository
     name: librechat
 
+  dependsOn:
+    - name: librechat-mongodb
+
   values:
     controllers:
       librechat:

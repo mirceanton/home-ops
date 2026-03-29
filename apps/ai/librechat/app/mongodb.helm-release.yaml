@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: librechat-mongodb
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: librechat-mongodb
+
+  values:
+    fullnameOverride: librechat-mongodb
+    replicaCount: 1
+
+    auth:
+      enabled: false
+
+    persistence:
+      enabled: true
+      storageClass: openebs-zfs
+      size: 5Gi
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+
+    metrics:
+      enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+      serviceMonitor:
+        enabled: true
+        interval: 30s
+        scrapeTimeout: 10s
