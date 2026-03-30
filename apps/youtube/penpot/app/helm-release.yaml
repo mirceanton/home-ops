@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: penpotapp/frontend
-              tag: "2.14.0"
+              tag: "2.14.1"
             env:
               PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
               PENPOT_TERMS_OF_SERVICE_URI: ""
