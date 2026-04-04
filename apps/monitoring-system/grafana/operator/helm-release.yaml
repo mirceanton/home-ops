@@ -15,9 +15,9 @@ spec:
     resources:
       requests:
         cpu: 20m
-        memory: 32Mi
-      limits:
         memory: 64Mi
+      limits:
+        memory: 128Mi
 
     serviceMonitor: {enabled: true}
     dashboard: {enabled: true}
