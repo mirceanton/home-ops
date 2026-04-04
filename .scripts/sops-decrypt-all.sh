@@ -20,7 +20,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-find . -regextype egrep -regex "\.\/.+\/.*.sops.yaml" -type f | while IFS= read -r file; do
+find -E . -regex "\.\/.+\/.*.sops.yaml" -type f | while IFS= read -r file; do
     decrypted_file="${file%.sops.yaml}.yaml"
 
     if [ -f "$decrypted_file" ]; then

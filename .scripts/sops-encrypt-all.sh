@@ -6,7 +6,7 @@ NC='\033[0m'
 
 while IFS= read -r path; do
     path=${path/.sops/ }
-    find . -regextype egrep -regex ".*/$path" -type f | while IFS= read -r file; do
+    find -E . -regex ".*/$path" -type f | while IFS= read -r file; do
         encrypted_file="${file%.yaml}.sops.yaml"
 
         if [ -f "$encrypted_file" ]; then
@@ -29,4 +29,4 @@ while IFS= read -r path; do
             sops --encrypt "$file" >"$encrypted_file"
         fi
     done
-done < <(grep -oP '^\s*- path_regex:\s*\K.*' ".sops.yaml")
+done < <(grep -E '^\s*- path_regex:' ".sops.yaml" | sed 's/^\s*- path_regex:\s*//')
