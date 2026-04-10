@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ollama/ollama
-              tag: 0.20.3
+              tag: 0.20.5
             env:
               TZ: Europe/Bucharest
               OLLAMA_HOST: "::"
