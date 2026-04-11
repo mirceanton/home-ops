@@ -29,4 +29,4 @@ while IFS= read -r path; do
             sops --encrypt "$file" >"$encrypted_file"
         fi
     done
-done < <(grep -E '^\s*- path_regex:' ".sops.yaml" | sed 's/^\s*- path_regex:\s*//')
+done < <(grep -E '^[[:space:]]*- path_regex:' ".sops.yaml" | sed 's/^[[:space:]]*- path_regex:[[:space:]]*//')
