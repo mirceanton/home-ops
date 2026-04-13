@@ -167,7 +167,7 @@ spec:
     kubeApiServer: {enabled: true}
     kubeControllerManager: {enabled: true}
     kubeScheduler: {enabled: true}
-    kubeProxy: {enabled: true}
+    kubeProxy: {enabled: false}
     kubeEtcd:
       enabled: true
       service:
