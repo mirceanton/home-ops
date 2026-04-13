@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/database_v1.json
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
