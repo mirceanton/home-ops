@@ -6,7 +6,7 @@ namespace: ai
 
 resources:
   - ./namespace.yaml
-  - ./librechat
+  # - ./librechat
   - ./mcp-flux
   - ./mcp-grafana
   - ./mcp-homeassistant
