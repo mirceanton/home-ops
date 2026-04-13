@@ -16,8 +16,6 @@ spec:
         type: cronjob
         cronjob:
           schedule: "0 * * * *"
-          successfulJobsHistoryLimit: 1
-          failedJobsHistoryLimit: 3
         pod:
           restartPolicy: OnFailure
         containers:
