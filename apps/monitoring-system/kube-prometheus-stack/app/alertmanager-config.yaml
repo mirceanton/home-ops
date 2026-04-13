@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/alertmanagerconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager
+spec:
+  route:
+    receiver: pushover
+    groupBy: [alertname, namespace]
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+
+  receivers:
+    - name: pushover
+      pushoverConfigs:
+        - userKey:
+            name: alertmanager-pushover-secret
+            key: user-key
+          token:
+            name: alertmanager-pushover-secret
+            key: token
+          title: '{{ template "pushover.default.title" . }}'
+          message: '{{ template "pushover.default.message" . }}'
+          url: '{{ template "pushover.default.url" . }}'
+          priority: '{{ if eq .Status "firing" }}1{{ else }}0{{ end }}'
+          sound: gamelan
+          retry: 60s
+          expire: 1h
