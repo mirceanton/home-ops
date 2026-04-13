@@ -13,7 +13,7 @@ spec:
   values:
     instance:
       distribution:
-        artifact: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests:v0.42.1
+        artifact: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests:v0.46.0
 
       cluster:
         networkPolicy: false
@@ -136,15 +136,6 @@ spec:
               - op: add
                 path: /spec/template/spec/containers/0/args/-
                 value: --feature-gates=CancelHealthCheckOnNewRevision=true
-            target:
-              kind: Deployment
-              name: kustomize-controller
-
-          - # Use RC image for kustomize-controller
-            patch: |-
-              - op: replace
-                path: /spec/template/spec/containers/0/image
-                value: ghcr.io/fluxcd/kustomize-controller:rc-203b42e7
             target:
               kind: Deployment
               name: kustomize-controller
