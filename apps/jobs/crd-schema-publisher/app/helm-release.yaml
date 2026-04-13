@@ -1,0 +1,78 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: crd-schema-publisher
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: crd-schema-publisher
+
+  values:
+    controllers:
+      crd-schema-publisher:
+        type: cronjob
+        cronjob:
+          schedule: "0 * * * *"
+          successfulJobsHistoryLimit: 1
+          failedJobsHistoryLimit: 3
+        pod:
+          restartPolicy: OnFailure
+        containers:
+          app:
+            image:
+              repository: ghcr.io/sholdee/crd-schema-publisher
+              tag: latest
+            env:
+              CF_PAGES_PROJECT: k8s-schemas
+              OUTPUT_DIR: /output
+            envFrom:
+              - secretRef: {name: crd-schema-publisher}
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 100m
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: [ALL]}
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+
+    persistence:
+      output:
+        type: emptyDir
+        globalMounts:
+          - path: /output
+
+    serviceAccount:
+      crd-schema-publisher: {}
+
+    rbac:
+      bindings:
+        crd-schema-publisher:
+          type: ClusterRoleBinding
+          roleRef:
+            kind: ClusterRole
+            name: crd-schema-publisher
+          subjects:
+            - identifier: crd-schema-publisher
+      roles:
+        crd-schema-publisher:
+          type: ClusterRole
+          rules:
+            - apiGroups: [apiextensions.k8s.io]
+              resources: [customresourcedefinitions]
+              verbs: [get, list, watch]
