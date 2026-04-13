@@ -20,17 +20,16 @@ spec:
         containers:
           mktxp:
             image:
-              repository: ghcr.io/akpw/mktxp
-              tag: 1.2.17
-            command: ["mktxp"]
+              repository: ghcr.io/eleboucher/mktxp
+              tag: 0.0.5
             args: ["--cfg-dir", "/mktxp_config", "export"]
 
             resources:
               requests:
                 cpu: 20m
-                memory: 256Mi
+                memory: 32Mi
               limits:
-                memory: 2Gi
+                memory: 128Mi
 
             securityContext:
               allowPrivilegeEscalation: false
@@ -57,7 +56,7 @@ spec:
         endpoints:
           - port: http
             scheme: http
-            path: /
+            path: /metrics
             interval: 1m
             scrapeTimeout: 10s
 
@@ -66,10 +65,10 @@ spec:
         type: configMap
         name: mktxp-config
         globalMounts:
-          - path: /mktxp_config/mktxp.conf
-            subPath: mktxp.conf
-          - path: /mktxp_config/_mktxp.conf
-            subPath: _mktxp.conf
+          - path: /mktxp_config/mktxp.yaml
+            subPath: mktxp.yaml
+          - path: /mktxp_config/_mktxp.yaml
+            subPath: _mktxp.yaml
       credentials:
         type: secret
         name: mktxp-credentials
