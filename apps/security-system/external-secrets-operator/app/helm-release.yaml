@@ -27,7 +27,6 @@ spec:
         cpu: 25m
         memory: 64Mi
       limits:
-        cpu: 100m
         memory: 256Mi
 
     podSecurityContext: {fsGroup: 1000}
@@ -54,7 +53,6 @@ spec:
           cpu: 25m
           memory: 128Mi
         limits:
-          cpu: 100m
           memory: 256Mi
 
       podSecurityContext: {fsGroup: 1000}
@@ -81,7 +79,6 @@ spec:
           cpu: 25m
           memory: 64Mi
         limits:
-          cpu: 100m
           memory: 128Mi
 
       podSecurityContext: {fsGroup: 1000}
