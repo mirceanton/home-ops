@@ -42,10 +42,7 @@ spec:
           - chassis # chassis status, power status, etc.
 
     serviceMonitor:
-      enabled: true
-      interval: 30s
-      timeout: 10s
-      telemetryPath: /metrics
+      enabled: false
 
     scrapeConfig:
       enabled: true
