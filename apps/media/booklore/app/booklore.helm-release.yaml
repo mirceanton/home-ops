@@ -41,11 +41,10 @@ spec:
         containers:
           booklore:
             image:
-              repository: ghcr.io/booklore-app/booklore
-              tag: v2.2.1@sha256:252586c469ff6d07a06469fd1d49f19af932f4d323713d253c5d29e33b6ec97a
-            command: ["java"]
-            args: ["-jar", "/app/app.jar"]
+              repository: ghcr.io/grimmory-tools/grimmory
+              tag: v2.3.0
             env:
+              DISK_TYPE: NETWORK
               DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
               DATABASE_USERNAME: booklore
               DATABASE_PASSWORD:
