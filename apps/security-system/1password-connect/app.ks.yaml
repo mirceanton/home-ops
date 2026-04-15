@@ -6,6 +6,7 @@ metadata:
   name: 1password-connect
 spec:
   interval: 1m30s
+  timeout: 5m
   prune: true
   wait: true
   targetNamespace: security-system
