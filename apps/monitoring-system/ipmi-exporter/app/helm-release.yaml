@@ -10,47 +10,34 @@ spec:
     kind: OCIRepository
     name: ipmi-exporter
 
-  valuesFrom:
-    - kind: Secret
-      name: ipmi-credentials
-      valuesKey: username
-      targetPath: modules.default.user
-    - kind: Secret
-      name: ipmi-credentials
-      valuesKey: password
-      targetPath: modules.default.pass
-
   values:
-    fullnameOverride: *app
-    replicaCount: 1
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: null
-        memory: 128Mi
+    controllers:
+      ipmi-exporter:
+        containers:
+          ipmi-exporter:
+            image:
+              repository: registry.hub.docker.com/prometheuscommunity/ipmi-exporter
+              tag: v1.10.1
+            args:
+              - "--config.file"
+              - "/config.yml"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
 
-    modules:
-      default:
-        driver: "LAN_2_0"
-        privilege: "user"
-        timeout: 10000 # freeipmi session-timeout in ms; max scrape = timeout * num_collectors
-        collectors:
-          - bmc
-          - ipmi # temps, fans, voltages, etc.
-          - chassis # chassis status, power status, etc.
+    service:
+      ipmi-exporter:
+        ports:
+          http:
+            port: 9290
 
-    serviceMonitor:
-      enabled: false
-
-    scrapeConfig:
-      enabled: true
-      mode: remote
-      scrapeInterval: 60s
-      scrapeTimeout: 30s
-      metricsPath: /ipmi # default is /metrics for local mode, /ipmi for remote mode
-      scheme: HTTP # HTTP or HTTPS
-      staticConfigs:
-        - targets:
-            - bmc-nas.mgmt.h.mirceanton.com
+    persistence:
+      config:
+        type: secret
+        name: ipmi-credentials
+        globalMounts:
+          - path: /config.yml
+            subPath: config.yml
