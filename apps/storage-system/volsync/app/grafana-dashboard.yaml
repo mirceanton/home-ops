@@ -5,14 +5,14 @@ kind: GrafanaDashboard
 metadata:
   name: volsync
 spec:
+  url: https://grafana.com/api/dashboards/21356/revisions/3/download
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      dashboards: grafana
+      grafana.internal/instance: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
   envs:
     - name: VAR_REPLICATIONDESTNAME
       value: .*-dst
-  url: https://grafana.com/api/dashboards/21356/revisions/3/download
