@@ -46,8 +46,8 @@ spec:
             env:
               DISK_TYPE: NETWORK
               DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
-              DATABASE_USERNAME: booklore
-              DATABASE_PASSWORD:
+              DB_USER: booklore
+              DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
                     name: booklore-secret
