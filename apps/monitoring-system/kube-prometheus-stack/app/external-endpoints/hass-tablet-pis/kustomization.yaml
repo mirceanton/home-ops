@@ -4,5 +4,4 @@ kind: Kustomization
 
 resources:
   - ./scrape-config.yaml
-  - ./grafana-dashboard.yaml
   - ./prometheus-rule.yaml
