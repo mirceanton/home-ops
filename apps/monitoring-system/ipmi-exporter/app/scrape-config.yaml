@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: ipmi-exporter
+spec:
+  jobName: ipmi-exporter
+  params:
+    module: [default]
+  scrapeInterval: 60s
+  scrapeTimeout: 30s
+  metricsPath: /ipmi
+  scheme: HTTP
+  staticConfigs:
+    - targets: ["bmc-nas.mgmt.h.mirceanton.com"]
+  relabelings:
+    - sourceLabels: [__address__]
+      targetLabel: __param_target
+      action: replace
+    - sourceLabels: [__param_target]
+      targetLabel: instance
+      action: replace
+    - targetLabel: __address__
+      replacement: ipmi-exporter.monitoring-system.svc.cluster.local:9290
+      action: replace
