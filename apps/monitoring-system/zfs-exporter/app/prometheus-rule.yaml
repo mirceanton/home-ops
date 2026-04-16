@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: zfs-exporter
+spec:
+  groups:
+    - name: zfs.rules
+      rules:
+        # ---- Exporter Availability ----
+        - alert: ZFSScrapeError
+          expr: up{job=~".*zfs.*"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ZFS exporter scrape failing"
+            description: >-
+              Prometheus cannot reach the ZFS exporter pod.
+              Check that the exporter deployment is healthy and that
+              /dev/zfs is accessible on the node.
+
+        # ---- Pool Health ----
+        - alert: ZFSPoolDegraded
+          expr: zfs_pool_health == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} is degraded"
+            description: >-
+              Pool {{ $labels.pool }} is in DEGRADED state. A device has
+              failed but the pool is still functioning with reduced redundancy.
+              Run `zpool status {{ $labels.pool }}` to identify the failed device.
+
+        - alert: ZFSPoolUnhealthy
+          expr: zfs_pool_health > 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} is in an unhealthy state"
+            description: >-
+              Pool {{ $labels.pool }} is reporting health code {{ $value }}
+              (2=Faulted, 3=Offline, 4=Unavailable, 5=Removed, 6=Suspended).
+              Immediate attention required — data may be at risk.
+
+        - alert: ZFSPoolReadOnly
+          expr: zfs_pool_readonly == 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} is read-only"
+            description: >-
+              Pool {{ $labels.pool }} has switched to read-only mode. This
+              typically occurs when the pool reaches 100% capacity or encounters
+              unrecoverable errors. Run `zpool status {{ $labels.pool }}`.
+
+        # ---- Pool Capacity ----
+        - alert: ZFSPoolCapacityWarning
+          expr: zfs_pool_capacity_ratio > 0.80
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} is running low on space"
+            description: >-
+              Pool {{ $labels.pool }} is {{ $value | humanizePercentage }} full
+              (threshold: 80%). ZFS performance begins to degrade above 80%.
+              Consider adding vdevs or removing data.
+
+        - alert: ZFSPoolCapacityCritical
+          expr: zfs_pool_capacity_ratio > 0.90
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} is critically low on space"
+            description: >-
+              Pool {{ $labels.pool }} is {{ $value | humanizePercentage }} full
+              (threshold: 90%). The pool may become read-only at 100%.
+              Immediate action required.
+
+        # ---- Pool Fragmentation ----
+        - alert: ZFSPoolHighFragmentation
+          expr: zfs_pool_fragmentation_ratio > 0.70
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ZFS pool {{ $labels.pool }} has high fragmentation"
+            description: >-
+              Pool {{ $labels.pool }} fragmentation is {{ $value | humanizePercentage }}
+              (threshold: 70%). High fragmentation degrades sequential I/O
+              performance. Consider running a scrub or adding free space.
