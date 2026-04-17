@@ -136,6 +136,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/tdarr.webp"
 
+      - name: "Streamarr"
+        subtitle: "Audio & Subtitle Janitor"
+        url: "https://streamarr.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-sliders"
+
       - name: "Prowlarr"
         subtitle: "Indexer Manager"
         url: "https://prowlarr.home.mirceanton.com"

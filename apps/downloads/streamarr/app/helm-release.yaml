@@ -1,0 +1,91 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: streamarr
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: streamarr
+
+  values:
+    controllers:
+      streamarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/mirceanton/streamarr
+              tag: v0.22.0
+            env:
+              TZ: "Europe/Bucharest"
+              STREAMARR_PORT: &port 8080
+              STREAMARR_CONFIG_PATH: /config/streamarr.db
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 4Gi
+
+            probes:
+              liveness: {enabled: true}
+              readiness: {enabled: true}
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["streamarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      tvshows:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/TV_Shows
+        globalMounts:
+          - path: /nfs-media/TV_Shows
+      movies:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Movies
+        globalMounts:
+          - path: /nfs-media/Movies
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

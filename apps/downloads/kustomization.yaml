@@ -15,4 +15,5 @@ resources:
   - ./radarr
   - ./shelfmark
   - ./sonarr
+  - ./streamarr
   - ./tdarr
