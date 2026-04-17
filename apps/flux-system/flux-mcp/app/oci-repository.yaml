@@ -3,13 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: mcp-grafana
+  name: flux-mcp
 spec:
   interval: 15m
-  url: oci://ghcr.io/bjw-s-labs/helm/app-template
+  url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator-mcp
   ref:
-    tag: 4.6.2
-
+    tag: 0.45.1
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy

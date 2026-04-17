@@ -10,7 +10,7 @@ resources:
   # Monitoring Stack
   - ./kube-prometheus-stack
   - ./grafana
-  - ./mcp-grafana
+  - ./grafana-mcp
 
   # Exporters
   - ./ipmi-exporter

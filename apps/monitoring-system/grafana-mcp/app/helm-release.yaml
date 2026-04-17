@@ -3,22 +3,22 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mcp-grafana
+  name: grafana-mcp
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: mcp-grafana
+    name: grafana-mcp
 
   values:
     controllers:
-      mcp-grafana:
+      grafana-mcp:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: grafana/mcp-grafana
+              repository: grafana/grafana-mcp
               tag: 0.11.6
             env:
               GRAFANA_URL: http://grafana-service.monitoring-system:3000
@@ -27,7 +27,7 @@ spec:
               GRAFANA_AUTH:
                 valueFrom:
                   secretKeyRef:
-                    name: mcp-grafana-secret
+                    name: grafana-mcp-secret
                     key: GRAFANA_AUTH
 
             probes:
@@ -70,7 +70,7 @@ spec:
 
     service:
       app:
-        controller: mcp-grafana
+        controller: grafana-mcp
         ports:
           http:
             port: *port

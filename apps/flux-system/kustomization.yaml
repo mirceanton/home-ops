@@ -8,4 +8,4 @@ resources:
   - ./namespace.yaml
   - ./flux-operator
   - ./flux-instance
-  - ./mcp-flux
+  - ./flux-mcp

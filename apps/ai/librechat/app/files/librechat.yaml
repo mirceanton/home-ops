@@ -15,13 +15,13 @@ endpoints:
 
 mcpServers:
   grafana:
-    url: http://mcp-grafana.ai.svc.cluster.local:8000/sse
+    url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
     type: sse
 
   homeassistant:
-    url: http://mcp-homeassistant.ai.svc.cluster.local:8086/sse
+    url: http://homeassistant-mcp.home-automation.svc.cluster.local:8086/sse
     type: sse
 
   flux:
-    url: http://mcp-flux.ai.svc.cluster.local:9090/mcp
+    url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
     type: streamable-http
