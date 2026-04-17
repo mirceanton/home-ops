@@ -3,16 +3,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mcp-homeassistant
+  name: homeassistant-mcp
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: mcp-homeassistant
+    name: homeassistant-mcp
 
   values:
     controllers:
-      mcp-homeassistant:
+      homeassistant-mcp:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -40,7 +40,7 @@ spec:
               HOMEASSISTANT_TOKEN:
                 valueFrom:
                   secretKeyRef:
-                    name: mcp-homeassistant-secret
+                    name: homeassistant-mcp-secret
                     key: HOMEASSISTANT_TOKEN
             resources:
               requests:
@@ -60,7 +60,7 @@ spec:
 
     service:
       app:
-        controller: mcp-homeassistant
+        controller: homeassistant-mcp
         ports:
           http:
             port: 8086

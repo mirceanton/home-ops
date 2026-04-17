@@ -3,15 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app mcp-flux
+  name: &app homeassistant-mcp
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 5m
-  targetNamespace: ai
+  targetNamespace: home-automation
 
-  path: ./apps/ai/mcp-flux/app
+  path: ./apps/home-automation/homeassistant-mcp/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,4 +21,8 @@ spec:
     substitute:
       APP: *app
 
-  dependsOn: []
+  dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: home-assistant
+      namespace: home-automation

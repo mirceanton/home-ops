@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mcp-flux
+  name: flux-mcp
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: mcp-flux
+    name: flux-mcp
 
   values:
-    fullnameOverride: mcp-flux
+    fullnameOverride: flux-mcp
     transport: http # sse for server-sent events, http for streamable HTTP
     readonly: false
 
@@ -25,5 +25,4 @@ spec:
         cpu: 10m
         memory: 64Mi
       limits:
-        cpu: null
         memory: 1Gi
