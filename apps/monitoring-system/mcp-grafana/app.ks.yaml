@@ -3,15 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app mcp-homeassistant
+  name: &app mcp-grafana
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 5m
-  targetNamespace: ai
+  targetNamespace: monitoring-system
 
-  path: ./apps/ai/mcp-homeassistant/app
+  path: ./apps/monitoring-system/mcp-grafana/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,5 +24,5 @@ spec:
   dependsOn:
     - name: 1password-connect
       namespace: security-system
-    - name: home-assistant
-      namespace: home-automation
+    - name: grafana-instance
+      namespace: monitoring-system
