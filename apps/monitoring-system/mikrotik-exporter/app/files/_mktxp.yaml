@@ -1,0 +1,20 @@
+mktxp:
+  listen: "0.0.0.0:49090"
+  socket_timeout: 2
+  verbose_mode: false
+
+  initial_delay_on_failure: 120
+  max_delay_on_failure: 900
+  delay_inc_div: 5
+
+  bandwidth: true
+  bandwidth_test_dns_server: "8.8.8.8"
+  bandwidth_test_interval: 600
+
+  fetch_routers_in_parallel: true
+  max_worker_threads: 5
+  max_scrape_duration: 10
+  total_max_scrape_duration: 30
+
+  persistent_router_connection_pool: true
+  persistent_dhcp_cache: true

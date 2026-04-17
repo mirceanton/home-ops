@@ -1,0 +1,81 @@
+default:
+  port: 8729
+  use_ssl: true
+  no_ssl_certificate: false
+  ssl_certificate_verify: false
+  ssl_check_hostname: true
+  plaintext_login: true
+
+  health: true
+  installed_packages: true
+  dhcp: false
+  dhcp_lease: false
+  connections: true
+  connection_stats: false
+  interface: true
+  route: false
+  pool: false
+  firewall: false
+  neighbor: false
+  dns: false
+  ipv6_route: false
+  ipv6_pool: false
+  ipv6_firewall: false
+  ipv6_neighbor: false
+  poe: false
+  monitor: true
+  netwatch: false
+  public_ip: false
+  wireless: false
+  wireless_clients: false
+  capsman: false
+  capsman_clients: false
+  w60g: false
+  eoip: false
+  gre: false
+  ipip: false
+  lte: false
+  ipsec: false
+  switch_port: true
+  kid_control_assigned: false
+  kid_control_dynamic: false
+  user: true
+  queue: true
+  bfd: false
+  bgp: false
+  routing_stats: false
+  certificate: false
+  container: false
+  interface_name_format: name
+  check_for_updates: true
+
+routers:
+  RB5009:
+    hostname: 10.0.0.1
+    credentials_file: /mktxp_credentials/rb5009.yaml
+    dhcp: true
+    dhcp_lease: true
+    route: true
+    pool: true
+    firewall: true
+    neighbor: true
+    dns: true
+    monitor: true
+    netwatch: true
+    public_ip: true
+    wireless: true
+    wireless_clients: true
+    capsman: true
+    capsman_clients: true
+
+  CRS317:
+    hostname: 10.0.0.2
+    credentials_file: /mktxp_credentials/crs317.yaml
+
+  CRS326:
+    hostname: 10.0.0.3
+    credentials_file: /mktxp_credentials/crs326.yaml
+
+  HEX:
+    hostname: 10.0.0.4
+    credentials_file: /mktxp_credentials/hex.yaml
