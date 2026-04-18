@@ -16,4 +16,3 @@ resources:
   - ./shelfmark
   - ./sonarr
   - ./streamarr
-  - ./tdarr
