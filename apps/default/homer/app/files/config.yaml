@@ -48,7 +48,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/karakeep.webp"
 
-
   - name: "Home"
     icon: "fas fa-home"
     items:
@@ -130,12 +129,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/bazarr.webp"
 
-      - name: "Tdarr"
-        subtitle: "Media Transcoder"
-        url: "https://tdarr.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/tdarr.webp"
-
       - name: "Streamarr"
         subtitle: "Audio & Subtitle Janitor"
         url: "https://streamarr.home.mirceanton.com"
@@ -171,7 +164,6 @@ services:
         url: "https://chat.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/librechat.webp"
-
 
   - name: "Admin"
     icon: "fas fa-server"
