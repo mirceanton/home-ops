@@ -36,6 +36,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/navidrome.webp"
 
+      - name: "Papra"
+        subtitle: "Document Management"
+        url: "https://documents.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/papra.webp"
+
       - name: "Booklore"
         subtitle: "Book Library"
         url: "https://books.home.mirceanton.com"
