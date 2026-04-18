@@ -58,12 +58,6 @@ spec:
         ports:
           http:
             port: *port
-    route:
-      home:
-        hostnames: ["qbit.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
 
     persistence:
       config:
