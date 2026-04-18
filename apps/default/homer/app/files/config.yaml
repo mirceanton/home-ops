@@ -199,3 +199,9 @@ services:
         url: "https://flux.admin.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/flux-cd.webp"
+
+      - name: "Hubble"
+        subtitle: "Network Observability"
+        url: "https://hubble.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/hubble.webp"
