@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: readurr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: readurr
+
+  values:
+    controllers:
+      readurr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DATABASE_URL)"]
+            env:
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: readurr-postgres-app
+                    key: uri
+
+        containers:
+          readurr:
+            image:
+              repository: ghcr.io/readur/readur
+              tag: 2.8.0
+            env:
+              UPLOAD_PATH: /data/uploads
+              WATCH_FOLDER: /nfs-media/Documents
+              OCR_LANGUAGE: eng
+              CONCURRENT_OCR_JOBS: "2"
+              OCR_TIMEOUT_SECONDS: "300"
+              MAX_FILE_SIZE_MB: "50"
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: readurr-postgres-app
+                    key: uri
+              JWT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: readurr-secret
+                    key: JWT_SECRET
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 1Gi
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 8000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 30
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  failureThreshold: 10
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      enableServiceLinks: false
+
+    service:
+      app:
+        ports:
+          http:
+            port: 8000
+
+    route:
+      home:
+        hostnames: ["documents.home.mirceanton.com", "readurr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /data
+      documents:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Documents
+        globalMounts:
+          - path: /nfs-media/Documents
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

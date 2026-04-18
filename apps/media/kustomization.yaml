@@ -12,3 +12,4 @@ resources:
   - ./jellyfin
   - ./karakeep
   - ./navidrome
+  - ./readurr
