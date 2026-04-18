@@ -1,0 +1,78 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opencode
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: opencode
+
+  values:
+    fullnameOverride: opencode
+
+    controllers:
+      opencode:
+        containers:
+          opencode:
+            image:
+              repository: ghcr.io/anomalyco/opencode
+              tag: 1.4.12@sha256:c196a341e3b4a8dc9a534625d278a247ad6754f9f3fcb2fb30190e6444d52b6a
+            command: ["opencode", "web", "--hostname", "0.0.0.0"]
+            env:
+              TZ: "Europe/Bucharest"
+              HOME: /home/opencode
+
+            probes:
+              liveness: &probes
+                enabled: true
+              readiness: *probes
+              startup: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: {drop: ["ALL"]}
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+    service:
+      opencode:
+        ports:
+          http:
+            port: 4096
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: false
+        seccompProfile:
+          type: RuntimeDefault
+
+    route:
+      home:
+        hostnames: ["code.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        type: emptyDir
+        globalMounts:
+          - path: /home/opencode
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
