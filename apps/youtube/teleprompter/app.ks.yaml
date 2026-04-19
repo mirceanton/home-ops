@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: teleprompter
+  name: &app teleprompter
 spec:
   interval: 10m
   prune: true
@@ -11,8 +11,7 @@ spec:
   targetNamespace: youtube
 
   path: ./apps/youtube/teleprompter/app
-  components:
-    - ../../../../components/dragonfly/
+  components: []
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -20,9 +19,7 @@ spec:
 
   postBuild:
     substitute:
-      APP: teleprompter
+      APP: *app
 
-  dependsOn:
-    - name: dragonfly-operator
-      namespace: database-system
+  dependsOn: []
 
