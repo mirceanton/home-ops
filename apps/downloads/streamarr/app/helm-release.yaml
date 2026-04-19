@@ -61,6 +61,11 @@ spec:
           http:
             port: *port
 
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: http
+
     route:
       home:
         hostnames: ["streamarr.home.mirceanton.com"]

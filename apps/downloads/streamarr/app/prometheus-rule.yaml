@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: streamarr
+spec:
+  groups:
+    - name: streamarr.rules
+      rules:
+        - alert: StreamarrMediaNeedsAttention
+          expr: sum(streamarr_media_needs_attention_total) > 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Streamarr media needs attention"
+            description: >-
+              {{ $value }} media items are flagged as needing attention
+              (missing language or subtitle preferences).
+
+        - alert: StreamarrJobsStuck
+          expr: streamarr_jobs_total{status="pending"} > 0
+          for: 30m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Streamarr has pending jobs stuck in queue"
+            description: >-
+              {{ $value }} jobs have been pending for over 30 minutes.
+              A job may be stuck — check the Streamarr job queue.
