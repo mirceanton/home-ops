@@ -36,7 +36,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/live
-                    port: &backendPort 8001
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
