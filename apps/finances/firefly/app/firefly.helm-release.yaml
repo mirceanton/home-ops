@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: fireflyiii/core
-              tag: version-6.4.15
+              tag: version-6.6.1
             envFrom:
               - secretRef: {name: firefly-keys}
               - configMapRef: {name: firefly-settings}
