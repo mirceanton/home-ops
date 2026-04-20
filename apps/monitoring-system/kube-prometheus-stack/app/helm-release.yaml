@@ -20,36 +20,6 @@ spec:
     alertmanager:
       enabled: true
 
-      config:
-        route:
-          receiver: pushover
-          group_by: [alertname, namespace]
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 12h
-          routes:
-            - receiver: 'null'
-              matchers:
-                - alertname = "Watchdog"
-
-        receivers:
-          - name: 'null'
-          - name: pushover
-            pushover_configs:
-              - user_key:
-                  name: alertmanager-pushover-secret
-                  key: user-key
-                token:
-                  name: alertmanager-pushover-secret
-                  key: token
-                title: '{{ template "pushover.default.title" . }}'
-                message: '{{ template "pushover.default.message" . }}'
-                url: '{{ template "pushover.default.url" . }}'
-                priority: '{{ if eq .Status "firing" }}1{{ else }}0{{ end }}'
-                sound: gamelan
-                retry: 60s
-                expire: 1h
-
       route:
         main:
           enabled: true
@@ -59,6 +29,7 @@ spec:
               namespace: network-system
 
       alertmanagerSpec:
+        alertmanagerConfiguration: {name: alertmanager}
         # =======================================
         # App Settings
         # =======================================

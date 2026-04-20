@@ -6,6 +6,7 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
+  - ./alertmanager-config.yaml
 
   - ./grafana-dashboards.yaml
   - ./prometheus-rules
