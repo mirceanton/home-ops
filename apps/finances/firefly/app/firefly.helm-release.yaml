@@ -132,6 +132,11 @@ spec:
                   secretKeyRef:
                     name: firefly-data-importer-token
                     key: IMPORTER_TOKEN
+              ACCESS_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-data-importer-token
+                    key: ACCESS_TOKEN
 
             probes:
               liveness: {enabled: true}
