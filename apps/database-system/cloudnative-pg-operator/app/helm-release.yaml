@@ -20,3 +20,7 @@ spec:
         memory: 128Mi
       limits:
         memory: 256Mi
+
+    monitoring:
+      podMonitorEnabled: true
+      grafanaDashboard: { create: true }
