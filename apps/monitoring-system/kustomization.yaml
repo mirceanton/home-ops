@@ -14,5 +14,7 @@ resources:
 
   # Exporters
   - ./ipmi-exporter
+  - ./kube-state-metrics
   - ./mikrotik-exporter
+  - ./node-exporter
   - ./zfs-exporter

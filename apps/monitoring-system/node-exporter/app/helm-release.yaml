@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: node-exporter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: node-exporter
+
+  values:
+    fullnameOverride: node-exporter
+    hostNetwork: false
+    image:
+      registry: quay.io
+      repository: prometheus/node-exporter
+
+    resources:
+      requests:
+        cpu: 20m
+        memory: 32Mi
+      limits:
+        memory: 64Mi
+
+    prometheus:
+      monitor:
+        enabled: true
+        jobLabel: app.kubernetes.io/instance
