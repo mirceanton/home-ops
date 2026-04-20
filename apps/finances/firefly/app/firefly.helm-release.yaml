@@ -120,7 +120,7 @@ spec:
           main:
             image:
               repository: fireflyiii/data-importer
-              tag: version-2.0.3
+              tag: version-2.3.2
             envFrom:
               - configMapRef:
                   name: firefly-settings
