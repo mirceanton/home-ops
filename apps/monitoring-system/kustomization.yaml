@@ -9,6 +9,7 @@ resources:
 
   # Monitoring Stack
   - ./kube-prometheus-stack
+  - ./silence-operator
   - ./grafana
 
   # Exporters
