@@ -19,7 +19,7 @@ mcpServers:
     type: sse
 
   homeassistant:
-    url: http://homeassistant-mcp.home-automation.svc.cluster.local:8086/sse
+    url: http://home-assistant-mcp.home-automation.svc.cluster.local:8086/sse
     type: sse
 
   flux:
