@@ -24,11 +24,10 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: 1password-connect
-      namespace: security-system
     - name: external-secrets-operator
       namespace: security-system
     - name: volsync

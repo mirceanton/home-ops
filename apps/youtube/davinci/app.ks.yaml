@@ -28,5 +28,3 @@ spec:
       namespace: database-system
     - name: 1password-connect
       namespace: security-system
-    - name: external-secrets-operator
-      namespace: security-system
