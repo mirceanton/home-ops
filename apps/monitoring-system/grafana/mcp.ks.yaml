@@ -11,7 +11,7 @@ spec:
   timeout: 5m
   targetNamespace: monitoring-system
 
-  path: ./apps/monitoring-system/grafana-mcp/app
+  path: ./apps/monitoring-system/grafana/mcp
   sourceRef:
     kind: GitRepository
     name: flux-system
