@@ -33,3 +33,6 @@ spec:
   postgresql:
     pg_hba:
       - host all all ${CNPG_PG_HBA_CIDR:-10.244.0.0/16} scram-sha-256
+
+  monitoring:
+    enablePodMonitor: true
