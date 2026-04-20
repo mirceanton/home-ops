@@ -58,7 +58,6 @@ spec:
               namespace: network-system
 
       alertmanagerSpec:
-        alertmanagerConfiguration: {name: alertmanager}
         # =======================================
         # App Settings
         # =======================================
