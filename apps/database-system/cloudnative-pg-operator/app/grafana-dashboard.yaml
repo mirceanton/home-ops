@@ -5,13 +5,15 @@ kind: GrafanaDashboard
 metadata:
   name: cnpg
 spec:
+  grafanaCom:
+    id: 20417
+    revision: 4
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  configMapRef:
-    name: cnpg-grafana-dashboard
-    key: cnp.json

@@ -5,14 +5,18 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-global
 spec:
+  grafanaCom:
+    id: 15757
+    revision: 43
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/15757/revisions/43/download
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
@@ -21,14 +25,18 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-namespaces
 spec:
+  grafanaCom:
+    id: 15758
+    revision: 44
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/15758/revisions/44/download
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
@@ -37,14 +45,18 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-nodes
 spec:
+  grafanaCom:
+    id: 15759
+    revision: 40
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/15759/revisions/40/download
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
@@ -53,14 +65,18 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-pods
 spec:
+  grafanaCom:
+    id: 15760
+    revision: 37
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/15760/revisions/37/download
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
@@ -69,11 +85,15 @@ kind: GrafanaDashboard
 metadata:
   name: node-exporter-full
 spec:
+  grafanaCom:
+    id: 1860
+    revision: 42
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-  datasources:
-    - datasourceName: prometheus
-      inputName: DS_PROMETHEUS
-  url: https://grafana.com/api/dashboards/1860/revisions/42/download
