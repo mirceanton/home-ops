@@ -7,6 +7,5 @@ namespace: home-automation
 resources:
   - ./namespace.yaml
   - ./home-assistant
-  - ./homeassistant-mcp
   - ./mosquitto
   - ./zigbee2mqtt

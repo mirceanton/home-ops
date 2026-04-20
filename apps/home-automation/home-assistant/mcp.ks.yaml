@@ -11,7 +11,7 @@ spec:
   timeout: 5m
   targetNamespace: home-automation
 
-  path: ./apps/home-automation/homeassistant-mcp/app
+  path: ./apps/home-automation/home-assistant/mcp
   sourceRef:
     kind: GitRepository
     name: flux-system
