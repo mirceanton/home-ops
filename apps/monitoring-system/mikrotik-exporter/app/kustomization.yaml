@@ -15,6 +15,4 @@ resources:
   - helm-release.yaml
   - oci-repository.yaml
   - external-secret.yaml
-
-  - grafana/folder.yaml
-  - grafana/dashboard.yaml
+  - grafana-dashboard.yaml

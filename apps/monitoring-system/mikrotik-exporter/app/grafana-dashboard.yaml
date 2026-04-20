@@ -5,8 +5,9 @@ kind: GrafanaDashboard
 metadata:
   name: mikrotik-dashboard
 spec:
-  folderRef: mikrotik
-  url: https://grafana.com/api/dashboards/13679/revisions/23/download
+  grafanaCom:
+    id: 13679
+    revision: 24
 
   datasources:
     - datasourceName: prometheus
