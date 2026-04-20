@@ -19,6 +19,36 @@ spec:
     # ==========================================================================
     alertmanager:
       enabled: true
+
+      config:
+        route:
+          receiver: pushover
+          groupBy: [alertname, namespace]
+          groupWait: 30s
+          groupInterval: 5m
+          repeatInterval: 12h
+          routes:
+            - receiver: 'null'
+              matchers:
+                - alertname = "Watchdog"
+
+        receivers:
+          - name: pushover
+            pushoverConfigs:
+              - userKey:
+                  name: alertmanager-pushover-secret
+                  key: user-key
+                token:
+                  name: alertmanager-pushover-secret
+                  key: token
+                title: '{{ template "pushover.default.title" . }}'
+                message: '{{ template "pushover.default.message" . }}'
+                url: '{{ template "pushover.default.url" . }}'
+                priority: '{{ if eq .Status "firing" }}1{{ else }}0{{ end }}'
+                sound: gamelan
+                retry: 60s
+                expire: 1h
+
       route:
         main:
           enabled: true
@@ -74,6 +104,14 @@ spec:
           memory: 64Mi
         limits:
           memory: 128Mi
+
+      prometheusConfigReloader:
+        resources:
+          requests:
+            cpu: 5m
+            memory: 32M
+          limits:
+            memory: 32M
 
     # ==========================================================================
     # Prometheus
@@ -162,17 +200,11 @@ spec:
     # ==========================================================================
     # Exporters
     # ==========================================================================
-    coreDns: {enabled: true}
-    kubelet: {enabled: true}
-    kubeApiServer: {enabled: true}
     kubeControllerManager: {enabled: true}
-    kubeScheduler: {enabled: true}
+    kubeScheduler: {enabled: false}
     kubeProxy: {enabled: false}
-    kubeEtcd:
-      enabled: true
-      service:
-        selector:
-          component: kube-apiserver
+    kubeEtcd: {enabled: false}
+    coreDns: {enabled: true}
 
     nodeExporter: {enabled: true}
     prometheus-node-exporter:
@@ -191,6 +223,35 @@ spec:
           memory: 128Mi
         limits:
           memory: 512Mi
+
+    kubelet:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: labeldrop
+            regex: (uid)
+          - action: labeldrop
+            regex: (id|name)
+          - action: drop
+            sourceLabels:
+              - "__name__"
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+
+    kubeApiServer:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: drop
+            sourceLabels:
+              - "__name__"
+            regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
+          - action: drop
+            sourceLabels:
+              - "__name__"
+            regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
+
 
     # ==========================================================================
     # Additional Settings
