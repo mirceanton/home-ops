@@ -171,29 +171,12 @@ spec:
     # ==========================================================================
     # Exporters
     # ==========================================================================
+    nodeExporter: {enabled: false}
+    kubeStateMetrics: {enabled: false}
     kubeControllerManager: {enabled: true}
     kubeScheduler: {enabled: false}
     kubeProxy: {enabled: false}
     kubeEtcd: {enabled: false}
     coreDns: {enabled: true}
-
-    nodeExporter: {enabled: true}
-    prometheus-node-exporter:
-      resources:
-        requests:
-          cpu: 20m
-          memory: 32Mi
-        limits:
-          memory: 64Mi
-
-    kubeStateMetrics: {enabled: true}
-    kube-state-metrics:
-      resources:
-        requests:
-          cpu: 20m
-          memory: 128Mi
-        limits:
-          memory: 512Mi
-
     kubelet: {enabled: true}
     kubeApiServer: {enabled: true}
