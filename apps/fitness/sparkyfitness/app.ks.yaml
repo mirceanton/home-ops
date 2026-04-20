@@ -24,11 +24,6 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-    substituteFrom:
-      - kind: Secret
-        name: ${APP}-cnpg-backup-secret
-        optional: true
-
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
