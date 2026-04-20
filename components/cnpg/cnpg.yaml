@@ -8,6 +8,7 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   imageName: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
+  instances: ${CNPG_INSTANCES:-1}
 
   bootstrap:
     initdb:
@@ -28,6 +29,23 @@ spec:
       memory: ${CNPG_MEMORY_REQUEST:-256Mi}
     limits:
       memory: ${CNPG_MEMORY_LIMIT:-512Mi}
+
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: "s3://home-ops-backups/cnpg/${APP}"
+      endpointURL: https://garage-s3.nas.svc.h.mirceanton.com
+      s3Credentials:
+        accessKeyId:
+          name: "${APP}-cnpg-backup-secret"
+          key: AWS_ACCESS_KEY_ID
+        secretAccessKey:
+          name: "${APP}-cnpg-backup-secret"
+          key: AWS_SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
 
   postgresql:
     pg_hba:
