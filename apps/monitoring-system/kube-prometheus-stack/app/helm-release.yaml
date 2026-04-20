@@ -33,6 +33,7 @@ spec:
                 - alertname = "Watchdog"
 
         receivers:
+          - name: 'null'
           - name: pushover
             pushoverConfigs:
               - userKey:
