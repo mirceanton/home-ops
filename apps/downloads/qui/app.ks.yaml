@@ -14,6 +14,7 @@ spec:
   path: ./apps/downloads/qui/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/nfs-scaler/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -31,3 +32,5 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
+    - name: keda
+      namespace: kube-system
