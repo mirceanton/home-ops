@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/keda.sh/scaledobject_v1alpha1.json
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: ${APP}
+spec:
+  cooldownPeriod: ${COOLDOWN_PERIOD:=300}
+  minReplicaCount: ${MIN_REPLICAS:=0}
+  maxReplicaCount: ${MAX_REPLICAS:=1}
+  advanced:
+    restoreToOriginalReplicaCount: true
+
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: ${CONTROLLER:=Deployment}
+    name: ${APP}
+
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-operated.monitoring-system.svc.cluster.local:9090
+        query: max_over_time(probe_success{instance=~".+:2049"}[1m])
+        threshold: "1"
+        ignoreNullValues: "0"
