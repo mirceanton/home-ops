@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: http
+spec:
+  module: http_2xx
+  prober:
+    url: blackbox-exporter.monitoring-system:9115
+  targets:
+    staticConfig:
+      static:
+        - https://mirceanton.com
+        - https://links.mirceanton.com

@@ -1,0 +1,477 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: blackbox-exporter
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "graphTooltip": 1,
+      "panels": [
+
+        {
+          "type": "row",
+          "title": "Overview",
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+        },
+
+        {
+          "type": "stat",
+          "title": "Total Probes",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "count(probe_success{job=~\"$job\", instance=~\"$target\"})",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "colorMode": "background",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "fixed", "fixedColor": "blue" },
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }
+            }
+          }
+        },
+
+        {
+          "type": "stat",
+          "title": "Total Modules",
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "count(count by (module) (label_replace(probe_success{job=~\"$job\", instance=~\"$target\"}, \"module\", \"$1\", \"job\", \".*/(.+)\")))",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "colorMode": "background",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "fixed", "fixedColor": "purple" },
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] }
+            }
+          }
+        },
+
+        {
+          "type": "stat",
+          "title": "Avg Response Time",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 5 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "avg(probe_duration_seconds{job=~\"$job\", instance=~\"$target\"})",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "colorMode": "background",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "color": { "mode": "fixed", "fixedColor": "yellow" },
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "yellow", "value": null }] }
+            }
+          }
+        },
+
+        {
+          "type": "stat",
+          "title": "Overall Success Rate",
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 5 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "avg(probe_success{job=~\"$job\", instance=~\"$target\"}) * 100",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "colorMode": "background",
+            "graphMode": "none",
+            "textMode": "auto"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "min": 0,
+              "max": 100,
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "yellow", "value": 80 },
+                  { "color": "green", "value": 95 }
+                ]
+              }
+            }
+          }
+        },
+
+        {
+          "type": "table",
+          "title": "Modules Summary",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "count by (module) (label_replace(probe_success{job=~\"$job\", instance=~\"$target\"}, \"module\", \"$1\", \"job\", \".*/(.+)\"))",
+              "instant": true,
+              "format": "table",
+              "refId": "A"
+            },
+            {
+              "expr": "avg by (module) (label_replace(probe_success{job=~\"$job\", instance=~\"$target\"}, \"module\", \"$1\", \"job\", \".*/(.+)\")) * 100",
+              "instant": true,
+              "format": "table",
+              "refId": "B"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "joinByField",
+              "options": { "byField": "module", "mode": "outer" }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "renameByName": {
+                  "module": "Module",
+                  "Value": "Probe Count",
+                  "Value #A": "Probe Count",
+                  "Value #B": "Avg Success %"
+                },
+                "excludeByName": {
+                  "Time": true,
+                  "Time #B": true,
+                  "Time 1": true
+                },
+                "indexByName": {
+                  "module": 0,
+                  "Value": 1,
+                  "Value #A": 1,
+                  "Value #B": 2
+                }
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "displayMode": "auto"
+              }
+            },
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Avg Success %" },
+                "properties": [
+                  { "id": "unit", "value": "percent" },
+                  { "id": "min", "value": 0 },
+                  { "id": "max", "value": 100 },
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        { "color": "red", "value": null },
+                        { "color": "yellow", "value": 80 },
+                        { "color": "green", "value": 95 }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Probe Count" },
+                "properties": [
+                  { "id": "unit", "value": "short" },
+                  { "id": "custom.width", "value": 100 }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "sortBy": [{ "displayName": "Module", "desc": false }],
+            "footer": { "show": false }
+          }
+        },
+
+        {
+          "type": "row",
+          "title": "Probe Details",
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 }
+        },
+
+        {
+          "type": "table",
+          "title": "Probe Status",
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 10 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "label_replace(probe_success{job=~\"$job\", instance=~\"$target\"}, \"module\", \"$1\", \"job\", \".*/(.+)\")",
+              "instant": true,
+              "format": "table",
+              "refId": "A"
+            },
+            {
+              "expr": "avg_over_time(probe_success{job=~\"$job\", instance=~\"$target\"}[$__range]) * 100",
+              "instant": true,
+              "format": "table",
+              "refId": "B"
+            },
+            {
+              "expr": "probe_duration_seconds{job=~\"$job\", instance=~\"$target\"}",
+              "instant": true,
+              "format": "table",
+              "refId": "C"
+            },
+            {
+              "expr": "timestamp(probe_success{job=~\"$job\", instance=~\"$target\"}) * 1000",
+              "instant": true,
+              "format": "table",
+              "refId": "D"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "joinByField",
+              "options": { "byField": "instance", "mode": "outer" }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "renameByName": {
+                  "instance": "Target",
+                  "module": "Module",
+                  "Value": "Status",
+                  "Value #A": "Status",
+                  "Value #B": "Uptime %",
+                  "Value #C": "Latency",
+                  "Value #D": "Last Probe"
+                },
+                "indexByName": {
+                  "instance": 0,
+                  "module": 1,
+                  "Value": 2,
+                  "Value #A": 2,
+                  "Value #D": 3,
+                  "Value #C": 4,
+                  "Value #B": 5
+                },
+                "excludeByName": {
+                  "job": true,
+                  "namespace": true,
+                  "__name__": true,
+                  "__name__ 1": true,
+                  "__name__ 2": true,
+                  "__name__ 3": true,
+                  "Time": true,
+                  "Time #B": true,
+                  "Time #C": true,
+                  "Time #D": true,
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true
+                }
+              }
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "displayMode": "auto"
+              }
+            },
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Target" },
+                "properties": [
+                  { "id": "custom.minWidth", "value": 200 }
+                ]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Status" },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "type": "value",
+                        "options": {
+                          "0": { "text": "DOWN", "color": "red", "index": 0 },
+                          "1": { "text": "UP", "color": "green", "index": 1 }
+                        }
+                      }
+                    ]
+                  },
+                  { "id": "custom.displayMode", "value": "color-background" },
+                  { "id": "custom.width", "value": 80 }
+                ]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Last Probe" },
+                "properties": [
+                  { "id": "unit", "value": "dateTimeFromNow" },
+                  { "id": "custom.width", "value": 120 }
+                ]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Latency" },
+                "properties": [
+                  { "id": "unit", "value": "s" },
+                  { "id": "custom.width", "value": 100 }
+                ]
+              },
+              {
+                "matcher": { "id": "byName", "options": "Uptime %" },
+                "properties": [
+                  { "id": "unit", "value": "percent" },
+                  { "id": "min", "value": 0 },
+                  { "id": "max", "value": 100 },
+                  { "id": "custom.displayMode", "value": "gradient-gauge" },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        { "color": "red", "value": null },
+                        { "color": "yellow", "value": 80 },
+                        { "color": "green", "value": 95 }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "options": {
+            "sortBy": [{ "displayName": "Status", "desc": true }],
+            "footer": { "show": false }
+          }
+        },
+
+        {
+          "type": "row",
+          "title": "Latency",
+          "collapsed": false,
+          "gridPos": { "h": 1, "w": 24, "x": 0, "y": 24 }
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Probe Latency",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 25 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "label_replace(probe_duration_seconds{job=~\"$job\", instance=~\"$target\"}, \"module\", \"$1\", \"job\", \".*/(.+)\")",
+              "legendFormat": "{{instance}} ({{module}})",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "custom": {
+                "lineWidth": 1,
+                "fillOpacity": 5,
+                "showPoints": "never"
+              }
+            }
+          },
+          "options": {
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "calcs": ["mean", "max", "lastNotNull"]
+            },
+            "tooltip": { "mode": "multi" }
+          }
+        }
+
+      ],
+      "templating": {
+        "list": [
+          {
+            "name": "job",
+            "label": "Job",
+            "type": "query",
+            "query": {
+              "query": "label_values(probe_success, job)",
+              "refId": "StandardVariableQuery"
+            },
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "multi": true,
+            "includeAll": true,
+            "allValue": ".*",
+            "sort": 1,
+            "refresh": 2
+          },
+          {
+            "name": "target",
+            "label": "Target",
+            "type": "query",
+            "query": {
+              "query": "label_values(probe_success{job=~\"$job\"}, instance)",
+              "refId": "StandardVariableQuery"
+            },
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "multi": true,
+            "includeAll": true,
+            "allValue": ".*",
+            "sort": 1,
+            "refresh": 2
+          }
+        ]
+      },
+      "refresh": "30s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["blackbox", "monitoring"],
+      "time": { "from": "now-1h", "to": "now" },
+      "title": "Blackbox Exporter Overview",
+      "uid": "blackbox-overview"
+    }

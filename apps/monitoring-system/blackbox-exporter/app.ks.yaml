@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: blackbox-exporter
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  targetNamespace: monitoring-system
+
+  path: ./apps/monitoring-system/blackbox-exporter/app
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute: {}

@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: nfs
+spec:
+  module: tcp_connect
+  prober:
+    url: blackbox-exporter.monitoring-system:9115
+  targets:
+    staticConfig:
+      static:
+        - nas.stor.h.mirceanton.com:2049

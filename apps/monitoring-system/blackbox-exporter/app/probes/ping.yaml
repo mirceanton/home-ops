@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/probe_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: ping
+spec:
+  module: icmp
+  prober:
+    url: blackbox-exporter.monitoring-system:9115
+  targets:
+    staticConfig:
+      static:
+        # - pve01.mgmt.h.mirceanton.com
+        # - pve02.mgmt.h.mirceanton.com
+        # - pve03.mgmt.h.mirceanton.com
+
+        - sonoff-dongle-max.mgmt.h.mirceanton.com
+        - jetkvm.mgmt.h.mirceanton.com
+
+        - mirkdesk-pi.utrst.h.mirceanton.com
+        - livingroom-pi.utrst.h.mirceanton.com
