@@ -32,3 +32,5 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
+    - name: keda
+      namespace: kube-system
