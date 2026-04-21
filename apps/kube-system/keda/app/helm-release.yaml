@@ -22,24 +22,24 @@ spec:
       operator:
         requests:
           cpu: 20m
-          memory: 32Mi
+          memory: 64Mi
         limits:
           cpu: null
-          memory: 64Mi
+          memory: 256Mi
       metricServer:
         requests:
           cpu: 20m
-          memory: 32Mi
+          memory: 48Mi
         limits:
           cpu: null
-          memory: 64Mi
+          memory: 96Mi
       webhooks:
         requests:
           cpu: 20m
-          memory: 32Mi
+          memory: 64Mi
         limits:
           cpu: null
-          memory: 64Mi
+          memory: 128Mi
 
     operator: {replicaCount: 1}
     metricsServer: {replicaCount: 1}
