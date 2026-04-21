@@ -8,3 +8,4 @@ resources:
   - ./oci-repository.yaml
   - ./z2m-config.configmap.yaml
   - ./z2m-secret.secret.sops.yaml
+  - ./scaled-object.yaml
