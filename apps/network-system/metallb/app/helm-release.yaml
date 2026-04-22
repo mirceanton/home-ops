@@ -44,3 +44,29 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
+
+    # =============================================================================================
+    # Monitoring
+    # =============================================================================================
+    prometheus:
+      serviceMonitor:
+        enabled: true
+      prometheusRule:
+        enabled: true
+        bgpSessionDown: {enabled: false}
+        staleConfig: {enabled: true}
+        addressPoolExhausted: {enabled: true}
+        addressPoolUsage:
+          enabled: true
+          # Exclude the pools matching the regular expression from triggering the alert.
+          excludePools: ""
+          thresholds:
+            - percent: 75
+              labels:
+                severity: warning
+            - percent: 85
+              labels:
+                severity: warning
+            - percent: 95
+              labels:
+                severity: critical
