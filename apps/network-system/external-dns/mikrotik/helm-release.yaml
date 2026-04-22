@@ -37,6 +37,9 @@ spec:
       limits:
         memory: 256Mi
 
+    serviceMonitor:
+      enabled: true
+
     provider:
       name: webhook
       webhook:
@@ -65,6 +68,9 @@ spec:
               secretKeyRef:
                 name: mikrotik-credentials
                 key: username
+
+        serviceMonitor:
+          enabled: true
 
         resources:
           requests:

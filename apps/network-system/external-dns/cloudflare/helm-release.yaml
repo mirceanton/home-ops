@@ -37,6 +37,9 @@ spec:
       limits:
         memory: 256Mi
 
+    serviceMonitor:
+      enabled: true
+
     provider:
       name: cloudflare
     extraArgs:
