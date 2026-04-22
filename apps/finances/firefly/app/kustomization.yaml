@@ -6,5 +6,4 @@ resources:
   - ./firefly.oci-repository.yaml
   - ./firefly.helm-release.yaml
   - ./firefly-settings.configmap.yaml
-  - ./firefly-keys.secret.sops.yaml
-  - ./firefly-data-importer-token.secret.sops.yaml
+  - ./external-secret.yaml
