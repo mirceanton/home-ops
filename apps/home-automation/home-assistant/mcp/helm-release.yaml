@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/homeassistant-ai/ha-mcp
-              tag: 7.3.0@sha256:249883504501324be3af990d6173192c80eaa3660989e6b999856a163119c479
+              tag: 7.3.0@sha256:00187403678128888ed388268e954f66d1a7a53b757571ce808e519cf34359ff
             # ha-mcp-sse always passes stateless_http=True which FastMCP 3.x rejects for SSE.
             # Workaround: call run_async directly without that flag.
             command:
