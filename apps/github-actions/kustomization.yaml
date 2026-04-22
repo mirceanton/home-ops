@@ -9,3 +9,4 @@ resources:
   - ./actions-controller
   - ./actions-runners
   # - ./buildkit
+  - ./renovate

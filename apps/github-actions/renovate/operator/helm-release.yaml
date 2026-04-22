@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: renovate-operator
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: renovate-operator
+
+  values:
+    fullnameOverride: renovate-operator
+    crd: {install: true}
+
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+
+    config:
+      # -- default backoff limit for renovate jobs
+      defaultJobBackoffLimit: 1
+      # -- default active deadline seconds for renovate jobs
+      defaultJobActiveDeadlineSeconds: 1800
+      # -- whether to delete successfully finished renovate jobs (will lose logs)
+      deleteSuccessfulJobs: false
+      # -- TTL for finished renovate jobs in seconds, -1 means they are kept forever
+      jobTTLSecondsAfterFinished: -1
+      # -- global limit for concurrent renovate executor jobs across all RenovateJobs (0 = unlimited)
+      globalParallelismLimit: 0
+
+    logging:
+      level: info
+      format: json
+
+    # TODO: keycloak OIDC via Keycloak
+    auth: {oidc: {enabled: false}}
+
+    webhook: {enabled: false}
+    route:
+      enabled: true
+      hostnames: ["renovate.home.mirceanton.com"]
+      parentRefs:
+        - name: envoy-internal
+          namespace: network-system
+
+    metrics:
+      enabled: true
+      serviceMonitor: {enabled: true}
+      dashboard:
+        enabled: true
+        grafanaDatasource:
+          allowCrossNamespaceImport: true
+          instanceSelector:
+            matchLabels:
+              grafana.internal/instance: grafana
