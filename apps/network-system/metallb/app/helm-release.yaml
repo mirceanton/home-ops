@@ -49,8 +49,8 @@ spec:
     # Monitoring
     # =============================================================================================
     prometheus:
-      serviceMonitor:
-        enabled: true
+      serviceMonitor: {enabled: true}
+      serviceAccount: "metallb-prometheus"
       prometheusRule:
         enabled: true
         bgpSessionDown: {enabled: false}
