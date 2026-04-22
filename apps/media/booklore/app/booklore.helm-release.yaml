@@ -39,7 +39,7 @@ spec:
           booklore:
             image:
               repository: ghcr.io/grimmory-tools/grimmory
-              tag: v2.3.0
+              tag: v2.3.1
             env:
               USER_ID: "568"
               GROUP_ID: "568"
