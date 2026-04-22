@@ -19,6 +19,8 @@ spec:
     leaderElect: true #! Required for more than 1 replica
     concurrent: 8
     log: {level: info}
+    serviceMonitor: {enabled: true}
+    grafanaDashboard: {enabled: true}
 
     replicaCount: 1
 
