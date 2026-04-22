@@ -22,6 +22,8 @@ spec:
             image:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.31.0
+            envFrom:
+              - secretRef: {name: karakeep-secret}
             env:
               BROWSER_WEB_URL: http://karakeep-chrome:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
@@ -32,17 +34,8 @@ spec:
               DISABLE_NEW_RELEASE_CHECK: true
               COREPACK_INTEGRITY_KEYS: 0
               MEILI_ADDR: http://karakeep-meilisearch:7700
-              MEILI_MASTER_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: karakeep-secret
-                    key: meilisearch_master_key
-              NEXTAUTH_SECRET:
-                valueFrom:
-                  secretKeyRef:
-                    name: karakeep-secret
-                    key: nextauth_secret
               NEXTAUTH_URL: https://karakeep.home.mirceanton.com
+
             probes:
               liveness:
                 enabled: true

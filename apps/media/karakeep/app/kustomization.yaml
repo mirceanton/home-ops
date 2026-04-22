@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./karakeep.helm-release.yaml
   - ./karakeep.oci-repository.yaml
-  - ./karakeep.secret.sops.yaml
+  - ./external-secret.yaml
