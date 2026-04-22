@@ -68,6 +68,6 @@ spec:
     # =============================================================================================
     prometheus:
       enabled: true
-      serviceMonitor:
+      servicemonitor:
         enabled: true
         interval: 30s
