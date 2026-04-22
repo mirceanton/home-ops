@@ -30,7 +30,7 @@ spec:
           app:
             image:
               repository: ghcr.io/danny-avila/librechat
-              tag: v0.8.4
+              tag: v0.8.5
             envFrom:
               - secretRef: {name: librechat-secret}
             env:
