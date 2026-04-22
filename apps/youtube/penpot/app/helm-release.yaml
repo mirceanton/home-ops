@@ -36,6 +36,7 @@ spec:
                 valueFrom:
                   fieldRef:
                     fieldPath: status.podIP
+
             resources:
               requests:
                 cpu: 10m

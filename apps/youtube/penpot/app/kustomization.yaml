@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
-  - ./penpot-secret.secret.sops.yaml
+  - ./external-secret.yaml
