@@ -17,4 +17,5 @@ resources:
   - ./kube-state-metrics
   - ./mikrotik-exporter
   - ./node-exporter
+  - ./speedtest-exporter
   - ./zfs-exporter
