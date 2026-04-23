@@ -122,21 +122,11 @@ spec:
               repository: fireflyiii/data-importer
               tag: version-2.3.2
             envFrom:
-              - configMapRef:
-                  name: firefly-settings
+              - configMapRef: {name: firefly-settings}
+              - secretRef: {name: firefly-data-importer-token}
             env:
               FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
               VANITY_URL: "https://firefly.home.mirceanton.com"
-              FIREFLY_III_ACCESS_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: firefly-data-importer-token
-                    key: IMPORTER_TOKEN
-              ACCESS_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: firefly-data-importer-token
-                    key: ACCESS_TOKEN
 
             probes:
               liveness: {enabled: true}
