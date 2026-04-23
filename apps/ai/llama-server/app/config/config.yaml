@@ -1,0 +1,55 @@
+---
+# Single GPU: only one model runs at a time — llama-swap stops the running
+# child before starting the next when a request selects a different model.
+
+# seconds; upper bound for a cold load (large MoE mmap warmup + first-token
+# page-fault round-trips from PVC). Default 120s is too tight for MoE models.
+healthCheckTimeout: 900
+
+macros:
+  # Shared flags. $${PORT} must appear literally in each model's cmd — llama-swap
+  # validates its presence before macro expansion, so it can't live in here.
+  # The doubled `$$` escapes Flux Kustomization postBuild envsubst; the rendered
+  # ConfigMap contains literal `${PORT}` / `${common}` for llama-swap to resolve.
+  common: >
+    --host 127.0.0.1
+    --jinja
+    --cache-type-k q8_0 --cache-type-v q8_0
+    --temp 0.6 --top-k 20
+    --metrics
+
+models:
+  qwen-3.6:
+    # 35B-A3B MoE (40 layers: 10 gated-attention + 30 GDN, MoE in every layer).
+    # --n-cpu-moe 30 keeps experts of layers 0-29 on CPU + leaves 10 layers'
+    # experts on GPU (≈8 GB VRAM). ubatch 2048 needs ~1 GB more compute buffer
+    # than 1024 → ~9 GB total active. n-cpu-moe 29 + ubatch 2048 OOM'd
+    # CUDA at 185 MB free during compute-buffer alloc (init 250 result=11);
+    # 30 leaves ~600 MB headroom for KV growth + safe ubatch 2048 alloc.
+    # UD-Q4_K_M (not _XL) — avoids f16 tensors ik_llama.cpp refuses to load.
+    # -rtr is ik_llama.cpp-specific (runtime tensor repack for fused kernels);
+    # already disables mmap so weights live in anon RSS (kernel can't easily
+    # reclaim them, making --mlock redundant — and the container ulimit -l
+    # of 8 MB would block mlock anyway without CAP_IPC_LOCK on the pod).
+    # preserve_thinking carries thinking traces across turns (Qwen3.6 trained
+    # for this) — improves KV reuse and decision consistency in agentic loops.
+    ttl: 3600
+    aliases: ["self-hosted"]
+    cmd: >
+      /app/llama-server
+      --port $${PORT}
+      $${common}
+      --hf-repo unsloth/Qwen3.6-35B-A3B-GGUF
+      --hf-file Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
+      --ctx-size 131072
+      --parallel 1
+      --n-gpu-layers 99
+      --n-cpu-moe 30
+      --ubatch-size 2048
+      --threads 8
+      --threads-batch 8
+      --slot-save-path /cache/slots
+      --top-p 0.95
+      --min-p 0.0
+      --chat-template-kwargs '{"preserve_thinking":true}'
+      -rtr
