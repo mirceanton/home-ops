@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cert-manager
+spec:
+  groups:
+    - name: cert-manager.rules
+      rules:
+        # ---- Controller Availability ----
+        - alert: CertManagerAbsent
+          expr: absent(up{job=~".*cert-manager.*"})
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "cert-manager metrics endpoint is absent"
+            description: >-
+              Prometheus cannot find any cert-manager scrape target.
+              The cert-manager controller may be down or the ServiceMonitor
+              misconfigured.
+
+        # ---- Certificate Readiness ----
+        - alert: CertificateNotReady
+          expr: certmanager_certificate_ready_status{condition="True"} == 0
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} is not ready"
+            description: >-
+              Certificate {{ $labels.namespace }}/{{ $labels.name }} has been in a
+              non-Ready state for over 10 minutes. This may indicate an ACME challenge
+              failure, a misconfigured issuer, or a DNS/HTTP validation problem.
+
+        # ---- Certificate Expiry ----
+        - alert: CertificateExpiringSoon
+          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (21 * 24 * 3600)
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in less than 21 days"
+            description: >-
+              Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in
+              {{ $value | humanizeDuration }}. Automatic renewal should have triggered
+              already for 90-day ACME certificates. Investigate the Certificate and
+              CertificateRequest resources for errors.
+
+        - alert: CertificateExpiringCritical
+          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (7 * 24 * 3600)
+          for: 1h
+          labels:
+            severity: critical
+          annotations:
+            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in less than 7 days"
+            description: >-
+              Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in
+              {{ $value | humanizeDuration }}. Renewal has failed and the certificate
+              is approaching expiry. Immediate action required to avoid an outage.
