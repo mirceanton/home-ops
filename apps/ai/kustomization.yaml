@@ -6,5 +6,4 @@ namespace: ai
 resources:
   - ./namespace.yaml
   # - ./librechat
-  - ./ollama
   - ./whisper
