@@ -10,6 +10,7 @@ spec:
         - nas.mgmt.h.mirceanton.com:9100
       labels:
         job: node-exporter
+        node_type: nas
     - targets:
         - nas.mgmt.h.mirceanton.com:9633
       labels:

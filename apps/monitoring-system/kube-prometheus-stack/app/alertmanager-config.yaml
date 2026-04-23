@@ -12,6 +12,18 @@ spec:
     groupInterval: 5m
     repeatInterval: 12h
     routes:
+      - receiver: pushover-silent
+        matchers:
+          - name: alertname
+            value: TargetDown
+          - name: job
+            value: node-exporter
+
+      - receiver: pushover-silent
+        matchers:
+          - name: severity
+            value: info
+
       - receiver: 'null'
         matchers:
           - name: alertname
@@ -19,6 +31,19 @@ spec:
 
   receivers:
     - name: 'null'
+    - name: pushover-silent
+      pushoverConfigs:
+        - userKey:
+            name: alertmanager-pushover-secret
+            key: user-key
+          token:
+            name: alertmanager-pushover-secret
+            key: token
+          title: '{{ template "pushover.default.title" . }}'
+          message: '{{ template "pushover.default.message" . }}'
+          url: '{{ template "pushover.default.url" . }}'
+          priority: '-1'
+          sound: none
     - name: pushover
       pushoverConfigs:
         - userKey:

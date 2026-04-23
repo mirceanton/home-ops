@@ -1,0 +1,21 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: truenas-alerts
+spec:
+  groups:
+    - name: truenas
+      rules:
+        # -----------------------------------------------------------------------
+        # Availability
+        # -----------------------------------------------------------------------
+        - alert: NASDown
+          expr: up{job="node-exporter", node_type="nas"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "NAS {{ $labels.instance }} is unreachable"
+            description: "No metrics received from {{ $labels.instance }} for more than 2 minutes."

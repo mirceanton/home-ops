@@ -15,7 +15,7 @@ spec:
           expr: up{job="node-exporter", node_type="raspberry_pi"} == 0
           for: 2m
           labels:
-            severity: critical
+            severity: info
           annotations:
             summary: "Raspberry Pi {{ $labels.instance }} is unreachable"
             description: "No metrics received from {{ $labels.instance }} for more than 2 minutes."

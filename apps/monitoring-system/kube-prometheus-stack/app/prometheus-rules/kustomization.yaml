@@ -6,3 +6,4 @@ kind: Kustomization
 resources:
   - ./oom-killed.yaml
   - ./raspberry-pi.yaml
+  - ./truenas.yaml

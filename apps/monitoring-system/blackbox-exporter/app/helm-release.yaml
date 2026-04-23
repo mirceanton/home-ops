@@ -56,10 +56,20 @@ spec:
     prometheusRule:
       enabled: true
       rules:
+        # WiFi Pi devices — silent notification (intermittent connectivity drops expected)
         - alert: BlackboxProbeFailed
-          expr: probe_success == 0
+          expr: probe_success{instance=~"mirkdesk-pi\\..*|livingroom-pi\\..*"} == 0
+          for: 15m
+          labels:
+            severity: info
+          annotations:
+            summary: The host {{ $labels.instance }} is currently unreachable
+
+        # All other targets (HTTP endpoints, NFS, wired devices) — critical as before
+        - alert: BlackboxProbeFailed
+          expr: probe_success{instance!~"mirkdesk-pi\\..*|livingroom-pi\\..*"} == 0
           for: 15m
           labels:
             severity: critical
           annotations:
-            summary: The host {{ $labels.target }} is currently unreachable
+            summary: The host {{ $labels.instance }} is currently unreachable
