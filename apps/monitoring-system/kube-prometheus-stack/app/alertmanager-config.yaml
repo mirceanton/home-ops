@@ -55,7 +55,5 @@ spec:
           title: '{{ template "pushover.default.title" . }}'
           message: '{{ template "pushover.default.message" . }}'
           url: '{{ template "pushover.default.url" . }}'
-          priority: '{{ if eq .Status "firing" }}1{{ else }}0{{ end }}'
+          priority: '0'
           sound: gamelan
-          retry: 60s
-          expire: 1h
