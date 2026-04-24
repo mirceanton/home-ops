@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dcgm-exporter
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: dcgm-exporter
+
+  values:
+    runtimeClassName: nvidia
+    fullnameOverride: nvidia-exporter
+    image:
+      repository: mirror.gcr.io/nvidia/dcgm-exporter
+      tag: 4.5.1-4.8.0-distroless
+
+    extraEnv:
+      - name: NVIDIA_DRIVER_CAPABILITIES
+        value: all
+      - name: NVIDIA_VISIBLE_DEVICES
+        value: all
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 1Gi
+        nvidia.com/gpu: 1
+
+    tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+
+    serviceMonitor:
+      enabled: true
+      interval: 15s
+      honorLabels: true
+      labels:
+        prometheus: kube-prometheus-stack
