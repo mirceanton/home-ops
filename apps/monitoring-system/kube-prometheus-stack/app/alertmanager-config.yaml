@@ -27,7 +27,22 @@ spec:
       - receiver: 'null'
         matchers:
           - name: alertname
+            value: InfoInhibitor
+
+      - receiver: 'null'
+        matchers:
+          - name: alertname
             value: Watchdog
+
+  inhibitRules:
+    - sourceMatch:
+        - name: alertname
+          value: InfoInhibitor
+      targetMatch:
+        - name: severity
+          value: info
+      equal:
+        - namespace
 
   receivers:
     - name: 'null'
