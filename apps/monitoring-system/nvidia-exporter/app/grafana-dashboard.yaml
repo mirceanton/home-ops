@@ -8,6 +8,9 @@ spec:
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
   resyncPeriod: 5m
   json: >-
     {
@@ -49,7 +52,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "GPU model name.",
           "fieldConfig": {
@@ -100,7 +103,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_UTIL)",
               "legendFormat": "{{modelName}}",
@@ -113,7 +116,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "NVIDIA driver version currently loaded on the host.",
           "fieldConfig": {
@@ -164,7 +167,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_UTIL)",
               "legendFormat": "{{DCGM_FI_DRIVER_VERSION}}",
@@ -177,7 +180,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current GPU and VRAM utilization per Kubernetes pod. Only pods actively using the GPU appear here.",
           "fieldConfig": {
@@ -338,7 +341,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (pod, namespace) (max_over_time(DCGM_FI_DEV_GPU_UTIL[$__range]))",
               "format": "table",
@@ -350,7 +353,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (pod, namespace) (max_over_time((100 * DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED))[$__range]))",
               "format": "table",
@@ -389,7 +392,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current GPU utilization as a percentage of shader/compute capacity.",
           "fieldConfig": {
@@ -452,7 +455,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_UTIL)",
               "legendFormat": "GPU Util",
@@ -465,7 +468,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current framebuffer (VRAM) utilization as a percentage of total capacity.",
           "fieldConfig": {
@@ -528,7 +531,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "100 * max by (gpu, UUID) (DCGM_FI_DEV_FB_USED) / (max by (gpu, UUID) (DCGM_FI_DEV_FB_USED) + max by (gpu, UUID) (DCGM_FI_DEV_FB_FREE) + max by (gpu, UUID) (DCGM_FI_DEV_FB_RESERVED))",
               "legendFormat": "VRAM Util",
@@ -541,7 +544,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current SM (shader/compute) clock frequency in MHz.",
           "fieldConfig": {
@@ -593,7 +596,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_SM_CLOCK)",
               "legendFormat": "SM Clock",
@@ -606,7 +609,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current memory clock frequency in MHz.",
           "fieldConfig": {
@@ -658,7 +661,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_MEM_CLOCK)",
               "legendFormat": "Mem Clock",
@@ -671,7 +674,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Current GPU die temperature in Celsius. GTX 1050 Ti thermal limit is 97°C.",
           "fieldConfig": {
@@ -734,7 +737,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_TEMP)",
               "legendFormat": "GPU Temp",
@@ -747,7 +750,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Framebuffer memory currently in use by applications.",
           "fieldConfig": {
@@ -799,7 +802,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_FB_USED) * 1048576",
               "legendFormat": "Used",
@@ -812,7 +815,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Framebuffer memory available for new allocations.",
           "fieldConfig": {
@@ -864,7 +867,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_FB_FREE) * 1048576",
               "legendFormat": "Free",
@@ -890,7 +893,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "GPU die and memory temperature over time.",
           "fieldConfig": {
@@ -977,7 +980,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_TEMP)",
               "legendFormat": "GPU",
@@ -986,7 +989,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_MEMORY_TEMP)",
               "legendFormat": "Memory",
@@ -999,7 +1002,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "GPU shader/compute utilization over time.",
           "fieldConfig": {
@@ -1088,7 +1091,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_GPU_UTIL)",
               "legendFormat": "GPU",
@@ -1101,7 +1104,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "VRAM (framebuffer) usage breakdown over time.",
           "fieldConfig": {
@@ -1188,7 +1191,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_FB_USED) * 1048576",
               "legendFormat": "Used",
@@ -1197,7 +1200,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_FB_FREE) * 1048576",
               "legendFormat": "Free",
@@ -1206,7 +1209,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_FB_RESERVED) * 1048576",
               "legendFormat": "Reserved",
@@ -1219,7 +1222,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "Hardware encoder and decoder engine utilization. Relevant for video transcoding workloads (Jellyfin, Plex, etc.).",
           "fieldConfig": {
@@ -1308,7 +1311,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_ENC_UTIL)",
               "legendFormat": "Encoder",
@@ -1317,7 +1320,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "max by (gpu, UUID, device, modelName, Hostname, DCGM_FI_DRIVER_VERSION) (DCGM_FI_DEV_DEC_UTIL)",
               "legendFormat": "Decoder",
@@ -1343,7 +1346,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "GPU shader/compute utilization over time, broken down by the pod currently consuming the GPU.",
           "fieldConfig": {
@@ -1430,7 +1433,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "DCGM_FI_DEV_GPU_UTIL",
               "legendFormat": "{{pod}}",
@@ -1443,7 +1446,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "description": "VRAM utilization over time, broken down by the pod currently consuming the GPU.",
           "fieldConfig": {
@@ -1530,7 +1533,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${datasource}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "100 * DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED)",
               "legendFormat": "{{pod}}",
@@ -1549,24 +1552,7 @@ spec:
         "gpu",
         "dcgm"
       ],
-      "templating": {
-        "list": [
-          {
-            "current": {
-              "text": "prometheus",
-              "value": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
-            },
-            "includeAll": false,
-            "label": "Datasource",
-            "name": "datasource",
-            "options": [],
-            "query": "prometheus",
-            "refresh": 1,
-            "regex": "",
-            "type": "datasource"
-          }
-        ]
-      },
+      "templating": { "list": [] },
       "time": {
         "from": "now-5m",
         "to": "now"

@@ -47,7 +47,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -113,7 +113,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_chassis_power_state",
@@ -129,7 +129,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -177,7 +177,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_fan_speed_rpm{instance=\"$instance\"}",
@@ -192,7 +192,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -275,7 +275,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_temperature_state{instance=\"$instance\"}",
@@ -308,7 +308,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -379,7 +379,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_fan_speed_state{instance=\"$instance\"}",
@@ -394,7 +394,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -446,7 +446,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_temperature_celsius{instance=\"$instance\"}",
@@ -461,7 +461,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -532,7 +532,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_voltage_state{instance=\"$instance\"}",
@@ -547,7 +547,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -596,7 +596,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "ipmi_voltage_volts{instance=\"$instance\"}",

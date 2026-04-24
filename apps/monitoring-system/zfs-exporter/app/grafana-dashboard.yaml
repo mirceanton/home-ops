@@ -8,6 +8,9 @@ spec:
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
   resyncPeriod: 5m
   json: >-
     {
@@ -41,7 +44,7 @@ spec:
           "type": "row"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Current health status of the ZFS pool. 0=Online, 1=Degraded, 2=Faulted, 3=Offline, 4=Unavailable, 5=Removed, 6=Suspended.",
           "fieldConfig": {
             "defaults": {
@@ -83,7 +86,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_health{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -93,7 +96,7 @@ spec:
           "type": "stat"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Whether the pool is in read-only mode. 0=Read-Write (normal), 1=Read-Only (problem).",
           "fieldConfig": {
             "defaults": {
@@ -130,7 +133,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_readonly{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -140,7 +143,7 @@ spec:
           "type": "stat"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Total size of the storage pool.",
           "fieldConfig": {
             "defaults": {
@@ -167,7 +170,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_size_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -177,7 +180,7 @@ spec:
           "type": "stat"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Amount of free space remaining in the pool.",
           "fieldConfig": {
             "defaults": {
@@ -208,7 +211,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_free_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -218,7 +221,7 @@ spec:
           "type": "stat"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Ratio of pool space currently in use. ZFS performance degrades above 80%.",
           "fieldConfig": {
             "defaults": {
@@ -253,7 +256,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_capacity_ratio{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -263,7 +266,7 @@ spec:
           "type": "gauge"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Fragmentation ratio of the pool. High fragmentation degrades sequential I/O performance.",
           "fieldConfig": {
             "defaults": {
@@ -298,7 +301,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_fragmentation_ratio{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }}",
               "refId": "A"
@@ -308,7 +311,7 @@ spec:
           "type": "gauge"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Pool space breakdown over time: total size, allocated, and free.",
           "fieldConfig": {
             "defaults": {
@@ -361,19 +364,19 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_size_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }} — Total",
               "refId": "A"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_allocated_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }} — Allocated",
               "refId": "B"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_free_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }} — Free",
               "refId": "C"
@@ -383,7 +386,7 @@ spec:
           "type": "timeseries"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Bytes pending asynchronous freeing and leaked bytes. Persistent leaked bytes may indicate a pool consistency issue.",
           "fieldConfig": {
             "defaults": {
@@ -436,13 +439,13 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_freeing_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }} — Freeing",
               "refId": "A"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_pool_leaked_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ pool }} — Leaked",
               "refId": "B"
@@ -459,7 +462,7 @@ spec:
           "type": "row"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Space consumed by each dataset's own data, excluding children and snapshots.",
           "fieldConfig": {
             "defaults": {
@@ -512,7 +515,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
@@ -522,7 +525,7 @@ spec:
           "type": "timeseries"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Bytes written to each dataset since the last snapshot. Resets to 0 when a new snapshot is taken.",
           "fieldConfig": {
             "defaults": {
@@ -575,7 +578,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_written_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
@@ -585,7 +588,7 @@ spec:
           "type": "timeseries"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Breakdown of total dataset space usage into own data, children, and snapshots.",
           "fieldConfig": {
             "defaults": {
@@ -638,19 +641,19 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ name }} — Own Data",
               "refId": "A"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_used_by_children_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ name }} — Children",
               "refId": "B"
             },
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_used_by_snapshot_bytes{pool=~\"$pool\"}",
               "legendFormat": "{{ name }} — Snapshots",
               "refId": "C"
@@ -660,7 +663,7 @@ spec:
           "type": "timeseries"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "description": "Compression ratio per dataset. A value of 2.0x means data is compressed to half its logical size.",
           "fieldConfig": {
             "defaults": {
@@ -714,7 +717,7 @@ spec:
           "pluginVersion": "12.3.0",
           "targets": [
             {
-              "datasource": { "type": "prometheus", "uid": "${datasource}" },
+              "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
               "expr": "zfs_dataset_compression_ratio{pool=~\"$pool\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
@@ -731,22 +734,8 @@ spec:
       "templating": {
         "list": [
           {
-            "current": {
-              "text": "prometheus",
-              "value": "e4315b0f-3597-475f-8726-10fc0ffbdc75"
-            },
-            "includeAll": false,
-            "label": "Datasource",
-            "name": "datasource",
-            "options": [],
-            "query": "prometheus",
-            "refresh": 1,
-            "regex": "",
-            "type": "datasource"
-          },
-          {
             "current": {},
-            "datasource": { "type": "prometheus", "uid": "${datasource}" },
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
             "definition": "label_values(zfs_pool_health, pool)",
             "includeAll": true,
             "label": "Pool",
