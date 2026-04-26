@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sholdee/crd-schema-publisher
-              tag: v2026.425.164600
+              tag: v2026.426.155327
             env:
               CF_PAGES_PROJECT: k8s-schemas
               OUTPUT_DIR: /output
