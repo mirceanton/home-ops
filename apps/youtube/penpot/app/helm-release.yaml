@@ -68,7 +68,7 @@ spec:
           app:
             image:
               repository: penpotapp/backend
-              tag: "2.14.3"
+              tag: "2.14.4"
             env:
               PENPOT_PUBLIC_URI: "https://penpot.home.mirceanton.com"
               PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
