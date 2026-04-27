@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>mirceanton/renovate-config//default.json5"],
+  "extends": [
+    "github>mirceanton/renovate-config//default.json5",
+    "local>.renovate/groups.json",
+    "local>.renovate/versions.json"
+  ],
 
   "flux": {
     "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"]
@@ -10,24 +14,5 @@
   },
   "kubernetes": {
     "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"]
-  },
-
-  "packageRules": [
-    {
-      "matchPackageNames": ["fireflyiii/core", "fireflyiii/data-importer"],
-      "versioning": "regex:^version-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
-    },
-    {
-      "matchPackageNames": ["onerahmet/openai-whisper-asr-webservice"],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-gpu$"
-    },
-    {
-      "matchPackageNames": ["ghcr.io/immich-app/immich-machine-learning"],
-      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-cuda$"
-    },
-    {
-      "matchPackageNames": ["ghcr.io/papra-hq/papra"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-rootless$"
-    }
-  ]
+  }
 }

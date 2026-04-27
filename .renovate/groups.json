@@ -1,0 +1,92 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "packageRules": [
+        {
+            "description": "Group Penpot components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "penpotapp/frontend",
+                "penpotapp/backend",
+                "penpotapp/exporter"
+            ],
+            "groupName": "penpot",
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group SparkyFitness components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "codewithcj/sparkyfitness",
+                "codewithcj/sparkyfitness_server",
+                "codewithcj/sparkyfitness_garmin"
+            ],
+            "groupName": "sparkyfitness",
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group Immich components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "ghcr.io/immich-app/immich-server",
+                "ghcr.io/immich-app/immich-machine-learning"
+            ],
+            "groupName": "immich",
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group Firefly III components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "fireflyiii/core",
+                "fireflyiii/data-importer"
+            ],
+            "groupName": "firefly-iii",
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group 1Password Connect components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "/1password/connect-api",
+                "/1password/connect-sync"
+            ],
+            "groupName": "1password-connect",
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group Flux operator components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "/flux-operator/",
+                "/flux-instance/",
+                "/flux-operator-manifests/"
+            ],
+            "groupName": "flux-operator",
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group GitHub Actions runner components",
+            "matchDatasources": [
+                "docker"
+            ],
+            "matchPackageNames": [
+                "/gha-runner-scale-set-controller/",
+                "/gha-runner-scale-set/"
+            ],
+            "groupName": "actions-runner",
+            "minimumGroupSize": 2
+        }
+    ]
+}
