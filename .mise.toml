@@ -19,7 +19,7 @@ clusterctl = "latest"
 
 # Talos Stuff
 "aqua:talosctl" = "1.13.0"
-"aqua:talhelper" = "3.1.8"
+"aqua:talhelper" = "3.1.9"
 "github:mirceanton/talswitcher" = "latest"
 
 # Misc Tools
