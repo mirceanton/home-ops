@@ -20,7 +20,7 @@ spec:
 
           containers:
             - name: zfs-scrubber
-              image: ghcr.io/heavybullets8/zfs-scrubber:1.1.1@sha256:d5c3fd2edfa5fa2b054e24411d79ecbe7bd6bd76547ff59e08ae2926338a2ddd
+              image: ghcr.io/heavybullets8/zfs-scrubber:1.1.2@sha256:d142396cbf0926b84a586666b777e357c622c7780bcf1444af4384bf3f14411b
               env:
                 - name: "ACTION"
                   value: "scrub"
