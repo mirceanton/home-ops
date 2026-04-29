@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 15m
   url: oci://ghcr.io/prometheus-community/charts/prometheus-node-exporter
-  ref: {tag: 4.53.1}
+  ref: {tag: 4.54.0}
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
