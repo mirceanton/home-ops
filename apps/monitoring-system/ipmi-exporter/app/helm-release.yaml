@@ -16,7 +16,7 @@ spec:
         containers:
           ipmi-exporter:
             image:
-              repository: registry.hub.docker.com/prometheuscommunity/ipmi-exporter
+              repository: quay.io/prometheuscommunity/ipmi-exporter
               tag: v1.10.1
             args:
               - "--config.file"
