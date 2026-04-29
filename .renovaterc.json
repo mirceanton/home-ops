@@ -5,8 +5,8 @@
     "github>mirceanton/renovate-config//default.json5",
 
     // Local configuration files for Renovate
-    "github>mirceanton/home-ops//.renovate/groups.json",
-    "github>mirceanton/home-ops//.renovate/managers.json",
-    "github>mirceanton/home-ops//.renovate/versions.json"
+    "github>mirceanton/home-ops//.renovate/groups.json5",
+    "github>mirceanton/home-ops//.renovate/managers.json5",
+    "github>mirceanton/home-ops//.renovate/versions.json5"
   ]
 }
