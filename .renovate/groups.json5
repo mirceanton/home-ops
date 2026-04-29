@@ -56,26 +56,6 @@
             ],
             "groupName": "actions-runner",
             "minimumGroupSize": 2
-        },
-        {
-            "description": "Kubernetes group",
-            "groupName": "Kubernetes",
-            "matchDatasources": ["docker"],
-            "matchPackageNames": [
-                "/kube-apiserver/",
-                "/kube-controller-manager/",
-                "/kube-proxy/",
-                "/kube-scheduler/",
-                "/kubelet/"
-            ],
-            "minimumGroupSize": 5
-        },
-        {
-            "description": "Talos group",
-            "groupName": "Talos",
-            "matchDatasources": ["docker"],
-            "matchPackageNames": ["/installer/", "/talosctl/"],
-            "minimumGroupSize": 2
         }
     ]
 }
