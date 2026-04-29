@@ -17,7 +17,7 @@ spec:
         initContainers:
           wait-for-postgres:
             image:
-              repository: wait4x/wait4x
+              repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["postgresql", "$(DB_URL)"]
             env:

@@ -18,7 +18,7 @@ spec:
         initContainers:
           wait-for-postgres:
             image:
-              repository: wait4x/wait4x
+              repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["postgresql", "$(DB_URL)"]
             env:
@@ -134,7 +134,7 @@ spec:
         initContainers:
           wait-for-postgres:
             image:
-              repository: wait4x/wait4x
+              repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["postgresql", "$(DB_URL)"]
             env:
@@ -145,7 +145,7 @@ spec:
                     key: uri
           wait-for-server:
             image:
-              repository: wait4x/wait4x
+              repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["http", "http://sparkyfitness-server:3010/health"]
         containers:
