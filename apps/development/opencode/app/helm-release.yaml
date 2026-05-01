@@ -19,7 +19,7 @@ spec:
           opencode:
             image:
               repository: ghcr.io/anomalyco/opencode
-              tag: 1.14.30@sha256:632584b2e350e36a32c4718ca4d4af3344b36a4970f1be2edd84605f3483fa01
+              tag: 1.14.31@sha256:fc868f6adf9364ff99a9fee4662cddd54f23161bb0d9a1030c6a2373b20d3750
             command: ["opencode", "web", "--hostname", "0.0.0.0"]
             env:
               TZ: "Europe/Bucharest"
