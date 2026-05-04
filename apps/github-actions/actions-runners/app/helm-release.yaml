@@ -59,8 +59,8 @@ spec:
             image: ghcr.io/mirceanton/actions-runner:2.334.0
             command: ["/home/runner/run.sh"]
             securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
+              runAsUser: 1001
+              runAsGroup: 1001
               runAsNonRoot: true
               allowPrivilegeEscalation: false
               capabilities:
