@@ -75,7 +75,7 @@ spec:
               - name: MISE_GITHUB_TOKEN
                 valueFrom:
                   secretKeyRef:
-                    name: github-org-token
+                    name: github-mise-token
                     key: github_token
 
               - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
