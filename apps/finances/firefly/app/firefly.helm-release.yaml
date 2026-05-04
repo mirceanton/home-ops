@@ -93,7 +93,7 @@ spec:
         containers:
           cron:
             image:
-              repository: ghcr.io/curl/curl-container/curl
+              repository: curlimages/curl
               tag: 8.20.0
             command:
               - sh
