@@ -92,7 +92,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: karakeep-secret
-                    key: meilisearch_master_key
+                    key: MEILI_MASTER_KEY
             resources:
               requests:
                 cpu: 10m
