@@ -66,12 +66,17 @@ spec:
               capabilities:
                 drop: ["ALL"]
             env:
-              - name: MISE_CACHE_DIR
-                value: /cache/mise
               - name: PIP_CACHE_DIR
                 value: /cache/pip
               - name: NPM_CONFIG_CACHE
                 value: /cache/npm
+              - name: MISE_CACHE_DIR
+                value: /cache/mise
+              - name: MISE_GITHUB_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: github-org-token
+                    key: github_token
 
               - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
                 value: "false"
