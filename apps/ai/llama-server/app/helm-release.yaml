@@ -98,6 +98,9 @@ spec:
           - path: /app/config.yaml
             subPath: config.yaml
             readOnly: true
+          - path: /templates/chat-template-claude.jinja
+            subPath: chat-template-claude.jinja
+            readOnly: true
       cache:
         enabled: true
         type: persistentVolumeClaim

@@ -13,3 +13,4 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - config.yaml=./config/config.yaml
+      - chat-template-claude.jinja=./config/chat-template-claude.jinja

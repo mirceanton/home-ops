@@ -15,7 +15,14 @@ macros:
 models:
   qwen-3.6:
     ttl: 3600
-    aliases: ["self-hosted"]
+    aliases:
+      - qwen3.6-35b-a3b
+      - claude-sonnet-4-5
+      - claude-sonnet-4-5-20250929
+      - claude-haiku-4-5
+      - claude-haiku-4-5-20251001
+      - claude-opus-4-5
+      - claude-opus-4-5-20251101
     cmd: >
       /app/llama-server
       --port ${PORT}
@@ -33,4 +40,4 @@ models:
       --threads-batch 10
       --slot-save-path /cache/slots
       --top-p 0.95
-      --chat-template-kwargs '{"preserve_thinking":true}'
+      --chat-template-file /templates/chat-template-claude.jinja
