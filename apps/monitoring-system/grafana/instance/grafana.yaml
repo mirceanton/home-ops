@@ -9,6 +9,9 @@ metadata:
 
 spec:
   config:
+    dashboards:
+      min_refresh_interval: 1s
+
     analytics:
       check_for_updates: "false"
       check_for_plugin_updates: "false"
