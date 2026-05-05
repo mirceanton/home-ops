@@ -21,7 +21,7 @@ spec:
           zfs-exporter:
             image:
               repository: ghcr.io/mirceanton/zfs-exporter
-              tag: 2.3.12@sha256:c26e1c68538c095db7e9dd8e8607ac5276121aad29b475c5b46d4f7f96611a6d
+              tag: 2.3.12@sha256:e1afce5f9bf7fb78fab6780bd3950539bf02c14f9d2d344d24007cdd79fdd9a8
             resources:
               requests:
                 cpu: 10m
