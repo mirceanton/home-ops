@@ -182,7 +182,7 @@ spec:
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "description": "Current GPU and VRAM utilization per Kubernetes pod. Only pods actively using the GPU appear here.",
+          "description": "Peak GPU utilization per Kubernetes pod over the selected time range. Only pods that used the GPU appear here.",
           "fieldConfig": {
             "defaults": {
               "custom": {
@@ -210,7 +210,7 @@ spec:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Value #A"
+                  "options": "Value"
                 },
                 "properties": [
                   {
@@ -258,57 +258,6 @@ spec:
                   }
                 ]
               },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Value #B"
-                },
-                "properties": [
-                  {
-                    "id": "displayName",
-                    "value": "VRAM Util %"
-                  },
-                  {
-                    "id": "unit",
-                    "value": "percent"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 1
-                  },
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "mode": "gradient",
-                      "type": "color-background"
-                    }
-                  },
-                  {
-                    "id": "thresholds",
-                    "value": {
-                      "mode": "absolute",
-                      "steps": [
-                        {
-                          "color": "green",
-                          "value": 0
-                        },
-                        {
-                          "color": "yellow",
-                          "value": 70
-                        },
-                        {
-                          "color": "orange",
-                          "value": 85
-                        },
-                        {
-                          "color": "red",
-                          "value": 95
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
             ]
           },
           "gridPos": {
@@ -355,7 +304,7 @@ spec:
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "max by (pod, namespace) (max_over_time((100 * DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED))[$__range]))",
+              "expr": "max by (pod, namespace) (max_over_time(DCGM_FI_DEV_FB_USED[$__range]) * 100 / (max_over_time(DCGM_FI_DEV_FB_USED[$__range]) + max_over_time(DCGM_FI_DEV_FB_FREE[$__range]) + max_over_time(DCGM_FI_DEV_FB_RESERVED[$__range])))",
               "format": "table",
               "instant": true,
               "legendFormat": "",
