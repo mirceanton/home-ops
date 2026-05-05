@@ -355,7 +355,7 @@ spec:
                 "type": "prometheus",
                 "uid": "${DS_PROMETHEUS}"
               },
-              "expr": "max by (pod, namespace) (max_over_time((100 * DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE + DCGM_FI_DEV_FB_RESERVED))[$__range]))",
+              "expr": "max by (pod, namespace) (max_over_time(DCGM_FI_DEV_FB_USED[$__range]) * 100 / (max_over_time(DCGM_FI_DEV_FB_USED[$__range]) + max_over_time(DCGM_FI_DEV_FB_FREE[$__range]) + max_over_time(DCGM_FI_DEV_FB_RESERVED[$__range])))",
               "format": "table",
               "instant": true,
               "legendFormat": "",
