@@ -84,7 +84,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.42.1
+              tag: v1.43.0
             args: ["/bin/meilisearch"]
             env:
               MEILI_NO_ANALYTICS: true
@@ -92,7 +92,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: karakeep-secret
-                    key: meilisearch_master_key
+                    key: MEILI_MASTER_KEY
             resources:
               requests:
                 cpu: 10m

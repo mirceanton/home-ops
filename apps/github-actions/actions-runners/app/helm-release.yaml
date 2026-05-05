@@ -56,22 +56,27 @@ spec:
             type: RuntimeDefault
         containers:
           - name: runner
-            image: ghcr.io/home-operations/actions-runner:2.334.0@sha256:95d91d7f8d241e319ef2f4fec08f417aa1606b96fbb327643f75c303acd30002
+            image: ghcr.io/mirceanton/actions-runner:2.334.0@sha256:4c0c07dc9eae254930a23cab811810607747d27ced1dc697bdc24707ba1c6b36
             command: ["/home/runner/run.sh"]
             securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
+              runAsUser: 1001
+              runAsGroup: 1001
               runAsNonRoot: true
               allowPrivilegeEscalation: false
               capabilities:
                 drop: ["ALL"]
             env:
-              - name: MISE_CACHE_DIR
-                value: /cache/mise
               - name: PIP_CACHE_DIR
                 value: /cache/pip
               - name: NPM_CONFIG_CACHE
                 value: /cache/npm
+              - name: MISE_CACHE_DIR
+                value: /cache/mise
+              - name: MISE_GITHUB_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: github-mise-token
+                    key: github_token
 
               - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
                 value: "false"

@@ -12,6 +12,8 @@ spec:
 
   values:
     fullnameOverride: kube-state-metrics
+    statefulSet:
+      enabled: true
     resources:
       requests:
         cpu: 20m

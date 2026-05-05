@@ -22,10 +22,10 @@ spec:
       operator:
         requests:
           cpu: 20m
-          memory: 64Mi
+          memory: 256Mi
         limits:
           cpu: null
-          memory: 256Mi
+          memory: 1Gi
       metricServer:
         requests:
           cpu: 20m

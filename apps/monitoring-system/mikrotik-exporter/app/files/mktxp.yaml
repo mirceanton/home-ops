@@ -1,9 +1,9 @@
 default:
   port: 8729
   use_ssl: true
-  no_ssl_certificate: false
+  no_ssl_certificate: true
   ssl_certificate_verify: false
-  ssl_check_hostname: true
+  ssl_check_hostname: false
   plaintext_login: true
 
   health: true

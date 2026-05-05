@@ -7,7 +7,7 @@ mktxp:
   max_delay_on_failure: 900
   delay_inc_div: 5
 
-  bandwidth: true
+  bandwidth: false
   bandwidth_test_dns_server: "8.8.8.8"
   bandwidth_test_interval: 600
 

@@ -8,4 +8,3 @@ resources:
   - ./namespace.yaml
   - ./cloudnative-pg-operator
   - ./dragonfly-operator
-  - ./rabbitmq-operator

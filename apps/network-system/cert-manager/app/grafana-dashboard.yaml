@@ -3,11 +3,11 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: renovate-operator-dashboard
+  name: cert-manager-dashboard
 spec:
-  configMapRef:
-    name: renovate-operator-dashboard
-    key: renovate-operator.json
+  grafanaCom:
+    id: 20842
+    revision: 3
 
   datasources:
     - datasourceName: prometheus

@@ -52,10 +52,4 @@ spec:
     metrics:
       enabled: true
       serviceMonitor: {enabled: true}
-      dashboard:
-        enabled: true
-        grafanaDatasource:
-          allowCrossNamespaceImport: true
-          instanceSelector:
-            matchLabels:
-              grafana.internal/instance: grafana
+      dashboard: {enabled: false}

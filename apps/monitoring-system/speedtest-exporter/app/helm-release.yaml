@@ -1,0 +1,80 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: speedtest-exporter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: speedtest-exporter
+
+  values:
+    controllers:
+      speedtest-exporter:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          speedtest-exporter:
+            image:
+              repository: ghcr.io/heathcliff26/speedtest-exporter
+              tag: v1.5.1@sha256:c14a18cfb3325da0c646398ab970d76dff2a1eb288cd54e3b2925c663fff6d77
+            env:
+              OOKLA_EULA_GDPR: "true"
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+
+        pod:
+          securityContext:
+            runAsGroup: 1000
+            runAsUser: 1000
+            fsGroup: 1000
+            runAsNonRoot: true
+
+    service:
+      speedtest-exporter:
+        controller: speedtest-exporter
+        ports:
+          http:
+            port: 8080
+    serviceMonitor:
+      speedtest-exporter:
+        serviceName: speedtest-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 10m
+            scrapeTimeout: 5m
+            metricRelabelings:
+              - sourceLabels: [job]
+                targetLabel: job
+                replacement: "integrations/speedtest"
+
+    persistence:
+      cache:
+        type: emptyDir
+        advancedMounts:
+          speedtest-exporter:
+            speedtest-exporter:
+              - path: /cache

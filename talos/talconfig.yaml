@@ -2,11 +2,11 @@
 clusterName: home-ops
 endpoint: "https://home-ops.mgmt.h.mirceanton.com:6443"
 
-# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
-talosVersion: v1.12.4
+# renovate: depName=ghcr.io/siderolabs/installer datasource=docker
+talosVersion: v1.13.0
 
-# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-kubernetesVersion: v1.35.0
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.36.0
 
 additionalApiServerCertSans: &san
   - home-ops.mgmt.h.mirceanton.com
@@ -58,8 +58,8 @@ nodes:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/amdgpu
-            - siderolabs/nvidia-container-toolkit-lts
-            - siderolabs/nonfree-kmod-nvidia-lts
+            - siderolabs/nvidia-container-toolkit-production
+            - siderolabs/nonfree-kmod-nvidia-production
             - siderolabs/zfs
 
 controlPlane:

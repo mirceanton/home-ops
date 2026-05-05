@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/sholdee/crd-schema-publisher
-              tag: v2026.422.184045
+              tag: v2026.429.153650
             env:
               CF_PAGES_PROJECT: k8s-schemas
               OUTPUT_DIR: /output
@@ -33,7 +33,7 @@ spec:
                 cpu: 50m
                 memory: 64Mi
               limits:
-                memory: 256Mi
+                memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

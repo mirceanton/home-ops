@@ -18,7 +18,7 @@ spec:
         containers:
           main:
             image:
-              repository: jellyfin/jellyfin
+              repository: ghcr.io/jellyfin/jellyfin
               tag: 10.11.8
             env:
               TZ: "Europe/Bucharest"

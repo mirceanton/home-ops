@@ -1,0 +1,61 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "packageRules": [
+        {
+            "description": "Group Penpot components",
+            "groupName": "penpot",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["/penpotapp/"],
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group SparkyFitness components",
+            "groupName": "sparkyfitness",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["/codewithcj/"],
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group Immich components",
+            "groupName": "immich",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["/immich-app/"],
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group Firefly III components",
+            "groupName": "firefly-iii",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["/fireflyiii/"],
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group 1Password Connect components",
+            "groupName": "1password-connect",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": ["/1password/"],
+            "minimumGroupSize": 2
+        },
+        {
+            "description": "Group Flux operator components",
+            "groupName": "flux-operator",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": [
+                "/flux-operator/",
+                "/flux-instance/",
+                "/flux-operator-manifests/"
+            ],
+            "minimumGroupSize": 3
+        },
+        {
+            "description": "Group GitHub Actions runner components",
+            "matchDatasources": ["docker"],
+            "matchPackageNames": [
+                "/gha-runner-scale-set-controller/",
+                "/gha-runner-scale-set/"
+            ],
+            "groupName": "actions-runner",
+            "minimumGroupSize": 2
+        }
+    ]
+}

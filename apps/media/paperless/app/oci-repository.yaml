@@ -3,12 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: rabbitmq-operator
+  name: paperless
 spec:
   interval: 15m
-  url: oci://registry-1.docker.io/cloudpirates/rabbitmq-cluster-operator
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
   ref:
-    tag: 0.2.3
+    tag: 4.6.2
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip

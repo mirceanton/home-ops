@@ -25,7 +25,7 @@ spec:
         initContainers:
           wait-for-mariadb:
             image:
-              repository: wait4x/wait4x
+              repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["mysql", "booklore:$(DB_PASSWORD)@tcp(booklore-mariadb:3306)/booklore"]
             env:
@@ -39,7 +39,7 @@ spec:
           booklore:
             image:
               repository: ghcr.io/grimmory-tools/grimmory
-              tag: v3.0.0
+              tag: v3.0.3
             env:
               USER_ID: "568"
               GROUP_ID: "568"
