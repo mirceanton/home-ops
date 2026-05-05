@@ -11,6 +11,7 @@ spec:
     name: blackbox-exporter
 
   values:
+    kind: StatefulSet
     fullnameOverride: blackbox-exporter
 
     resources:
