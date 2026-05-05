@@ -38,7 +38,8 @@ spec:
 
     serviceMonitor:
       enabled: true
-      interval: 15s
+      interval: 1s
+      scrapeTimeout: 1s
       honorLabels: true
       labels:
         prometheus: kube-prometheus-stack
