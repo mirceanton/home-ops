@@ -1,0 +1,132 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: paperless
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: paperless
+
+  values:
+    controllers:
+      paperless:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/paperless-ngx/paperless-ngx
+              tag: 2.20.15
+
+            envFrom:
+              - secretRef: {name: paperless-secret}
+            env:
+              # Application
+              PAPERLESS_URL: "https://documents.home.mirceanton.com"
+              PAPERLESS_PORT: "8000"
+              PAPERLESS_TIME_ZONE: Europe/Bucharest
+              PAPERLESS_WEBSERVER_WORKERS: "2"
+              PAPERLESS_TASK_WORKERS: "2"
+              # Authentication
+              PAPERLESS_ACCOUNT_ALLOW_SIGNUPS: "false"
+              PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS: "false"
+              # Folders
+              PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
+              PAPERLESS_EXPORT_DIR: /data/nas/export
+              PAPERLESS_DATA_DIR: /data/local/data
+              PAPERLESS_MEDIA_ROOT: /data/local/media
+              # Consumer
+              PAPERLESS_CONSUMER_POLLING: "60"
+              PAPERLESS_CONSUMER_RECURSIVE: "true"
+              PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
+              # Redis
+              PAPERLESS_REDIS: "redis://paperless-dragonfly:6379"
+              # Postgres
+              PAPERLESS_DBENGINE: postgresql
+              PAPERLESS_DBHOST:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-postgres-app
+                    key: host
+              PAPERLESS_DBPORT:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-postgres-app
+                    key: port
+              PAPERLESS_DBNAME: 
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-postgres-app
+                    key: database
+              PAPERLESS_DBUSER:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-postgres-app
+                    key: username
+              PAPERLESS_DBPASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-postgres-app
+                    key: password
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+            probes:
+              liveness: &probes
+                enabled: true
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+
+    service:
+      app:
+        ports:
+          http:
+            port: 8000
+
+    route:
+      home:
+        hostnames: ["documents.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /data/local
+      documents:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Documents
+        globalMounts:
+          - path: /data/nas
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
