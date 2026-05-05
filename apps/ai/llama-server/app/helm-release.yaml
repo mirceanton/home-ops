@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ikawrakow/ik-llama-cpp
-              tag: cu12-swap-4417@sha256:e747df1b266ea2a36d4763d7d84abe9ce0f919c941827140626e20e093880066
+              tag: cu12-swap-4456@sha256:9c447dd6c00864960be8d74211b10b6a44807313b41fcc523950cbc150b11296
             command: ["/app/llama-swap"]
             args: ["-config", "/app/config.yaml", "-listen", "0.0.0.0:8080"]
 

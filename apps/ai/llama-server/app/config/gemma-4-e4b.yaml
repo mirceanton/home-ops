@@ -1,0 +1,42 @@
+---
+# Gemma 4 4B dense model, fully GPU-offloaded
+# ~7.5GB model + ~1-2GB KV cache = ~9GB total VRAM
+# 32K context with q8_0 KV cache
+healthCheckTimeout: 300
+
+macros:
+  common: >
+    --host 127.0.0.1
+    --jinja
+    --cache-type-k q8_0 --cache-type-v q8_0
+    --temp 0.2 --top-k 20
+    --metrics
+    --verbose
+
+models:
+  gemma-4:
+    ttl: 3600
+    aliases:
+      - gemma-4-e4b
+      - claude-sonnet-4-6
+      - claude-sonnet-4-5
+      - claude-sonnet-4-5-20250929
+      - claude-haiku-4-5
+      - claude-haiku-4-5-20251001
+      - claude-opus-4-6
+      - claude-opus-4-5
+      - claude-opus-4-5-20251101
+    cmd: >
+      /app/llama-server
+      --port ${PORT}
+      ${common}
+      --hf-repo unsloth/gemma-4-E4B-it-GGUF
+      --hf-file gemma-4-E4B-it-UD-Q6_K_XL.gguf
+      --ctx-size 32768
+      --n-predict -1
+      --parallel 1
+      --n-gpu-layers 99
+      --ubatch-size 512
+      --slot-save-path /cache/slots
+      --top-p 0.95
+      --chat-template-file /templates/chat-template-claude.jinja
