@@ -12,6 +12,8 @@ spec:
 
   values:
     fullnameOverride: *app
+    workloadAsStatefulSet: true
+    strategyType: OnDelete
 
     image:
       repository: ghcr.io/itzg/minecraft-server
