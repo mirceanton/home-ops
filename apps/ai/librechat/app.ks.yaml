@@ -31,5 +31,3 @@ spec:
       namespace: database-system
     - name: 1password-connect
       namespace: security-system
-    - name: ollama
-      namespace: ai
