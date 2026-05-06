@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app discord-bot-autoscaler
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: discord-bot-autoscaler
+
+  values:
+    controllers:
+      discord-bot-autoscaler:
+        replicas: 1
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/discord-bot-autoscaler
+              tag: v1.1.0
+            env:
+              TZ: Europe/Bucharest
+              STATE_FILE_PATH: /data/state.json
+              SERVER_HOST: 0.0.0.0
+              SERVER_PORT: "8080"
+              LOG_LEVEL: info
+              LOG_FORMAT: json
+              ACTIVATION_WINDOW: 10m
+              ALLOWED_SERVICES: ""
+              DISCORD_GUILD_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: discord-bot-autoscaler-secret
+                    key: DISCORD_GUILD_ID
+              DISCORD_BOT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: discord-bot-autoscaler-secret
+                    key: DISCORD_BOT_TOKEN
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: discord-bot-autoscaler
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /data
