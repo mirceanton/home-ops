@@ -8,3 +8,4 @@ resources:
   - ./external-secret.yaml
   - ./rbac.yaml
   - ./configmap.yaml
+  - ./pvc.yaml

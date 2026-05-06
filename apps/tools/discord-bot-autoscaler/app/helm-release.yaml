@@ -71,7 +71,7 @@ spec:
 
     persistence:
       data:
-        existingClaim: ${APP}
+        existingClaim: discord-bot-autoscaler
         globalMounts:
           - path: /data
       config:
