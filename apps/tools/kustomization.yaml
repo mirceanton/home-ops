@@ -7,5 +7,6 @@ namespace: tools
 resources:
   - ./namespace.yaml
   - ./convertx
+  - ./discord-bot-autoscaler
   - ./omni-tools
   - ./openspeedtest

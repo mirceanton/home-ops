@@ -6,6 +6,7 @@ resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
   - ./grafana-dashboard.yaml
+  - ./scaled-object.yaml
 
 configMapGenerator:
   - name: llama-server-config
