@@ -36,11 +36,11 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/navidrome.webp"
 
-      - name: "Papra"
+      - name: "Paperless"
         subtitle: "Document Management"
         url: "https://documents.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/papra.webp"
+        logo: "assets/icons/webp/paperless-ng.webp"
 
       - name: "Booklore"
         subtitle: "Book Library"
