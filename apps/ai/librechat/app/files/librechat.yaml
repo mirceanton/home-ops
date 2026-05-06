@@ -3,14 +3,14 @@ version: "1"
 
 endpoints:
   custom:
-    - name: Ollama
-      apiKey: "ollama"
-      baseURL: "http://ollama.ai.svc.cluster.local:11434/v1"
+    - name: llama-server
+      apiKey: "llama"
+      baseURL: "http://llama-server.ai.svc.cluster.local:8080/v1"
       models:
-        default: ["qwen3:4b"]
+        default: ["local"]
         fetch: true
       titleConvo: true
-      titleModel: "qwen3:1.7b"
+      titleModel: "local"
       summarize: false
 
 mcpServers:

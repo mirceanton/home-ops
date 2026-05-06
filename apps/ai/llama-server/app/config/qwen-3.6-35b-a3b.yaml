@@ -16,6 +16,7 @@ models:
   qwen-3.6:
     ttl: 3600
     aliases:
+      - local
       - qwen3.6-35b-a3b
       - claude-sonnet-4-6
       - claude-sonnet-4-5

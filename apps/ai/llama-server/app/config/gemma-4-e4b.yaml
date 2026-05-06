@@ -17,6 +17,7 @@ models:
   gemma-4:
     ttl: 3600
     aliases:
+      - local
       - gemma-4-e4b
       - claude-sonnet-4-6
       - claude-sonnet-4-5
