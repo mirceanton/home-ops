@@ -54,7 +54,6 @@ spec:
 
     defaultPodOptions:
       enableServiceLinks: false
-      serviceAccountName: discord-bot-autoscaler
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -69,13 +68,46 @@ spec:
           http:
             port: 8080
 
+    serviceAccount:
+      discord-bot-autoscaler: {}
+
+    rbac:
+      roles:
+        discord-bot-autoscaler-watcher:
+          type: ClusterRole
+          rules:
+            - apiGroups: ["apps"]
+              resources: ["deployments", "statefulsets"]
+              verbs: ["get"]
+      bindings:
+        discord-bot-autoscaler-watcher:
+          type: ClusterRoleBinding
+          roleRef:
+            kind: ClusterRole
+            identifier: discord-bot-autoscaler-watcher
+          subjects:
+            - identifier: discord-bot-autoscaler
+
+    configMaps:
+      config:
+        data:
+          services.yaml: |
+            ---
+            activationWindow: 10m
+            services:
+              llama-server:
+                namespace: ai
+                workloadKind: StatefulSet
+
     persistence:
       data:
-        existingClaim: discord-bot-autoscaler
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 1Gi
         globalMounts:
           - path: /data
       config:
         type: configMap
-        name: discord-bot-autoscaler-config
+        identifier: config
         globalMounts:
           - path: /config
