@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/v1/serviceaccount.json
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: discord-bot-autoscaler
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/rbac.authorization.k8s.io/clusterrole_v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: discord-bot-autoscaler-watcher
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets"]
+    verbs: ["get"]
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/rbac.authorization.k8s.io/clusterrolebinding_v1.json
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: discord-bot-autoscaler-watcher
+subjects:
+  - kind: ServiceAccount
+    name: discord-bot-autoscaler
+    namespace: tools
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: discord-bot-autoscaler-watcher

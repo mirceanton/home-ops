@@ -23,13 +23,12 @@ spec:
               tag: v1.1.0
             env:
               TZ: Europe/Bucharest
+              CONFIG_FILE_PATH: /config/services.yaml
               STATE_FILE_PATH: /data/state.json
               SERVER_HOST: 0.0.0.0
               SERVER_PORT: "8080"
               LOG_LEVEL: info
               LOG_FORMAT: json
-              ACTIVATION_WINDOW: 10m
-              ALLOWED_SERVICES: ""
               DISCORD_GUILD_ID:
                 valueFrom:
                   secretKeyRef:
@@ -55,6 +54,7 @@ spec:
 
     defaultPodOptions:
       enableServiceLinks: false
+      serviceAccountName: discord-bot-autoscaler
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -74,3 +74,8 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /data
+      config:
+        type: configMap
+        name: discord-bot-autoscaler-config
+        globalMounts:
+          - path: /config
