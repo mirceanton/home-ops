@@ -9,13 +9,11 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 "aqua:kustomize" = "latest"
 "aqua:derailed/k9s" = "latest"
 "aqua:fluxcd/flux2" = "2.8.6"
+"aqua:cilium/hubble" = "latest"
 
 # Helm + Plugins
 "aqua:helm" = "latest"
 helmfile = "latest"
-
-# CAPI Tools
-clusterctl = "latest"
 
 # Talos Stuff
 "aqua:talosctl" = "1.13.0"
