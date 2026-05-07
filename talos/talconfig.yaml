@@ -52,6 +52,12 @@ nodes:
     patches:
       - "@./patches/nvidia.yaml"
       - "@./patches/zfs.yaml"
+      - |
+        machine:
+          disks:
+            - device: /dev/nvme0n1
+              partitions:
+                - mountpoint: /var/lib/etcd
     schematic:
       customization:
         systemExtensions:
