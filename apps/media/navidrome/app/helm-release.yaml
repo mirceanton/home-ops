@@ -31,7 +31,7 @@ spec:
               ND_MUSICFOLDER: /music
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
-              ND_REQUESTLIMIT: "1000"
+              ND_AUTHREQUESTLIMIT: "0"
               # ND_BASEURL: https://navidrome.home.mirceanton.com
 
             resources:
