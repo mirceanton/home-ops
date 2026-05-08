@@ -21,19 +21,18 @@ spec:
           navidrome-mcp:
             image:
               repository: ghcr.io/mirceanton/navidrome-mcp
-              tag: test
+              tag: test2
             env:
-              NAVIDROME_URL: http://navidrome-app.media.svc.cluster.local:4533
+              NAVIDROME_URL: http://navidrome:4533
             envFrom:
-              - secretRef:
-                  name: navidrome-mcp-secret
+              - secretRef: {name: navidrome-mcp-secret}
 
             resources:
               requests:
                 cpu: 10m
-                memory: 64Mi
+                memory: 1Gi
               limits:
-                memory: 256Mi
+                memory: 2Gi
 
             probes:
               liveness:
