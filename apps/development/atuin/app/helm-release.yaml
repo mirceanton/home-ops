@@ -11,6 +11,9 @@ spec:
     name: atuin
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       atuin:
         replicas: 1
@@ -68,6 +71,7 @@ spec:
                 drop: ["ALL"]
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 568

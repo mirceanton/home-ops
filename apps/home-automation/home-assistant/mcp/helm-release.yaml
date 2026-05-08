@@ -11,6 +11,9 @@ spec:
     name: home-assistant-mcp
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       home-assistant-mcp:
         annotations:
@@ -50,6 +53,7 @@ spec:
                 memory: 512Mi
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

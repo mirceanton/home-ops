@@ -11,6 +11,12 @@ spec:
     name: lidarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       lidarr:
         annotations:

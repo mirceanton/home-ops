@@ -11,7 +11,11 @@ spec:
     name: llama-server
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     defaultPodOptions:
+      automountServiceAccountToken: false
       runtimeClassName: nvidia
 
     controllers:

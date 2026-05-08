@@ -11,6 +11,9 @@ spec:
     name: home-assistant
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       home-assistant:
         annotations:
@@ -38,6 +41,7 @@ spec:
                 memory: 2Gi
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

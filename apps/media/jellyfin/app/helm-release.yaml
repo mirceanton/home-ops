@@ -11,6 +11,9 @@ spec:
     name: jellyfin
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       jellyfin:
         annotations:
@@ -55,6 +58,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:

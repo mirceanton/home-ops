@@ -11,6 +11,9 @@ spec:
     name: streamarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       streamarr:
         annotations:
@@ -47,6 +50,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

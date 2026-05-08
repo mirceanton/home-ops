@@ -13,6 +13,9 @@ spec:
   dependsOn: []
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       teleprompter:
         containers:
@@ -50,6 +53,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

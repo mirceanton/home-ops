@@ -11,6 +11,9 @@ spec:
     name: feishin
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       feishin:
         containers:
@@ -40,6 +43,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

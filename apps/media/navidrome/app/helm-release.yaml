@@ -11,6 +11,9 @@ spec:
     name: navidrome
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       navidrome:
         containers:
@@ -54,6 +57,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

@@ -11,6 +11,9 @@ spec:
     name: crd-schema-publisher
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       crd-schema-publisher:
         type: cronjob
@@ -40,6 +43,7 @@ spec:
               capabilities: {drop: [ALL]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534

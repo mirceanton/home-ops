@@ -11,6 +11,12 @@ spec:
     name: buildkit
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       buildkit:
         type: statefulset

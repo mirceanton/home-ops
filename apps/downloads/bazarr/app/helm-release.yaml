@@ -11,6 +11,12 @@ spec:
     name: bazarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       bazarr:
         annotations:

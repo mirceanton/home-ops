@@ -11,6 +11,12 @@ spec:
     name: ipmi-exporter
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       ipmi-exporter:
         type: statefulset

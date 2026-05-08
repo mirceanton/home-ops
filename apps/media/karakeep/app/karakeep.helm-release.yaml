@@ -10,7 +10,11 @@ spec:
     name: karakeep
   interval: 30m
   values:
+    global:
+      createDefaultServiceAccount: false
+
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch

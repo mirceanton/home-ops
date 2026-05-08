@@ -11,6 +11,12 @@ spec:
     name: radarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       radarr:
         annotations:

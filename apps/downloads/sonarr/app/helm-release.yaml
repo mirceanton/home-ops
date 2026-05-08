@@ -11,6 +11,12 @@ spec:
     name: sonarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       sonarr:
         annotations:

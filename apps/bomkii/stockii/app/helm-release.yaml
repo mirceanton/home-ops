@@ -11,6 +11,12 @@ spec:
     name: stockii
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       stockii:
         replicas: 1

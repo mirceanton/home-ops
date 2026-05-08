@@ -11,6 +11,12 @@ spec:
     name: flaresolverr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       flaresolverr:
         annotations:

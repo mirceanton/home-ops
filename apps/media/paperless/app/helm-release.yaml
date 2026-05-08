@@ -11,6 +11,9 @@ spec:
     name: paperless
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       paperless:
         annotations:
