@@ -52,7 +52,7 @@ nodes:
     patches:
       - "@./patches/nvidia.yaml"
       - "@./patches/zfs.yaml"
-      - |
+      - | #? Use the Intel Optane for the etcd disk
         machine:
           disks:
             - device: /dev/nvme0n1
@@ -81,3 +81,12 @@ controlPlane:
     - "@./patches/sysctls.yaml"
     - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
     - "@./patches/registry-mirrors.yaml"
+    - |
+      cluster:
+        apiServer:
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              memory: 6Gi
