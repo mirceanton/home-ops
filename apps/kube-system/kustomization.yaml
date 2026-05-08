@@ -8,6 +8,7 @@ resources:
   - ./namespace.yaml
   - ./cilium
   - ./descheduler
+  - ./generic-device-plugin
   - ./keda
   - ./metrics-server
   - ./nvidia-device-plugin
