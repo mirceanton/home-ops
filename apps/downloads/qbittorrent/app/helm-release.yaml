@@ -11,6 +11,12 @@ spec:
     name: qbittorrent
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       qbittorrent:
         annotations:

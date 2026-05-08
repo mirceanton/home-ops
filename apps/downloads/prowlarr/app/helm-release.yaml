@@ -11,6 +11,12 @@ spec:
     name: prowlarr
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       prowlarr:
         annotations:

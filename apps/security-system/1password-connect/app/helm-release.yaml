@@ -11,6 +11,9 @@ spec:
     kind: OCIRepository
     name: onepassword
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       onepassword:
         strategy: RollingUpdate
@@ -113,6 +116,7 @@ spec:
             securityContext: *securityContext
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 999

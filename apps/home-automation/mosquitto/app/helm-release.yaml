@@ -11,6 +11,9 @@ spec:
     name: mosquitto
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       mosquitto:
         type: statefulset
@@ -40,6 +43,7 @@ spec:
               size: 5Gi
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

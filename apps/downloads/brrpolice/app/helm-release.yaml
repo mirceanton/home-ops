@@ -10,6 +10,9 @@ spec:
     name: brrpolice
   interval: 1h
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       brrpolice:
         containers:
@@ -54,6 +57,7 @@ spec:
                 memory: 128Mi
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

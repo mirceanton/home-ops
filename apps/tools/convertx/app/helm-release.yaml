@@ -11,6 +11,9 @@ spec:
     name: convertx
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       convertx:
         annotations:
@@ -56,6 +59,7 @@ spec:
               capabilities: {drop: ["ALL"]}
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

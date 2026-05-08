@@ -11,6 +11,9 @@ spec:
     name: grafana-mcp
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       grafana-mcp:
         annotations:
@@ -60,6 +63,7 @@ spec:
                 drop: ["ALL"]
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

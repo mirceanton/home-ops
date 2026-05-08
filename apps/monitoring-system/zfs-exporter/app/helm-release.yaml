@@ -11,6 +11,9 @@ spec:
     name: zfs-exporter
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     controllers:
       zfs-exporter:
         type: statefulset
@@ -35,6 +38,7 @@ spec:
               privileged: true
 
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsUser: 0
         runAsGroup: 0

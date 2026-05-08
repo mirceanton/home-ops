@@ -11,6 +11,12 @@ spec:
     name: firefly
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       firefly:
         replicas: 1

@@ -11,7 +11,11 @@ spec:
     name: penpot
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     defaultPodOptions:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001

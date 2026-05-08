@@ -14,6 +14,12 @@ spec:
     - name: booklore-mariadb
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
     controllers:
       booklore:
         annotations:

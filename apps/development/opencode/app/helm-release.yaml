@@ -11,6 +11,9 @@ spec:
     name: opencode
 
   values:
+    global:
+      createDefaultServiceAccount: false
+
     fullnameOverride: opencode
 
     controllers:
