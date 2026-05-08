@@ -7,7 +7,6 @@ namespace: downloads
 resources:
   - ./namespace.yaml
   - ./bazarr
-  - ./brrpolice
   - ./flaresolverr
   - ./lidarr
   - ./prowlarr
