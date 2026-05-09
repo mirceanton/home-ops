@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: navidrome
+spec:
+  grafanaCom:
+    id: 24397
+    revision: 1
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

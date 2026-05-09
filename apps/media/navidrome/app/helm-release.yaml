@@ -32,6 +32,8 @@ spec:
               ND_PORT: &port 4533
               ND_SCANSCHEDULE: 30m
               ND_AUTHREQUESTLIMIT: "0"
+              ND_PROMETHEUS_ENABLED: "true"
+              ND_PROMETHEUS_METRICSPATH: "/metrics"
               # ND_BASEURL: https://navidrome.home.mirceanton.com
 
             resources:
@@ -72,6 +74,16 @@ spec:
         ports:
           http:
             port: *port
+
+    serviceMonitor:
+      navidrome:
+        serviceName: navidrome
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 15s
+            scrapeTimeout: 5s
 
     route:
       home:
