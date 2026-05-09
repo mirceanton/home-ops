@@ -1,0 +1,89 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: qbittorrent-exporter
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: qbittorrent-exporter
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
+    controllers:
+      qbittorrent-exporter:
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+        containers:
+          app:
+            image:
+              repository: ghcr.io/esanchezm/prometheus-qbittorrent-exporter
+              tag: v1.6.0
+            env:
+              EXPORTER_PORT: &port 8000
+              QBITTORRENT_HOST: qbittorrent.downloads.svc.cluster.local
+              QBITTORRENT_PORT: 8080
+              VERIFY_WEBUI_CERTIFICATE: "False"
+              QBITTORRENT_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: qbittorrent-exporter-secret
+                    key: QBITTORRENT_USER
+              QBITTORRENT_PASS:
+                valueFrom:
+                  secretKeyRef:
+                    name: qbittorrent-exporter-secret
+                    key: QBITTORRENT_PASS
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /metrics
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    serviceMonitor:
+      qbittorrent-exporter:
+        serviceName: qbittorrent-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 30s
+            scrapeTimeout: 10s
