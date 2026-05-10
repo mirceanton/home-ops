@@ -32,7 +32,7 @@ spec:
             args: ["sonarr"]
             env:
               URL: http://sonarr:8989
-              PORT: &port 9707x
+              PORT: &port 9707
               APIKEY:
                 valueFrom:
                   secretKeyRef:
