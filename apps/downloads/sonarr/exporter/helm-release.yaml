@@ -31,13 +31,13 @@ spec:
               tag: v2.3.0
             args: ["sonarr"]
             env:
-              URL: http://sonarr.downloads.svc.cluster.local:8989
+              URL: http://sonarr:8989
+              PORT: &port 9707x
               APIKEY:
                 valueFrom:
                   secretKeyRef:
                     name: sonarr-exporter-secret
                     key: api_key
-              PORT: &port 9707
 
             probes:
               liveness: &probes
@@ -79,5 +79,5 @@ spec:
           - port: http
             scheme: http
             path: /metrics
-            interval: 1h
-            scrapeTimeout: 1m
+            interval: 1m
+            scrapeTimeout: 30s

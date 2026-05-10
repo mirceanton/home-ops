@@ -32,12 +32,12 @@ spec:
             args: ["radarr"]
             env:
               URL: http://radarr.downloads.svc.cluster.local:7878
+              PORT: &port 9707
               APIKEY:
                 valueFrom:
                   secretKeyRef:
                     name: radarr-exporter-secret
                     key: api_key
-              PORT: &port 9707
 
             probes:
               liveness: &probes
@@ -79,5 +79,5 @@ spec:
           - port: http
             scheme: http
             path: /metrics
-            interval: 1h
-            scrapeTimeout: 1m
+            interval: 1m
+            scrapeTimeout: 30s

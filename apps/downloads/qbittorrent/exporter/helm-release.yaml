@@ -34,16 +34,16 @@ spec:
               QBITTORRENT_HOST: qbittorrent.downloads.svc.cluster.local
               QBITTORRENT_PORT: 8080
               VERIFY_WEBUI_CERTIFICATE: "False"
-              QBITTORRENT_USER:
-                valueFrom:
-                  secretKeyRef:
-                    name: qbittorrent-exporter-secret
-                    key: QBITTORRENT_USER
-              QBITTORRENT_PASS:
-                valueFrom:
-                  secretKeyRef:
-                    name: qbittorrent-exporter-secret
-                    key: QBITTORRENT_PASS
+              # QBITTORRENT_USER:
+              #   valueFrom:
+              #     secretKeyRef:
+              #       name: qbittorrent-exporter-secret
+              #       key: QBITTORRENT_USER
+              # QBITTORRENT_PASS:
+              #   valueFrom:
+              #     secretKeyRef:
+              #       name: qbittorrent-exporter-secret
+              #       key: QBITTORRENT_PASS
 
             probes:
               liveness: &probes
