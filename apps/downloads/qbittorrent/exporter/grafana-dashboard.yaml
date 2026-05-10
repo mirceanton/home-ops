@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: qbittorrent-exporter
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  url: https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/refs/heads/master/grafana/dashboard.json
+  resyncPeriod: 30m
