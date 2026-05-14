@@ -43,7 +43,7 @@ spec:
               capabilities: {drop: [ALL]}
 
     defaultPodOptions:
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 65534
