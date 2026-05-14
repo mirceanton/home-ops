@@ -3,6 +3,7 @@ kind: GrafanaDashboard
 metadata:
   name: jellyfin-dashboard
 spec:
+  folderRef: media
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:

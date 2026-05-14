@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: qbittorrent-exporter
 spec:
+  folderRef: downloads
   url: https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/refs/heads/master/grafana/dashboard.json
   resyncPeriod: 30m
 

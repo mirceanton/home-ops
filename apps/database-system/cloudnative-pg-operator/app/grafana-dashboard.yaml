@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: cnpg
 spec:
+  folderRef: database-system
   grafanaCom:
     id: 20417
     revision: 4

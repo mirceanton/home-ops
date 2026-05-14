@@ -5,5 +5,6 @@ namespace: ai
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./librechat
   - ./llama-server

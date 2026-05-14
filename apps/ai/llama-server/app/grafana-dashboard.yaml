@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: llama-server
 spec:
+  folderRef: ai
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:

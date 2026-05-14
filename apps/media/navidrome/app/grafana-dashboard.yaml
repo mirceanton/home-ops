@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: navidrome
 spec:
+  folderRef: media
   grafanaCom:
     id: 24397
     revision: 1

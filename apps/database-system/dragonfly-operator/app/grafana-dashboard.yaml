@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: dragonfly-operator
 spec:
+  folderRef: database-system
   configMapRef:
     name: dashboard-dragonfly-operator-grafana-dashboard
     key: grafana-dashboard.json

@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: sonarr-exporter
 spec:
+  folderRef: downloads
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:

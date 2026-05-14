@@ -6,6 +6,7 @@ namespace: storage-system
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./openebs
   - ./snapshot-controller
   - ./volsync

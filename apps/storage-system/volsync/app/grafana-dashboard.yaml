@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: volsync
 spec:
+  folderRef: storage-system
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:

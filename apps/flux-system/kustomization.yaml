@@ -6,6 +6,7 @@ namespace: flux-system
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./flux-operator
   - ./flux-instance
   - ./flux-mcp
