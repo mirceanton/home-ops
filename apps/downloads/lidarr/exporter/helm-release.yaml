@@ -29,7 +29,7 @@ spec:
             image:
               repository: ghcr.io/onedr0p/exportarr
               tag: v2.3.0
-            args: ["lidarr"]
+            args: ["lidarr", "--enable-additional-metrics"]
             env:
               URL: http://lidarr:8686
               PORT: &port 9707
