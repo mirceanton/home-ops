@@ -232,7 +232,7 @@ spec:
             "barWidth": 0.9,
             "groupWidth": 0.7,
             "legend": {"calcs": ["sum"], "displayMode": "table", "placement": "right", "showLegend": true},
-            "orientation": "horizontal",
+            "orientation": "vertical",
             "showValue": "auto",
             "stacking": "none",
             "tooltip": {"mode": "single", "sort": "none"},

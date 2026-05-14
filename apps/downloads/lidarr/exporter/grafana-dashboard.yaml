@@ -197,7 +197,7 @@ spec:
             "xTickLabelSpacing": 0
           },
           "title": "Songs by Quality",
-          "type": "barchart",
+          "type": "bargauge",
           "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sort_desc(lidarr_songs_quality_total)", "instant": true, "legendFormat": "{{quality}}", "refId": "A"}]
         },
         {
@@ -225,7 +225,7 @@ spec:
             "xTickLabelSpacing": 0
           },
           "title": "Top 25 Genres by Album Count",
-          "type": "barchart",
+          "type": "bargauge",
           "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "topk(25, lidarr_albums_genres_total)", "instant": true, "legendFormat": "{{genre}}", "refId": "A"}]
         },
 
