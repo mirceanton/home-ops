@@ -4,3 +4,4 @@ kind: Component
 
 resources:
   - dragonfly.yaml
+  - pod-monitor.yaml
