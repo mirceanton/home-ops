@@ -26,6 +26,9 @@ spec:
             image:
               repository: ghcr.io/flaresolverr/flaresolverr
               tag: v3.4.6
+            env:
+              PROMETHEUS_ENABLED: "true"
+              PROMETHEUS_PORT: 8000
             resources:
               requests:
                 cpu: 20m
