@@ -5,6 +5,9 @@ kind: GrafanaDashboard
 metadata:
   name: qbittorrent-exporter
 spec:
+  url: https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/refs/heads/master/grafana/dashboard.json
+  resyncPeriod: 30m
+
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
@@ -13,6 +16,3 @@ spec:
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-
-  url: https://raw.githubusercontent.com/esanchezm/prometheus-qbittorrent-exporter/refs/heads/master/grafana/dashboard.json
-  resyncPeriod: 30m
