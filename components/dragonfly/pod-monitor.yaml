@@ -9,6 +9,8 @@ spec:
     - port: admin
       path: /metrics
       honorLabels: true
+      interval: 15s
+      scrapeTimeout: 10s
   selector:
     matchLabels:
       app.kubernetes.io/name: dragonfly
