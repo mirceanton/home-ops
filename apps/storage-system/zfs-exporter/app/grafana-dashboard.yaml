@@ -6,13 +6,16 @@ metadata:
   name: zfs-pool-monitoring
 spec:
   folderRef: storage-system
+  allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
+
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
   resyncPeriod: 5m
+
   json: >-
     {
       "annotations": {
