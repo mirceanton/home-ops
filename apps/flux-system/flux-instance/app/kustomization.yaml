@@ -7,3 +7,4 @@ resources:
   - ./helm-release.yaml
   - ./pod-monitor.yaml
   - ./prometheus-rule.yaml
+  - ./grafana-dashboards.yaml
