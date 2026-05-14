@@ -10,3 +10,4 @@ resources:
   - ./openebs
   - ./snapshot-controller
   - ./volsync
+  - ./zfs-exporter

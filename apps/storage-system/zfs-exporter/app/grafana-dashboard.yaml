@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: zfs-pool-monitoring
 spec:
+  folderRef: storage-system
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -516,7 +517,7 @@ spec:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
             }
@@ -579,7 +580,7 @@ spec:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_written_bytes{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_written_bytes{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
             }
@@ -642,19 +643,19 @@ spec:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_used_by_dataset_bytes{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }} — Own Data",
               "refId": "A"
             },
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_used_by_children_bytes{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_used_by_children_bytes{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }} — Children",
               "refId": "B"
             },
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_used_by_snapshot_bytes{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_used_by_snapshot_bytes{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }} — Snapshots",
               "refId": "C"
             }
@@ -718,7 +719,7 @@ spec:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-              "expr": "zfs_dataset_compression_ratio{pool=~\"$pool\"}",
+              "expr": "zfs_dataset_compression_ratio{pool=~\"$pool\", name!~\".*@.*\"}",
               "legendFormat": "{{ name }}",
               "refId": "A"
             }

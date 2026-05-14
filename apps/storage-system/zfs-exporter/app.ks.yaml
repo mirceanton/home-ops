@@ -8,9 +8,9 @@ spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: monitoring-system
+  targetNamespace: storage-system
 
-  path: ./apps/monitoring-system/zfs-exporter/app
+  path: ./apps/storage-system/zfs-exporter/app
   sourceRef:
     kind: GitRepository
     name: flux-system
