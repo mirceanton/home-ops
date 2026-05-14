@@ -1,10 +1,24 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanafolder_v1beta1.json
+kind: GrafanaFolder
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  name: kubernetes
+spec:
+  title: Kubernetes
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+
+---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
   name: kubernetes-global
 spec:
+  folderRef: kubernetes
   grafanaCom:
     id: 15757
     revision: 43
@@ -25,6 +39,7 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-namespaces
 spec:
+  folderRef: kubernetes
   grafanaCom:
     id: 15758
     revision: 44
@@ -45,6 +60,7 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-nodes
 spec:
+  folderRef: kubernetes
   grafanaCom:
     id: 15759
     revision: 40
@@ -65,6 +81,7 @@ kind: GrafanaDashboard
 metadata:
   name: kubernetes-pods
 spec:
+  folderRef: kubernetes
   grafanaCom:
     id: 15760
     revision: 37
