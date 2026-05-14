@@ -27,6 +27,8 @@ spec:
     - --version_check=false
     - --default_lua_flags=allow-undeclared-keys
 
+  networkPolicyEnabled: false
+
   resources:
     requests:
       cpu: ${DRAGONFLY_CPU_REQUEST:=100m}
