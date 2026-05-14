@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
-  - ./external-secret.yaml
   - ./grafana-dashboard.yaml
