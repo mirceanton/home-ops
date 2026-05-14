@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/streamarr
-              tag: v0.30.0
+              tag: v0.31.2
             env:
               TZ: "Europe/Bucharest"
               STREAMARR_PORT: &port 8080
@@ -94,6 +94,12 @@ spec:
         path: /mnt/tank/Media/Movies
         globalMounts:
           - path: /nfs-media/Movies
+      music:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Music
+        globalMounts:
+          - path: /nfs-media/Music
       tmp:
         type: emptyDir
         globalMounts:
