@@ -29,7 +29,7 @@ spec:
             image:
               repository: ghcr.io/onedr0p/exportarr
               tag: v2.3.0
-            args: ["radarr"]
+            args: ["radarr", "--enable-additional-metrics"]
             env:
               URL: http://radarr.downloads.svc.cluster.local:7878
               PORT: &port 9707
