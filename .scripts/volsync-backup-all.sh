@@ -26,19 +26,21 @@ fi
 echo -e "${CYAN}Triggering backups (trigger=${TRIGGER})...${NC}"
 
 # Launch all backups in parallel
-declare -A PIDS
+PIDS=()
+KEYS=()
 while IFS=' ' read -r APP APP_NS; do
     [ -z "${APP}" ] && continue
     echo "  → ${APP} (${APP_NS})"
     bash "$(dirname "$0")/volsync-backup.sh" "${APP}" "${APP_NS}" "${TRIGGER}" &
-    PIDS["${APP}/${APP_NS}"]=$!
+    PIDS+=($!)
+    KEYS+=("${APP}/${APP_NS}")
 done <<< "${SOURCES}"
 
 # Wait and collect results
 FAILED=()
-for KEY in "${!PIDS[@]}"; do
-    if ! wait "${PIDS[$KEY]}"; then
-        FAILED+=("${KEY}")
+for i in "${!PIDS[@]}"; do
+    if ! wait "${PIDS[$i]}"; then
+        FAILED+=("${KEYS[$i]}")
     fi
 done
 
