@@ -1,0 +1,341 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: karakeep
+spec:
+  folderRef: media
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  json: |
+    {
+      "__inputs": [{"name": "DS_PROMETHEUS", "label": "Prometheus", "type": "datasource", "pluginId": "prometheus", "pluginName": "Prometheus"}],
+      "__requires": [
+        {"type": "grafana", "id": "grafana", "name": "Grafana", "version": "10.0.0"},
+        {"type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0"},
+        {"type": "panel", "id": "stat", "name": "Stat", "version": ""},
+        {"type": "panel", "id": "bargauge", "name": "Bar gauge", "version": ""},
+        {"type": "panel", "id": "timeseries", "name": "Time series", "version": ""}
+      ],
+      "description": "Karakeep bookmark manager metrics",
+      "editable": true,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "panels": [
+
+        {
+          "collapsed": false,
+          "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+          "id": 100,
+          "title": "Overview",
+          "type": "row"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "text"}, "unit": "dtdurations"}, "overrides": []},
+          "gridPos": {"h": 4, "w": 3, "x": 0, "y": 1},
+          "id": 4,
+          "options": {"colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "Uptime",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "time() - karakeep_process_start_time_seconds", "instant": true, "legendFormat": "Uptime", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "blue"}, "unit": "short"}, "overrides": []},
+          "gridPos": {"h": 4, "w": 3, "x": 3, "y": 1},
+          "id": 1,
+          "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "Total Bookmarks",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_total_bookmarks", "legendFormat": "Bookmarks", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "blue"}, "unit": "bytes"}, "overrides": []},
+          "gridPos": {"h": 4, "w": 3, "x": 6, "y": 1},
+          "id": 2,
+          "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "Asset Storage",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_total_asset_size_bytes", "legendFormat": "Storage", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "text"}, "unit": "short"}, "overrides": []},
+          "gridPos": {"h": 4, "w": 3, "x": 9, "y": 1},
+          "id": 3,
+          "options": {"colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "Users",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_total_users", "instant": true, "legendFormat": "Users", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "text"}, "unit": "reqps"}, "overrides": []},
+          "gridPos": {"h": 4, "w": 4, "x": 12, "y": 1},
+          "id": 5,
+          "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "HTTP Request Rate",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sum(rate(karakeep_http_requests_total[5m]))", "legendFormat": "Req/s", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "thresholds"},
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 1}, {"color": "red", "value": 5}]},
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 4, "w": 4, "x": 16, "y": 1},
+          "id": 6,
+          "options": {"colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "HTTP Error Rate",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sum(rate(karakeep_http_requests_total{ok=\"false\"}[5m])) / sum(rate(karakeep_http_requests_total[5m])) * 100", "legendFormat": "Error %", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "thresholds"},
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]},
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 4, "w": 4, "x": 20, "y": 1},
+          "id": 7,
+          "options": {"colorMode": "background", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "textMode": "auto"},
+          "title": "Failed Queue Jobs",
+          "type": "stat",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sum(karakeep_queue_jobs{status=\"failed\"})", "instant": true, "legendFormat": "Failed", "refId": "A"}]
+        },
+
+        {
+          "collapsed": false,
+          "gridPos": {"h": 1, "w": 24, "x": 0, "y": 5},
+          "id": 101,
+          "title": "Background Queues",
+          "type": "row"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "thresholds"},
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]},
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 9, "w": 12, "x": 0, "y": 6},
+          "id": 10,
+          "options": {
+            "displayMode": "gradient",
+            "minVizHeight": 10,
+            "minVizWidth": 0,
+            "orientation": "horizontal",
+            "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+            "showUnfilled": true,
+            "valueMode": "color"
+          },
+          "title": "Failed Jobs per Queue",
+          "type": "bargauge",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_queue_jobs{status=\"failed\"}", "instant": true, "legendFormat": "{{queue_name}}", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 9, "w": 12, "x": 12, "y": 6},
+          "id": 11,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Pending Jobs Over Time",
+          "type": "timeseries",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sum by(queue_name)(karakeep_queue_jobs{status=~\"pending|pending_retry\"})", "legendFormat": "{{queue_name}}", "refId": "A"}]
+        },
+
+        {
+          "collapsed": false,
+          "gridPos": {"h": 1, "w": 24, "x": 0, "y": 15},
+          "id": 102,
+          "title": "HTTP API",
+          "type": "row"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "reqps"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+          "id": 20,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Request Rate by Status",
+          "type": "timeseries",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "sum by(status)(rate(karakeep_http_requests_total[5m]))", "legendFormat": "HTTP {{status}}", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+          "id": 21,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Request Latency Percentiles",
+          "type": "timeseries",
+          "targets": [
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "histogram_quantile(0.50, sum by(le)(rate(karakeep_http_request_duration_seconds_bucket[5m])))", "legendFormat": "p50", "refId": "A"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "histogram_quantile(0.95, sum by(le)(rate(karakeep_http_request_duration_seconds_bucket[5m])))", "legendFormat": "p95", "refId": "B"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "histogram_quantile(0.99, sum by(le)(rate(karakeep_http_request_duration_seconds_bucket[5m])))", "legendFormat": "p99", "refId": "C"}
+          ]
+        },
+
+        {
+          "collapsed": false,
+          "gridPos": {"h": 1, "w": 24, "x": 0, "y": 24},
+          "id": 103,
+          "title": "Node.js Runtime",
+          "type": "row"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 8, "x": 0, "y": 25},
+          "id": 30,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "CPU Usage",
+          "type": "timeseries",
+          "targets": [
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "rate(karakeep_process_cpu_user_seconds_total[5m]) * 100", "legendFormat": "User", "refId": "A"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "rate(karakeep_process_cpu_system_seconds_total[5m]) * 100", "legendFormat": "System", "refId": "B"}
+          ]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 8, "x": 8, "y": 25},
+          "id": 31,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Memory",
+          "type": "timeseries",
+          "targets": [
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_process_resident_memory_bytes", "legendFormat": "RSS", "refId": "A"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_nodejs_heap_size_used_bytes", "legendFormat": "Heap Used", "refId": "B"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_nodejs_heap_size_total_bytes", "legendFormat": "Heap Total", "refId": "C"}
+          ]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 8, "x": 16, "y": 25},
+          "id": 32,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Event Loop Lag",
+          "type": "timeseries",
+          "targets": [
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_nodejs_eventloop_lag_p50_seconds * 1000", "legendFormat": "p50", "refId": "A"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_nodejs_eventloop_lag_p90_seconds * 1000", "legendFormat": "p90", "refId": "B"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_nodejs_eventloop_lag_p99_seconds * 1000", "legendFormat": "p99", "refId": "C"}
+          ]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 33},
+          "id": 33,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "GC Duration Rate",
+          "type": "timeseries",
+          "targets": [{"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "rate(karakeep_nodejs_gc_duration_seconds_sum[5m])", "legendFormat": "{{kind}}", "refId": "A"}]
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"},
+          "fieldConfig": {
+            "defaults": {
+              "color": {"mode": "palette-classic"},
+              "custom": {"axisBorderShow": false, "axisCenteredZero": false, "axisColorMode": "text", "axisPlacement": "auto", "barAlignment": 0, "drawStyle": "line", "fillOpacity": 10, "gradientMode": "none", "hideFrom": {"legend": false, "tooltip": false, "viz": false}, "lineInterpolation": "smooth", "lineWidth": 2, "pointSize": 5, "scaleDistribution": {"type": "linear"}, "showPoints": "never", "spanNulls": true, "stacking": {"group": "A", "mode": "none"}, "thresholdsStyle": {"mode": "off"}},
+              "unit": "short"
+            },
+            "overrides": []
+          },
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 33},
+          "id": 34,
+          "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
+          "title": "Open File Descriptors",
+          "type": "timeseries",
+          "targets": [
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_process_open_fds", "legendFormat": "Open", "refId": "A"},
+            {"datasource": {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}, "expr": "karakeep_process_max_fds", "legendFormat": "Limit", "refId": "B"}
+          ]
+        }
+
+      ],
+      "refresh": "5m",
+      "schemaVersion": 38,
+      "tags": ["karakeep", "media"],
+      "templating": {"list": []},
+      "time": {"from": "now-24h", "to": "now"},
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Karakeep",
+      "uid": "karakeep",
+      "version": 1
+    }

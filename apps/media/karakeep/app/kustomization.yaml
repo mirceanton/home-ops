@@ -6,3 +6,4 @@ resources:
   - ./karakeep.helm-release.yaml
   - ./karakeep.oci-repository.yaml
   - ./external-secret.yaml
+  - ./grafana-dashboard.yaml
