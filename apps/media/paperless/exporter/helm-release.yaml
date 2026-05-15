@@ -1,0 +1,72 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: paperless-exporter
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: paperless-exporter
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+
+    controllers:
+      paperless-exporter:
+        type: statefulset
+
+        containers:
+          paperless-exporter:
+            image:
+              repository: ghcr.io/hansmi/prometheus-paperless-exporter
+              tag: v0.0.9
+
+            env:
+              PAPERLESS_URL: http://paperless:8000
+              PAPERLESS_SERVER_TIMEZONE: Europe/Bucharest
+              PAPERLESS_AUTH_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-exporter-secret
+                    key: PAPERLESS_AUTH_TOKEN
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+            probes:
+              liveness: {enabled: false}
+              readiness: {enabled: false}
+              startup: {enabled: false}
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: {drop: ["ALL"]}
+              readOnlyRootFilesystem: true
+
+    service:
+      paperless-exporter:
+        controller: paperless-exporter
+        ports:
+          http: {port: 8081}
+
+    serviceMonitor:
+      paperless-exporter:
+        serviceName: paperless-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
