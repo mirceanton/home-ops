@@ -29,10 +29,13 @@ spec:
             envFrom:
               - secretRef: {name: karakeep-secret}
             env:
+              # TODO: OCR_USE_LLM : https://docs.karakeep.app/configuration/environment-variables/#ocr-configs
+              # TODO: LLM AUTO TAGGING: https://docs.karakeep.app/configuration/environment-variables/#inference-configs-for-automatic-tagging
               BROWSER_WEB_URL: http://karakeep-chrome:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true
               CRAWLER_ENABLE_ADBLOCKER: true
               CRAWLER_STORE_SCREENSHOT: true
+              CRAWLER_NUM_WORKERS: 4
               DATA_DIR: /data
               DISABLE_SIGNUPS: true
               DISABLE_NEW_RELEASE_CHECK: true
@@ -122,6 +125,21 @@ spec:
         controller: meilisearch
         ports:
           http: {port: 7700}
+
+    serviceMonitor:
+      app:
+        serviceName: karakeep
+        selector:
+          matchLabels:
+            app.kubernetes.io/service: karakeep-app
+        endpoints:
+          - port: http
+            path: /api/metrics
+            interval: 30s
+            authorization:
+              credentials:
+                name: karakeep-secret
+                key: PROMETHEUS_AUTH_TOKEN
 
     route:
       home:
