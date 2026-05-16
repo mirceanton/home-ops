@@ -6,13 +6,9 @@ metadata:
   name: llmkube
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: llmkube
-      version: 0.7.8
-      sourceRef:
-        kind: HelmRepository
-        name: llmkube
+  chartRef:
+    kind: OCIRepository
+    name: llmkube
 
   values:
     namespace: ai
@@ -21,6 +17,9 @@ spec:
       keep: true
 
     controllerManager:
+      image:
+        repository: ghcr.io/mirceanton/forks/llmkube/llmkube-controller
+        tag: scale-subresource2
       replicaCount: 1
       leaderElection: {enabled: true}
       resources:
