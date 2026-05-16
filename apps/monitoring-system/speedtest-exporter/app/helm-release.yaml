@@ -48,7 +48,9 @@ spec:
 
             securityContext:
               allowPrivilegeEscalation: false
-              capabilities: { drop: ["ALL"] }
+              capabilities:
+                drop: ["ALL"]
+                add: ["NET_RAW"]
 
         pod:
           securityContext:
@@ -76,10 +78,15 @@ spec:
               - sourceLabels: [job]
                 targetLabel: job
                 replacement: "integrations/speedtest"
+              - regex: instance
+                action: labeldrop  # drop exporter's instance label, let Prometheus set its own
 
     persistence:
       cache:
-        type: emptyDir
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        storageClass: openebs-zfs-cache
         advancedMounts:
           speedtest-exporter:
             speedtest-exporter:
