@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keda-http-add-on
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: keda-http-add-on
+
+  values:
+    crds: {install: true}
+
+    logging:
+      operator:
+        level: info
+        format: console
+      scaler:
+        level: info
+        format: console
+      interceptor:
+        level: info
+        format: console
+
+    operator:
+      replicas: 1
+      pullPolicy: IfNotPresent
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    interceptor:
+      pullPolicy: IfNotPresent
+      replicas:
+        min: 1
+        max: 2
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 256Mi
+
+    scaler:
+      replicas: 1
+      pullPolicy: IfNotPresent
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
