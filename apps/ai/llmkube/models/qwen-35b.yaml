@@ -1,0 +1,72 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen-35b
+spec:
+  source: https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
+  format: gguf
+  quantization: Q4_K_M
+  hardware:
+    accelerator: cuda
+    gpu:
+      enabled: true
+      count: 1
+      vendor: nvidia
+      layers: 20
+
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen-35b
+spec:
+  modelRef: qwen-35b
+  replicas: 0
+  runtimeClassName: nvidia
+  parallelSlots: 1
+  contextSize: 32768
+  uBatchSize: 1024
+  cacheTypeK: q8_0
+  cacheTypeV: q8_0
+  moeCPUOffload: true
+  moeCPULayers: 25
+
+  resources:
+    cpu: "10m"
+    memory: 32Gi
+    gpu: 1
+    gpuMemory: 8Gi
+    hostMemory: 24Gi
+  endpoint:
+    port: 8080
+    type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-35b-proxy
+spec:
+  type: ExternalName
+  externalName: keda-add-ons-http-interceptor-proxy.kube-system.svc.cluster.local
+  ports:
+    - port: 8080
+
+---
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+  name: qwen-35b
+spec:
+  hosts:
+    - qwen-35b-proxy.ai.svc.cluster.local
+  targetPendingRequests: 1
+  scaledownPeriod: 1800
+  scaleTargetRef:
+    name: qwen-35b
+    service: qwen-35b
+    port: 8080
+  replicas:
+    min: 0
+    max: 1
