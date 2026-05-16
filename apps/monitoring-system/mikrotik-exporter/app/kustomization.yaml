@@ -8,8 +8,8 @@ generatorOptions:
 configMapGenerator:
   - name: mktxp-config
     files:
-      - files/_mktxp.yaml
-      - files/mktxp.yaml
+      - files/_mktxp.conf
+      - files/mktxp.conf
 
 resources:
   - helm-release.yaml
