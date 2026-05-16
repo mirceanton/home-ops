@@ -42,3 +42,34 @@ spec:
     port: 8080
     type: ClusterIP
 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qwen-35b-proxy
+spec:
+  type: ExternalName
+  externalName: keda-add-ons-http-interceptor-proxy.kube-system.svc.cluster.local
+  ports:
+    - port: 8080
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: qwen-35b
+spec:
+  scaleTargetRef:
+    apiVersion: inference.llmkube.dev/v1alpha1
+    kind: InferenceService
+    name: qwen-35b
+  minReplicaCount: 0
+  maxReplicaCount: 1
+  cooldownPeriod: 1800
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: keda-add-ons-http-external-scaler.kube-system.svc.cluster.local:9090
+        host: qwen-35b-proxy.ai.svc.cluster.local
+        targetPendingRequests: "1"
+

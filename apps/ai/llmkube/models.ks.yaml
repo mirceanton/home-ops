@@ -19,3 +19,5 @@ spec:
   dependsOn:
     - name: llmkube
       namespace: ai
+    - name: keda-http-add-on
+      namespace: kube-system
