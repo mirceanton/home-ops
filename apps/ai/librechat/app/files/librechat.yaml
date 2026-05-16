@@ -3,14 +3,24 @@ version: "1"
 
 endpoints:
   custom:
-    - name: llama-server
-      apiKey: "llama"
-      baseURL: "http://llama-server.ai.svc.cluster.local:8080/v1"
+    - name: Qwen 3.5 35B A3B
+      apiKey: "llmkube"
+      baseURL: "http://qwen-35b-proxy.ai.svc.cluster.local:8080/v1"
       models:
-        default: ["local"]
+        default: ["qwen-35b"]
         fetch: true
       titleConvo: true
-      titleModel: "local"
+      titleModel: "qwen-35b"
+      summarize: false
+
+    - name: Gemma 4 E4B
+      apiKey: "llmkube"
+      baseURL: "http://gemma-4-proxy.ai.svc.cluster.local:8080/v1"
+      models:
+        default: ["gemma-4"]
+        fetch: true
+      titleConvo: true
+      titleModel: "gemma-4"
       summarize: false
 
 mcpServers:
@@ -25,3 +35,7 @@ mcpServers:
   flux:
     url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
     type: streamable-http
+
+  navidrome:
+    url: http://navidrome-mcp.media.svc.cluster.local:3000/sse
+    type: sse
