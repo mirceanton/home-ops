@@ -5,7 +5,7 @@ endpoints:
   custom:
     - name: Qwen 3.5 35B A3B
       apiKey: "llmkube"
-      baseURL: "http://qwen-35b-proxy.ai.svc.cluster.local:8080/v1"
+      baseURL: "http://qwen-35b.ai.svc.cluster.local:8080/v1"
       models:
         default: ["qwen-35b"]
         fetch: true
@@ -15,7 +15,7 @@ endpoints:
 
     - name: Gemma 4 E4B
       apiKey: "llmkube"
-      baseURL: "http://gemma-4-proxy.ai.svc.cluster.local:8080/v1"
+      baseURL: "http://gemma-4.ai.svc.cluster.local:8080/v1"
       models:
         default: ["gemma-4"]
         fetch: true
