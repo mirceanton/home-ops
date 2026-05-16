@@ -50,19 +50,21 @@ spec:
     - port: 8080
 
 ---
-apiVersion: http.keda.sh/v1alpha1
-kind: HTTPScaledObject
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
 metadata:
   name: gemma-4
 spec:
-  hosts:
-    - gemma-4-proxy.ai.svc.cluster.local
-  targetPendingRequests: 1
-  scaledownPeriod: 1800
   scaleTargetRef:
+    apiVersion: inference.llmkube.dev/v1alpha1
+    kind: InferenceService
     name: gemma-4
-    service: gemma-4
-    port: 8080
-  replicas:
-    min: 0
-    max: 1
+  minReplicaCount: 0
+  maxReplicaCount: 1
+  cooldownPeriod: 1800
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: keda-add-ons-http-external-scaler.kube-system.svc.cluster.local:9090
+        host: gemma-4-proxy.ai.svc.cluster.local
+        targetPendingRequests: "1"
