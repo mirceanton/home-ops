@@ -23,10 +23,10 @@ spec:
 
     resources:
       requests:
-        memory: 256Mi
-        cpu: 100m
+        memory: 164Mi
+        cpu: 11m
       limits:
-        memory: 512Mi
+        memory: 164Mi
 
     persistence:
       enabled: true

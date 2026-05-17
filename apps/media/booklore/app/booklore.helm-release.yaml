@@ -76,10 +76,10 @@ spec:
                   failureThreshold: 10
             resources:
               requests:
-                cpu: 100m
-                memory: 1Gi
+                cpu: 1018m
+                memory: 730Mi
               limits:
-                memory: 2Gi
+                memory: 730Mi
             securityContext:
               readOnlyRootFilesystem: false
 
