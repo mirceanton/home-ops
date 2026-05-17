@@ -41,5 +41,5 @@ mcpServers:
     type: streamable-http
 
   navidrome:
-    url: http://navidrome-mcp.media.svc.cluster.local:3000/sse
-    type: sse
+    url: http://navidrome-mcp.media.svc.cluster.local:3000/mcp
+    type: streamable-http
