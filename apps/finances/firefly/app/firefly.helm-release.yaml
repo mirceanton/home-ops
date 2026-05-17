@@ -84,10 +84,10 @@ spec:
 
             resources:
               requests:
-                cpu: 20m
-                memory: 128Mi
+                cpu: 231m
+                memory: 178Mi
               limits:
-                memory: 512Mi
+                memory: 178Mi
 
       cron:
         type: cronjob
@@ -140,10 +140,10 @@ spec:
 
             resources:
               requests:
-                cpu: 20m
-                memory: 64Mi
+                cpu: 98m
+                memory: 116Mi
               limits:
-                memory: 1Gi
+                memory: 116Mi
 
     service:
       firefly:
