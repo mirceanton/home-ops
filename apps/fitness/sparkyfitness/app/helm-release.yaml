@@ -106,10 +106,10 @@ spec:
 
             resources:
               requests:
-                cpu: 50m
-                memory: 256Mi
+                cpu: 237m
+                memory: 439Mi
               limits:
-                memory: 1Gi
+                memory: 439Mi
 
       frontend:
         annotations:
