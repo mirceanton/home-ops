@@ -45,6 +45,7 @@ spec:
               CONFIG_PATH: /config/librechat.yaml
               ENDPOINTS: custom,agents
               ALLOW_REGISTRATION: "true"
+              GOOGLE_KEY: "user_provided"
 
             probes:
               startup:
