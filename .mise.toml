@@ -8,7 +8,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 "github:josegonzalez/kubectl-eso" = "latest"
 "aqua:kustomize" = "latest"
 "aqua:derailed/k9s" = "latest"
-"aqua:fluxcd/flux2" = "2.8.6"
+"aqua:fluxcd/flux2" = "2.8.7"
 "aqua:cilium/hubble" = "latest"
 
 # Helm + Plugins
