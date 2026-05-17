@@ -50,10 +50,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 10m
-                memory: 256Mi
+                cpu: 204m
+                memory: 717Mi
               limits:
-                memory: 1Gi
+                memory: 717Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -78,9 +78,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 324Mi
               limits:
-                memory: 1Gi
+                memory: 324Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -103,9 +103,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 100Mi
               limits:
-                memory: 2Gi
+                memory: 100Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
