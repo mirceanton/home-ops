@@ -47,14 +47,24 @@ spec:
               ALLOW_REGISTRATION: "true"
 
             probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
               liveness: &probe
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /api/health
+                    path: /health
                     port: *port
-                  initialDelaySeconds: 30
                   periodSeconds: 10
                   timeoutSeconds: 5
                   failureThreshold: 6
