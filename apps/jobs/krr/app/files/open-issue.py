@@ -1,7 +1,11 @@
 import json
 import os
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
+
+REPO = "mirceanton/home-ops"
+ISSUE_TITLE = "KRR Dashboard"
 
 with open("/data/krr.json") as f:
     data = json.load(f)
@@ -69,19 +73,35 @@ else:
 
 body = "\n".join(lines)
 token = os.environ["GH_TOKEN"]
-payload = json.dumps({"title": "KRR Dashboard", "body": body}).encode()
 
-req = urllib.request.Request(
-    "https://api.github.com/repos/mirceanton/home-ops/issues",
-    data=payload,
-    headers={
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/vnd.github+json",
-        "Content-Type": "application/json",
-        "X-GitHub-Api-Version": "2022-11-28",
-    },
-    method="POST",
-)
-with urllib.request.urlopen(req) as resp:
-    result = json.loads(resp.read())
+headers = {
+    "Authorization": f"Bearer {token}",
+    "Accept": "application/vnd.github+json",
+    "Content-Type": "application/json",
+    "X-GitHub-Api-Version": "2022-11-28",
+}
+
+
+def gh(method, path, payload=None):
+    url = f"https://api.github.com{path}"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode() if payload else None,
+        headers=headers,
+        method=method,
+    )
+    with urllib.request.urlopen(req) as resp:
+        return json.loads(resp.read())
+
+
+# Find an existing open issue to update rather than opening a new one each run
+q = urllib.parse.urlencode({"q": f"repo:{REPO} is:issue is:open in:title {ISSUE_TITLE}"})
+results = gh("GET", f"/search/issues?{q}")
+existing = next((i for i in results["items"] if i["title"] == ISSUE_TITLE), None)
+
+if existing:
+    result = gh("PATCH", f"/repos/{REPO}/issues/{existing['number']}", {"body": body})
+    print(f"Updated: {result['html_url']}")
+else:
+    result = gh("POST", f"/repos/{REPO}/issues", {"title": ISSUE_TITLE, "body": body})
     print(f"Opened: {result['html_url']}")
