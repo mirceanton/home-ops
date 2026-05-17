@@ -20,12 +20,22 @@ spec:
     - "--admin_bind=::"
     - --maxmemory=$(MAX_MEMORY)Mi
     - --dbnum=1
-    - --dbfilename=
+    - --dbfilename=dump.rdb
     - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:=1}
     - --cluster_mode=${DRAGONFLY_CLUSTER_MODE:=emulated}
     - --lock_on_hashtags
     - --version_check=false
     - --default_lua_flags=allow-undeclared-keys
+
+  snapshot:
+    cron: "0 */2 * * *"
+    dir: /dragonfly/snapshots
+    persistentVolumeClaimSpec:
+      accessModes: [ReadWriteOnce]
+      storageClassName: ${DRAGONFLY_SNAPSHOT_STORAGE_CLASS:=openebs-zfs-cache}
+      resources:
+        requests:
+          storage: "${DRAGONFLY_MEMORY_LIMIT:=512Mi}"
 
   networkPolicyEnabled: false
 
