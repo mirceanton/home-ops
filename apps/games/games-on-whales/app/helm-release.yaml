@@ -1,0 +1,206 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gow
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: gow
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      gow:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          xorg:
+            image:
+              repository: ghcr.io/games-on-whales/xorg
+              tag: edge
+            env:
+              DISPLAY: ":0"
+              RESOLUTION: "1920x1080"
+              REFRESH_RATE: "60"
+              CURRENT_OUTPUT: HDMI-A-0
+              FORCE_RESOLUTION: "true"
+              NVIDIA_DRIVER_CAPABILITIES: all
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+                nvidia.com/gpu: 1
+              limits:
+                memory: 2Gi
+                nvidia.com/gpu: 1
+            securityContext:
+              privileged: true
+
+          pulseaudio:
+            image:
+              repository: ghcr.io/games-on-whales/pulseaudio
+              tag: edge
+            env:
+              DISPLAY: ":0"
+              PULSE_COOKIE: ""
+              DISABLE_COOKIE_AUTH: "true"
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
+            securityContext:
+              privileged: true
+
+          sunshine:
+            image:
+              repository: ghcr.io/games-on-whales/sunshine
+              tag: edge
+            env:
+              DISPLAY: ":0"
+              PULSE_SERVER: unix:/tmp/pulse/pulse-socket
+              GOW_REQUIRED_DEVICES: /dev/uinput /dev/dri/renderD128 /dev/dri/card0
+              XDG_RUNTIME_DIR: /tmp
+              NVIDIA_DRIVER_CAPABILITIES: all
+              NVIDIA_VISIBLE_DEVICES: all
+              LIBVA_DRIVER_NAME: nvidia
+              SUNSHINE_NVENC: "true"
+              SUNSHINE_VAAPI: "false"
+              __GLX_VENDOR_LIBRARY_NAME: nvidia
+
+              SUNSHINE_USER: username
+                # valueFrom:
+                #   secretKeyRef:
+                #     name: gow-secret
+                #     key: SUNSHINE_USER
+              SUNSHINE_PASS: password
+                # valueFrom:``
+                #   secretKeyRef:
+                #     name: gow-secret
+                #     key: SUNSHINE_PASS
+
+            resources:
+              requests:
+                cpu: 500m
+                memory: 2Gi
+                nvidia.com/gpu: 1
+              limits:
+                memory: 4Gi
+                nvidia.com/gpu: 1
+            probes:
+              liveness: {enabled: false}
+              readiness: {enabled: false}
+              startup: {enabled: false}
+            securityContext:
+              privileged: true
+
+          steam:
+            image:
+              repository: ghcr.io/games-on-whales/steam
+              tag: edge
+            command: ["/bin/bash", "-c", "sleep infinity"]
+            env:
+              DISPLAY: ":0"
+              PULSE_SERVER: unix:/tmp/pulse/pulse-socket
+              NVIDIA_DRIVER_CAPABILITIES: all
+              NVIDIA_VISIBLE_DEVICES: all
+            resources:
+              requests:
+                cpu: 500m
+                memory: 4Gi
+                nvidia.com/gpu: 1
+              limits:
+                memory: 16Gi
+                nvidia.com/gpu: 1
+            securityContext:
+              privileged: true
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      runtimeClassName: nvidia
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+
+    service:
+      sunshine:
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: 10.0.10.254
+          external-dns.alpha.kubernetes.io/hostname: steam.home.mirceanton.com
+        ports:
+          web: {protocol: TCP, port: 47990}
+          https: {protocol: TCP, port: 47984}
+          http: {protocol: TCP, port: 47989}
+          rtsp: {protocol: TCP, port: 48010}
+          video1: {protocol: UDP, port: 47998}
+          video2: {protocol: UDP, port: 47999}
+          video3: {protocol: UDP, port: 48000}
+          control: {protocol: UDP, port: 48002}
+          audio: {protocol: UDP, port: 48100}
+
+    persistence:
+      xsocket:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp/.X11-unix
+
+      pulse-socket:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp/pulse
+
+      udev-run:
+        type: hostPath
+        hostPath: /run/udev
+        globalMounts:
+          - path: /run/udev
+            readOnly: true
+
+      dev-input:
+        type: hostPath
+        hostPath: /dev/input
+        advancedMounts:
+          gow:
+            sunshine:
+              - path: /dev/input
+            steam:
+              - path: /dev/input
+
+      uinput:
+        type: hostPath
+        hostPath: /dev/uinput
+        advancedMounts:
+          gow:
+            sunshine:
+              - path: /dev/uinput
+            steam:
+              - path: /dev/uinput
+
+      home:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
+        size: 100Gi
+        advancedMounts:
+          gow:
+            steam:
+              - path: /home/user
+
+      pulse-config:
+        type: emptyDir
+        advancedMounts:
+          gow:
+            pulseaudio:
+              - path: /root/.config/pulse
+            sunshine:
+              - path: /root/.config/pulse
