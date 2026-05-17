@@ -25,10 +25,10 @@ spec:
 
     resources:
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 23m
+        memory: 644Mi
       limits:
-        memory: 1Gi
+        memory: 644Mi
         nvidia.com/gpu: 1
 
     tolerations:
