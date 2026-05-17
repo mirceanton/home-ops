@@ -144,10 +144,10 @@ spec:
         shards: 1
         resources:
           requests:
-            cpu: 50m
-            memory: 128Mi
+            cpu: 106m
+            memory: 1127Mi
           limits:
-            memory: 1Gi
+            memory: 1127Mi
         storageSpec:
           volumeClaimTemplate:
             spec:
