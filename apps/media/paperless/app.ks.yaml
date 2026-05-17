@@ -26,6 +26,9 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
       CNPG_DATA_STORAGE_SIZE: 8Gi
+      DRAGONFLY_CPU_REQUEST: 10m
+      DRAGONFLY_MEMORY_REQUEST: 32Mi
+      DRAGONFLY_MEMORY_LIMIT: 32Mi
 
   decryption: {provider: sops}
   dependsOn:
