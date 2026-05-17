@@ -23,6 +23,10 @@ endpoints:
       titleModel: "gemma-4"
       summarize: false
 
+mcpSettings:
+  allowedDomains:
+    - "*.cluster.local"
+
 mcpServers:
   grafana:
     url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
