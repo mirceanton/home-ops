@@ -4,7 +4,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: renovate-cache
 spec:
-  accessModes: [ReadWriteMany]
+  accessModes: [ReadWriteOnce]
   storageClassName: openebs-zfs-cache
   resources:
     requests:
