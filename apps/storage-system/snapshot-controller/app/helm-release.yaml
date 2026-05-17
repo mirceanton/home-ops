@@ -20,3 +20,12 @@ spec:
           memory: 64Mi
         limits:
           memory: 128Mi
+
+    webhook:
+      enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 100Mi
+        limits:
+          memory: 100Mi
