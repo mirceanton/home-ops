@@ -23,11 +23,10 @@ spec:
 
     resources:
       requests:
-        cpu: 50m
-        memory: 64Mi
+        cpu: 10m
+        memory: 79Mi
       limits:
-        cpu: 200m
-        memory: 256Mi
+        memory: 79Mi
 
     podSecurityContext: {fsGroup: 1000}
     securityContext:
