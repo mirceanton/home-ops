@@ -47,10 +47,10 @@ spec:
                     key: HOMEASSISTANT_TOKEN
             resources:
               requests:
-                cpu: 50m
-                memory: 100Mi
+                cpu: 10m
+                memory: 118Mi
               limits:
-                memory: 512Mi
+                memory: 118Mi
 
     defaultPodOptions:
       automountServiceAccountToken: false
