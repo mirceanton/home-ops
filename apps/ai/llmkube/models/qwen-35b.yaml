@@ -34,10 +34,10 @@ spec:
 
   resources:
     cpu: "10m"
-    memory: 32Gi
+    memory: 20Gi
     gpu: 1
     gpuMemory: 8Gi
-    hostMemory: 24Gi
+    hostMemory: 12Gi
   endpoint:
     port: 8080
     type: ClusterIP
