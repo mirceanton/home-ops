@@ -22,6 +22,7 @@ metadata:
   name: qwen-35b
 spec:
   modelRef: qwen-35b
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda
   replicas: 0
   priority: batch
   runtimeClassName: nvidia

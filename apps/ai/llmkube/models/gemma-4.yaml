@@ -22,6 +22,7 @@ metadata:
   name: gemma-4
 spec:
   modelRef: gemma-4
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda
   replicas: 0
   priority: batch
   runtimeClassName: nvidia
