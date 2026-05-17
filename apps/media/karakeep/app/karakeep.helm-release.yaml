@@ -50,10 +50,10 @@ spec:
                 enabled: true
             resources:
               requests:
-                cpu: 10m
-                memory: 256Mi
+                cpu: 287m
+                memory: 718Mi
               limits:
-                memory: 1Gi
+                memory: 718Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -77,10 +77,10 @@ spec:
               - --hide-scrollbars
             resources:
               requests:
-                cpu: 10m
-                memory: 256Mi
+                cpu: 11m
+                memory: 324Mi
               limits:
-                memory: 1Gi
+                memory: 324Mi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
@@ -103,9 +103,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 90Mi
               limits:
-                memory: 2Gi
+                memory: 90Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
