@@ -35,14 +35,21 @@ spec:
               - python
               - krr.py
               - simple
-              - --allow_hpa
-              - --use_oomkill_data
-              - --max-workers
-              - "3"
-              - -f
-              - json
-              - --fileoutput
-              - /data/krr.json
+              - --history-duration=336 # 14d in hours
+              - --timeframe-duration=1 # step for history data in min.
+              - --cpu-min=10 # min millicores to consider
+              - --mem-min=32 # min Mi to consider
+              - --max-workers=10
+              - --allow-hpa
+              - --use-oomkill-data
+              - --oom-memory-buffer-percentage=15 # if OOMKilled -> add 15% to the memory request
+              - --cpu-percentile=90
+              - --memory-buffer-percentage=15
+              - --resource=Deployment
+              - --resource=StatefulSet
+              - --resource=DaemonSet
+              - --formatter=json
+              - --fileoutput=/data/krr.json
             env:
               MPLCONFIGDIR: /tmp
 
