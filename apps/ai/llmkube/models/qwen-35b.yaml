@@ -23,6 +23,7 @@ metadata:
 spec:
   modelRef: qwen-35b
   replicas: 0
+  priority: batch
   runtimeClassName: nvidia
   parallelSlots: 1
   contextSize: 32768
