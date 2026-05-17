@@ -16,7 +16,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 helmfile = "latest"
 
 # Talos Stuff
-"aqua:talosctl" = "1.13.0"
+"aqua:talosctl" = "1.13.2"
 "aqua:talhelper" = "3.1.10"
 "github:mirceanton/talswitcher" = "latest"
 
