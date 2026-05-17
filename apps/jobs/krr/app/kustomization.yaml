@@ -6,3 +6,11 @@ resources:
   - ./external-secret.yaml
   - ./oci-repository.yaml
   - ./helm-release.yaml
+
+configMapGenerator:
+  - name: krr-script
+    files:
+      - ./files/open-issue.py
+
+generatorOptions:
+  disableNameSuffixHash: true

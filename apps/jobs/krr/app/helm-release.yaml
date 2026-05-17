@@ -19,7 +19,7 @@ spec:
         type: cronjob
 
         cronjob:
-          schedule: "0 0 * * 1"
+          schedule: "0 5 * * *" # Daily at 5:00 AM
           concurrencyPolicy: Replace
 
         pod:
@@ -64,91 +64,10 @@ spec:
               repository: python
               tag: 3.13-alpine@sha256:420cd0bf0f3998275875e02ecd5808168cf0843cbb4d3c536432f729247b2acc
               pullPolicy: IfNotPresent
-            command:
-              - python
-              - -c
-              - |
-                import json, os, urllib.request
-                from datetime import datetime, timezone
-
-                with open("/data/krr.json") as f:
-                    data = json.load(f)
-
-                score = data.get("score", 0)
-                letter = "F" if score < 30 else "D" if score < 55 else "C" if score < 70 else "B" if score < 90 else "A"
-                today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
-                def fmt_cpu(v):
-                    if v is None: return "unset"
-                    if isinstance(v, str): return "?"
-                    return f"{int(v * 1000)}m"
-
-                def fmt_mem(v):
-                    if v is None: return "unset"
-                    if isinstance(v, str): return "?"
-                    mib = v / (1024 * 1024)
-                    return f"{mib / 1024:.1f}Gi" if mib >= 1024 else f"{int(mib)}Mi"
-
-                def arrow(cur, rec, fmt):
-                    c, r = fmt(cur), fmt(rec["value"] if isinstance(rec, dict) else rec)
-                    return c if c == r else f"~~{c}~~ → **{r}**"
-
-                icons = {"CRITICAL": "🔴", "WARNING": "🟡", "OK": "🟢", "GOOD": "💚"}
-
-                actionable = [s for s in data["scans"] if s["severity"] in ("WARNING", "CRITICAL")]
-                actionable.sort(key=lambda s: ("WARNING", "CRITICAL").index(s["severity"]) if s["severity"] in ("WARNING", "CRITICAL") else 99, reverse=True)
-
-                lines = [
-                    f"## KRR Resource Recommendations — {today}",
-                    f"",
-                    f"**Cluster score: {score}/100 ({letter})**",
-                    f"",
-                ]
-
-                if not actionable:
-                    lines += ["All workloads are within acceptable resource bounds. No changes needed."]
-                else:
-                    lines += [
-                        f"### {len(actionable)} workload(s) need attention",
-                        f"",
-                        f"| Severity | Namespace | Workload | Container | CPU req | Mem req | Mem limit |",
-                        f"|---|---|---|---|---|---|---|",
-                    ]
-                    for s in actionable:
-                        obj, rec, cur = s["object"], s["recommended"], s["object"]["allocations"]
-                        icon = icons.get(s["severity"], "❓")
-                        cpu_req = arrow(cur["requests"].get("cpu"), rec["requests"]["cpu"], fmt_cpu)
-                        mem_req = arrow(cur["requests"].get("memory"), rec["requests"]["memory"], fmt_mem)
-                        mem_lim = arrow(cur["limits"].get("memory"), rec["limits"]["memory"], fmt_mem)
-                        lines.append(f"| {icon} {s['severity']} | {obj['namespace']} | {obj['name']} | {obj['container']} | {cpu_req} | {mem_req} | {mem_lim} |")
-
-                unmatched = [s for s in data["scans"] if s["severity"] not in ("OK", "GOOD", "UNKNOWN")]
-                # unmatched targets come from the KRR report but aren't in the list above
-                # (auto-krr would log these separately; here we just show the full picture)
-
-                body = "\n".join(lines)
-                title = f"KRR Dashboard"
-
-                token = os.environ["GH_TOKEN"]
-                payload = json.dumps({"title": title, "body": body}).encode()
-                req = urllib.request.Request(
-                    "https://api.github.com/repos/mirceanton/home-ops/issues",
-                    data=payload,
-                    headers={
-                        "Authorization": f"Bearer {token}",
-                        "Accept": "application/vnd.github+json",
-                        "Content-Type": "application/json",
-                        "X-GitHub-Api-Version": "2022-11-28",
-                    },
-                    method="POST",
-                )
-                with urllib.request.urlopen(req) as resp:
-                    result = json.loads(resp.read())
-                    print(f"Opened: {result['html_url']}")
+            command: [python, /scripts/open-issue.py]
 
             envFrom:
-              - secretRef:
-                  name: *app
+              - secretRef: {name: *app}
 
             resources:
               requests:
@@ -169,17 +88,19 @@ spec:
         runAsUser: 65534
         runAsGroup: 65534
         fsGroup: 65534
-        seccompProfile:
-          type: RuntimeDefault
+        seccompProfile: {type: RuntimeDefault}
 
     persistence:
       data: {type: emptyDir}
-      tmp:
-        type: emptyDir
+      tmp: {type: emptyDir}
+      script:
+        type: configMap
+        name: krr-script
         advancedMounts:
           krr:
-            krr:
-              - path: /tmp
+            open-issue:
+              - path: /scripts
+                readOnly: true
 
     serviceAccount: {krr: {}}
     rbac:
@@ -188,38 +109,22 @@ spec:
           type: ClusterRole
           rules:
             - apiGroups: [""]
-              resources:
-                - configmaps
-                - namespaces
-                - pods
-                - replicationcontrollers
-                - services
+              resources: [configmaps, namespaces, pods, replicationcontrollers, services]
               verbs: [get, list, watch]
             - apiGroups: [""]
               resources: [nodes]
               verbs: [get, list, watch]
             - apiGroups: [apps]
-              resources:
-                - daemonsets
-                - deployments
-                - deployments/scale
-                - replicasets
-                - replicasets/scale
-                - statefulsets
+              resources: [daemonsets, deployments, deployments/scale, replicasets, replicasets/scale, statefulsets]
               verbs: [get, list, watch]
             - apiGroups: [batch]
-              resources:
-                - cronjobs
-                - jobs
+              resources: [cronjobs, jobs]
               verbs: [get, list, watch]
             - apiGroups: [autoscaling]
               resources: [horizontalpodautoscalers]
               verbs: [get, list, watch]
-
       bindings:
         krr:
           type: ClusterRoleBinding
-          roleRef:
-            identifier: krr
-          subjects:
-            - identifier: krr
+          roleRef: {identifier: krr}
+          subjects: [{identifier: krr}]
