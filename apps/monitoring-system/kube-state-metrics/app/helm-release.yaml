@@ -16,10 +16,10 @@ spec:
       enabled: true
     resources:
       requests:
-        cpu: 20m
-        memory: 128Mi
+        cpu: 104m
+        memory: 529Mi
       limits:
-        memory: 512Mi
+        memory: 529Mi
 
     prometheus:
       monitor:
