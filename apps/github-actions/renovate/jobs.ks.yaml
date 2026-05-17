@@ -11,10 +11,21 @@ spec:
   targetNamespace: github-actions
 
   path: ./apps/github-actions/renovate/jobs
+  components:
+    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
 
+  postBuild:
+    substitute:
+      APP: renovate
+      DRAGONFLY_CPU_REQUEST: 100m
+      DRAGONFLY_MEMORY_REQUEST: 256Mi
+      DRAGONFLY_MEMORY_LIMIT: 256Mi
+
   dependsOn:
     - name: renovate-operator
+    - name: dragonfly-operator
+      namespace: database-system

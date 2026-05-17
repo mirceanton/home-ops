@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: renovate-cache
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: openebs-zfs-cache
+  resources:
+    requests:
+      storage: 5Gi

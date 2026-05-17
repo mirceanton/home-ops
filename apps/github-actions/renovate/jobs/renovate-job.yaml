@@ -18,6 +18,12 @@ spec:
   provider: {name: github}
 
   extraEnv:
+    - name: RENOVATE_REDIS_URL
+      value: "redis://renovate-dragonfly:6379"
+    - name: RENOVATE_CACHE_DIR
+      value: /tmp/renovate-cache
+    - name: RENOVATE_REPOSITORY_CACHE
+      value: enabled
     - name: LOG_LEVEL
       value: debug
     - name: RENOVATE_ALLOWED_COMMANDS
@@ -43,6 +49,15 @@ spec:
             "password": "$(DOCKERHUB_TOKEN)"
           }
         ]
+
+  extraVolumes:
+    - name: renovate-cache
+      persistentVolumeClaim:
+        claimName: renovate-cache
+
+  extraVolumeMounts:
+    - name: renovate-cache
+      mountPath: /tmp/renovate-cache
 
   secretRef: mr-borboto-auth-token
   webhook:
