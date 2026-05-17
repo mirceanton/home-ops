@@ -27,6 +27,9 @@ spec:
       VOLSYNC_CAPACITY: 2Gi
       VOLSYNC_PUID: "1001"
       VOLSYNC_PGID: "1001"
+      DRAGONFLY_CPU_REQUEST: 10m
+      DRAGONFLY_MEMORY_REQUEST: 100Mi
+      DRAGONFLY_MEMORY_LIMIT: 100Mi
 
   decryption: {provider: sops}
   dependsOn:
