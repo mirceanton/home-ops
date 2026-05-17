@@ -30,10 +30,10 @@ spec:
 
             resources:
               requests:
-                cpu: 50m
-                memory: 256Mi
+                cpu: 941m
+                memory: 222Mi
               limits:
-                memory: 4Gi
+                memory: 222Mi
 
             probes:
               liveness: {enabled: true}
