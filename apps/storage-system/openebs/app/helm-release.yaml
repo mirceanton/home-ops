@@ -29,6 +29,20 @@ spec:
       zfsNode:
         # /home is read-only on Talos; use a writable path under /var
         encrKeysDir: /var/local/openebs/keys
+        resources:
+          requests:
+            cpu: 103m
+            memory: 167Mi
+          limits:
+            memory: 167Mi
+        sidecars:
+          nodeDriverRegistrar:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 100Mi
+              limits:
+                memory: 100Mi
       zfs:
         # Talos installs ZFS at a non-standard path
         bin: /usr/local/sbin/zfs
