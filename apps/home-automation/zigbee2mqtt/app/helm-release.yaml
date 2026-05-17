@@ -67,10 +67,10 @@ spec:
 
             resources:
               requests:
-                cpu: 50m
-                memory: 128Mi
+                cpu: 45m
+                memory: 152Mi
               limits:
-                memory: 512Mi
+                memory: 152Mi
 
             probes:
               liveness: {enabled: true}
