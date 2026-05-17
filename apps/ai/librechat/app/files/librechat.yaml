@@ -8,7 +8,7 @@ endpoints:
       baseURL: "http://qwen-35b-proxy.ai.svc.cluster.local:8080/v1"
       models:
         default: ["qwen-35b"]
-        fetch: true
+        fetch: false
       titleConvo: true
       titleModel: "qwen-35b"
       summarize: false
@@ -18,7 +18,7 @@ endpoints:
       baseURL: "http://gemma-4-proxy.ai.svc.cluster.local:8080/v1"
       models:
         default: ["gemma-4"]
-        fetch: true
+        fetch: false
       titleConvo: true
       titleModel: "gemma-4"
       summarize: false
