@@ -43,6 +43,12 @@ spec:
                     secretKeyRef:
                       name: grafana-admin-password-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
+              resources:
+                requests:
+                  cpu: 56m
+                  memory: 387Mi
+                limits:
+                  memory: 387Mi
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
