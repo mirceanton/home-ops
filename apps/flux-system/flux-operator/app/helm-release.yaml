@@ -13,10 +13,10 @@ spec:
   values:
     resources:
       requests:
-        cpu: 20m
-        memory: 128Mi
+        cpu: 27m
+        memory: 278Mi
       limits:
         cpu: null
-        memory: 1Gi
+        memory: 278Mi
     web:
       networkPolicy: {create: false}
