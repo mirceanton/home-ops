@@ -29,7 +29,7 @@ spec:
           jellyfin-exporter:
             image:
               repository: rebelcore/jellyfin-exporter
-              tag: v1.5.0@sha256:37e6d389654180ad9e1661210a48fee71a6dc355a160670235a00329da0dbf80
+              tag: v1.5.1@sha256:a42181c7faf593ce11761916f669bc5b3598e43d2c5b8bd4381934f2df83bbd7
 
             env:
               JELLYFIN_ADDRESS: http://jellyfin:8096
