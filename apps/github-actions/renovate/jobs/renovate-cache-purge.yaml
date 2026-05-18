@@ -1,0 +1,31 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate-cache-purge
+spec:
+  schedule: "0 0 31 2 *" # Feb 31
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          volumes:
+            - name: cache
+              persistentVolumeClaim:
+                claimName: renovate-cache
+
+          containers:
+            - name: purge
+              image: busybox
+              command:
+                - sh
+                - -c
+                - |
+                  rm -rf /cache/renovate/repository/github/mirceanton/
+                  echo "Renovate repository cache purged"
+              volumeMounts:
+                - name: cache
+                  mountPath: /cache

@@ -7,3 +7,4 @@ resources:
   - ./github-access-token.yaml
   - ./renovate-job.yaml
   - ./renovate-cache-pvc.yaml
+  - ./renovate-cache-purge.yaml
