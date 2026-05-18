@@ -28,7 +28,7 @@ spec:
           app:
             image:
               repository: penpotapp/frontend
-              tag: "2.14.5"
+              tag: "2.15.3"
             env:
               PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
               PENPOT_TERMS_OF_SERVICE_URI: ""
@@ -72,7 +72,7 @@ spec:
           app:
             image:
               repository: penpotapp/backend
-              tag: "2.14.5"
+              tag: "2.15.3"
             env:
               PENPOT_PUBLIC_URI: "https://penpot.home.mirceanton.com"
               PENPOT_FLAGS: "$PENPOT_FLAGS disable-email-verification disable-secure-session-cookies disable-telemetry enable-login-with-password enable-prepl-server"
@@ -118,7 +118,7 @@ spec:
           app:
             image:
               repository: penpotapp/exporter
-              tag: "2.14.5"
+              tag: "2.15.3"
             env:
               PENPOT_PUBLIC_URI: "http://penpot-frontend:8080"
               PENPOT_REDIS_URI: "redis://penpot-dragonfly:6379/0"
