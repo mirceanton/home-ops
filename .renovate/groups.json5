@@ -6,7 +6,7 @@
             "groupName": "penpot",
             "matchDatasources": ["docker"],
             "matchPackageNames": ["/penpotapp/"],
-            "minimumGroupSize": 3
+            "minimumGroupSize": 4
         },
         {
             "description": "Group SparkyFitness components",
