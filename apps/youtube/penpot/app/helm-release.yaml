@@ -107,6 +107,19 @@ spec:
               limits:
                 memory: 2Gi
 
+      mcp:
+        containers:
+          app:
+            image:
+              repository: penpotapp/mcp
+              tag: "2.15.3"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
       exporter:
         initContainers:
           wait-for-dragonfly:
@@ -146,6 +159,13 @@ spec:
         ports:
           http:
             port: 6060
+      mcp:
+        controller: mcp
+        ports:
+          http:
+            port: 4401
+          ws:
+            port: 4402
       exporter:
         controller: exporter
         ports:
