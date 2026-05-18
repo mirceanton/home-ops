@@ -10,6 +10,11 @@ spec:
     kind: OCIRepository
     name: envoy-gateway
 
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+
   values:
     deployment:
       replicas: 1
