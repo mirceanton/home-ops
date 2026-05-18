@@ -28,13 +28,13 @@ spec:
         initContainers:
           krr:
             image:
-              repository: robustadev/krr
-              tag: v1.28.0
-              pullPolicy: IfNotPresent
+              repository: ghcr.io/mircea-pavel-anton/krr
+              tag: burstable
+              pullPolicy: Always
             command:
               - python
               - krr.py
-              - simple
+              - burstable
               - --history-duration=336 # 14d in hours
               - --timeframe-duration=1 # step for history data in min.
               - --cpu-min=10 # min millicores to consider
@@ -42,8 +42,11 @@ spec:
               - --max-workers=10
               - --allow-hpa
               - --use-oomkill-data
-              - --oom-memory-buffer-percentage=15 # if OOMKilled -> add 15% to the memory request
-              - --cpu-percentile=90
+              - --oom-memory-buffer-percentage=15 # if OOMKilled -> add 15% to the memory limit
+              - --cpu-requests-percentile=50
+              - --cpu-limits-percentile=90
+              - --memory-requests-percentile=50
+              - --memory-limits-percentile=90
               - --memory-buffer-percentage=15
               - --resource=Deployment
               - --resource=StatefulSet
