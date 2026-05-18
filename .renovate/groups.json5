@@ -56,6 +56,11 @@
             ],
             "groupName": "actions-runner",
             "minimumGroupSize": 2
+        },
+        {
+            "description": "Group envoy-gateway chart updates (OCIRepository + helmfile in sync)",
+            "groupName": "envoy-gateway",
+            "matchPackageNames": ["/envoyproxy.gateway-helm/"]
         }
     ]
 }
