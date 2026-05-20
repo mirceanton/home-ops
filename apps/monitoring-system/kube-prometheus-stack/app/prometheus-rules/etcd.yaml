@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: etcd-custom
+spec:
+  groups:
+    - name: etcd.custom
+      rules:
+        - alert: EtcdSlowAppliesHigh
+          expr: rate(etcd_server_slow_apply_total[5m]) > 0.1
+          for: 5m
+          annotations:
+            summary: etcd slow applies are elevated
+            description: >-
+              etcd is taking >100ms to apply raft entries at a rate of {{ $value | humanize }}/s.
+              This typically indicates raft pipeline saturation from a write storm (e.g. concurrent volsync backups).
+          labels:
+            severity: warning
+
+        - alert: EtcdWritesUnavailable
+          expr: rate(grpc_server_handled_total{grpc_code="Unavailable",grpc_method="Txn"}[5m]) > 0
+          for: 2m
+          annotations:
+            summary: etcd is rejecting write transactions
+            description: >-
+              etcd is returning Unavailable for write transactions at {{ $value | humanize }}/s.
+              Controllers will lose leader election if this persists beyond their renew deadline.
+          labels:
+            severity: critical

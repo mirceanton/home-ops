@@ -176,7 +176,10 @@ spec:
     kubeControllerManager: {enabled: true}
     kubeScheduler: {enabled: false}
     kubeProxy: {enabled: false}
-    kubeEtcd: {enabled: false}
+    kubeEtcd:
+      enabled: true
+      endpoints: [10.0.0.15]
+      serviceMonitor: {scheme: http}
     coreDns: {enabled: true}
     kubelet: {enabled: true}
     kubeApiServer: {enabled: true}
