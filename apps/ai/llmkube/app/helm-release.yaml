@@ -21,7 +21,7 @@ spec:
         repository: ghcr.io/mirceanton/forks/llmkube/llmkube-controller
         tag: scale-subresource2
       replicaCount: 1
-      leaderElection: {enabled: true}
+      leaderElection: {enabled: false}
       resources:
         requests:
           cpu: 10m
