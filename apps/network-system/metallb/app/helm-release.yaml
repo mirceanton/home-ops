@@ -14,6 +14,7 @@ spec:
   values:
     crds: {enabled: true}
     networkpolicies: {enabled: false}
+    frrk8s: {enabled: false}
 
     # =============================================================================================
     # Component - Controller
