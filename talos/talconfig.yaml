@@ -74,6 +74,7 @@ controlPlane:
   patches:
     - "@./patches/cluster-discovery.yaml"
     - "@./patches/kubelet-tuning.yaml"
+    - "@./patches/etcd-tuning.yaml"
     - "@./patches/disable-search-domain.yaml"
     - "@./patches/kubeprism.yaml"
     - "@./patches/network-binding.yaml"
