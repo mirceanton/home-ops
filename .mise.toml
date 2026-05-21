@@ -3,6 +3,7 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 
 [tools]
 # Runtimes
+node = "latest"
 npm = "latest"
 uv = "latest"
 
