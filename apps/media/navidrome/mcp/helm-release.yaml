@@ -32,7 +32,7 @@ spec:
                 cpu: 10m
                 memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 4Gi
 
             probes:
               liveness:
