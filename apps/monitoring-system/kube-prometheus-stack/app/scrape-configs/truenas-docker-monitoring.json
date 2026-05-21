@@ -10,12 +10,7 @@
   },
   "refresh": "1m",
   "editable": true,
-  "tags": [
-    "truenas",
-    "docker",
-    "cadvisor",
-    "prometheus"
-  ],
+  "tags": ["truenas", "docker", "cadvisor", "prometheus"],
   "panels": [
     {
       "datasource": {
@@ -66,9 +61,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -145,9 +138,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -223,9 +214,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -301,9 +290,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -379,9 +366,7 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -476,11 +461,7 @@
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "last"
-          ],
+          "calcs": ["mean", "max", "last"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -578,11 +559,7 @@
       "id": 1,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "max",
-            "last"
-          ],
+          "calcs": ["mean", "max", "last"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -681,11 +658,7 @@
       "id": 3,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "sum",
-            "last"
-          ],
+          "calcs": ["mean", "sum", "last"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true
@@ -797,11 +770,7 @@
       "id": 8,
       "options": {
         "legend": {
-          "calcs": [
-            "mean",
-            "sum",
-            "last"
-          ],
+          "calcs": ["mean", "sum", "last"],
           "displayMode": "table",
           "placement": "right",
           "showLegend": true

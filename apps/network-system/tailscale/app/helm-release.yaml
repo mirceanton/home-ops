@@ -22,8 +22,8 @@ spec:
 
   values:
     installCRDs: true
-    apiServerProxyConfig: {mode: false}
-    ingressClass: {enabled: false}
+    apiServerProxyConfig: { mode: false }
+    ingressClass: { enabled: false }
 
     proxyConfig:
       defaultTags: "tag:k8s-homeops"

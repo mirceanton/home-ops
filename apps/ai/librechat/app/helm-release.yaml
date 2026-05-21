@@ -35,7 +35,7 @@ spec:
               repository: ghcr.io/danny-avila/librechat
               tag: v0.8.5
             envFrom:
-              - secretRef: {name: librechat-secret}
+              - secretRef: { name: librechat-secret }
             env:
               HOST: "0.0.0.0"
               PORT: &port 3080

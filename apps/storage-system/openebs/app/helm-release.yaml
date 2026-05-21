@@ -63,16 +63,16 @@ spec:
     # ====================================================================
     # ====================== Disable EVERYTHING Else =====================
     # ====================================================================
-    analytics: {enabled: false}
-    alloy: {enabled: false}
-    loki: {enabled: false}
+    analytics: { enabled: false }
+    alloy: { enabled: false }
+    loki: { enabled: false }
     engines:
       local:
-        zfs: {enabled: true}
-        lvm: {enabled: false}
-        rawfile: {enabled: false}
+        zfs: { enabled: true }
+        lvm: { enabled: false }
+        rawfile: { enabled: false }
       replicated:
-        mayastor: {enabled: false}
+        mayastor: { enabled: false }
     openebs-crds:
       csi:
         volumeSnapshots:

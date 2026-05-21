@@ -30,7 +30,7 @@ spec:
               CF_PAGES_PROJECT: k8s-schemas
               OUTPUT_DIR: /output
             envFrom:
-              - secretRef: {name: crd-schema-publisher}
+              - secretRef: { name: crd-schema-publisher }
             resources:
               requests:
                 cpu: 50m
@@ -40,7 +40,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: [ALL]}
+              capabilities: { drop: [ALL] }
 
     defaultPodOptions:
       automountServiceAccountToken: true

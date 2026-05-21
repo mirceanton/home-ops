@@ -29,9 +29,8 @@ spec:
         GITHUB_COM_USER: mr-borboto
         RENOVATE_TOKEN: "{{ .token }}"
   dataFrom:
-  - sourceRef:
-      generatorRef:
-        apiVersion: generators.external-secrets.io/v1alpha1
-        kind: GithubAccessToken
-        name: mr-borboto-auth-token
-
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GithubAccessToken
+          name: mr-borboto-auth-token

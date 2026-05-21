@@ -27,7 +27,7 @@ spec:
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: 1password-connect
       namespace: security-system

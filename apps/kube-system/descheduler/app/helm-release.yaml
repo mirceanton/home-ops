@@ -15,7 +15,7 @@ spec:
     deschedulingInterval: 5m #! Required when running as a Deployment
 
     replicas: 1
-    leaderElection: {enabled: true}
+    leaderElection: { enabled: true }
 
     resources:
       requests:
@@ -79,4 +79,3 @@ spec:
                 - RemovePodsViolatingInterPodAntiAffinity
                 - RemovePodsViolatingNodeAffinity
                 - RemovePodsViolatingNodeTaints
-

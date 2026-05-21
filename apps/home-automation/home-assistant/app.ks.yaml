@@ -24,7 +24,7 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: zigbee2mqtt
     - name: 1password-connect

@@ -16,7 +16,7 @@ spec:
 
     controllers:
       zigbee:
-        annotations: {reloader.stakater.com/auto: "true"}
+        annotations: { reloader.stakater.com/auto: "true" }
 
         containers:
           z2m:
@@ -24,7 +24,7 @@ spec:
               repository: ghcr.io/koenkk/zigbee2mqtt
               tag: 2.10.1@sha256:67c26dcf8346aced02fe1380a6afd1b57268bcef10faae3f6057c13d5d3dfa80
             envFrom:
-              - secretRef: {name: z2m-secret}
+              - secretRef: { name: z2m-secret }
             env:
               TZ: Europe/Bucharest
               ZIGBEE2MQTT_DATA: /config
@@ -73,8 +73,8 @@ spec:
                 memory: 512Mi
 
             probes:
-              liveness: {enabled: true}
-              readiness: {enabled: true}
+              liveness: { enabled: true }
+              readiness: { enabled: true }
               startup:
                 enabled: true
                 spec:
@@ -84,7 +84,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       automountServiceAccountToken: false
@@ -98,8 +98,8 @@ spec:
     service:
       app:
         ports:
-          http: {port: 80}
-          onboard: {port: 8080}
+          http: { port: 80 }
+          onboard: { port: 8080 }
 
     route:
       home:

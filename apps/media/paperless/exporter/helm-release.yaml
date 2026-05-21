@@ -48,20 +48,20 @@ spec:
                 memory: 1Gi
 
             probes:
-              liveness: {enabled: false}
-              readiness: {enabled: false}
-              startup: {enabled: false}
+              liveness: { enabled: false }
+              readiness: { enabled: false }
+              startup: { enabled: false }
 
             securityContext:
               allowPrivilegeEscalation: false
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
               readOnlyRootFilesystem: true
 
     service:
       paperless-exporter:
         controller: paperless-exporter
         ports:
-          http: {port: 8081}
+          http: { port: 8081 }
 
     serviceMonitor:
       paperless-exporter:

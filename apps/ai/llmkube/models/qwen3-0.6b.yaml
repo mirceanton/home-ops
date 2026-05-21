@@ -9,7 +9,7 @@ spec:
   quantization: UD-Q8_K_XL
   hardware:
     accelerator: cpu
-    gpu: {enabled: false}
+    gpu: { enabled: false }
 
 ---
 apiVersion: inference.llmkube.dev/v1alpha1

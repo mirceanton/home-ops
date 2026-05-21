@@ -11,7 +11,7 @@ spec:
     name: kube-prometheus-stack
 
   values:
-    crds: {enabled: true}
+    crds: { enabled: true }
     cleanPrometheusOperatorObjectNames: true
 
     # ==========================================================================
@@ -29,7 +29,7 @@ spec:
               namespace: network-system
 
       alertmanagerSpec:
-        alertmanagerConfiguration: {name: alertmanager}
+        alertmanagerConfiguration: { name: alertmanager }
         # =======================================
         # App Settings
         # =======================================
@@ -171,15 +171,15 @@ spec:
     # ==========================================================================
     # Exporters
     # ==========================================================================
-    nodeExporter: {enabled: false}
-    kubeStateMetrics: {enabled: false}
-    kubeControllerManager: {enabled: true}
-    kubeScheduler: {enabled: false}
-    kubeProxy: {enabled: false}
+    nodeExporter: { enabled: false }
+    kubeStateMetrics: { enabled: false }
+    kubeControllerManager: { enabled: true }
+    kubeScheduler: { enabled: false }
+    kubeProxy: { enabled: false }
     kubeEtcd:
       enabled: true
       endpoints: [10.0.0.15]
-      serviceMonitor: {scheme: http}
-    coreDns: {enabled: true}
-    kubelet: {enabled: true}
-    kubeApiServer: {enabled: true}
+      serviceMonitor: { scheme: http }
+    coreDns: { enabled: true }
+    kubelet: { enabled: true }
+    kubeApiServer: { enabled: true }

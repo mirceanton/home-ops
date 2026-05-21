@@ -15,7 +15,7 @@ spec:
       memory: 128Mi
 
   discoveryFilters: ["mirceanton/*"]
-  provider: {name: github}
+  provider: { name: github }
 
   extraEnv:
     - name: RENOVATE_REDIS_URL

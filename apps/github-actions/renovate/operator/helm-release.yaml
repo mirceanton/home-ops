@@ -12,7 +12,7 @@ spec:
 
   values:
     fullnameOverride: renovate-operator
-    crd: {install: true}
+    crd: { install: true }
 
     replicaCount: 1
     resources:
@@ -39,9 +39,9 @@ spec:
       format: json
 
     # TODO: keycloak OIDC via Keycloak
-    auth: {oidc: {enabled: false}}
+    auth: { oidc: { enabled: false } }
 
-    webhook: {enabled: false}
+    webhook: { enabled: false }
     route:
       enabled: true
       hostnames: ["renovate.home.mirceanton.com"]
@@ -51,5 +51,5 @@ spec:
 
     metrics:
       enabled: true
-      serviceMonitor: {enabled: true}
-      dashboard: {enabled: false}
+      serviceMonitor: { enabled: true }
+      dashboard: { enabled: false }

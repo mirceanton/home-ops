@@ -10,7 +10,7 @@ spec:
   maxReplicaCount: 1
   advanced:
     restoreToOriginalReplicaCount: true
- 
+
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment

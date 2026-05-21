@@ -1,6 +1,6 @@
 ---
 name: Lint
-permissions: {contents: read}
+permissions: { contents: read }
 
 on:
   workflow_dispatch: {}

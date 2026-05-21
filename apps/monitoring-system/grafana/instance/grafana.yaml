@@ -22,12 +22,12 @@ spec:
       enable_gzip: "true"
       root_url: https://grafana.admin.mirceanton.com
 
-    auth: {disable_login_form: "false"}
-    auth.anonymous: {enabled: "true"}
-    metrics: {enabled: "true"}
-    news: {news_feed_enabled: "false"}
-    plugins: {plugin_admin_enabled: "false"}
-    security: {angular_support_enabled: "true"}
+    auth: { disable_login_form: "false" }
+    auth.anonymous: { enabled: "true" }
+    metrics: { enabled: "true" }
+    news: { news_feed_enabled: "false" }
+    plugins: { plugin_admin_enabled: "false" }
+    security: { angular_support_enabled: "true" }
 
   deployment:
     spec:
@@ -46,7 +46,7 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
-                capabilities: {drop: ["ALL"]}
+                capabilities: { drop: ["ALL"] }
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000

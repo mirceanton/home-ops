@@ -11,8 +11,8 @@ spec:
     name: keda
 
   values:
-    crds: {install: true}
-    networkPolicy: {enabled: false}
+    crds: { install: true }
+    networkPolicy: { enabled: false }
 
     certificates:
       certManager:
@@ -41,9 +41,9 @@ spec:
           cpu: null
           memory: 128Mi
 
-    operator: {replicaCount: 1}
-    metricsServer: {replicaCount: 1}
-    webhooks: {replicaCount: 1}
+    operator: { replicaCount: 1 }
+    metricsServer: { replicaCount: 1 }
+    webhooks: { replicaCount: 1 }
 
     logging:
       operator:

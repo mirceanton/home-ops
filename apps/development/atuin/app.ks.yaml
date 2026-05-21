@@ -22,8 +22,7 @@ spec:
     substitute:
       APP: *app
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-

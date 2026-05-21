@@ -51,7 +51,7 @@ metadata:
 spec:
   type: ExternalName
   externalName: keda-add-ons-http-interceptor-proxy.kube-system.svc.cluster.local
-  ports: [{port: 8080}]
+  ports: [{ port: 8080 }]
 
 ---
 apiVersion: http.keda.sh/v1alpha1
@@ -60,7 +60,7 @@ metadata:
   name: gemma-4
 spec:
   hosts: ["gemma-4-proxy.ai.svc.cluster.local"]
-  replicas: {min: 0, max: 1}
+  replicas: { min: 0, max: 1 }
   scaledownPeriod: 600
   scaleTargetRef:
     apiVersion: inference.llmkube.dev/v1alpha1
@@ -68,4 +68,3 @@ spec:
     name: gemma-4
     service: gemma-4
     port: 8080
-

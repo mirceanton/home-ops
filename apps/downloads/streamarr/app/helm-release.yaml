@@ -36,8 +36,8 @@ spec:
                 memory: 4Gi
 
             probes:
-              liveness: {enabled: true}
-              readiness: {enabled: true}
+              liveness: { enabled: true }
+              readiness: { enabled: true }
               startup:
                 enabled: true
                 spec:
@@ -47,7 +47,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       automountServiceAccountToken: false

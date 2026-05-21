@@ -23,7 +23,11 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["codewithcj/sparkyfitness", "codewithcj/sparkyfitness_server", "codewithcj/sparkyfitness_garmin"],
+      "matchPackageNames": [
+        "codewithcj/sparkyfitness",
+        "codewithcj/sparkyfitness_server",
+        "codewithcj/sparkyfitness_garmin"
+      ],
       "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$"
     }
   ]

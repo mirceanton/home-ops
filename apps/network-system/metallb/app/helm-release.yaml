@@ -12,9 +12,9 @@ spec:
     name: metallb
 
   values:
-    crds: {enabled: true}
-    networkpolicies: {enabled: false}
-    frrk8s: {enabled: false}
+    crds: { enabled: true }
+    networkpolicies: { enabled: false }
+    frrk8s: { enabled: false }
 
     # =============================================================================================
     # Component - Controller

@@ -19,7 +19,7 @@ spec:
   postBuild:
     substitute: {}
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: jellyfin
       namespace: media

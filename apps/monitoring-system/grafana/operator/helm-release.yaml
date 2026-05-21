@@ -19,8 +19,8 @@ spec:
       limits:
         memory: 128Mi
 
-    serviceMonitor: {enabled: true}
-    dashboard: {enabled: true}
+    serviceMonitor: { enabled: true }
+    dashboard: { enabled: true }
 
     maxConcurrentReconciles: 4
     logging:

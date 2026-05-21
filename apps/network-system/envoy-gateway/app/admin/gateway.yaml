@@ -18,12 +18,12 @@ spec:
       protocol: HTTP
       port: 80
       allowedRoutes:
-        namespaces: {from: Same} #? same namespace only, for https redirect
+        namespaces: { from: Same } #? same namespace only, for https redirect
     - name: https
       protocol: HTTPS
       port: 443
       allowedRoutes:
-        namespaces: {from: All} #? allow all namespaces for https
+        namespaces: { from: All } #? allow all namespaces for https
       tls:
         certificateRefs:
           - kind: Secret

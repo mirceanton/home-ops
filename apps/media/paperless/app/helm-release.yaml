@@ -26,7 +26,7 @@ spec:
               tag: 2.20.15
 
             envFrom:
-              - secretRef: {name: paperless-secret}
+              - secretRef: { name: paperless-secret }
             env:
               # Application
               PAPERLESS_URL: "https://documents.home.mirceanton.com"
@@ -60,7 +60,7 @@ spec:
                   secretKeyRef:
                     name: paperless-postgres-app
                     key: port
-              PAPERLESS_DBNAME: 
+              PAPERLESS_DBNAME:
                 valueFrom:
                   secretKeyRef:
                     name: paperless-postgres-app

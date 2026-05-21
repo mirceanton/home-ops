@@ -24,11 +24,10 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 2Mi
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: mosquitto
     - name: 1password-connect
       namespace: security-system
     - name: volsync
       namespace: storage-system
-

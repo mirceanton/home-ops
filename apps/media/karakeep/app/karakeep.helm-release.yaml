@@ -27,7 +27,7 @@ spec:
               repository: ghcr.io/karakeep-app/karakeep
               tag: 0.32.0
             envFrom:
-              - secretRef: {name: karakeep-secret}
+              - secretRef: { name: karakeep-secret }
             env:
               # TODO: OCR_USE_LLM : https://docs.karakeep.app/configuration/environment-variables/#ocr-configs
               # TODO: LLM AUTO TAGGING: https://docs.karakeep.app/configuration/environment-variables/#inference-configs-for-automatic-tagging
@@ -116,15 +116,15 @@ spec:
       app:
         controller: karakeep
         ports:
-          http: {port: 3000}
+          http: { port: 3000 }
       chrome:
         controller: chrome
         ports:
-          http: {port: 9222}
+          http: { port: 9222 }
       meilisearch:
         controller: meilisearch
         ports:
-          http: {port: 7700}
+          http: { port: 7700 }
 
     serviceMonitor:
       app:
@@ -157,16 +157,16 @@ spec:
         existingClaim: ${APP}
         advancedMounts:
           karakeep:
-            app: [{path: /data}]
+            app: [{ path: /data }]
       meilisearch-data:
         type: emptyDir
         advancedMounts:
           meilisearch:
-            app: [{path: /meili_data}]
+            app: [{ path: /meili_data }]
       tmp:
         type: emptyDir
         advancedMounts:
           karakeep:
-            app: [{path: /tmp}]
+            app: [{ path: /tmp }]
           meilisearch:
-            app: [{path: /tmp}]
+            app: [{ path: /tmp }]

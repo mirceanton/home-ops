@@ -19,4 +19,4 @@ spec:
         cpu: null
         memory: 1Gi
     web:
-      networkPolicy: {create: false}
+      networkPolicy: { create: false }

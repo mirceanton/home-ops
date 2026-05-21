@@ -25,7 +25,7 @@ spec:
             env:
               NAVIDROME_URL: http://navidrome:4533
             envFrom:
-              - secretRef: {name: navidrome-mcp-secret}
+              - secretRef: { name: navidrome-mcp-secret }
 
             resources:
               requests:
@@ -60,7 +60,7 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               runAsNonRoot: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       automountServiceAccountToken: false

@@ -19,4 +19,4 @@ spec:
   postBuild:
     substitute: {}
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }

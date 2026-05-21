@@ -35,7 +35,7 @@ spec:
               # privileged: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       automountServiceAccountToken: false

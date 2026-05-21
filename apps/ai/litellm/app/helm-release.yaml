@@ -92,7 +92,7 @@ spec:
       app:
         controller: litellm
         ports:
-          http: {port: 4000}
+          http: { port: 4000 }
 
     route:
       home:

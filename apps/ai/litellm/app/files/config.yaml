@@ -22,4 +22,11 @@ general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
 
 litellm_settings:
-  drop_params: true
+  success_callback: ["prometheus"]
+  failure_callback: ["prometheus"]
+  prometheus_adapter: true
+  drop_params: false
+  request_timeout: 600
+  num_retries: 2
+  retry_after: 5
+  set_verbose: false

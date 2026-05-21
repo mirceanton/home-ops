@@ -18,10 +18,10 @@ spec:
       tag: 1.42.1@sha256:bab38fed93b8b54bb36fcded3310e83d92fb65b4df89989f5bcdb4b559e286a3
       pullPolicy: IfNotPresent
     extraArgs: ["--in-kube-cluster"]
-  
+
     minecraftRouter:
       autoScale:
-        up: {enabled: true}
+        up: { enabled: true }
         down:
           enabled: true
           after: "30m"

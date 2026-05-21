@@ -49,7 +49,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
         containers:
           app:
             image:
@@ -66,12 +66,12 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     service:
       app:
         ports:
-          http: {port: 8080}
+          http: { port: 8080 }
 
     persistence:
       config:

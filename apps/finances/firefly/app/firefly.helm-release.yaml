@@ -43,8 +43,8 @@ spec:
               repository: fireflyiii/core
               tag: version-6.6.3
             envFrom:
-              - secretRef: {name: firefly-keys}
-              - configMapRef: {name: firefly-settings}
+              - secretRef: { name: firefly-keys }
+              - configMapRef: { name: firefly-settings }
             env:
               CACHE_DRIVER: "redis"
               SESSION_DRIVER: "redis"
@@ -78,9 +78,9 @@ spec:
                     name: firefly-postgres-app
                     key: password
             probes:
-              startup: {enabled: true}
-              liveness: {enabled: true}
-              readiness: {enabled: true}
+              startup: { enabled: true }
+              liveness: { enabled: true }
+              readiness: { enabled: true }
 
             resources:
               requests:
@@ -128,15 +128,15 @@ spec:
               repository: fireflyiii/data-importer
               tag: version-2.3.2
             envFrom:
-              - configMapRef: {name: firefly-settings}
-              - secretRef: {name: firefly-data-importer-token}
+              - configMapRef: { name: firefly-settings }
+              - secretRef: { name: firefly-data-importer-token }
             env:
               FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
               VANITY_URL: "https://firefly.home.mirceanton.com"
 
             probes:
-              liveness: {enabled: true}
-              readiness: {enabled: true}
+              liveness: { enabled: true }
+              readiness: { enabled: true }
 
             resources:
               requests:

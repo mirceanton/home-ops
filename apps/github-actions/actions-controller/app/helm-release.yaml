@@ -29,7 +29,7 @@ spec:
         cpu: 200m
         memory: 256Mi
 
-    podSecurityContext: {fsGroup: 1000}
+    podSecurityContext: { fsGroup: 1000 }
     securityContext:
       capabilities:
         drop: ["ALL"]

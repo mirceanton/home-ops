@@ -24,7 +24,7 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: external-secrets-operator
       namespace: security-system

@@ -18,9 +18,9 @@ spec:
     installCRDs: true
     leaderElect: true #! Required for more than 1 replica
     concurrent: 8
-    log: {level: info}
-    serviceMonitor: {enabled: true}
-    grafanaDashboard: {enabled: true}
+    log: { level: info }
+    serviceMonitor: { enabled: true }
+    grafanaDashboard: { enabled: true }
 
     replicaCount: 1
 
@@ -31,7 +31,7 @@ spec:
       limits:
         memory: 256Mi
 
-    podSecurityContext: {fsGroup: 1000}
+    podSecurityContext: { fsGroup: 1000 }
     securityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -57,7 +57,7 @@ spec:
         limits:
           memory: 256Mi
 
-      podSecurityContext: {fsGroup: 1000}
+      podSecurityContext: { fsGroup: 1000 }
       securityContext:
         allowPrivilegeEscalation: false
         capabilities:
@@ -83,7 +83,7 @@ spec:
         limits:
           memory: 128Mi
 
-      podSecurityContext: {fsGroup: 1000}
+      podSecurityContext: { fsGroup: 1000 }
       securityContext:
         allowPrivilegeEscalation: false
         capabilities:

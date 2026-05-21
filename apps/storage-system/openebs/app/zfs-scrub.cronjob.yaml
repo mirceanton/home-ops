@@ -15,7 +15,7 @@ spec:
       backoffLimit: 0
       template:
         spec:
-          nodeSelector: {kubernetes.io/hostname: "home-ops"}
+          nodeSelector: { kubernetes.io/hostname: "home-ops" }
           restartPolicy: Never
 
           containers:

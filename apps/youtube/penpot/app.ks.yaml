@@ -28,7 +28,7 @@ spec:
       VOLSYNC_PUID: "1001"
       VOLSYNC_PGID: "1001"
 
-  decryption: {provider: sops}
+  decryption: { provider: sops }
   dependsOn:
     - name: dragonfly-operator
       namespace: database-system

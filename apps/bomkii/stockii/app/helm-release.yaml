@@ -51,11 +51,11 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
 
     service:
       stockii:
-        ports: {http: {port: *port}}
+        ports: { http: { port: *port } }
 
     route:
       home:

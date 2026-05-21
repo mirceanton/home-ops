@@ -56,14 +56,14 @@ spec:
 
             securityContext:
               allowPrivilegeEscalation: false
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
               readOnlyRootFilesystem: true
 
     service:
       jellyfin-exporter:
         controller: jellyfin-exporter
         ports:
-          http: {port: 9594}
+          http: { port: 9594 }
 
     serviceMonitor:
       jellyfin-exporter:

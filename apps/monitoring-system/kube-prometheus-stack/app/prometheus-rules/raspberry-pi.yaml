@@ -33,7 +33,7 @@ spec:
             severity: warning
           annotations:
             summary: "High CPU on {{ $labels.instance }}"
-            description: "CPU usage has been above 80% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf \"%.1f\" }}%)"
+            description: 'CPU usage has been above 80% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf "%.1f" }}%)'
 
         - alert: RaspberryPiHighIOWait
           expr: >
@@ -45,7 +45,7 @@ spec:
             severity: warning
           annotations:
             summary: "High IO wait on {{ $labels.instance }}"
-            description: "IO wait above 20% for 5 minutes on {{ $labels.instance }} ({{ $value | printf \"%.1f\" }}%) — possible SD card degradation."
+            description: 'IO wait above 20% for 5 minutes on {{ $labels.instance }} ({{ $value | printf "%.1f" }}%) — possible SD card degradation.'
 
         # -----------------------------------------------------------------------
         # Memory
@@ -61,7 +61,7 @@ spec:
             severity: warning
           annotations:
             summary: "High memory usage on {{ $labels.instance }}"
-            description: "Memory usage above 85% for 5 minutes on {{ $labels.instance }} ({{ $value | printf \"%.1f\" }}%)"
+            description: 'Memory usage above 85% for 5 minutes on {{ $labels.instance }} ({{ $value | printf "%.1f" }}%)'
 
         # -----------------------------------------------------------------------
         # Disk (SD card health)
@@ -77,7 +77,7 @@ spec:
             severity: warning
           annotations:
             summary: "Low disk space on {{ $labels.instance }}"
-            description: "{{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full on {{ $labels.instance }}"
+            description: '{{ $labels.mountpoint }} is {{ $value | printf "%.1f" }}% full on {{ $labels.instance }}'
 
         - alert: RaspberryPiCriticalDiskSpace
           expr: >
@@ -90,7 +90,7 @@ spec:
             severity: critical
           annotations:
             summary: "Disk almost full on {{ $labels.instance }}"
-            description: "{{ $labels.mountpoint }} is {{ $value | printf \"%.1f\" }}% full on {{ $labels.instance }}"
+            description: '{{ $labels.mountpoint }} is {{ $value | printf "%.1f" }}% full on {{ $labels.instance }}'
 
         # SD card corruption: filesystem flipped to read-only by the kernel
         - alert: RaspberryPiFilesystemReadOnly
@@ -116,7 +116,7 @@ spec:
             severity: warning
           annotations:
             summary: "High temperature on {{ $labels.instance }}"
-            description: "CPU temperature is {{ $value | printf \"%.1f\" }}°C on {{ $labels.instance }} — approaching throttle threshold (80°C)."
+            description: 'CPU temperature is {{ $value | printf "%.1f" }}°C on {{ $labels.instance }} — approaching throttle threshold (80°C).'
 
         - alert: RaspberryPiCriticalTemperature
           expr: >
@@ -128,4 +128,4 @@ spec:
             severity: critical
           annotations:
             summary: "Critical temperature on {{ $labels.instance }}"
-            description: "CPU temperature is {{ $value | printf \"%.1f\" }}°C on {{ $labels.instance }} — Pi is throttling. Check cooling."
+            description: 'CPU temperature is {{ $value | printf "%.1f" }}°C on {{ $labels.instance }} — Pi is throttling. Check cooling.'

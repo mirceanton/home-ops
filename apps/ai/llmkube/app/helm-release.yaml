@@ -22,7 +22,7 @@ spec:
 
     controllerManager:
       replicaCount: 1
-      leaderElection: {enabled: false}
+      leaderElection: { enabled: false }
       resources:
         requests:
           cpu: 10m

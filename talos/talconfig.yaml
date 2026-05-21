@@ -15,20 +15,20 @@ additionalApiServerCertSans: &san
 additionalMachineCertSans: *san
 
 allowSchedulingOnControlPlanes: true
-cniConfig: {name: none}
+cniConfig: { name: none }
 
 nodes:
   - hostname: home-ops
     ipAddress: 10.0.0.15
     controlPlane: true
-    installDiskSelector: {size: "<= 300Gb"}
+    installDiskSelector: { size: "<= 300Gb" }
     nodeLabels:
       nvidia.com/gpu.present: "true"
 
     networkInterfaces:
       - interface: enp6s0 #? Management
         dhcp: true
-        dhcpOptions: {routeMetric: 1024}
+        dhcpOptions: { routeMetric: 1024 }
 
       - interface: bond0
         mtu: 9000
@@ -44,10 +44,10 @@ nodes:
         vlans:
           - vlanId: 1255
             dhcp: true
-            dhcpOptions: {routeMetric: 4095}
+            dhcpOptions: { routeMetric: 4095 }
           - vlanId: 1010
             dhcp: true
-            dhcpOptions: {routeMetric: 4095}
+            dhcpOptions: { routeMetric: 4095 }
 
     patches:
       - "@./patches/nvidia.yaml"

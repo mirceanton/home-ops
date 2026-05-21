@@ -11,10 +11,10 @@ spec:
     name: silence-operator
 
   values:
-    crds: {install: true}
+    crds: { install: true }
     alertmanagerAddress: http://alertmanager-operated.monitoring-system:9093
-    networkPolicy: {enabled: false}
-    podMonitor: {enabled: true}
+    networkPolicy: { enabled: false }
+    podMonitor: { enabled: true }
 
     resources:
       requests:
