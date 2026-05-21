@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 15m
   url: oci://ghcr.io/grafana/helm-charts/grafana-operator
-  ref: {tag: 5.22.2}
+  ref: {tag: 5.23.0}
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
