@@ -26,7 +26,7 @@ spec:
               - name: DATABASE_URL
                 valueFrom:
                   secretKeyRef:
-                    name: postgres-litellm-app
+                    name: litellm-postgres-app
                     key: uri
 
         containers:
@@ -54,7 +54,7 @@ spec:
               DATABASE_URL:
                 valueFrom:
                   secretKeyRef:
-                    name: postgres-litellm-app
+                    name: litellm-postgres-app
                     key: uri
 
             resources:
