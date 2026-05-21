@@ -7,8 +7,8 @@ endpoints:
       apiKey: "llmkube"
       baseURL: "http://qwen-35b-proxy.ai.svc.cluster.local:8080/v1"
       models:
-        default: ["qwen-35b"]
-        fetch: false
+        default: ["gemma-4", "qwen-35b", "qwen3-0.6b"]
+        fetch: true
       titleConvo: true
       titleModel: "qwen-35b"
       summarize: false

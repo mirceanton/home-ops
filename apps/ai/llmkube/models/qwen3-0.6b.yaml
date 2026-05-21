@@ -1,0 +1,37 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen3-0.6b
+spec:
+  source: https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-UD-Q8_K_XL.gguf
+  format: gguf
+  quantization: UD-Q8_K_XL
+  hardware:
+    accelerator: cpu
+    gpu: {enabled: false}
+
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen3-0.6b
+spec:
+  modelRef: qwen3-0.6b
+  image: ghcr.io/ggml-org/llama.cpp:server
+  replicas: 1
+  priority: batch
+  parallelSlots: 2
+
+  contextSize: 8192
+  uBatchSize: 512
+  cacheTypeK: q8_0
+  cacheTypeV: q8_0
+
+  resources:
+    cpu: "1"
+    memory: 1Gi
+
+  endpoint:
+    port: 8080
+    type: ClusterIP
