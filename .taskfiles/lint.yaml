@@ -1,24 +1,19 @@
 ---
-version: '3'
+version: "3"
 
 tasks:
   default:
     desc: Run all linters.
     alias: ["fix", "all"]
     cmds:
+      - task lint:prettier -- --write
       - task: actions
-      - task: yaml
 
   check:
     desc: Check all files for linting issues without modifying them
     cmds:
+      - task lint:prettier -- --check
       - task lint:actions
-      - task lint:yaml -- -lint
 
-  actions:
-    desc: Lint GitHub Actions workflow files
-    cmd: actionlint {{.CLI_ARGS}}
-
-  yaml:
-    desc: Format YAML files across the project
-    cmd: yamlfmt -dstar **/*.yaml {{.CLI_ARGS}}
+  actions: actionlint {{.CLI_ARGS}}
+  prettier: prettier {{.CLI_ARGS}} .

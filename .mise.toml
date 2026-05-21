@@ -29,6 +29,6 @@ op = "latest"
 yq = "latest"
 
 # Linters
-yamlfmt = "latest"
 actionlint = "latest"
 shellcheck = "latest"
+"npm:prettier" = "latest"
