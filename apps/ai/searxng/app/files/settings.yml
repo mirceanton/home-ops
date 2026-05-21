@@ -13,7 +13,10 @@ search:
   formats: [html, json]
 
 general:
+  debug: false
   instance_name: Home Search
+  enable_metrics: true
+  open_metrics: "prometheus" #? password
 
 ui:
   default_theme: simple

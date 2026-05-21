@@ -72,6 +72,19 @@ spec:
           http:
             port: *port
 
+    serviceMonitor:
+      app:
+        serviceName: searxng-app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
+            bearerTokenSecret:
+              name: searxng-secret
+              key: open_metrics_token
+
     route:
       home:
         hostnames: ["search.home.mirceanton.com"]
