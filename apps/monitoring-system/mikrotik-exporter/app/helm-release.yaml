@@ -42,6 +42,8 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
