@@ -25,7 +25,8 @@ litellm_settings:
   success_callback: ["prometheus"]
   failure_callback: ["prometheus"]
   prometheus_adapter: true
-  drop_params: false
+  require_auth_for_metrics_endpoint: false
+  drop_params: true
   request_timeout: 600
   num_retries: 2
   retry_after: 5

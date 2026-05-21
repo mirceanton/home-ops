@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: litellm
+spec:
+  folderRef: ai
+  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/ai/litellm/app/dashboard.json"
+
+  allowCrossNamespaceImport: true
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

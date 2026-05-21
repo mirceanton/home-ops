@@ -101,6 +101,16 @@ spec:
           - name: envoy-internal
             namespace: network-system
 
+    serviceMonitor:
+      app:
+        serviceName: litellm
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 30s
+
     persistence:
       config:
         type: configMap

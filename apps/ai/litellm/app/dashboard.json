@@ -7,7 +7,10 @@
     "to": "now"
   },
   "refresh": "30s",
-  "tags": ["llm", "litellm"],
+  "tags": [
+    "llm",
+    "litellm"
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -25,7 +28,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Requests processed in the selected time range",
       "fieldConfig": {
@@ -47,7 +50,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -57,7 +62,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(increase(litellm_proxy_total_requests_metric_total[$__range]))",
           "legendFormat": "Requests",
@@ -70,7 +75,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Tokens (input + output) processed in the selected time range",
       "fieldConfig": {
@@ -92,7 +97,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -102,7 +109,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(increase(litellm_total_tokens_metric_total[$__range]))",
           "legendFormat": "Tokens",
@@ -115,7 +122,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Requests currently in-flight",
       "fieldConfig": {
@@ -137,7 +144,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -147,7 +156,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(litellm_in_flight_requests)",
           "legendFormat": "In-Flight",
@@ -160,7 +169,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Average total request latency (last 5m)",
       "fieldConfig": {
@@ -182,7 +191,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["mean"],
+          "calcs": [
+            "mean"
+          ],
           "fields": "",
           "values": false
         },
@@ -192,7 +203,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum(rate(litellm_request_total_latency_metric_sum[5m])) / sum(rate(litellm_request_total_latency_metric_count[5m]))",
           "legendFormat": "Avg Latency",
@@ -218,7 +229,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Requests per requested model in the selected time range",
       "fieldConfig": {
@@ -235,7 +246,9 @@
       },
       "id": 7,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -243,7 +256,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (requested_model) (increase(litellm_proxy_total_requests_metric_total[$__range]))",
           "legendFormat": "{{requested_model}}",
@@ -256,7 +269,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Request rate over time by requested model",
       "fieldConfig": {
@@ -285,7 +298,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (requested_model) (rate(litellm_proxy_total_requests_metric_total[5m]))",
           "legendFormat": "{{requested_model}}",
@@ -298,7 +311,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Latency percentiles over time by requested model",
       "fieldConfig": {
@@ -327,7 +340,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "histogram_quantile(0.99, sum by (le, requested_model) (rate(litellm_request_total_latency_metric_bucket[5m])))",
           "legendFormat": "{{requested_model}} p99",
@@ -336,7 +349,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "histogram_quantile(0.95, sum by (le, requested_model) (rate(litellm_request_total_latency_metric_bucket[5m])))",
           "legendFormat": "{{requested_model}} p95",
@@ -345,7 +358,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "histogram_quantile(0.50, sum by (le, requested_model) (rate(litellm_request_total_latency_metric_bucket[5m])))",
           "legendFormat": "{{requested_model}} p50",
@@ -358,7 +371,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "LLM API latency (time to get response from model) percentiles",
       "fieldConfig": {
@@ -387,7 +400,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "histogram_quantile(0.99, sum by (le, model) (rate(litellm_llm_api_latency_metric_bucket[5m])))",
           "legendFormat": "{{model}} p99",
@@ -396,7 +409,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "histogram_quantile(0.95, sum by (le, model) (rate(litellm_llm_api_latency_metric_bucket[5m])))",
           "legendFormat": "{{model}} p95",
@@ -422,7 +435,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Tokens (input + output) per requested model in the selected time range",
       "fieldConfig": {
@@ -439,7 +452,9 @@
       },
       "id": 12,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -447,7 +462,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (requested_model) (increase(litellm_total_tokens_metric_total[$__range]))",
           "legendFormat": "{{requested_model}}",
@@ -460,7 +475,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Token rate over time by model",
       "fieldConfig": {
@@ -489,7 +504,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (requested_model) (rate(litellm_total_tokens_metric_total[5m]))",
           "legendFormat": "{{requested_model}}",
@@ -502,7 +517,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Input vs output tokens per backend model in the selected time range",
       "fieldConfig": {
@@ -519,7 +534,9 @@
       },
       "id": 14,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -527,7 +544,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (model) (increase(litellm_input_tokens_metric_total[$__range]))",
           "legendFormat": "{{model}} input",
@@ -536,7 +553,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (model) (increase(litellm_output_tokens_metric_total[$__range]))",
           "legendFormat": "{{model}} output",
@@ -549,7 +566,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Spend per backend model in the selected time range (local models = $0)",
       "fieldConfig": {
@@ -567,7 +584,9 @@
       },
       "id": 15,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -575,7 +594,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (model) (increase(litellm_spend_metric_total[$__range]))",
           "legendFormat": "{{model}}",
@@ -601,7 +620,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Failed requests as a percentage of total requests over the last 5m",
       "fieldConfig": {
@@ -625,7 +644,9 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -635,7 +656,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "(sum(rate(litellm_proxy_failed_requests_metric_total[5m])) or vector(0)) / clamp_min(sum(rate(litellm_proxy_total_requests_metric_total[5m])), 0.001)",
           "legendFormat": "Failure Rate",
@@ -648,7 +669,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Request status codes over time",
       "fieldConfig": {
@@ -677,7 +698,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (status_code) (rate(litellm_proxy_total_requests_metric_total[5m]))",
           "legendFormat": "{{status_code}}",
@@ -690,7 +711,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Requests by route in the selected time range",
       "fieldConfig": {
@@ -707,7 +728,9 @@
       },
       "id": 18,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -715,7 +738,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (route) (increase(litellm_proxy_total_requests_metric_total[$__range]))",
           "legendFormat": "{{route}}",
@@ -728,7 +751,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${datasource}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Requests by requested model in the selected time range",
       "fieldConfig": {
@@ -745,7 +768,9 @@
       },
       "id": 19,
       "options": {
-        "displayLabels": ["name"],
+        "displayLabels": [
+          "name"
+        ],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -753,7 +778,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${datasource}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum by (requested_model) (increase(litellm_proxy_total_requests_metric_total[$__range]))",
           "legendFormat": "{{requested_model}}",
@@ -764,23 +789,57 @@
       "type": "piechart"
     }
   ],
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "piechart",
+      "name": "Pie chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "id": null,
   "schemaVersion": 39,
   "templating": {
-    "list": [
-      {
-        "current": {
-          "text": "Prometheus",
-          "value": "prometheus"
-        },
-        "hide": 2,
-        "label": "Datasource",
-        "name": "datasource",
-        "query": "prometheus",
-        "refresh": 1,
-        "type": "datasource"
-      }
-    ]
+    "list": []
   },
   "timepicker": {}
 }

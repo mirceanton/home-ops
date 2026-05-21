@@ -5,6 +5,7 @@ namespace: ai
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./librechat
   - ./litellm
   - ./llmkube
