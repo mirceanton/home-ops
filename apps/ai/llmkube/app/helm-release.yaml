@@ -42,18 +42,14 @@ spec:
           drop: ["ALL"]
 
     metrics:
-      enabled: true
-      secure: true
-      service:
-        type: ClusterIP
-        port: 8443
+      enabled: false
 
     prometheus:
       serviceMonitor:
-        enabled: true
+        enabled: false
         interval: 30s
       inferencePodMonitor:
-        enabled: true
+        enabled: false
         interval: 30s
       prometheusRule:
         enabled: false
