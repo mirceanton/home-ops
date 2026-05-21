@@ -2,6 +2,10 @@
 SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 
 [tools]
+# Runtimes
+npm = "latest"
+uv = "latest"
+
 # Kubectl + Tools + Plugins
 "aqua:kubectl" = "1.36.1"
 "github:mirceanton/kubectl-switch" = "latest"
