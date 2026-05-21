@@ -7,10 +7,7 @@
     "to": "now"
   },
   "refresh": "30s",
-  "tags": [
-    "llm",
-    "litellm"
-  ],
+  "tags": ["llm", "litellm"],
   "panels": [
     {
       "collapsed": false,
@@ -50,9 +47,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -97,9 +92,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -144,9 +137,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -191,9 +182,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
+          "calcs": ["mean"],
           "fields": "",
           "values": false
         },
@@ -246,9 +235,7 @@
       },
       "id": 7,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -452,9 +439,7 @@
       },
       "id": 12,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -534,9 +519,7 @@
       },
       "id": 14,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -584,9 +567,7 @@
       },
       "id": 15,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -644,9 +625,7 @@
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -728,9 +707,7 @@
       },
       "id": 18,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
@@ -768,9 +745,7 @@
       },
       "id": 19,
       "options": {
-        "displayLabels": [
-          "name"
-        ],
+        "displayLabels": ["name"],
         "layout": "horizontal",
         "showLegend": true
       },
