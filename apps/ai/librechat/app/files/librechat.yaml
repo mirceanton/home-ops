@@ -42,9 +42,31 @@ interface:
   fileSearch: false
   fileCitations: false
   autoSubmitFromUrl: false
-  prompts: false
   memories: false
   addedMCPServers: false
+  endpointsMenu: false
+  sidePanel: true
+  peoplePicker:
+    users: true
+    groups: true
+    roles: true
+  marketplace:
+    use: true
+  prompts:
+    use: false
+    create: false
+    share: false
+    public: false
+  agents:
+    use: true
+    create: false
+    share: false
+    public: false
+  mcpServers:
+    use: true
+    create: false
+    share: false
+    public: false
 
 mcpSettings:
   allowedDomains:
