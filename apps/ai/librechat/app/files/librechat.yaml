@@ -1,26 +1,18 @@
 ---
 version: "1"
-
+# TODO: OCR
+# TODO: Websearch
+# TODO: RAG?
 endpoints:
   custom:
-    - name: Qwen 3.5 35B A3B
-      apiKey: "llmkube"
-      baseURL: "http://qwen-35b-proxy.ai.svc.cluster.local:8080/v1"
+    - name: LiteLLM
+      apiKey: "$${LITELLM_MASTER_KEY}"
+      baseURL: "http://litellm.ai.svc.cluster.local:4000/v1"
       models:
         default: ["gemma-4", "qwen-35b", "qwen3-0.6b"]
         fetch: true
       titleConvo: true
-      titleModel: "qwen-35b"
-      summarize: false
-
-    - name: Gemma 4 E4B
-      apiKey: "llmkube"
-      baseURL: "http://gemma-4-proxy.ai.svc.cluster.local:8080/v1"
-      models:
-        default: ["gemma-4"]
-        fetch: false
-      titleConvo: true
-      titleModel: "gemma-4"
+      titleModel: "qwen3-0.6b"
       summarize: false
 
 mcpSettings:
