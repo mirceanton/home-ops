@@ -30,6 +30,22 @@ webSearch:
   safeSearch: 1
   rerank: false
 
+interface:
+  modelSelect: true
+  parameters: false
+  presets: true
+  bookmarks: true
+  multiConvo: true
+  temporaryChat: false
+  runCode: false
+  webSearch: true
+  fileSearch: false
+  fileCitations: false
+  autoSubmitFromUrl: false
+  prompts: false
+  memories: false
+  addedMCPServers: false
+
 mcpSettings:
   allowedDomains:
     - "*.cluster.local"
