@@ -82,6 +82,9 @@ spec:
             interval: 1m
             scrapeTimeout: 30s
             basicAuth:
+              username:
+                name: searxng-secret
+                key: open_metrics_username
               password:
                 name: searxng-secret
                 key: open_metrics_token
