@@ -74,7 +74,7 @@ spec:
 
     serviceMonitor:
       app:
-        serviceName: searxng-app
+        serviceName: searxng
         endpoints:
           - port: http
             scheme: http
