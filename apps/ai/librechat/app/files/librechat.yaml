@@ -1,7 +1,6 @@
 ---
 version: "1"
 # TODO: OCR
-# TODO: Websearch
 # TODO: RAG?
 endpoints:
   custom:
@@ -22,6 +21,14 @@ endpoints:
           maxContextTokens: 32768
         - name: "qwen3-0.6b"
           maxContextTokens: 8192
+
+webSearch:
+  searchProvider: searxng
+  apis:
+    searxng:
+      url: http://searxng-app.ai.svc.cluster.local:8080
+  safeSearch: moderate
+  rerank: false
 
 mcpSettings:
   allowedDomains:
