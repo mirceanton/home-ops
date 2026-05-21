@@ -27,7 +27,7 @@ webSearch:
   apis:
     searxng:
       url: http://searxng-app.ai.svc.cluster.local:8080
-  safeSearch: moderate
+  safeSearch: 1
   rerank: false
 
 mcpSettings:
