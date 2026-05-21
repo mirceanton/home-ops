@@ -14,6 +14,14 @@ endpoints:
       titleConvo: true
       titleModel: "qwen3-0.6b"
       summarize: false
+      temperature: 0.2
+      modelSpecs:
+        - name: "gemma-4"
+          maxContextTokens: 81920
+        - name: "qwen-35b"
+          maxContextTokens: 32768
+        - name: "qwen3-0.6b"
+          maxContextTokens: 8192
 
 mcpSettings:
   allowedDomains:
