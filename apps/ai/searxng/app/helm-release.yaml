@@ -81,9 +81,10 @@ spec:
             path: /metrics
             interval: 1m
             scrapeTimeout: 30s
-            bearerTokenSecret:
-              name: searxng-secret
-              key: open_metrics_token
+            basicAuth:
+              password:
+                name: searxng-secret
+                key: open_metrics_token
 
     route:
       home:
