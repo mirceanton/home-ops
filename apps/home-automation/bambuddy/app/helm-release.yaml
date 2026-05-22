@@ -81,6 +81,16 @@ spec:
             appProtocol: kubernetes.io/ws
             port: *httpPort
 
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: http
+            scheme: http
+            path: /api/v1/metrics
+            interval: 30s
+            scrapeTimeout: 15s
+
     route:
       home:
         hostnames: [bambuddy.home.mirceanton.com]
