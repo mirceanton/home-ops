@@ -6,14 +6,15 @@ metadata:
   name: zfs-pool-monitoring
 spec:
   folderRef: storage-system
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: zfs-pool-monitoring-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-  resyncPeriod: 5m
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/storage-system/zfs-exporter/app/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

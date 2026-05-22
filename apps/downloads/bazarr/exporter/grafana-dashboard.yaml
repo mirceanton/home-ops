@@ -6,13 +6,15 @@ metadata:
   name: bazarr-exporter
 spec:
   folderRef: downloads
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: bazarr-exporter-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/downloads/bazarr/exporter/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

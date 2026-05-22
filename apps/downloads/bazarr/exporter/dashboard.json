@@ -5,7 +5,7 @@
   "description": "Bazarr subtitle manager metrics via exportarr",
   "timezone": "browser",
   "time": {
-    "from": "now-24h",
+    "from": "now/y",
     "to": "now"
   },
   "refresh": "1m",

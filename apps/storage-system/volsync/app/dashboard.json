@@ -1,14 +1,14 @@
 {
   "version": 2,
   "uid": "cdp5agkgn4yrkc",
-  "title": "VolSync Dashboard",
+  "title": "VolSync",
   "description": "Provides a basic dashboard for VolSync (See Project https://github.com/backube/volsync).",
   "timezone": "browser",
   "time": {
-    "from": "2026-04-23T23:13:31.031Z",
-    "to": "2026-04-23T23:33:32.629Z"
+    "from": "now-24h",
+    "to": "now"
   },
-  "refresh": "1m",
+  "refresh": "30s",
   "editable": true,
   "tags": ["volsync", "storage", "backups"],
   "panels": [

@@ -4,7 +4,7 @@
   "title": "NVIDIA GPU",
   "timezone": "browser",
   "time": {
-    "from": "now-5m",
+    "from": "now-24h",
     "to": "now"
   },
   "refresh": "30s",

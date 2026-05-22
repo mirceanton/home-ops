@@ -7,3 +7,10 @@ resources:
   - ./helm-release.yaml
   - ./grafana-dashboard.yaml
   - ./probes/
+
+configMapGenerator:
+  - name: blackbox-exporter-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json

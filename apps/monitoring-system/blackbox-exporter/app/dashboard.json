@@ -2,7 +2,7 @@
   "uid": "blackbox-overview",
   "title": "Blackbox Exporter Overview",
   "time": {
-    "from": "now-1h",
+    "from": "now-24h",
     "to": "now"
   },
   "refresh": "30s",

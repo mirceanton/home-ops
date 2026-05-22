@@ -6,13 +6,15 @@ metadata:
   name: lidarr-exporter
 spec:
   folderRef: downloads
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: lidarr-exporter-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/downloads/lidarr/exporter/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

@@ -10,3 +10,10 @@ resources:
 
   - prometheus-rule.yaml
   - grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: ipmi-sensor-monitoring-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json

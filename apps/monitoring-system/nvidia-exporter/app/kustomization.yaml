@@ -6,3 +6,10 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: nvidia-dcgm-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json

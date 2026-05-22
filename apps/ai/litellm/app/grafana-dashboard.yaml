@@ -6,13 +6,15 @@ metadata:
   name: litellm
 spec:
   folderRef: ai
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/ai/litellm/app/dashboard.json"
-
-  allowCrossNamespaceImport: true
+  configMapRef:
+    name: litellm-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
+
+  allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana

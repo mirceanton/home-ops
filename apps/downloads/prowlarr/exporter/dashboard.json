@@ -5,10 +5,10 @@
   "description": "Prowlarr indexer manager metrics via exportarr",
   "timezone": "browser",
   "time": {
-    "from": "now-24h",
+    "from": "now/y",
     "to": "now"
   },
-  "refresh": "5m",
+  "refresh": "1m",
   "editable": true,
   "tags": ["exportarr", "prowlarr", "indexers"],
   "panels": [

@@ -5,6 +5,10 @@ kind: GrafanaDashboard
 metadata:
   name: ipmi-sensor-monitoring
 spec:
+  configMapRef:
+    name: ipmi-sensor-monitoring-dashboard
+    key: dashboard.json
+
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
@@ -13,6 +17,3 @@ spec:
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-
-  resyncPeriod: 5m
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/monitoring-system/ipmi-exporter/app/dashboard.json"

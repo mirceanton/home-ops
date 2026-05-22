@@ -6,10 +6,9 @@ metadata:
   name: volsync
 spec:
   folderRef: storage-system
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: volsync-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
@@ -19,4 +18,7 @@ spec:
     - name: VAR_REPLICATIONDESTNAME
       value: .*-dst
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/storage-system/volsync/app/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

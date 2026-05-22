@@ -5,11 +5,14 @@ kind: GrafanaDashboard
 metadata:
   name: nvidia-dcgm
 spec:
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: nvidia-dcgm-dashboard
+    key: dashboard.json
+
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-  resyncPeriod: 5m
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/monitoring-system/nvidia-exporter/app/dashboard.json"
+
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

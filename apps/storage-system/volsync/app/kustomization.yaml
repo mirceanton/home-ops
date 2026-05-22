@@ -9,3 +9,10 @@ resources:
 
   - ./prometheus-rule.yaml
   - ./grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: volsync-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json

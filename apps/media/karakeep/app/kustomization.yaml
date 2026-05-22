@@ -7,3 +7,10 @@ resources:
   - ./karakeep.oci-repository.yaml
   - ./external-secret.yaml
   - ./grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: karakeep-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json

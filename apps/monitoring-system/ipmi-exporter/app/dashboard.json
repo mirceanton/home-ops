@@ -4,10 +4,10 @@
   "title": "IPMI Exporter",
   "timezone": "",
   "time": {
-    "from": "now-6h",
+    "from": "now-24h",
     "to": "now"
   },
-  "refresh": "",
+  "refresh": "30s",
   "editable": true,
   "tags": [],
   "panels": [

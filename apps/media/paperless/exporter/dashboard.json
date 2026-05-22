@@ -5,10 +5,10 @@
   "description": "Paperless-NGX metrics via prometheus-paperless-exporter",
   "timezone": "browser",
   "time": {
-    "from": "now-24h",
+    "from": "now/y",
     "to": "now"
   },
-  "refresh": "5m",
+  "refresh": "1m",
   "editable": true,
   "tags": ["paperless", "media"],
   "panels": [

@@ -5,13 +5,15 @@ kind: GrafanaDashboard
 metadata:
   name: blackbox-exporter
 spec:
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: blackbox-exporter-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/monitoring-system/blackbox-exporter/app/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

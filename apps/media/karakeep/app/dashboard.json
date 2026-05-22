@@ -5,10 +5,10 @@
   "description": "Karakeep bookmark manager metrics",
   "timezone": "browser",
   "time": {
-    "from": "now-24h",
+    "from": "now/y",
     "to": "now"
   },
-  "refresh": "5m",
+  "refresh": "1m",
   "editable": true,
   "tags": ["karakeep", "media"],
   "panels": [

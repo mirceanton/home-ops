@@ -6,13 +6,15 @@ metadata:
   name: paperless-dashboard
 spec:
   folderRef: media
-  allowCrossNamespaceImport: true
-  instanceSelector:
-    matchLabels:
-      grafana.internal/instance: grafana
+  configMapRef:
+    name: paperless-dashboard
+    key: dashboard.json
 
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/media/paperless/exporter/dashboard.json"
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana

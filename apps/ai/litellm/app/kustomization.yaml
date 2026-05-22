@@ -14,3 +14,8 @@ configMapGenerator:
       disableNameSuffixHash: true
     files:
       - config.yaml=./files/config.yaml
+  - name: litellm-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json
