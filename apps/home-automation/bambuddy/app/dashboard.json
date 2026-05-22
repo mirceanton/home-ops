@@ -444,7 +444,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 0, "y": 8 },
+      "gridPos": { "h": 7, "w": 6, "x": 0, "y": 8 },
       "id": 8,
       "options": {
         "minVizHeight": 75,
@@ -495,7 +495,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 8, "y": 8 },
+      "gridPos": { "h": 7, "w": 6, "x": 6, "y": 8 },
       "id": 9,
       "options": {
         "minVizHeight": 75,
@@ -546,7 +546,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 16, "y": 8 },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 8 },
       "id": 10,
       "options": {
         "minVizHeight": 75,
@@ -572,6 +572,57 @@
         }
       ],
       "title": "Chamber Temperature",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": 0 },
+              { "color": "green", "value": 20 },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 95 }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 8 },
+      "id": 16,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "bambuddy_fan_speed_percent{printer_name=\"$printer\"}",
+          "instant": true,
+          "legendFormat": "{{fan}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Fan Speed",
       "type": "gauge"
     },
     {
@@ -681,7 +732,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 4 },
+      "gridPos": { "h": 4, "w": 3, "x": 12, "y": 4 },
       "id": 13,
       "options": {
         "colorMode": "value",
@@ -701,7 +752,6 @@
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "bambuddy_filament_used_grams",
-          "instant": true,
           "legendFormat": "Filament Used",
           "refId": "A"
         }
@@ -725,7 +775,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 4 },
+      "gridPos": { "h": 4, "w": 3, "x": 15, "y": 4 },
       "id": 15,
       "options": {
         "colorMode": "value",
@@ -745,12 +795,57 @@
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "sum(bambuddy_printer_prints_total{printer_name=\"$printer\"})",
-          "instant": true,
           "legendFormat": "Prints",
           "refId": "A"
         }
       ],
       "title": "Total Prints",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": 0 },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 3, "x": 18, "y": 4 },
+      "id": 17,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(bambuddy_prints_total{result=\"failed\"})",
+          "legendFormat": "Failed",
+          "refId": "A"
+        }
+      ],
+      "title": "Failed Prints",
       "type": "stat"
     },
     {
@@ -769,7 +864,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 4 },
+      "gridPos": { "h": 4, "w": 3, "x": 21, "y": 4 },
       "id": 14,
       "options": {
         "colorMode": "value",
@@ -789,7 +884,6 @@
         {
           "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "expr": "bambuddy_print_time_seconds",
-          "instant": true,
           "legendFormat": "Print Time",
           "refId": "A"
         }
