@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app bambuddy
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: home-automation
+
+  path: ./apps/home-automation/bambuddy/app
+  components:
+    - ../../../../components/volsync/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 2Gi
+
+  decryption: { provider: sops }
+  dependsOn:
+    - name: volsync
+      namespace: storage-system

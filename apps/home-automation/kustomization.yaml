@@ -6,6 +6,7 @@ namespace: home-automation
 
 resources:
   - ./namespace.yaml
+  - ./bambuddy
   - ./home-assistant
   - ./mosquitto
   - ./zigbee2mqtt
