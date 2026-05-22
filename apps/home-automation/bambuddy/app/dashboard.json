@@ -374,7 +374,7 @@
           }
         ]
       },
-      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 4 },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 15 },
       "id": 7,
       "options": {
         "legend": {
@@ -444,7 +444,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 0, "y": 13 },
+      "gridPos": { "h": 7, "w": 8, "x": 0, "y": 8 },
       "id": 8,
       "options": {
         "minVizHeight": 75,
@@ -495,7 +495,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 8, "y": 13 },
+      "gridPos": { "h": 7, "w": 8, "x": 8, "y": 8 },
       "id": 9,
       "options": {
         "minVizHeight": 75,
@@ -546,7 +546,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 7, "w": 8, "x": 16, "y": 13 },
+      "gridPos": { "h": 7, "w": 8, "x": 16, "y": 8 },
       "id": 10,
       "options": {
         "minVizHeight": 75,
@@ -590,7 +590,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 20 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 4 },
       "id": 11,
       "options": {
         "colorMode": "value",
@@ -637,7 +637,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 20 },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 4 },
       "id": 12,
       "options": {
         "colorMode": "value",
@@ -681,7 +681,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 20 },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 4 },
       "id": 13,
       "options": {
         "colorMode": "value",
@@ -721,11 +721,55 @@
             "mode": "absolute",
             "steps": [{ "color": "blue", "value": 0 }]
           },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 4 },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "sum(bambuddy_printer_prints_total{printer_name=\"$printer\"})",
+          "instant": true,
+          "legendFormat": "Prints",
+          "refId": "A"
+        }
+      ],
+      "title": "Total Prints",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "blue", "value": 0 }]
+          },
           "unit": "s"
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 20 },
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 4 },
       "id": 14,
       "options": {
         "colorMode": "value",
