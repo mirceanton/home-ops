@@ -16,3 +16,4 @@ resources:
   - oci-repository.yaml
   - external-secret.yaml
   - grafana-dashboard.yaml
+  - prometheus-rule.yaml

@@ -1,0 +1,214 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: mikrotik-exporter
+spec:
+  groups:
+    # ── Exporter Health ──────────────────────────────────────────────────────
+    - name: mikrotik.exporter
+      rules:
+        - alert: MikrotikExporterDown
+          expr: up{job="mikrotik-exporter"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MikroTik exporter is down"
+            description: >-
+              Prometheus cannot scrape the MikroTik exporter (job=mikrotik-exporter).
+              Check that the mktxp pod is running and the service on port 49090 is reachable.
+
+    # ── Temperature ──────────────────────────────────────────────────────────
+    - name: mikrotik.temperature
+      rules:
+        - alert: MikrotikCPUTemperatureWarning
+          expr: mktxp_system_cpu_temperature > 75
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU temperature on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) CPU temperature
+              is {{ $value }}°C, above the 75°C warning threshold.
+              Note: CRS326 idles around 69°C — investigate airflow if this persists.
+
+        - alert: MikrotikCPUTemperatureCritical
+          expr: mktxp_system_cpu_temperature > 85
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical CPU temperature on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) CPU temperature
+              is {{ $value }}°C, above the 85°C critical threshold.
+              Immediate attention required — risk of thermal throttling or shutdown.
+
+        - alert: MikrotikBoardTemperatureWarning
+          expr: mktxp_system_routerboard_temperature > 60
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High board temperature on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) routerboard
+              temperature is {{ $value }}°C, above the 60°C warning threshold.
+
+        - alert: MikrotikBoardTemperatureCritical
+          expr: mktxp_system_routerboard_temperature > 75
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical board temperature on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) routerboard
+              temperature is {{ $value }}°C, above the 75°C critical threshold.
+              Immediate attention required — risk of thermal damage.
+
+    # ── System Resources ─────────────────────────────────────────────────────
+    - name: mikrotik.resources
+      rules:
+        - alert: MikrotikHighCPULoad
+          expr: mktxp_system_cpu_load > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU load on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) CPU load
+              is {{ $value }}%, above the 80% warning threshold.
+
+        - alert: MikrotikCriticalCPULoad
+          expr: mktxp_system_cpu_load > 95
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical CPU load on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) CPU load
+              is {{ $value }}%, above the 95% critical threshold.
+              The device may be unable to process traffic correctly.
+
+        - alert: MikrotikHighMemoryUsage
+          expr: (1 - mktxp_system_free_memory / mktxp_system_total_memory) * 100 > 80
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) memory usage
+              is {{ $value | humanize }}%, above the 80% warning threshold.
+
+        - alert: MikrotikCriticalMemoryUsage
+          expr: (1 - mktxp_system_free_memory / mktxp_system_total_memory) * 100 > 90
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Critical memory usage on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) memory usage
+              is {{ $value | humanize }}%, above the 90% critical threshold.
+              The device may start dropping connections or become unresponsive.
+
+    # ── Security / Awareness ─────────────────────────────────────────────────
+    - name: mikrotik.security
+      rules:
+        - alert: MikrotikActiveUserSession
+          expr: mktxp_active_users_info{name!~"metrics|external-dns"}
+          for: 0m
+          labels:
+            severity: info
+          annotations:
+            summary: "Active user session on {{ $labels.routerboard_name }}"
+            description: >-
+              User '{{ $labels.name }}' (group: {{ $labels.group }}) has an active session
+              on {{ $labels.routerboard_name }} from {{ $labels.address }} via {{ $labels.via }}.
+
+        - alert: MikrotikPublicIPChanged
+          expr: count by (routerboard_name) (count by (public_address, routerboard_name) (mktxp_public_ip_address_info)) > 1
+          for: 0m
+          labels:
+            severity: info
+          annotations:
+            summary: "Public IP changed on {{ $labels.routerboard_name }}"
+            description: >-
+              Multiple distinct public IP addresses are simultaneously active on
+              {{ $labels.routerboard_name }}, indicating a recent WAN IP change.
+              Check the current address in Grafana or the router's WebFig.
+
+    # ── Updates ──────────────────────────────────────────────────────────────
+    - name: mikrotik.updates
+      rules:
+        - alert: MikrotikUpdateAvailable
+          expr: mktxp_system_update_available == 1
+          for: 1h
+          labels:
+            severity: info
+          annotations:
+            summary: "RouterOS update available on {{ $labels.routerboard_name }}"
+            description: >-
+              {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) has a
+              RouterOS update available: {{ $labels.newest_version }}.
+
+    # ── Connectivity ─────────────────────────────────────────────────────────
+    - name: mikrotik.connectivity
+      rules:
+        - alert: MikrotikSFPRxLoss
+          expr: mktxp_interface_sfp_rx_loss == 1
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SFP RX signal lost on {{ $labels.routerboard_name }}/{{ $labels.name }}"
+            description: >-
+              Interface {{ $labels.name }} on {{ $labels.routerboard_name }}
+              ({{ $labels.routerboard_address }}) reports SFP receiver signal loss.
+              Check the transceiver and fiber connection.
+
+        - alert: MikrotikSFPTxFault
+          expr: mktxp_interface_sfp_tx_fault == 1
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SFP TX fault on {{ $labels.routerboard_name }}/{{ $labels.name }}"
+            description: >-
+              Interface {{ $labels.name }} on {{ $labels.routerboard_name }}
+              ({{ $labels.routerboard_address }}) reports an SFP transmitter fault.
+              The transceiver may need replacement.
+
+    # ── Certificates ─────────────────────────────────────────────────────────
+    - name: mikrotik.certificates
+      rules:
+        - alert: MikrotikCertificateExpiringSoon
+          expr: (mktxp_certificate_expiration_timestamp_seconds - time()) / 86400 < 30
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Certificate expiring soon on {{ $labels.routerboard_name }}"
+            description: >-
+              Certificate '{{ $labels.name }}' (CN: {{ $labels.common_name }}) on
+              {{ $labels.routerboard_name }} expires in less than 30 days
+              ({{ $labels.invalid_after }}).
+
+        - alert: MikrotikCertificateExpiringCritical
+          expr: (mktxp_certificate_expiration_timestamp_seconds - time()) / 86400 < 7
+          for: 1h
+          labels:
+            severity: critical
+          annotations:
+            summary: "Certificate expiring critically soon on {{ $labels.routerboard_name }}"
+            description: >-
+              Certificate '{{ $labels.name }}' (CN: {{ $labels.common_name }}) on
+              {{ $labels.routerboard_name }} expires in less than 7 days
+              ({{ $labels.invalid_after }}). Renew immediately.
