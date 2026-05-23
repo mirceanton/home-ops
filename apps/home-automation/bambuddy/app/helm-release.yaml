@@ -35,7 +35,6 @@ spec:
               tag: 0.2.4.2
             env:
               PORT: &httpPort 8000
-              SLICER_API_URL: http://bambuddy-slicer:3000
 
             resources:
               requests:
