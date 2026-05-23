@@ -35,6 +35,7 @@ spec:
               tag: 0.2.4.2
             env:
               PORT: &httpPort 8000
+              SLICER_API_URL: http://bambuddy-slicer:3000
 
             resources:
               requests:
@@ -73,6 +74,30 @@ spec:
                 add: [NET_BIND_SERVICE]
                 drop: [ALL]
 
+      slicer:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsNonRoot: false
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/orca-slicer-api
+              tag: 2.3.2
+            env:
+              PORT: &slicerPort 3000
+              NODE_ENV: production
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+
     service:
       app:
         controller: bambuddy
@@ -80,6 +105,12 @@ spec:
           http:
             appProtocol: kubernetes.io/ws
             port: *httpPort
+
+      slicer:
+        controller: slicer
+        ports:
+          http:
+            port: *slicerPort
 
     serviceMonitor:
       app:
@@ -106,6 +137,10 @@ spec:
             app:
               - path: /app/data
                 subPath: data
+          slicer:
+            app:
+              - path: /app/data
+                subPath: slicer-data
 
       tmpfs:
         type: emptyDir
@@ -116,3 +151,7 @@ spec:
                 subPath: tmp
               - path: /app/logs
                 subPath: logs
+          slicer:
+            app:
+              - path: /tmp
+                subPath: slicer-tmp
