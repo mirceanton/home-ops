@@ -144,7 +144,7 @@ spec:
           slicer:
             app:
               - path: /app/data
-                subPath: slicer-data
+                subPath: bambu-studio-data
 
       tmpfs:
         type: emptyDir
