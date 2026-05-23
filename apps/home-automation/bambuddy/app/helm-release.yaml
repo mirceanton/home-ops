@@ -83,8 +83,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/mirceanton/orca-slicer-api
-              tag: 2.3.2
+              repository: ghcr.io/mirceanton/bambu-studio-api
+              tag: 02.06.00.51
             env:
               PORT: &slicerPort 3000
               NODE_ENV: production
@@ -144,7 +144,7 @@ spec:
           slicer:
             app:
               - path: /app/data
-                subPath: slicer-data
+                subPath: bambu-studio-data
 
       tmpfs:
         type: emptyDir
