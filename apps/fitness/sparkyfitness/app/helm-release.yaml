@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness_server
-              tag: v0.16.6.2
+              tag: v0.16.6.3
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_DISABLE_SIGNUP: "false"
@@ -118,7 +118,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness
-              tag: v0.16.6.2
+              tag: v0.16.6.3
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
@@ -158,7 +158,7 @@ spec:
           app:
             image:
               repository: codewithcj/sparkyfitness_garmin
-              tag: v0.16.6.2
+              tag: v0.16.6.3
             env:
               GARMIN_SERVICE_PORT: "8000"
               GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000
