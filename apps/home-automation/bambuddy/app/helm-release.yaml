@@ -114,7 +114,7 @@ spec:
 
     serviceMonitor:
       app:
-        serviceName: *app
+        serviceName: bambuddy-app
         endpoints:
           - port: http
             scheme: http
