@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: node-alerts
+spec:
+  groups:
+    - name: nodes
+      rules:
+        # -----------------------------------------------------------------------
+        # Memory
+        # ZFS ARC is reclaimable cache — add it back to available memory so the
+        # alert doesn't fire due to expected ZFS caching behaviour.
+        # -----------------------------------------------------------------------
+        - alert: NodeMemoryHighUtilization
+          expr: >
+            (1 - (
+              (node_memory_MemAvailable_bytes{job="node-exporter"}
+               + on(instance) group_left() node_zfs_arc_size{job="node-exporter"})
+              / node_memory_MemTotal_bytes{job="node-exporter"}
+            )) * 100 > 90
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage on {{ $labels.instance }}"
+            description: 'Memory usage (excluding reclaimable ZFS ARC) has been above 90% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf "%.1f" }}%)'
+
+        - alert: NodeMemoryHighUtilization
+          expr: >
+            (1 - (
+              node_memory_MemAvailable_bytes{job="node-exporter"}
+              / node_memory_MemTotal_bytes{job="node-exporter"}
+            )) * 100 > 90
+              unless on(instance) node_zfs_arc_size{job="node-exporter"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage on {{ $labels.instance }}"
+            description: 'Memory usage has been above 90% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf "%.1f" }}%)'

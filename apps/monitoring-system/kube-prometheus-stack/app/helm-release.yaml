@@ -14,6 +14,10 @@ spec:
     crds: { enabled: true }
     cleanPrometheusOperatorObjectNames: true
 
+    defaultRules:
+      disabled:
+        NodeMemoryHighUtilization: true
+
     # ==========================================================================
     # Alertmanager
     # ==========================================================================

@@ -5,6 +5,7 @@ kind: Kustomization
 
 resources:
   - ./etcd.yaml
+  - ./nodes.yaml
   - ./oom-killed.yaml
   - ./raspberry-pi.yaml
   - ./truenas.yaml
