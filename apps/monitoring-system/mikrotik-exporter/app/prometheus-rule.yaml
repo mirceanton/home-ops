@@ -24,7 +24,7 @@ spec:
     - name: mikrotik.temperature
       rules:
         - alert: MikrotikCPUTemperatureWarning
-          expr: mktxp_system_cpu_temperature > 75
+          expr: mktxp_system_cpu_temperature > 80
           for: 5m
           labels:
             severity: warning
@@ -32,7 +32,7 @@ spec:
             summary: "High CPU temperature on {{ $labels.routerboard_name }}"
             description: >-
               {{ $labels.routerboard_name }} ({{ $labels.routerboard_address }}) CPU temperature
-              is {{ $value }}°C, above the 75°C warning threshold.
+              is {{ $value }}°C, above the 80°C warning threshold.
               Note: CRS326 idles around 69°C — investigate airflow if this persists.
 
         - alert: MikrotikCPUTemperatureCritical
