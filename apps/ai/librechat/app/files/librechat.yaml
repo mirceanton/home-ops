@@ -78,8 +78,8 @@ mcpServers:
     type: sse
 
   homeassistant:
-    url: http://home-assistant-mcp.home-automation.svc.cluster.local:8086/sse
-    type: sse
+    url: http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp
+    type: streamable-http
 
   flux:
     url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
