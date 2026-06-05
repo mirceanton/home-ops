@@ -1,0 +1,127 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: manyfold
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: manyfold
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+
+    controllers:
+      manyfold:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          chown-tmpdirs:
+            image:
+              repository: docker.io/library/alpine
+              tag: "3.23"
+            command: ["/bin/sh", "-c"]
+            args: ["chmod o-rwx /tmp"]
+            securityContext: { runAsUser: 0, runAsNonRoot: false }
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/bjw-s-labs/manyfold
+              tag: 0.143.0@sha256:8eb9c08ef43b24e4166a1b19d6b8383d5142e4d0cc107107ed7a9b650b96694d
+            env:
+              DATABASE_URL: sqlite3:/data/database/manyfold.sqlite3
+              MULTIUSER: false
+              PORT: &port 3214
+              REDIS_URL: "redis://manyfold-dragonfly:6379"
+              REGISTRATION: false
+              SECRET_KEY_BASE:
+                valueFrom:
+                  secretKeyRef:
+                    name: manyfold-secret
+                    key: MANYFOLD_SECRET_KEY
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 20m
+                memory: 128Mi
+              limits:
+                memory: 4Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: manyfold
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["manyfold.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        advancedMounts:
+          manyfold:
+            app:
+              - path: /data/database
+                subPath: database
+
+      library:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/3D_Models
+        advancedMounts:
+          manyfold:
+            app:
+              - path: /data/libraries/main
+
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          manyfold:
+            app: &tmpdirs
+              - path: /tmp
+                subPath: host-tmp
+              - path: /app/tmp
+                subPath: app-tmp
+              - path: /app/log
+                subPath: app-log
+            chown-tmpdirs: *tmpdirs
