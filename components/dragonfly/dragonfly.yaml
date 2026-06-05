@@ -20,7 +20,7 @@ spec:
     - "--admin_bind=::"
     - --maxmemory=$(MAX_MEMORY)Mi
     - --dbnum=1
-    - --dbfilename=dump.rdb
+    - --dbfilename=dump
     - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:=1}
     - --cluster_mode=${DRAGONFLY_CLUSTER_MODE:=emulated}
     - --lock_on_hashtags
