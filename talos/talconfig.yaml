@@ -69,6 +69,9 @@ nodes:
             - siderolabs/nonfree-kmod-nvidia-production
             - siderolabs/zfs
             - siderolabs/iscsi-tools
+            - siderolabs/uinput # mouse/keyboard emulation (Sunshine)
+            - siderolabs/uhid # gamepad emulation (Sunshine)
+            - siderolabs/joydev # legacy joystick interface (Sunshine)
 
 controlPlane:
   patches:
