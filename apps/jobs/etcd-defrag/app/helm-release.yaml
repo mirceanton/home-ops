@@ -1,0 +1,88 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app etcd-defrag
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: etcd-defrag
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      etcd-defrag:
+        type: cronjob
+
+        cronjob:
+          schedule: "10 5 * * *" # daily at 5:10am
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        pod:
+          restartPolicy: OnFailure
+
+        initContainers:
+          pre-status: &talosctl
+            image:
+              repository: ghcr.io/siderolabs/talosctl
+              tag: v1.13.3
+            args:
+              - --talosconfig=/var/run/secrets/talos.dev/config
+              - --nodes=10.0.0.15
+              - etcd
+              - status
+
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
+
+        containers:
+          app:
+            <<: *talosctl
+            args:
+              - --talosconfig=/var/run/secrets/talos.dev/config
+              - --nodes=10.0.0.15
+              - etcd
+              - defrag
+
+    defaultPodOptions:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+
+    persistence:
+      talos:
+        type: secret
+        name: *app
+        globalMounts:
+          - path: /var/run/secrets/talos.dev
+            readOnly: true
+
+    serviceAccount: { etcd-defrag: {} }
+    rbac:
+      bindings:
+        etcd-defrag:
+          type: ClusterRoleBinding
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+            - identifier: etcd-defrag

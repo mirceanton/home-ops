@@ -7,4 +7,5 @@ namespace: jobs
 resources:
   - ./namespace.yaml
   - ./crd-schema-publisher
+  - ./etcd-defrag
   - ./krr
