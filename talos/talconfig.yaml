@@ -84,6 +84,7 @@ controlPlane:
     - "@./patches/sysctls.yaml"
     - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
     - "@./patches/registry-mirrors.yaml"
+    - "@./patches/talos-api-access.yaml"
     - |-
       cluster:
         apiServer:
