@@ -32,3 +32,7 @@ machine:
 
     # Disable slow start after idle - better for bursty traffic patterns
     net.ipv4.tcp_slow_start_after_idle: "0"
+
+    # User namespaces - required by Steam, Firefox/Chromium sandboxes, etc.
+    # Talos defaults to 0 (disabled). 15000 matches the Ubuntu default.
+    user.max_user_namespaces: "15000"
