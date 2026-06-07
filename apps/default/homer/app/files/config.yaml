@@ -85,13 +85,13 @@ services:
         subtitle: "3D Model Library"
         url: "https://manyfold.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-cube"
+        logo: "assets/icons/webp/manyfold.webp"
 
       - name: "Zigbee2MQTT"
         subtitle: "Zigbee Bridge"
         url: "https://z2m.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-broadcast-tower"
+        logo: "assets/icons/webp/zigbee2mqtt.webp"
 
   - name: "Tools"
     icon: "fas fa-tools"
@@ -100,7 +100,7 @@ services:
         subtitle: "Private Search Engine"
         url: "https://search.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-search"
+        logo: "assets/icons/webp/searxng.webp"
 
       - name: ConvertX
         subtitle: "File Converter"
@@ -268,4 +268,4 @@ services:
         subtitle: "Dependency Updates"
         url: "https://renovate.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-sync-alt"
+        logo: "assets/icons/webp/renovate.webp"
