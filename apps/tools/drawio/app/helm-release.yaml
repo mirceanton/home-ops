@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app drawio
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: drawio
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      drawio:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image:
+              repository: docker.io/jgraph/drawio
+              tag: 30.0.4
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: drawio
+        ports:
+          http:
+            port: 8080
+
+    route:
+      app:
+        hostnames: ["diagrams.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /usr/local/tomcat/logs/
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
