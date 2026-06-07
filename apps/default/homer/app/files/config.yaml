@@ -75,9 +75,33 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sparky-fitness.webp"
 
+      - name: "BamBuddy"
+        subtitle: "3D Printer Companion"
+        url: "https://bambuddy.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/bambu-lab.webp"
+
+      - name: "Manyfold"
+        subtitle: "3D Model Library"
+        url: "https://manyfold.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-cube"
+
+      - name: "Zigbee2MQTT"
+        subtitle: "Zigbee Bridge"
+        url: "https://z2m.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-broadcast-tower"
+
   - name: "Tools"
     icon: "fas fa-tools"
     items:
+      - name: "SearXNG"
+        subtitle: "Private Search Engine"
+        url: "https://search.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-search"
+
       - name: ConvertX
         subtitle: "File Converter"
         url: "https://convert.home.mirceanton.com"
@@ -95,6 +119,18 @@ services:
         url: "https://speedtest.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/openspeedtest.webp"
+
+      - name: "Carbon"
+        subtitle: "Code Screenshots"
+        url: "https://carbon.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-code"
+
+      - name: "DrawIO"
+        subtitle: "Diagram Editor"
+        url: "https://diagrams.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/draw-io.webp"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
@@ -171,6 +207,30 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/librechat.webp"
 
+      - name: "LiteLLM"
+        subtitle: "LLM Proxy"
+        url: "https://llm.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-robot"
+
+  - name: "Games"
+    icon: "fas fa-gamepad"
+    items:
+      - name: "Selkies"
+        subtitle: "Game Streaming"
+        url: "https://selkies.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-gamepad"
+
+  - name: "Bomkii"
+    icon: "fas fa-chart-line"
+    items:
+      - name: "Stockii"
+        subtitle: "Stock Tracker"
+        url: "https://stockii.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-chart-line"
+
   - name: "Admin"
     icon: "fas fa-server"
     items:
@@ -203,3 +263,9 @@ services:
         url: "https://hubble.admin.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/hubble.webp"
+
+      - name: "Renovate"
+        subtitle: "Dependency Updates"
+        url: "https://renovate.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-sync-alt"
