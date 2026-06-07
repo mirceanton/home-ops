@@ -1,0 +1,152 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app selkies
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: selkies
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      selkies:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/selkies-gaming
+              tag: 24.04-sunshine-2026.516.143833
+
+            env:
+              TZ: Europe/Bucharest
+              NVIDIA_DRIVER_CAPABILITIES: all
+              DISPLAY_SIZEW: "2560"
+              DISPLAY_SIZEH: "1440"
+              DISPLAY_REFRESH: "60"
+              DISPLAY_DPI: "96"
+              DISPLAY_CDEPTH: "24"
+              VIDEO_PORT: DFP
+
+              SELKIES_ENCODER: nvh264enc
+              SELKIES_ENABLE_RESIZE: "true"
+              SELKIES_VIDEO_BITRATE: "50000"
+              SELKIES_FRAMERATE: "30"
+              SELKIES_AUDIO_BITRATE: "128000"
+              SELKIES_ENABLE_HTTPS: "false"
+              SELKIES_ENABLE_BASIC_AUTH: "true"
+              SELKIES_BASIC_AUTH_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: selkies-secret
+                    key: username
+              SELKIES_BASIC_AUTH_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: selkies-secret
+                    key: password
+
+              SUNSHINE_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: selkies-secret
+                    key: username
+              SUNSHINE_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: selkies-secret
+                    key: password
+
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+                nvidia.com/gpu: "1"
+                devic.es/uinput: "1"
+              limits:
+                memory: 16Gi
+                nvidia.com/gpu: "1"
+                devic.es/uinput: "1"
+
+            securityContext:
+              privileged: true
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      hostname: selkies
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      runtimeClassName: nvidia
+      securityContext:
+        seccompProfile:
+          type: Unconfined
+
+    service:
+      app:
+        controller: selkies
+        ports:
+          http:
+            port: 8080
+
+    route:
+      home:
+        hostnames: ["selkies.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      home:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /home
+
+      dshm:
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /dev/shm
+
+      input-devices:
+        type: hostPath
+        hostPath: /dev/input
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/input
+
+      udev-run:
+        type: hostPath
+        hostPath: /run/udev
+        hostPathType: Directory
+        globalMounts:
+          - path: /run/udev
+            readOnly: true
+
+      sunshine-config:
+        type: configMap
+        name: selkies-sunshine-config
+        advancedMounts:
+          selkies:
+            app:
+              - path: /etc/sunshine/sunshine.conf
+                subPath: sunshine.conf
+                readOnly: true
+              - path: /etc/sunshine/apps.json
+                subPath: apps.json
+                readOnly: true
