@@ -66,7 +66,7 @@ nodes:
             - siderolabs/amd-ucode
             - siderolabs/amdgpu
             - siderolabs/nvidia-container-toolkit-production
-            - siderolabs/nonfree-kmod-nvidia-production
+            - siderolabs/nvidia-open-gpu-kernel-modules-production
             - siderolabs/zfs
             - siderolabs/iscsi-tools
             - siderolabs/uinput # mouse/keyboard emulation (Sunshine)
