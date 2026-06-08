@@ -117,9 +117,10 @@ spec:
         advancedMounts:
           selkies:
             app:
-              - path: /home/
-              - path: /root/.config/sunshine
-                subPath: sunshine-state
+              - path: /home
+                subPath: slash_home
+              - path: /root
+                subPath: slash_root
 
       movies:
         type: nfs
