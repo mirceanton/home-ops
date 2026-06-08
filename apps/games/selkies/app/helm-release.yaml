@@ -28,18 +28,18 @@ spec:
             env:
               TZ: Europe/Bucharest
               NVIDIA_DRIVER_CAPABILITIES: all
-              # DISPLAY_SIZEW: "2560"
-              # DISPLAY_SIZEH: "1440"
-              # DISPLAY_REFRESH: "60"
+              DISPLAY_SIZEW: "2560"
+              DISPLAY_SIZEH: "1440"
+              DISPLAY_REFRESH: "120"
               # DISPLAY_DPI: "96"
-              # DISPLAY_CDEPTH: "24"
+              DISPLAY_CDEPTH: "24"
               VIDEO_PORT: DFP
 
-              # SELKIES_ENCODER: nvh264enc
-              # SELKIES_ENABLE_RESIZE: "true"
-              # SELKIES_VIDEO_BITRATE: "50000"
-              # SELKIES_FRAMERATE: "30"
-              # SELKIES_AUDIO_BITRATE: "128000"
+              SELKIES_ENCODER: nvh264enc
+              SELKIES_ENABLE_RESIZE: "true"
+              SELKIES_VIDEO_BITRATE: "50000"
+              SELKIES_FRAMERATE: "30"
+              SELKIES_AUDIO_BITRATE: "128000"
               SELKIES_ENABLE_HTTPS: "false"
               SELKIES_ENABLE_BASIC_AUTH: "true"
               SELKIES_BASIC_AUTH_USER:
