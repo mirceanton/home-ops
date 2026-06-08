@@ -117,6 +117,13 @@ spec:
         globalMounts:
           - path: /home/
 
+      movies:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Games/mirk-steamlib
+        globalMounts:
+          - path: /mnt/games
+
       dshm:
         type: emptyDir
         medium: Memory
