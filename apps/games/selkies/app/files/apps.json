@@ -8,7 +8,7 @@
     {
       "name": "Steam Big Picture",
       "image-path": "steam.png",
-      "detached": ["setsid /usr/games/steam -bigpicture -cef-force-gpu -cef-disable-xcomposite-workaround"]
+      "cmd": ["gamescope -W 2560 -H 1440 -r 120 --steam -- steam -bigpicture"]
     }
   ]
 }
