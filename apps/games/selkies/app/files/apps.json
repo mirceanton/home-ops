@@ -3,24 +3,12 @@
   "apps": [
     {
       "name": "Desktop",
-      "image-path": "desktop.png",
-      "prep-cmd": [
-        {
-          "do": "bash /etc/sunshine/set-resolution.sh",
-          "undo": "bash /etc/sunshine/restore-resolution.sh"
-        }
-      ]
+      "image-path": "desktop.png"
     },
     {
       "name": "Steam Big Picture",
       "image-path": "steam.png",
-      "detached": ["setsid /usr/games/steam -bigpicture"],
-      "prep-cmd": [
-        {
-          "do": "bash /etc/sunshine/set-resolution.sh",
-          "undo": "bash /etc/sunshine/restore-resolution.sh"
-        }
-      ]
+      "detached": ["setsid /usr/games/steam -bigpicture"]
     }
   ]
 }

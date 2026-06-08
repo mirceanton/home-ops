@@ -16,5 +16,3 @@ configMapGenerator:
     files:
       - files/sunshine.conf
       - files/apps.json
-      - files/set-resolution.sh
-      - files/restore-resolution.sh
