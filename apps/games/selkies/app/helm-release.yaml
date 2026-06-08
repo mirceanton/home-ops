@@ -115,7 +115,7 @@ spec:
       home:
         existingClaim: ${APP}
         globalMounts:
-          - path: /home/user
+          - path: /home/
 
       dshm:
         type: emptyDir
