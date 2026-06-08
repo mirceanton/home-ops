@@ -8,7 +8,7 @@
     {
       "name": "Steam Big Picture",
       "image-path": "steam.png",
-      "detached": ["setsid env STEAM_ENABLE_XCOMPOSITE_WORKAROUND=0 /usr/games/steam -bigpicture -cef-force-gpu"]
+      "detached": ["setsid /usr/games/steam -bigpicture -cef-force-gpu -cef-disable-xcomposite-workaround"]
     }
   ]
 }
