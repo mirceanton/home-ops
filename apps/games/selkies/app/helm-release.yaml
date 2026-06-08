@@ -162,3 +162,9 @@ spec:
               - path: /etc/sunshine/apps.json
                 subPath: apps.json
                 readOnly: true
+              - path: /etc/sunshine/set-resolution.sh
+                subPath: set-resolution.sh
+                readOnly: true
+              - path: /etc/sunshine/restore-resolution.sh
+                subPath: restore-resolution.sh
+                readOnly: true
