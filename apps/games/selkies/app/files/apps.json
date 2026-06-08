@@ -8,7 +8,7 @@
     {
       "name": "Steam Big Picture",
       "image-path": "steam.png",
-      "detached": ["setsid /usr/games/steam -bigpicture"]
+      "detached": ["setsid /usr/games/steam -bigpicture -cef-force-gpu"]
     }
   ]
 }
