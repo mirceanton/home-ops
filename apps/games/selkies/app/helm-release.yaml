@@ -114,8 +114,12 @@ spec:
     persistence:
       home:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /home/
+        advancedMounts:
+          selkies:
+            app:
+              - path: /home/
+              - path: /root/.config/sunshine
+                subPath: sunshine-state
 
       movies:
         type: nfs
