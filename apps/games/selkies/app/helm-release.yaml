@@ -35,6 +35,10 @@ spec:
               DISPLAY_CDEPTH: "24"
               VIDEO_PORT: DFP
 
+              # KWin + NVIDIA triggers Steam's XComposite workaround, which disables GPU in
+              # the CEF (steamwebhelper) process and causes Big Picture to software-render.
+              STEAM_ENABLE_XCOMPOSITE_WORKAROUND: "0"
+
               SELKIES_ENCODER: nvh264enc
               SELKIES_ENABLE_RESIZE: "true"
               SELKIES_VIDEO_BITRATE: "50000"
