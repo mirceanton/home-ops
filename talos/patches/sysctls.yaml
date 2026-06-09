@@ -36,3 +36,7 @@ machine:
     # User namespaces - required by Steam, Firefox/Chromium sandboxes, etc.
     # Talos defaults to 0 (disabled). 15000 matches the Ubuntu default.
     user.max_user_namespaces: "15000"
+
+    # Memory map limit - GameGuard (anti-cheat) and Vulkan require a much higher
+    # limit than the kernel default of 65530; 2097152 is the Steam Deck default.
+    vm.max_map_count: "2097152"
