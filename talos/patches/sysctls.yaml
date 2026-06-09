@@ -40,3 +40,9 @@ machine:
     # Memory map limit - GameGuard (anti-cheat) and Vulkan require a much higher
     # limit than the kernel default of 65530; 2097152 is the Steam Deck default.
     vm.max_map_count: "2097152"
+
+    # Allow same-UID ptrace without CAP_SYS_PTRACE - GameGuard inspects the game
+    # process via ptrace to verify integrity; scope 2 (require capability) blocks
+    # it entirely since the container runs with no capabilities. Scope 0 allows
+    # any process to ptrace others it owns.
+    kernel.yama.ptrace_scope: "0"
