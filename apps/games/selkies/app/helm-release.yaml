@@ -117,6 +117,11 @@ spec:
         globalMounts:
           - path: /home
 
+      games:
+        existingClaim: selkies-games
+        globalMounts:
+          - path: /mnt/games
+
       dshm:
         type: emptyDir
         medium: Memory

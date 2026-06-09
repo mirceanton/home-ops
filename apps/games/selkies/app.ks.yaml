@@ -32,3 +32,5 @@ spec:
       namespace: storage-system
     - name: volsync
       namespace: storage-system
+    - name: democratic-csi
+      namespace: storage-system

@@ -9,10 +9,16 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   claimRef:
     name: selkies-games
+    namespace: games
   csi:
     driver: org.democratic-csi.iscsi
     volumeHandle: tank/ZVOLs/mircea-steamlib
     fsType: ext4
+    volumeAttributes:
+      node_attach_driver: iscsi
+      portal: nas.stor.h.mirceanton.com:3260
+      iqn: iqn.2005-10.org.freenas.ctl:mircea-steamlib
+      lun: "0"
 
 ---
 apiVersion: v1
