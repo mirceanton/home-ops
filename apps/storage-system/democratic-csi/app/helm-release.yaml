@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: democratic-csi
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: democratic-csi
+      version: 0.14.6
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi
+
+  valuesFrom:
+    - kind: Secret
+      name: democratic-csi-secret
+      valuesKey: truenas-api-key
+      targetPath: driver.config.httpConnection.apiKey
+
+  values:
+    csiDriver:
+      name: org.democratic-csi.iscsi
+
+    # No dynamic StorageClass — volumes are statically pre-provisioned on TrueNAS
+    storageClasses: []
+    volumeSnapshotClasses: []
+
+    driver:
+      config:
+        driver: truenas-api-iscsi
+        httpConnection:
+          protocol: https
+          host: nas.mgmt.h.mirceanton.com
+          port: 443
+          allowInsecure: false
+        iscsi:
+          targetPortal: "nas.stor.h.mirceanton.com:3260"
+          namePrefix: "csi-"
+          nameSuffix: "-homeops"
+          targetGroups:
+            - targetGroupPortalGroup: 1
+              targetGroupInitiatorGroup: 1
+              targetGroupAuthType: None
+              targetGroupInitiatorAuthType: None
+        zfs:
+          datasetParentName: "tank/k8s/iscsi"
+          detachedSnapshotsDatasetParentName: "tank/k8s/iscsi-snapshots"
+
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    controller:
+      driver:
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
+    node:
+      driver:
+        iscsiDirHostPath: /etc/iscsi
+        iscsiDirHostPathType: ""
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi

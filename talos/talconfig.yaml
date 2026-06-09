@@ -68,7 +68,7 @@ nodes:
             - siderolabs/nvidia-container-toolkit-production
             - siderolabs/nonfree-kmod-nvidia-production
             - siderolabs/zfs
-            - siderolabs/uinput
+            - siderolabs/iscsi-tools
 
 controlPlane:
   patches:
