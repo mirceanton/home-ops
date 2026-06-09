@@ -121,6 +121,14 @@ spec:
                 subPath: slash_home
               - path: /root
                 subPath: slash_root
+      
+      local:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        storageClass: openebs-zfs-cache
+        size: 150Gi
+        globalMounts:
+          - path: /mnt/local
 
       movies:
         type: nfs
