@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: selkies-local-games
+spec:
+  storageClassName: openebs-zfs-cache
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 150Gi

@@ -114,19 +114,11 @@ spec:
     persistence:
       home:
         existingClaim: ${APP}
-        advancedMounts:
-          selkies:
-            app:
-              - path: /home
-                subPath: slash_home
-              - path: /root
-                subPath: slash_root
-      
+        globalMounts:
+          - path: /home
+
       local:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        storageClass: openebs-zfs-cache
-        size: 150Gi
+        existingClaim: selkies-local-games
         globalMounts:
           - path: /mnt/local
 

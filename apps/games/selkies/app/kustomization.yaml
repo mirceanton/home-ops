@@ -6,6 +6,7 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
+  - ./local.pvc.yaml
 
 configMapGenerator:
   - name: selkies-sunshine-config
