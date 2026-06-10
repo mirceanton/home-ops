@@ -18,7 +18,7 @@ endpoints:
         - name: "gemma-4"
           maxContextTokens: 81920
         - name: "qwen-35b"
-          maxContextTokens: 32768
+          maxContextTokens: 262144
         - name: "qwen3-0.6b"
           maxContextTokens: 8192
 
