@@ -8,7 +8,7 @@ spec:
   interval: 15m
   url: oci://registry-1.docker.io/cloudpirates/mongodb
   ref:
-    tag: 0.17.4
+    tag: 0.17.5
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
