@@ -21,16 +21,16 @@ spec:
   image: ghcr.io/ggml-org/llama.cpp:server
   replicas: 1
   priority: batch
-  parallelSlots: 2
+  parallelSlots: 4
 
-  contextSize: 8192
+  contextSize: 32768
   uBatchSize: 512
   cacheTypeK: q8_0
   cacheTypeV: q8_0
 
   resources:
-    cpu: "1"
-    memory: 1Gi
+    cpu: 500Mi # just for scheduling purposes...
+    memory: 2Gi
 
   endpoint:
     port: 8080

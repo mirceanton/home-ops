@@ -20,7 +20,7 @@ endpoints:
         - name: "qwen-35b"
           maxContextTokens: 262144
         - name: "qwen3-0.6b"
-          maxContextTokens: 8192
+          maxContextTokens: 32768
 
 webSearch:
   searchProvider: searxng
