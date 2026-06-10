@@ -117,6 +117,11 @@ spec:
         globalMounts:
           - path: /home
 
+      cache:
+        existingClaim: selkies-cache
+        globalMounts:
+          - path: /home/ubuntu/.cache
+
       games:
         existingClaim: selkies-games
         globalMounts:
