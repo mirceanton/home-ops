@@ -4,7 +4,7 @@ kind: PersistentVolume
 metadata:
   name: selkies-games
 spec:
-  capacity: {storage: 1Ti}
+  capacity: { storage: 1Ti }
   accessModes: [ReadWriteOnce]
   persistentVolumeReclaimPolicy: Retain
   claimRef:
@@ -30,4 +30,4 @@ spec:
   storageClassName: ""
   volumeName: selkies-games
   resources:
-    requests: {storage: 1Ti}
+    requests: { storage: 1Ti }
