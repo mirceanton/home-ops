@@ -13,7 +13,7 @@ spec:
       enabled: true
       count: 1
       vendor: nvidia
-      layers: 20
+      layers: -1
 
 ---
 apiVersion: inference.llmkube.dev/v1alpha1
@@ -28,19 +28,21 @@ spec:
   runtimeClassName: nvidia
   parallelSlots: 1
 
-  contextSize: 32768
+  flashAttention: true
+  contextSize: 262144
   uBatchSize: 1024
   cacheTypeK: q8_0
   cacheTypeV: q8_0
   moeCPUOffload: true
-  moeCPULayers: 25
+  extraArgs:
+    - "--no-mmap"
 
   resources:
     cpu: "10m"
-    memory: 20Gi
+    memory: 2Gi
     gpu: 1
-    gpuMemory: 8Gi
-    hostMemory: 12Gi
+    gpuMemory: 12Gi
+
   endpoint:
     port: 8080
     type: ClusterIP

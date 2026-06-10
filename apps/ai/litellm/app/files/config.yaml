@@ -5,6 +5,9 @@ model_list:
       model: openai/qwen-35b
       api_base: http://qwen-35b-proxy.ai.svc.cluster.local:8080
       api_key: "N/A"
+      extra_body:
+        chat_template_kwargs:
+          enable_thinking: false
 
   - model_name: gemma-4-26b-a4b
     litellm_params:
