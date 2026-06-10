@@ -4,6 +4,5 @@ kind: Kustomization
 
 resources:
   - ./qwen-35b.yaml
-  - ./gemma-4.yaml
   - ./gemma-4-26B-A4B.yaml
   - ./qwen3-0.6b.yaml
