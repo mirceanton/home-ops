@@ -41,6 +41,10 @@ machine:
     # limit than the kernel default of 65530; 2097152 is the Steam Deck default.
     vm.max_map_count: "2097152"
 
+    # Keep filesystem metadata (dentries/inodes) in cache longer - reduces Steam
+    # library scan time on repeated launches. Default 100 evicts aggressively.
+    vm.vfs_cache_pressure: "50"
+
     # Allow same-UID ptrace without CAP_SYS_PTRACE - GameGuard inspects the game
     # process via ptrace to verify integrity; scope 2 (require capability) blocks
     # it entirely since the container runs with no capabilities. Scope 0 allows
