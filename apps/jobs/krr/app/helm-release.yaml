@@ -72,7 +72,7 @@ spec:
           open-issue:
             image:
               repository: python
-              tag: 3.14-alpine@sha256:5a824eb82cc75361f98611f3cfc5091ea33f10a6ccea4d4ebdabbc523b9a1614
+              tag: 3.14-alpine@sha256:c5c72336b2060db658391424c48466341838860a9f30efee9280ee53580d9537
               pullPolicy: IfNotPresent
             command: [python, /scripts/open-issue.py]
 
