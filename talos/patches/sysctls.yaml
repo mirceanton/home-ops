@@ -50,3 +50,9 @@ machine:
     # it entirely since the container runs with no capabilities. Scope 0 allows
     # any process to ptrace others it owns.
     kernel.yama.ptrace_scope: "0"
+
+    # Reserve Sunshine/Moonlight streaming ports so the kernel never picks them
+    # as ephemeral source ports for outgoing connections. Without this, a
+    # persistent kube-apiserver→etcd connection can claim port 47984, preventing
+    # Sunshine from binding when the pod runs with hostNetwork=true.
+    net.ipv4.ip_local_reserved_ports: "47984,47989,47990,47998,47999,48000,48010,50000-50001"
