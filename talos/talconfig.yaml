@@ -53,6 +53,7 @@ nodes:
       - "@./patches/nvidia.yaml"
       - "@./patches/uinput.yaml"
       - "@./patches/zfs.yaml"
+      - "@./patches/cpu-governor.yaml"
       - | #? Use the Intel Optane for the etcd disk
         machine:
           disks:
