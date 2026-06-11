@@ -23,22 +23,31 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/selkies-gaming
-              tag: 24.04-sunshine-2026.516.143833
+              tag: &imageTag 24.04-sunshine-2026.516.143833
 
             env:
               TZ: Europe/Bucharest
               NVIDIA_DRIVER_CAPABILITIES: all
+
+              # Load the patch-nvfbc initContainer's unlocked libnvidia-fbc ahead of the
+              # read-only host-injected one. Mirrors the image's default LD_LIBRARY_PATH;
+              # update the trailing paths if the base image ever changes them.
+              LD_LIBRARY_PATH: /opt/nvfbc:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/lib/rustdesk/lib
               DISPLAY_SIZEW: "2560"
               DISPLAY_SIZEH: "1440"
-              DISPLAY_REFRESH: "60"
+              DISPLAY_REFRESH: "120"
               DISPLAY_DPI: "96"
               DISPLAY_CDEPTH: "24"
               VIDEO_PORT: DFP
 
+              # One Wine thread per physical core (siblings are 0,8/1,9/.../7,15);
+              # keeps Proton games from spawning 16 spinning workers on 8C/16T
+              WINE_CPU_TOPOLOGY: "8:0,1,2,3,4,5,6,7"
+
               SELKIES_ENCODER: nvh264enc
               SELKIES_ENABLE_RESIZE: "true"
               SELKIES_VIDEO_BITRATE: "50000"
-              SELKIES_FRAMERATE: "30"
+              SELKIES_FRAMERATE: "120"
               SELKIES_AUDIO_BITRATE: "128000"
               SELKIES_ENABLE_HTTPS: "false"
               SELKIES_ENABLE_BASIC_AUTH: "true"
@@ -85,6 +94,35 @@ spec:
 
             securityContext:
               privileged: true
+
+        initContainers:
+          # Unlock NvFBC on the consumer RTX 4070: the stock libnvidia-fbc refuses to
+          # capture on GeForce. The host-injected lib is a read-only overlay mount, so we
+          # run keylase/nvidia-patch with PATCH_OUTPUT_DIR to write an unlocked copy onto a
+          # shared emptyDir (/opt/nvfbc) that the app container loads first via
+          # LD_LIBRARY_PATH. The upstream script auto-detects the driver version and carries
+          # the byte-pattern table itself, so a driver bump just works as long as keylase
+          # supports it (otherwise this init fails loudly).
+          patch-nvfbc:
+            image:
+              repository: ghcr.io/mirceanton/selkies-gaming
+              tag: *imageTag
+            command: ["/bin/bash", "-c"]
+            args:
+              - |
+                set -euo pipefail
+                curl -fsSL https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch-fbc.sh -o /tmp/patch-fbc.sh
+                PATCH_OUTPUT_DIR=/opt/nvfbc bash /tmp/patch-fbc.sh
+                # Expose the patched lib under its soname so LD_LIBRARY_PATH lookups resolve it.
+                lib="$(find /opt/nvfbc -maxdepth 1 -type f -name 'libnvidia-fbc.so.*' -printf '%f\n' | head -n1)"
+                ln -sf "${lib}" /opt/nvfbc/libnvidia-fbc.so.1
+                ls -l /opt/nvfbc
+            env:
+              NVIDIA_DRIVER_CAPABILITIES: all
+            resources:
+              limits:
+                memory: 256Mi
+                nvidia.com/gpu: "1"
 
     defaultPodOptions:
       automountServiceAccountToken: false
@@ -159,6 +197,13 @@ spec:
         medium: Memory
         globalMounts:
           - path: /dev/shm
+
+      # Holds the patched libnvidia-fbc written by the patch-nvfbc initContainer and
+      # read by the app container via LD_LIBRARY_PATH.
+      nvfbc:
+        type: emptyDir
+        globalMounts:
+          - path: /opt/nvfbc
 
       input-devices:
         type: hostPath
