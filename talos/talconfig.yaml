@@ -62,6 +62,8 @@ nodes:
                 - mountpoint: /var/lib/etcd
     schematic:
       customization:
+        extraKernelArgs:
+          - cpufreq.default_governor=performance
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
