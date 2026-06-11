@@ -98,11 +98,38 @@ spec:
           type: Unconfined
 
     service:
-      app:
-        controller: selkies
+      selkies:
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/loadBalancerIPs: 10.0.10.254
+          external-dns.alpha.kubernetes.io/hostname: sunshine.home.mirceanton.com
         ports:
-          http:
+          webrtc:
             port: 8080
+          rtsp-tcp:
+            port: 47984
+            protocol: TCP
+          rtsp-udp:
+            port: 47984
+            protocol: UDP
+          https:
+            port: 47989
+            protocol: TCP
+          http:
+            port: 47990
+            protocol: TCP
+          rtsp-alt:
+            port: 48010
+            protocol: TCP
+          video:
+            port: 47998
+            protocol: UDP
+          control:
+            port: 47999
+            protocol: UDP
+          audio:
+            port: 48000
+            protocol: UDP
 
     route:
       home:
