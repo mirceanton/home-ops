@@ -118,6 +118,7 @@ spec:
       dshm:
         type: emptyDir
         medium: Memory
+        sizeLimit: 8Gi
         globalMounts:
           - path: /dev/shm
 
