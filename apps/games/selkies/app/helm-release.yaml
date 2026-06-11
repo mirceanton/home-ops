@@ -67,7 +67,7 @@ spec:
                 nvidia.com/gpu: "1"
                 devic.es/uinput: "1"
               limits:
-                memory: 16Gi
+                memory: 40Gi
                 nvidia.com/gpu: "1"
                 devic.es/uinput: "1"
 
