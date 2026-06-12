@@ -6,7 +6,7 @@ endpoint: "https://home-ops.mgmt.h.mirceanton.com:6443"
 talosVersion: v1.13.4
 
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
-kubernetesVersion: v1.36.1
+kubernetesVersion: v1.36.2
 
 additionalApiServerCertSans: &san
   - home-ops.mgmt.h.mirceanton.com
