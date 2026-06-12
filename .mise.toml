@@ -8,7 +8,7 @@ npm = "latest"
 uv = "latest"
 
 # Kubectl + Tools + Plugins
-"aqua:kubectl" = "1.36.1"
+"aqua:kubectl" = "1.36.2"
 "github:mirceanton/kubectl-switch" = "latest"
 "github:josegonzalez/kubectl-eso" = "latest"
 "aqua:kustomize" = "latest"
