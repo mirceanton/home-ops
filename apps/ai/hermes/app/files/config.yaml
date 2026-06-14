@@ -1,0 +1,61 @@
+model:
+  default: gemma-4-26b-a4b
+
+providers:
+  litellm:
+    base_url: http://litellm:4000/v1
+    api_key: "{{ .LITELLM_API_KEY }}"
+
+mcp_servers:
+  remote_api:
+    url: "http://litellm:4000/mcp"
+    headers:
+      x-litellm-api-key: "Bearer {{ .LITELLM_API_KEY }}"
+
+toolsets:
+  - hermes-cli
+
+compression:
+  enabled: true
+  threshold: 0.50
+  target_ratio: 0.20
+  protect_last_n: 20
+
+agent:
+  max_turns: 90
+  gateway_timeout: 1800
+  restart_drain_timeout: 60
+  api_max_retries: 3
+
+streaming:
+  enabled: false
+
+security:
+  redact_secrets: true
+
+privacy:
+  redact_pii: true
+
+platform_toolsets:
+  signal:
+    - hermes-cli
+  cli:
+    - hermes-cli
+
+discord:
+  require_mention: true
+  thread_require_mention: false
+  auto_thread: false
+  reactions: true
+  ignored_channels: []
+  no_thread_channels: []
+  history_backfill: false
+  history_backfill_limit: 50
+  channel_prompts: {}
+  allow_mentions:
+    everyone: false
+    roles: false
+    users: true
+    replied_user: true
+
+group_sessions_per_user: false

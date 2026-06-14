@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./external-secret.yaml
+  - ./helm-release.yaml
+  - ./oci-repository.yaml
+
+configMapGenerator:
+  - name: hermes-config-template
+    files:
+      - config.yaml=./files/config.yaml
+      - env=./files/env
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

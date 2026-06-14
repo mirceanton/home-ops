@@ -1,0 +1,128 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: hermes
+
+  values:
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      hermes:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          init:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: "4"
+            securityContext:
+              runAsUser: 10000
+              runAsGroup: 10000
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                if [ -f /opt/data/config.yaml ]; then
+                  yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' \
+                    /opt/data/config.yaml /tmp/config.yaml > /tmp/merged.yaml
+                  mv /tmp/merged.yaml /opt/data/config.yaml
+                else
+                  cp /tmp/config.yaml /opt/data/config.yaml
+                fi
+                cp /tmp/.env /opt/data/.env
+
+        containers:
+          app:
+            image: &image
+              repository: nousresearch/hermes-agent
+              tag: v2026.6.5@sha256:9ad3b04ec916ea2c2da22358fd43b024c788d74073210695af88bfc2e63869b4
+            args: ["gateway", "run", "--no-supervise"]
+
+            envFrom:
+              - secretRef: { name: hermes-secret }
+            env:
+              HERMES_HOME: /opt/data
+              HOME: /opt/data
+              TZ: Europe/Bucharest
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            ports:
+              - containerPort: &port 8642
+                name: http
+                protocol: TCP
+
+          dashboard:
+            image: *image
+            args:
+              - dashboard
+              - --host
+              - "0.0.0.0"
+              - --insecure
+            env:
+              TZ: Europe/Bucharest
+              GATEWAY_HEALTH_URL: http://localhost:8642
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 512Mi
+            ports:
+              - containerPort: &dashboard_port 9119
+                name: dashboard
+                protocol: TCP
+
+    service:
+      app:
+        controller: hermes
+        ports:
+          http:
+            port: *port
+      dashboard:
+        controller: hermes
+        ports:
+          http:
+            port: *dashboard_port
+
+    route:
+      dashboard:
+        hostnames: ["hermes.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: dashboard
+                port: http
+
+    persistence:
+      data:
+        existingClaim: hermes
+        globalMounts:
+          - path: /opt/data
+      config-secret:
+        type: secret
+        name: hermes-secret
+        defaultMode: 0400
+        globalMounts:
+          - path: /tmp/config.yaml
+            subPath: config.yaml
+          - path: /tmp/.env
+            subPath: env
