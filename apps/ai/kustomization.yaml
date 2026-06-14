@@ -9,4 +9,3 @@ resources:
   - ./librechat
   - ./litellm
   - ./llmkube
-  - ./searxng

@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: ai
+  targetNamespace: tools
 
-  path: ./apps/ai/searxng/app
+  path: ./apps/tools/searxng/app
   sourceRef:
     kind: GitRepository
     name: flux-system

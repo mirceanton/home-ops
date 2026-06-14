@@ -46,7 +46,7 @@ spec:
               ENDPOINTS: custom,agents
               ALLOW_REGISTRATION: "true"
               GOOGLE_KEY: "user_provided"
-              SEARXNG_INSTANCE_URL: http://searxng.ai.svc.cluster.local:8080
+              SEARXNG_INSTANCE_URL: http://searxng.tools.svc.cluster.local:8080
 
             probes:
               startup:

@@ -26,7 +26,7 @@ webSearch:
   searchProvider: searxng
   apis:
     searxng:
-      url: http://searxngx.ai.svc.cluster.local:8080
+      url: http://searxngx.tools.svc.cluster.local:8080
   safeSearch: 1
   rerank: false
 

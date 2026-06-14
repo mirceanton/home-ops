@@ -10,3 +10,4 @@ resources:
   - ./convertx
   - ./omni-tools
   - ./openspeedtest
+  - ./searxng
