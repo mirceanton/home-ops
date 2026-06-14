@@ -23,6 +23,7 @@ Whenever asked to sort these files, follow these instructions:
 This section gives instructions specifically for HelmReleases that are based on the `app-template` chart. These can be identified by the presence of a sidecar `ocirepository.yaml` file that references `oci://ghcr.io/bjw-s-labs/helm/app-template` in the `url` field.
 
 ### Sorting rules
+
 Whenever asked to sort these files, follow these instructions:
 
 - Whenever there is an `enabled` field, it should be the first field within its section, unless a more specific rule below dictates otherwise.
@@ -46,6 +47,7 @@ Note: Sibling keys within `persistence.*`, `service.*`, `route.*`, `configMaps.*
 ### General pattern for section keys
 
 Unless a more specific rule applies, keys within any section should be ordered as:
+
 - `annotations` (if present)
 - `labels` (if present)
 - All other keys should be sorted alphabetically
@@ -96,12 +98,12 @@ Unless a more specific rule applies, keys within any section should be ordered a
 
 ```md
 At spec.values level?
-  → Yes: defaultPodOptions first (if present), then alphabetical
-  
-Within controllers.*.containers.* or .initContainers.*?
-  → Yes: image first, then alphabetical
-  
-Within persistence.*, service.*, etc. siblings?
-  → No: Do not sort siblings (e.g., persistence.config vs persistence.data order doesn't matter)
-  → Yes: Sort keys within each item (type → annotations → labels → alphabetical)
+→ Yes: defaultPodOptions first (if present), then alphabetical
+
+Within controllers._.containers._ or .initContainers.\*?
+→ Yes: image first, then alphabetical
+
+Within persistence._, service._, etc. siblings?
+→ No: Do not sort siblings (e.g., persistence.config vs persistence.data order doesn't matter)
+→ Yes: Sort keys within each item (type → annotations → labels → alphabetical)
 ```
