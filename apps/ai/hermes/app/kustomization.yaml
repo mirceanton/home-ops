@@ -6,6 +6,7 @@ resources:
   - ./external-secret.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
+  - ./github-access-token.yaml
 
 configMapGenerator:
   - name: hermes-config-template
