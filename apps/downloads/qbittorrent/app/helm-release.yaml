@@ -46,10 +46,10 @@ spec:
                   periodSeconds: 5
             resources:
               requests:
-                cpu: 200m
-                memory: 512Mi
+                cpu: 57m
+                memory: 1.8Gi
               limits:
-                memory: 3Gi
+                memory: 2.1Gi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:

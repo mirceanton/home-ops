@@ -60,10 +60,10 @@ spec:
 
             resources:
               requests:
-                cpu: 1000m
-                memory: 2Gi
+                cpu: 10m
+                memory: 32Mi
               limits:
-                memory: 8Gi
+                memory: 4Gi
 
             securityContext:
               privileged: true

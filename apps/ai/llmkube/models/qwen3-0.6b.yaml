@@ -16,6 +16,8 @@ apiVersion: inference.llmkube.dev/v1alpha1
 kind: InferenceService
 metadata:
   name: qwen3-0.6b
+  labels:
+    krr/ignore: "true"
 spec:
   modelRef: qwen3-0.6b
   image: ghcr.io/ggml-org/llama.cpp:server
@@ -29,8 +31,8 @@ spec:
   cacheTypeV: q8_0
 
   resources:
-    cpu: 500Mi # just for scheduling purposes...
-    memory: 2Gi
+    cpu: 500m # just for scheduling purposes...
+    memory: 1.5Gi
 
   endpoint:
     port: 8080

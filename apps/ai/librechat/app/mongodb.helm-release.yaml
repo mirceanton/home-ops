@@ -24,10 +24,10 @@ spec:
 
     resources:
       requests:
-        cpu: 100m
-        memory: 512Mi
+        cpu: 106m
+        memory: 236Mi
       limits:
-        memory: 1Gi
+        memory: 386Mi
 
     metrics:
       enabled: true

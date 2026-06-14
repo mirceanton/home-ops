@@ -32,10 +32,10 @@ spec:
             resources:
               requests:
                 cpu: 20m
-                memory: 100Mi
+                memory: 1Gi
               limits:
                 cpu: 4000m
-                memory: 1Gi
+                memory: 1.2Gi
     service:
       app:
         ports:

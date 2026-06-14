@@ -30,11 +30,11 @@ spec:
               JELLYFIN_FFmpeg__analyzeduration: 50000000
             resources:
               requests:
-                cpu: 500m
-                memory: 1Gi
+                cpu: 20m
+                memory: 380Mi
                 nvidia.com/gpu: 1
               limits:
-                memory: 4Gi
+                memory: 1Gi
                 nvidia.com/gpu: 1
 
             probes:

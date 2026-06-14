@@ -42,17 +42,15 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 32Mi
               limits:
-                memory: 2Gi
+                memory: 32Mi
 
+            # TODO: add probes?
             probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
+              liveness: {enabled: false}
+              readiness: {enabled: false}
+              startup: {enabled: false}
 
             securityContext:
               allowPrivilegeEscalation: false

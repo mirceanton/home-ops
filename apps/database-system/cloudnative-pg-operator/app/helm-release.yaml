@@ -16,10 +16,10 @@ spec:
     topologySpreadConstraints: []
     resources:
       requests:
-        cpu: 100m
-        memory: 256Mi
+        cpu: 10m
+        memory: 240Mi
       limits:
-        memory: 512Mi
+        memory: 293Mi
 
     monitoring:
       podMonitorEnabled: true

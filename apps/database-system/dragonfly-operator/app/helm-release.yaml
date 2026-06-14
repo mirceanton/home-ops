@@ -15,19 +15,19 @@ spec:
     manager:
       resources:
         requests:
-          cpu: 20m
-          memory: 64Mi
+          cpu: 10m
+          memory: 67Mi
         limits:
-          memory: 256Mi
+          memory: 79Mi
 
     rbacProxy:
       resources:
         requests:
           cpu: 10m
-          memory: 64Mi
+          memory: 52Mi
         limits:
           cpu: null
-          memory: 128Mi
+          memory: 60Mi
 
     serviceMonitor:
       enabled: true

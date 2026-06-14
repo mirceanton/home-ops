@@ -8,5 +8,5 @@ resources:
   - ./namespace.yaml
   - ./actions-controller
   - ./actions-runners
-  - ./buildkit
+  # - ./buildkit
   - ./renovate
