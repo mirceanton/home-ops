@@ -46,7 +46,7 @@ spec:
               - --cpu-requests-percentile=50
               - --cpu-limits-percentile=90
               - --memory-requests-percentile=50
-              - --memory-limits-percentile=90
+              - --memory-limits-percentile=99
               - --memory-buffer-percentage=15
               - --resource=Deployment
               - --resource=StatefulSet
