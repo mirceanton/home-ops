@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM",
+
+      "options": {
+        "baseURL": "https://llm.home.mirceanton.com/v1"
+      },
+
+      "models": {
+        "qwen-35b": {
+          "name": "Qwen 3.6 35B A3B"
+        },
+        "gemma-4-26b-a4b": {
+          "name": "Gemma 4 26B A4B IT QAT"
+        },
+        "qwen3-0.6b": {
+          "name": "Qwen 3 0.6B"
+        }
+      }
+    }
+  }
+}
