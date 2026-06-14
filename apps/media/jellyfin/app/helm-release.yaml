@@ -31,10 +31,10 @@ spec:
             resources:
               requests:
                 cpu: 20m
-                memory: 380Mi
+                memory: 256Mi
                 nvidia.com/gpu: 1
               limits:
-                memory: 1Gi
+                memory: 4Gi
                 nvidia.com/gpu: 1
 
             probes:
