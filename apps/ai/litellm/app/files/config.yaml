@@ -8,6 +8,8 @@ model_list:
       extra_body:
         chat_template_kwargs:
           enable_thinking: false
+    model_info:
+      supports_response_schema: false
 
   - model_name: gemma-4-26b-a4b
     litellm_params:
@@ -20,6 +22,33 @@ model_list:
       model: openai/qwen3-0.6b
       api_base: http://qwen3-0-6b.ai.svc.cluster.local:8080
       api_key: "N/A"
+    model_info:
+      supports_response_schema: false
+
+  - model_name: qwen3-embedding-0.6b
+    litellm_params:
+      model: openai/qwen3-embedding-0.6b
+      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080
+      api_key: "N/A"
+    model_info:
+      mode: embedding
+
+mcp_servers:
+  kubesearch:
+    url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
+
+  flux:
+    url: "http://flux-mcp.flux-system.svc.cluster.local:9090/mcp"
+
+  grafana:
+    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse"
+    transport: sse
+
+  home_assistant:
+    url: "http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp"
+
+  navidrome:
+    url: "http://navidrome-mcp.media.svc.cluster.local:3000/mcp"
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -34,3 +63,8 @@ litellm_settings:
   num_retries: 2
   retry_after: 5
   set_verbose: false
+  mcp_semantic_tool_filter:
+    enabled: true
+    embedding_model: "qwen3-embedding-0.6b"
+    top_k: 20
+    similarity_threshold: 0.3
