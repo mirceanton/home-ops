@@ -35,7 +35,7 @@ spec:
               - python
               - krr.py
               - burstable
-              - --history-duration=336 # 14d in hours
+              - --history-duration=720 # 30d in hours
               - --timeframe-duration=1 # step for history data in min.
               - --cpu-min=5 # min millicores to consider
               - --mem-min=8 # min Mi to consider
