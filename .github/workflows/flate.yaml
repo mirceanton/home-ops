@@ -20,24 +20,23 @@ jobs:
   test:
     name: Flate Test
     runs-on: ubuntu-latest
+    container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
 
-      - name: Setup flate
-        uses: home-operations/flate/action@dfa3992ed14feb4b04df25fe3397606345f87374 # v0.4.7
-        with:
-          cache: true
-          base: ""
+      - name: Install flate
+        run: mise install flate
 
       - name: Run flate test
-        run: flate test all --path ./apps
+        run: mise exec -- flate test all --path ./apps
 
   diff:
     name: Flate Diff
     runs-on: ubuntu-latest
+    container: ghcr.io/mirceanton/actions-runner:latest
     permissions:
       contents: read
       pull-requests: write
@@ -55,17 +54,14 @@ jobs:
           path: default
           persist-credentials: false
 
-      - name: Setup flate
-        uses: home-operations/flate/action@dfa3992ed14feb4b04df25fe3397606345f87374 # v0.4.7
-        with:
-          cache: true
-          base: ""
+      - name: Install flate
+        run: mise install flate
 
       - name: Run flate diff
         id: diff
         continue-on-error: true
         run: |
-          flate diff all \
+          mise exec -- flate diff all \
             --path ./pull/apps \
             --path-orig ./default/apps \
             -o diff \

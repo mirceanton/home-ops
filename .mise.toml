@@ -37,3 +37,6 @@ yq = "latest"
 actionlint = "latest"
 shellcheck = "latest"
 "npm:prettier" = "latest"
+
+# Flux Tools
+"github:home-operations/flate" = "latest"
