@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-name: Flux Local
+name: Flate
 
 on:
   pull_request:
@@ -8,7 +8,6 @@ on:
     paths:
       - apps/**
       - components/**
-      - .github/flux-local/**
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
@@ -19,7 +18,7 @@ permissions:
 
 jobs:
   test:
-    name: Flux Local Test
+    name: Flate Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,30 +26,20 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Run flux-local test
-        uses: docker://ghcr.io/allenporter/flux-local:v8.3.0
+      - name: Setup flate
+        uses: home-operations/flate/action@dfa3992ed14feb4b04df25fe3397606345f87374 # v0.4.7
         with:
-          args: >-
-            test
-            --all-namespaces
-            --path /github/workspace/.github/flux-local
-            --skip-secrets
-            --kustomize-build-flags=--load-restrictor=LoadRestrictionsNone
-            -v
+          cache: true
+
+      - name: Run flate test
+        run: flate test all --path ./apps
 
   diff:
-    name: Flux Local Diff
+    name: Flate Diff
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
-    strategy:
-      matrix:
-        resources:
-          - helmrelease
-          - kustomization
-      max-parallel: 4
-      fail-fast: false
     steps:
       - name: Checkout Pull Request Branch
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -65,35 +54,31 @@ jobs:
           path: default
           persist-credentials: false
 
-      - name: Initialize diff output
-        run: touch diff.patch
-
-      - name: Run flux-local diff
-        continue-on-error: true
-        uses: docker://ghcr.io/allenporter/flux-local:v8.3.0
+      - name: Setup flate
+        uses: home-operations/flate/action@dfa3992ed14feb4b04df25fe3397606345f87374 # v0.4.7
         with:
-          args: >-
-            diff ${{ matrix.resources }}
-            --unified 6
-            --path /github/workspace/pull/.github/flux-local
-            --path-orig /github/workspace/default/.github/flux-local
-            --strip-attrs "helm.sh/chart,checksum/config,app.kubernetes.io/version,chart"
-            --limit-bytes 10000
-            --all-namespaces
-            --skip-secrets
-            --kustomize-build-flags=--load-restrictor=LoadRestrictionsNone
-            --output-file diff.patch
+          cache: true
+
+      - name: Run flate diff
+        id: diff
+        continue-on-error: true
+        run: |
+          flate diff all \
+            --path ./pull/apps \
+            --path-orig ./default/apps \
+            -o diff \
+            > diff.patch
 
       - name: Generate Diff
-        id: diff
+        id: generate-diff
         run: |
           {
               echo 'diff<<EOF'
               cat diff.patch
               echo EOF
-          } >> "${GITHUB_OUTPUT}";
+          } >> "${GITHUB_OUTPUT}"
           {
-              echo "## Flux ${{ matrix.resources }} diff"
+              echo "## Flux diff"
               echo '```diff'
               cat diff.patch
               echo '```'
@@ -101,19 +86,19 @@ jobs:
 
       - name: Generate Token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.diff.outputs.diff != '' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && steps.generate-diff.outputs.diff != '' }}
         id: app-token
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
-      - if: ${{ steps.diff.outputs.diff != '' }}
-        name: Add Comment
+      - name: Add Comment
+        if: ${{ steps.generate-diff.outputs.diff != '' }}
         uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          header: ${{ github.event.pull_request.number }}/apps/${{ matrix.resources }}
+          header: ${{ github.event.pull_request.number }}/flux-diff
           message: |
             ```diff
-            ${{ steps.diff.outputs.diff }}
+            ${{ steps.generate-diff.outputs.diff }}
             ```
