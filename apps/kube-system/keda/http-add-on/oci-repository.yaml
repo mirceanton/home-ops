@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 15m
   url: oci://ghcr.io/home-operations/charts-mirror/keda-add-ons-http
-  ref: { tag: 0.14.1 }
+  ref: { tag: 0.15.0 }
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
