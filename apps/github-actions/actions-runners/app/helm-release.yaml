@@ -17,6 +17,10 @@ spec:
     minRunners: 1
     maxRunners: 10
 
+    controllerServiceAccount:
+      name: actions-runner-controller
+      namespace: github-actions
+
     containerMode:
       type: kubernetes
       kubernetesModeWorkVolumeClaim:

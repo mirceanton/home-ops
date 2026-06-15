@@ -4,7 +4,6 @@ SOPS_AGE_KEY_FILE = '{{config_root}}/age.key'
 [tools]
 # Runtimes
 node = "latest"
-npm = "latest"
 uv = "latest"
 
 # Kubectl + Tools + Plugins
@@ -13,8 +12,11 @@ uv = "latest"
 "github:josegonzalez/kubectl-eso" = "latest"
 "aqua:kustomize" = "latest"
 "aqua:derailed/k9s" = "latest"
-"aqua:fluxcd/flux2" = "2.8.8"
 "aqua:cilium/hubble" = "latest"
+
+# Flux Tools
+"aqua:fluxcd/flux2" = "2.8.8"
+"github:home-operations/flate" = "latest"
 
 # Helm + Plugins
 "aqua:helm" = "latest"

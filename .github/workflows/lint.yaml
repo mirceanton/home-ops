@@ -16,6 +16,8 @@ jobs:
 
       - name: Install dependencies
         run: mise install
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run linters
         run: mise exec -- task lint:check
