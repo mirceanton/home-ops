@@ -21,7 +21,7 @@ spec:
           navidrome-mcp:
             image:
               repository: ghcr.io/mirceanton/navidrome-mcp
-              tag: test2
+              tag: 2.1.0
             env:
               NAVIDROME_URL: http://navidrome:4533
             envFrom:
