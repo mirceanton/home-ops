@@ -26,7 +26,7 @@ jobs:
         run: mise install
 
       - name: Run flate test
-        run: flate test all --path ./apps
+        run: mise exec -- flate test all --path ./apps
 
   diff:
     name: Flate Diff
@@ -52,7 +52,11 @@ jobs:
       - name: Run flate diff
         id: diff
         continue-on-error: true
-        run: flate diff all --path ./pull/apps --path-orig ./default/apps -o diff > diff.patch
+        run: |
+          mise exec -- flate diff all \
+            --path ./pull/apps \
+            --path-orig ./default/apps \
+            --output diff > diff.patch
 
       - name: Generate Diff
         id: generate-diff
@@ -63,7 +67,7 @@ jobs:
               echo EOF
           } >> "${GITHUB_OUTPUT}"
           {
-              echo "## Flux diff"
+              echo "## Flate diff"
               echo '```diff'
               cat diff.patch
               echo '```'
