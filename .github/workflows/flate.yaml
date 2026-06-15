@@ -46,6 +46,7 @@ jobs:
 
       - name: Run flate diff
         id: diff
+        continue-on-error: true
         run: |
           echo "## Flate Diff" > diff.md
           echo "" >> diff.md
