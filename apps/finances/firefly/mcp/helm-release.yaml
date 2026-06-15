@@ -16,24 +16,66 @@ spec:
 
     controllers:
       firefly-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
-          app:
+          # MCP server binds to loopback only — not reachable from outside the pod
+          mcp-server:
             image:
               repository: ghcr.io/daften/fireflyiii-mcp
               tag: 0.2.2
 
+            command:
+              - node
+              - dist/index.js
+              - --transport
+              - http
+              - --host
+              - 127.0.0.1
+              - --port
+              - "3001"
+
             env:
               FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
-              MCP_BASE_URL: "http://firefly-mcp.finances.svc.cluster.local:3000"
+              # Required by HTTP transport; value is arbitrary since OAuth flow is not used
               FIREFLY_OAUTH_CLIENT_ID: "litellm-internal"
+              MCP_BASE_URL: "http://firefly-mcp.finances.svc.cluster.local:3000"
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+          # nginx proxy injects the Firefly token as a Bearer header before forwarding to port 3001
+          proxy:
+            image:
+              repository: nginx
+              tag: alpine
+
+            command: ["/bin/sh", "-c"]
+            args:
+              - sed "s|__FIREFLY_TOKEN__|$FIREFLY_TOKEN|g" /etc/nginx/templates/proxy.conf.template > /etc/nginx/conf.d/proxy.conf && exec nginx -g "daemon off;"
+
+            env:
+              FIREFLY_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: firefly-mcp-secret
+                    key: FIREFLY_TOKEN
 
             probes:
               liveness: &probe
                 enabled: true
                 custom: true
                 spec:
-                  httpGet:
-                    path: /.well-known/oauth-authorization-server
+                  tcpSocket:
                     port: 3000
                   initialDelaySeconds: 10
                   periodSeconds: 10
@@ -43,8 +85,7 @@ spec:
                 enabled: true
                 custom: true
                 spec:
-                  httpGet:
-                    path: /.well-known/oauth-authorization-server
+                  tcpSocket:
                     port: 3000
                   failureThreshold: 30
                   periodSeconds: 5
@@ -52,9 +93,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 64Mi
+                memory: 32Mi
               limits:
-                memory: 256Mi
+                memory: 64Mi
 
             securityContext:
               allowPrivilegeEscalation: false
@@ -83,3 +124,28 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
+      nginx-conf-d:
+        type: emptyDir
+        advancedMounts:
+          firefly-mcp:
+            proxy:
+              - path: /etc/nginx/conf.d
+      nginx-cache:
+        type: emptyDir
+        advancedMounts:
+          firefly-mcp:
+            proxy:
+              - path: /var/cache/nginx
+      nginx-run:
+        type: emptyDir
+        advancedMounts:
+          firefly-mcp:
+            proxy:
+              - path: /var/run
+      nginx-config:
+        type: configMap
+        name: firefly-mcp-nginx-config
+        advancedMounts:
+          firefly-mcp:
+            proxy:
+              - path: /etc/nginx/templates

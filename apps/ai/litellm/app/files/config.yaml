@@ -52,7 +52,6 @@ mcp_servers:
 
   firefly:
     url: "http://firefly-mcp.finances.svc.cluster.local:3000/mcp"
-    api_key: "os.environ/FIREFLY_MCP_TOKEN"
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
