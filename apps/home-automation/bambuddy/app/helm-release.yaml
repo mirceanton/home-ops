@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: ghcr.io/maziggy/bambuddy
-              tag: 0.2.4.6
+              tag: 0.2.4.7
             env:
               PORT: &httpPort 8000
               SLICER_API_URL: http://bambuddy-slicer:3000
