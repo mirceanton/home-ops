@@ -23,9 +23,7 @@ spec:
               repository: ghcr.io/mirceanton/navidrome-mcp
               tag: 2.1.0
             env:
-              NAVIDROME_URL: http://navidrome:4533
-            envFrom:
-              - secretRef: { name: navidrome-mcp-secret }
+              NAVIDROME_CONFIG_PATH: /config/settings.json
 
             resources:
               requests:
@@ -80,6 +78,12 @@ spec:
             port: 3000
 
     persistence:
+      config:
+        type: secret
+        name: navidrome-mcp-secret
+        globalMounts:
+          - path: /config
+            readOnly: true
       tmp:
         type: emptyDir
         globalMounts:
