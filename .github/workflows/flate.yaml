@@ -50,12 +50,12 @@ jobs:
         run: |
           echo "## Flate Diff" > diff.md
           echo "" >> diff.md
-          flate diff all -o github >> diff.md
+          flate diff all -o github | tee diff.md
 
           if [ -s diff.md ]; then
-            echo "diff=true" >> "$GITHUB_OUTPUT"
+            echo "diff=true" | tee "$GITHUB_OUTPUT"
           else
-            echo "diff=false" >> "$GITHUB_OUTPUT"
+            echo "diff=false" | tee "$GITHUB_OUTPUT"
           fi
 
       - name: Generate Token
