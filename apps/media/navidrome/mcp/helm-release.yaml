@@ -22,7 +22,23 @@ spec:
             image:
               repository: ghcr.io/mirceanton/navidrome-mcp
               tag: 2.1.0
+            args:
+              - npx
+              - supergateway
+              - --stdio
+              - navidrome-mcp
+              - --outputTransport
+              - streamableHttp
+              - --stateful
+              - --port
+              - "3000"
+              - --httpPath
+              - /mcp
+              - --healthEndpoint
+              - /healthz
+
             env:
+              HOME: /tmp
               NAVIDROME_CONFIG_PATH: /config/settings.json
 
             resources:
