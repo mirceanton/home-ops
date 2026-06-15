@@ -121,42 +121,12 @@ spec:
               limits:
                 memory: 64Mi
 
-      data-importer:
-        containers:
-          main:
-            image:
-              repository: fireflyiii/data-importer
-              tag: version-2.3.2
-            envFrom:
-              - configMapRef: { name: firefly-settings }
-              - secretRef: { name: firefly-data-importer-token }
-            env:
-              FIREFLY_III_URL: "http://firefly.finances.svc.cluster.local:8080"
-              VANITY_URL: "https://firefly.home.mirceanton.com"
-
-            probes:
-              liveness: { enabled: true }
-              readiness: { enabled: true }
-
-            resources:
-              requests:
-                cpu: 20m
-                memory: 64Mi
-              limits:
-                memory: 1Gi
-
     service:
       firefly:
         controller: firefly
         ports:
           http:
             port: 8080
-      data-importer:
-        controller: data-importer
-        ports:
-          http:
-            port: 8080
-
     route:
       home:
         hostnames: ["firefly.home.mirceanton.com"]
@@ -167,16 +137,6 @@ spec:
           - backendRefs:
               - name: firefly
                 port: 8080
-      importer:
-        hostnames: ["firefly-importer.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - name: firefly-data-importer
-                port: 8080
-
     persistence:
       data:
         existingClaim: ${APP}
@@ -187,7 +147,3 @@ spec:
                 path: /var/www/html/storage
               - subPath: upload
                 path: /var/www/html/storage/upload
-          data-importer:
-            main:
-              - subPath: importer
-                path: /var/www/html/storage/uploads
