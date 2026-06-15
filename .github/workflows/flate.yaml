@@ -50,7 +50,9 @@ jobs:
         run: |
           echo "## Flate Diff" > diff.md
           echo "" >> diff.md
-          flate diff all -o github | tee diff.md
+          echo "```diff" >> diff.md
+          flate diff all -o diff >> diff.md
+          echo "```" >> diff.md
 
           if [ -s diff.md ]; then
             echo "diff=true" | tee "$GITHUB_OUTPUT"
