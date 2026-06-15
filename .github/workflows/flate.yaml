@@ -46,18 +46,21 @@ jobs:
 
       - name: Run flate diff
         id: diff
-        continue-on-error: true
+        env:
+          FLATE_BASE: ${{ github.event.repository.default_branch }}
         run: |
-          echo "## Flate Diff" > diff.md
-          echo "" >> diff.md
-          echo '```diff' >> diff.md
-          flate diff all -o diff >> diff.md
-          echo '```' >> diff.md
-
-          if [ -s diff.md ]; then
-            echo "diff=true" | tee "$GITHUB_OUTPUT"
+          DIFF=$(mise exec -- flate diff all -o diff 2>&1 || true)
+          if [ -n "$DIFF" ]; then
+            {
+              echo "## Flate Diff"
+              echo ""
+              echo '```diff'
+              echo "$DIFF"
+              echo '```'
+            } > diff.md
+            echo "diff=true" >> "$GITHUB_OUTPUT"
           else
-            echo "diff=false" | tee "$GITHUB_OUTPUT"
+            echo "diff=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Generate Token
