@@ -57,6 +57,12 @@ spec:
                     name: litellm-postgres-app
                     key: uri
 
+              FIREFLY_MCP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: firefly-mcp-token
+
             resources:
               requests:
                 cpu: 10m
