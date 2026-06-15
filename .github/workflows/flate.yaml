@@ -28,10 +28,10 @@ jobs:
           persist-credentials: false
 
       - name: Install flate
-        run: mise install flate
+        run: mise install 'github:home-operations/flate@latest'
 
       - name: Run flate test
-        run: mise exec -- flate test all --path ./apps
+        run: mise exec 'github:home-operations/flate@latest' -- flate test all --path ./apps
 
   diff:
     name: Flate Diff
@@ -55,13 +55,13 @@ jobs:
           persist-credentials: false
 
       - name: Install flate
-        run: mise install flate
+        run: mise install 'github:home-operations/flate@latest'
 
       - name: Run flate diff
         id: diff
         continue-on-error: true
         run: |
-          mise exec -- flate diff all \
+          mise exec 'github:home-operations/flate@latest' -- flate diff all \
             --path ./pull/apps \
             --path-orig ./default/apps \
             -o diff \
