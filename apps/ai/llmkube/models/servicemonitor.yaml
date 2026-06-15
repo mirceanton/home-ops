@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/servicemonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: llmkube-models
+spec:
+  selector:
+    matchExpressions:
+      - key: inference.llmkube.dev/service
+        operator: Exists
+  namespaceSelector:
+    matchNames:
+      - ai
+  endpoints:
+    - port: http
+      path: /metrics
+  fallbackScrapeProtocol: PrometheusText0.0.4
