@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./external-secret.yaml
   - ./helm-release.yaml
-  - ./nginx-config.configmap.yaml
   - ./oci-repository.yaml

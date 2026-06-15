@@ -19,51 +19,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          # MCP server binds to loopback only — not reachable from outside the pod
-          mcp-server:
+          app:
             image:
-              repository: ghcr.io/daften/fireflyiii-mcp
-              tag: 0.2.2
-
-            command:
-              - node
-              - dist/index.js
-              - --transport
-              - http
-              - --host
-              - 127.0.0.1
-              - --port
-              - "3001"
+              repository: ghcr.io/radcod3/lampyrid
+              tag: 0.4.0
 
             env:
-              FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
-              # Required by HTTP transport; value is arbitrary since OAuth flow is not used
-              FIREFLY_OAUTH_CLIENT_ID: "litellm-internal"
-              MCP_BASE_URL: "http://firefly-mcp.finances.svc.cluster.local:3000"
-
-            resources:
-              requests:
-                cpu: 10m
-                memory: 64Mi
-              limits:
-                memory: 256Mi
-
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-
-          # nginx proxy injects the Firefly token as a Bearer header before forwarding to port 3001
-          proxy:
-            image:
-              repository: nginx
-              tag: alpine
-
-            command: ["/bin/sh", "-c"]
-            args:
-              - sed "s|__FIREFLY_TOKEN__|$FIREFLY_TOKEN|g" /etc/nginx/templates/proxy.conf.template > /etc/nginx/conf.d/proxy.conf && exec nginx -g "daemon off;"
-
-            env:
+              FIREFLY_BASE_URL: "http://firefly.finances.svc.cluster.local:8080"
+              MCP_TRANSPORT: "http"
               FIREFLY_TOKEN:
                 valueFrom:
                   secretKeyRef:
@@ -93,9 +56,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 32Mi
-              limits:
                 memory: 64Mi
+              limits:
+                memory: 256Mi
 
             securityContext:
               allowPrivilegeEscalation: false
@@ -107,9 +70,9 @@ spec:
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
         fsGroupChangePolicy: OnRootMismatch
 
     service:
@@ -124,28 +87,3 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
-      nginx-conf-d:
-        type: emptyDir
-        advancedMounts:
-          firefly-mcp:
-            proxy:
-              - path: /etc/nginx/conf.d
-      nginx-cache:
-        type: emptyDir
-        advancedMounts:
-          firefly-mcp:
-            proxy:
-              - path: /var/cache/nginx
-      nginx-run:
-        type: emptyDir
-        advancedMounts:
-          firefly-mcp:
-            proxy:
-              - path: /var/run
-      nginx-config:
-        type: configMap
-        name: firefly-mcp-nginx-config
-        advancedMounts:
-          firefly-mcp:
-            proxy:
-              - path: /etc/nginx/templates
