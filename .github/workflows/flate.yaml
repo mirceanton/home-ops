@@ -60,13 +60,16 @@ jobs:
         continue-on-error: true
         run: |
           {
-            echo 'diff<<EOF'
+            echo '## Flate Diff'
+            echo ""
+            echo "```diff"
             mise exec -- flate diff all \
               --path ./apps \
               --path-orig ../default/apps \
               --output diff
-            echo EOF
-          } | tee "${GITHUB_OUTPUT}"
+            echo ""
+            echo "```"
+          } | tee summary.md
 
       - name: Generate Token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -94,9 +97,4 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           edit-mode: replace
-          body: |
-            ## Flate Diff
-
-            ```diff
-            ${steps.diff.outputs.diff}
-            ```
+          body-file: ./pull/summary.md
