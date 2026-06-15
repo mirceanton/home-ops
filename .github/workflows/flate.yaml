@@ -24,6 +24,8 @@ jobs:
 
       - name: Install dependencies
         run: mise install
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run flate test
         run: mise exec -- flate test all --path ./apps | tee test
@@ -49,6 +51,8 @@ jobs:
       - name: Install dependencies
         working-directory: pull
         run: mise install
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run flate diff
         id: diff
