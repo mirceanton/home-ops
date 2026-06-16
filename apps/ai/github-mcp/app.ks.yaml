@@ -3,17 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app litellm
+  name: &app github-mcp
 spec:
   interval: 10m
   prune: true
   wait: true
-  timeout: 15m
+  timeout: 5m
   targetNamespace: ai
 
-  path: ./apps/ai/litellm/app
-  components:
-    - ../../../../components/cnpg/
+  path: ./apps/ai/github-mcp/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -22,13 +20,3 @@ spec:
   postBuild:
     substitute:
       APP: *app
-
-  dependsOn:
-    - name: 1password-connect
-      namespace: security-system
-    - name: cloudnative-pg-operator
-      namespace: database-system
-    - name: external-secrets-operator
-      namespace: security-system
-    - name: llmkube
-      namespace: ai
