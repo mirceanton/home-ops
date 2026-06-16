@@ -13,5 +13,6 @@ spec:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
-  url: "https://raw.githubusercontent.com/rebelcore/jellyfin_grafana/refs/heads/master/dashboards/jellyfin.json"
-  resyncPeriod: 30m
+  configMapRef:
+    name: jellyfin-dashboard
+    key: dashboard.json
