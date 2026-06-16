@@ -56,7 +56,8 @@ mcp_servers:
     url: "http://navidrome-mcp.media.svc.cluster.local:3000/mcp"
 
   firefly:
-    url: "http://firefly-mcp.finances.svc.cluster.local:3000/mcp"
+    url: "http://firefly-mcp.finances.svc.cluster.local:3000/sse"
+    transport: sse
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY

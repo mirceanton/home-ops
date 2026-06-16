@@ -21,12 +21,12 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/radcod3/lampyrid
-              tag: 0.4.0
+              repository: ghcr.io/fabianonetto/mcp-server-firefly-iii
+              tag: main@sha256:46dce54fdca3f0b919052bad9bf04a17fb0d4deed63ee5a871eca1d3bbbf516a
 
             env:
-              FIREFLY_BASE_URL: "http://firefly.finances.svc.cluster.local:8080"
-              MCP_TRANSPORT: "http"
+              FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
+              PORT: "3000"
               FIREFLY_TOKEN:
                 valueFrom:
                   secretKeyRef:
