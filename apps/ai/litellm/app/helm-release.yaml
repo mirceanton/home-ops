@@ -57,6 +57,12 @@ spec:
                     name: litellm-postgres-app
                     key: uri
 
+              GITHUB_MCP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-github-mcp-token
+                    key: GITHUB_MCP_TOKEN
+
             resources:
               requests:
                 cpu: 10m
