@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
+  - ./firefly-mcp-token.yaml
   - ./github-mcp-token.yaml
   - ./grafana-dashboard.yaml
   - ./helm-release.yaml
