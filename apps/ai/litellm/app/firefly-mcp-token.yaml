@@ -3,7 +3,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: &name firefly-mcp-secret
+  name: &name litellm-firefly-mcp-token
 spec:
   refreshInterval: 1h
 
@@ -16,7 +16,7 @@ spec:
     creationPolicy: Owner
 
   data:
-    - secretKey: FIREFLY_TOKEN
+    - secretKey: FIREFLY_MCP_TOKEN
       remoteRef:
         key: "Firefly MCP"
         property: token

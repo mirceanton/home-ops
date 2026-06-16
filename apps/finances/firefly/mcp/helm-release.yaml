@@ -21,17 +21,18 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/radcod3/lampyrid
-              tag: 0.4.0
+              repository: ghcr.io/daften/fireflyiii-mcp
+              tag: 0.2.2@sha256:a08caf45e9030fea7e2429a10265f0579b4ff2403cda431a85e53f181f9b1acb
 
             env:
-              FIREFLY_BASE_URL: "http://firefly.finances.svc.cluster.local:8080"
-              MCP_TRANSPORT: "http"
-              FIREFLY_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: firefly-mcp-secret
-                    key: FIREFLY_TOKEN
+              FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
+              # Public OAuth client (no secret) registered solely to satisfy this
+              # image's startup check. The actual credential is a PAT, forwarded
+              # by litellm as a Bearer token — the OAuth flow is never exercised.
+              # Remove once daften/fireflyiii-mcp ships native PAT-only HTTP mode
+              # (https://github.com/daften/fireflyiii-mcp/pull/30).
+              FIREFLY_OAUTH_CLIENT_ID: "019ed106-79b5-7361-8613-765e72e38098"
+              MCP_BASE_URL: "http://firefly-mcp.finances.svc.cluster.local:3000"
 
             probes:
               liveness: &probe
