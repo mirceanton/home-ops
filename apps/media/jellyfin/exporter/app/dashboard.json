@@ -1,2416 +1,2362 @@
 {
-    "__requires": [
-        {
-            "type": "grafana",
-            "id": "grafana",
-            "name": "Grafana",
-            "version": "11.0.0"
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "state-timeline",
+      "name": "State timeline",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
-        {
-            "type": "datasource",
-            "id": "prometheus",
-            "name": "Prometheus",
-            "version": "1.0.0"
-        },
-        {
-            "type": "panel",
-            "id": "stat",
-            "name": "Stat",
-            "version": ""
-        },
-        {
-            "type": "panel",
-            "id": "bargauge",
-            "name": "Bar gauge",
-            "version": ""
-        },
-        {
-            "type": "panel",
-            "id": "state-timeline",
-            "name": "State timeline",
-            "version": ""
-        },
-        {
-            "type": "panel",
-            "id": "table",
-            "name": "Table",
-            "version": ""
-        },
-        {
-            "type": "panel",
-            "id": "timeseries",
-            "name": "Time series",
-            "version": ""
-        }
-    ],
-    "annotations": {
-        "list": [
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 100,
+      "title": "System",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
             {
-                "builtIn": 1,
-                "datasource": {
-                    "type": "grafana",
-                    "uid": "-- Grafana --"
+              "options": {
+                "0": {
+                  "color": "red",
+                  "text": "Down"
                 },
-                "enable": true,
-                "hide": true,
-                "iconColor": "rgba(0, 211, 255, 1)",
-                "name": "Annotations & Alerts",
-                "type": "dashboard"
+                "1": {
+                  "color": "green",
+                  "text": "Up"
+                }
+              },
+              "type": "value"
             }
-        ]
-    },
-    "editable": true,
-    "fiscalYearStartMonth": 0,
-    "graphTooltip": 1,
-    "links": [],
-    "panels": [
-        {
-            "collapsed": false,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 0
-            },
-            "id": 100,
-            "title": "System",
-            "type": "row"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "mappings": [
-                        {
-                            "options": {
-                                "0": {
-                                    "color": "red",
-                                    "text": "Down"
-                                },
-                                "1": {
-                                    "color": "green",
-                                    "text": "Up"
-                                }
-                            },
-                            "type": "value"
-                        }
-                    ],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "red",
-                                "value": null
-                            },
-                            {
-                                "color": "green",
-                                "value": 1
-                            }
-                        ]
-                    },
-                    "color": {
-                        "mode": "thresholds"
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 3,
-                "x": 0,
-                "y": 1
-            },
-            "id": 1,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "value"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_up{instance=~\"$instance\"}",
-                    "legendFormat": "",
-                    "refId": "A"
-                }
-            ],
-            "title": "Jellyfin Status",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "fixed",
-                        "fixedColor": "text"
-                    },
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 7,
-                "x": 3,
-                "y": 1
-            },
-            "id": 2,
-            "options": {
-                "colorMode": "none",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "name"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_system_info{instance=~\"$instance\"}",
-                    "instant": true,
-                    "legendFormat": "{{server_name}} ({{version}})",
-                    "refId": "A"
-                }
-            ],
-            "title": "Server",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "mappings": [
-                        {
-                            "options": {
-                                "0": {
-                                    "color": "green",
-                                    "text": "No"
-                                },
-                                "1": {
-                                    "color": "orange",
-                                    "text": "Yes"
-                                }
-                            },
-                            "type": "value"
-                        }
-                    ],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "orange",
-                                "value": 1
-                            }
-                        ]
-                    },
-                    "color": {
-                        "mode": "thresholds"
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 3,
-                "x": 10,
-                "y": 1
-            },
-            "id": 3,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "value"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_system_pending_restart{instance=~\"$instance\"}",
-                    "legendFormat": "",
-                    "refId": "A"
-                }
-            ],
-            "title": "Pending Restart",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "blue",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 3,
-                "x": 13,
-                "y": 1
-            },
-            "id": 4,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "area",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "auto"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "count(jellyfin_now_playing_state{instance=~\"$instance\"}) or vector(0)",
-                    "legendFormat": "",
-                    "refId": "A"
-                }
-            ],
-            "title": "Active Streams",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "mappings": [
-                        {
-                            "options": {
-                                "0": {
-                                    "color": "green",
-                                    "text": "None"
-                                },
-                                "1": {
-                                    "color": "yellow",
-                                    "text": "Active"
-                                }
-                            },
-                            "type": "value"
-                        }
-                    ],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            },
-                            {
-                                "color": "yellow",
-                                "value": 1
-                            }
-                        ]
-                    },
-                    "color": {
-                        "mode": "thresholds"
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 3,
-                "x": 16,
-                "y": 1
-            },
-            "id": 5,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "value"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_transcoding_sessions{instance=~\"$instance\"}",
-                    "legendFormat": "",
-                    "refId": "A"
-                }
-            ],
-            "title": "Transcoding",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "purple",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 4,
-                "w": 5,
-                "x": 19,
-                "y": 1
-            },
-            "id": 6,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "auto"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "count(jellyfin_user_active{instance=~\"$instance\"}) or vector(0)",
-                    "legendFormat": "",
-                    "refId": "A"
-                }
-            ],
-            "title": "Connected Users",
-            "type": "stat"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "description": "Timeline of active playback sessions. Gaps indicate paused or stopped playback.",
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "palette-classic"
-                    },
-                    "custom": {
-                        "fillOpacity": 80,
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "insertNulls": false,
-                        "lineWidth": 0,
-                        "spanNulls": false
-                    },
-                    "mappings": [
-                        {
-                            "options": {
-                                "1": {
-                                    "color": "green",
-                                    "text": "Playing"
-                                }
-                            },
-                            "type": "value"
-                        }
-                    ],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "transparent",
-                                "value": null
-                            },
-                            {
-                                "color": "green",
-                                "value": 1
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 8,
-                "w": 24,
-                "x": 0,
-                "y": 13
-            },
-            "id": 10,
-            "options": {
-                "alignValue": "left",
-                "legend": {
-                    "displayMode": "list",
-                    "placement": "bottom",
-                    "showLegend": false
-                },
-                "mergeValues": true,
-                "rowHeight": 0.9,
-                "showValue": "auto",
-                "tooltip": {
-                    "hideZeros": false,
-                    "mode": "multi",
-                    "sort": "none"
-                }
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "editorMode": "code",
-                    "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"} == 1,\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
-                    "instant": false,
-                    "legendFormat": "__auto",
-                    "range": true,
-                    "refId": "A"
-                }
-            ],
-            "title": "Now Playing",
-            "transformations": [
-                {
-                    "id": "seriesToRows",
-                    "options": {}
-                },
-                {
-                    "id": "extractFields",
-                    "options": {
-                        "keepTime": false,
-                        "replace": false,
-                        "source": "Metric"
-                    }
-                },
-                {
-                    "id": "filterByValue",
-                    "options": {
-                        "filters": [
-                            {
-                                "config": {
-                                    "id": "isNotNull",
-                                    "options": {}
-                                },
-                                "fieldName": "user_device"
-                            }
-                        ],
-                        "match": "any",
-                        "type": "include"
-                    }
-                },
-                {
-                    "id": "calculateField",
-                    "options": {
-                        "alias": "Item",
-                        "mode": "reduceRow",
-                        "reduce": {
-                            "include": [
-                                "item_index_clean"
-                            ],
-                            "reducer": "lastNotNull"
-                        }
-                    }
-                },
-                {
-                    "id": "calculateField",
-                    "options": {
-                        "alias": "Name",
-                        "mode": "reduceRow",
-                        "reduce": {
-                            "include": [
-                                "user_device"
-                            ],
-                            "reducer": "lastNotNull"
-                        }
-                    }
-                },
-                {
-                    "id": "partitionByValues",
-                    "options": {
-                        "fields": [
-                            "Name"
-                        ],
-                        "keepFields": true
-                    }
-                },
-                {
-                    "id": "filterFieldsByName",
-                    "options": {
-                        "include": {
-                            "pattern": "item_index_clean|Time (.*)"
-                        }
-                    }
-                },
-                {
-                    "id": "renameByRegex",
-                    "options": {
-                        "regex": "item_index_clean (.*)",
-                        "renamePattern": "$1"
-                    }
-                }
-            ],
-            "type": "state-timeline"
-        },
-        {
-            "collapsed": false,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 26
-            },
-            "id": 103,
-            "title": "Users",
-            "type": "row"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "custom": {
-                        "align": "auto",
-                        "cellOptions": {
-                            "type": "auto"
-                        },
-                        "filterable": true,
-                        "inspect": false
-                    },
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": [
-                    {
-                        "matcher": {
-                            "id": "byName",
-                            "options": "Status"
-                        },
-                        "properties": [
-                            {
-                                "id": "mappings",
-                                "value": [
-                                    {
-                                        "options": {
-                                            "0": {
-                                                "color": "red",
-                                                "text": "Disabled"
-                                            },
-                                            "1": {
-                                                "color": "green",
-                                                "text": "Active"
-                                            }
-                                        },
-                                        "type": "value"
-                                    }
-                                ]
-                            },
-                            {
-                                "id": "custom.cellOptions",
-                                "value": {
-                                    "mode": "basic",
-                                    "type": "color-background"
-                                }
-                            },
-                            {
-                                "id": "custom.width",
-                                "value": 90
-                            }
-                        ]
-                    },
-                    {
-                        "matcher": {
-                            "id": "byName",
-                            "options": "Admin"
-                        },
-                        "properties": [
-                            {
-                                "id": "mappings",
-                                "value": [
-                                    {
-                                        "options": {
-                                            "0": {
-                                                "text": "No"
-                                            },
-                                            "1": {
-                                                "color": "blue",
-                                                "text": "Yes"
-                                            }
-                                        },
-                                        "type": "value"
-                                    }
-                                ]
-                            },
-                            {
-                                "id": "custom.width",
-                                "value": 70
-                            }
-                        ]
-                    },
-                    {
-                        "matcher": {
-                            "id": "byName",
-                            "options": "Last Access"
-                        },
-                        "properties": [
-                            {
-                                "id": "unit",
-                                "value": "dateTimeFromNow"
-                            },
-                            {
-                                "id": "custom.width",
-                                "value": 160
-                            }
-                        ]
-                    }
-                ]
-            },
-            "gridPos": {
-                "h": 7,
-                "w": 12,
-                "x": 0,
-                "y": 27
-            },
-            "id": 12,
-            "options": {
-                "cellHeight": "sm",
-                "footer": {
-                    "countRows": false,
-                    "enablePagination": false,
-                    "fields": "",
-                    "reducer": [
-                        "sum"
-                    ],
-                    "show": false
-                },
-                "showHeader": true,
-                "sortBy": [
-                    {
-                        "desc": true,
-                        "displayName": "Last Access"
-                    }
-                ]
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_user_account{instance=~\"$instance\"}",
-                    "format": "table",
-                    "instant": true,
-                    "refId": "A"
-                }
-            ],
-            "title": "User Accounts",
-            "transformations": [
-                {
-                    "id": "convertFieldType",
-                    "options": {
-                        "conversions": [
-                            {
-                                "destinationType": "number",
-                                "targetField": "last_access"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "id": "calculateField",
-                    "options": {
-                        "alias": "last_access_ms",
-                        "binary": {
-                            "left": "last_access",
-                            "operator": "*",
-                            "right": "1000"
-                        },
-                        "mode": "binary"
-                    }
-                },
-                {
-                    "id": "organize",
-                    "options": {
-                        "excludeByName": {
-                            "Time": true,
-                            "__name__": true,
-                            "instance": true,
-                            "job": true,
-                            "user_id": true,
-                            "last_access": true
-                        },
-                        "renameByName": {
-                            "Value": "Status",
-                            "admin": "Admin",
-                            "last_access_ms": "Last Access",
-                            "username": "Username"
-                        },
-                        "indexByName": {
-                            "username": 0,
-                            "admin": 1,
-                            "last_access_ms": 2,
-                            "Value": 3
-                        }
-                    }
-                }
-            ],
-            "type": "table"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "custom": {
-                        "align": "auto",
-                        "cellOptions": {
-                            "type": "auto"
-                        },
-                        "filterable": true,
-                        "inspect": false
-                    },
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 7,
-                "w": 12,
-                "x": 12,
-                "y": 27
-            },
-            "id": 13,
-            "options": {
-                "cellHeight": "sm",
-                "footer": {
-                    "countRows": false,
-                    "enablePagination": false,
-                    "fields": "",
-                    "reducer": [
-                        "sum"
-                    ],
-                    "show": false
-                },
-                "showHeader": true
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_user_active{instance=~\"$instance\"}",
-                    "format": "table",
-                    "instant": true,
-                    "refId": "A"
-                }
-            ],
-            "title": "Active Sessions",
-            "transformations": [
-                {
-                    "id": "organize",
-                    "options": {
-                        "excludeByName": {
-                            "Time": true,
-                            "Value": true,
-                            "__name__": true,
-                            "instance": true,
-                            "job": true,
-                            "user_id": true
-                        },
-                        "renameByName": {
-                            "client": "Client",
-                            "client_version": "Version",
-                            "device": "Device",
-                            "ip_address": "IP Address",
-                            "username": "Username"
-                        },
-                        "indexByName": {
-                            "username": 0,
-                            "device": 1,
-                            "client": 2,
-                            "client_version": 3,
-                            "ip_address": 4
-                        }
-                    }
-                }
-            ],
-            "type": "table"
-        },
-        {
-            "collapsed": true,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 34
-            },
-            "id": 104,
-            "title": "Transcoding",
-            "type": "row",
-            "panels": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Active transcoding sessions with playback and codec details.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "auto",
-                                "cellOptions": {
-                                    "type": "auto"
-                                },
-                                "filterable": false,
-                                "inspect": false
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Video"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "mappings",
-                                        "value": [
-                                            {
-                                                "options": {
-                                                    "0": {
-                                                        "color": "yellow",
-                                                        "text": "Transcoding"
-                                                    },
-                                                    "1": {
-                                                        "color": "green",
-                                                        "text": "Direct"
-                                                    }
-                                                },
-                                                "type": "value"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "custom.cellOptions",
-                                        "value": {
-                                            "mode": "basic",
-                                            "type": "color-background"
-                                        }
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 100
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Audio"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "mappings",
-                                        "value": [
-                                            {
-                                                "options": {
-                                                    "0": {
-                                                        "color": "yellow",
-                                                        "text": "Transcoding"
-                                                    },
-                                                    "1": {
-                                                        "color": "green",
-                                                        "text": "Direct"
-                                                    }
-                                                },
-                                                "type": "value"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "custom.cellOptions",
-                                        "value": {
-                                            "mode": "basic",
-                                            "type": "color-background"
-                                        }
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 100
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 5,
-                        "w": 24,
-                        "x": 0,
-                        "y": 35
-                    },
-                    "id": 14,
-                    "options": {
-                        "cellHeight": "sm",
-                        "footer": {
-                            "countRows": false,
-                            "enablePagination": false,
-                            "fields": "",
-                            "reducer": [
-                                "sum"
-                            ],
-                            "show": false
-                        },
-                        "showHeader": true
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (session_id, username, device, title, series_title, series_season, series_episode, video_codec, audio_codec, hardware_acceleration) (jellyfin_transcoding_session_info{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "info"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (session_id) (jellyfin_transcoding_session_video_direct{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "video"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (session_id) (jellyfin_transcoding_session_audio_direct{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "audio"
-                        }
-                    ],
-                    "title": "Transcoding Sessions",
-                    "transformations": [
-                        {
-                            "id": "merge",
-                            "options": {}
-                        },
-                        {
-                            "id": "organize",
-                            "options": {
-                                "excludeByName": {
-                                    "Time": true,
-                                    "Time 1": true,
-                                    "Time 2": true,
-                                    "Time 3": true,
-                                    "session_id": true,
-                                    "Value #info": true
-                                },
-                                "renameByName": {
-                                    "username": "User",
-                                    "device": "Device",
-                                    "title": "Title",
-                                    "series_title": "Series",
-                                    "series_season": "Season",
-                                    "series_episode": "Episode",
-                                    "video_codec": "Video Codec",
-                                    "audio_codec": "Audio Codec",
-                                    "hardware_acceleration": "HW Accel",
-                                    "Value #video": "Video",
-                                    "Value #audio": "Audio"
-                                },
-                                "indexByName": {
-                                    "username": 0,
-                                    "device": 1,
-                                    "title": 2,
-                                    "series_title": 3,
-                                    "series_season": 4,
-                                    "series_episode": 5,
-                                    "video_codec": 6,
-                                    "audio_codec": 7,
-                                    "hardware_acceleration": 8,
-                                    "Value #video": 9,
-                                    "Value #audio": 10
-                                }
-                            }
-                        }
-                    ],
-                    "type": "table"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Transcode reasons for each active session.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "auto",
-                                "cellOptions": {
-                                    "type": "auto"
-                                },
-                                "filterable": false,
-                                "inspect": false
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Reason"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "custom.cellOptions",
-                                        "value": {
-                                            "mode": "basic",
-                                            "type": "color-background"
-                                        }
-                                    },
-                                    {
-                                        "id": "color",
-                                        "value": {
-                                            "fixedColor": "orange",
-                                            "mode": "fixed"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 5,
-                        "w": 12,
-                        "x": 0,
-                        "y": 40
-                    },
-                    "id": 16,
-                    "options": {
-                        "cellHeight": "sm",
-                        "footer": {
-                            "countRows": false,
-                            "enablePagination": false,
-                            "fields": "",
-                            "reducer": [
-                                "sum"
-                            ],
-                            "show": false
-                        },
-                        "showHeader": true
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "label_join(\n  max by (session_id, reason) (jellyfin_transcoding_session_reason{instance=~\"$instance\"})\n  * on (session_id) group_left(username, title)\n  max by (session_id, username, title) (jellyfin_transcoding_session_info{instance=~\"$instance\"}),\n  \"session\", \" - \", \"username\", \"title\"\n)",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "A"
-                        }
-                    ],
-                    "title": "Transcode Reasons",
-                    "transformations": [
-                        {
-                            "id": "organize",
-                            "options": {
-                                "excludeByName": {
-                                    "Time": true,
-                                    "Value": true,
-                                    "session_id": true,
-                                    "username": true,
-                                    "title": true
-                                },
-                                "renameByName": {
-                                    "session": "Session",
-                                    "reason": "Reason"
-                                },
-                                "indexByName": {
-                                    "session": 0,
-                                    "reason": 1
-                                }
-                            }
-                        }
-                    ],
-                    "type": "table"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Transcoding bitrate over time per session.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "axisBorderShow": false,
-                                "axisCenteredZero": false,
-                                "axisLabel": "",
-                                "axisPlacement": "auto",
-                                "barAlignment": 0,
-                                "drawStyle": "line",
-                                "fillOpacity": 20,
-                                "gradientMode": "scheme",
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                },
-                                "lineInterpolation": "smooth",
-                                "lineWidth": 2,
-                                "pointSize": 5,
-                                "showPoints": "never",
-                                "spanNulls": false,
-                                "stacking": {
-                                    "group": "A",
-                                    "mode": "none"
-                                },
-                                "thresholdsStyle": {
-                                    "mode": "off"
-                                }
-                            },
-                            "unit": "bitsps",
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 5,
-                        "w": 12,
-                        "x": 12,
-                        "y": 40
-                    },
-                    "id": 15,
-                    "options": {
-                        "legend": {
-                            "calcs": [
-                                "mean",
-                                "max"
-                            ],
-                            "displayMode": "table",
-                            "placement": "bottom",
-                            "showLegend": true
-                        },
-                        "tooltip": {
-                            "mode": "multi",
-                            "sort": "desc"
-                        }
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "label_join(\n  jellyfin_transcoding_session_bitrate_bits_per_second{instance=~\"$instance\"}\n  * on (session_id) group_left(username, title)\n  max by (session_id, username, title) (jellyfin_transcoding_session_info{instance=~\"$instance\"}),\n  \"display\", \" - \", \"username\", \"title\"\n)",
-                            "legendFormat": "{{display}}",
-                            "refId": "A"
-                        }
-                    ],
-                    "title": "Transcoding Bitrate",
-                    "type": "timeseries"
-                }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
             ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
         },
-        {
-            "collapsed": true,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 35
-            },
-            "id": 105,
-            "title": "Activity",
-            "type": "row",
-            "panels": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "auto",
-                                "cellOptions": {
-                                    "type": "auto"
-                                },
-                                "filterable": true,
-                                "inspect": false
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Total Plays"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "custom.width",
-                                        "value": 100
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 8,
-                        "w": 24,
-                        "x": 0,
-                        "y": 36
-                    },
-                    "id": 17,
-                    "options": {
-                        "cellHeight": "sm",
-                        "footer": {
-                            "countRows": false,
-                            "enablePagination": false,
-                            "fields": "",
-                            "reducer": [
-                                "sum"
-                            ],
-                            "show": false
-                        },
-                        "showHeader": true,
-                        "sortBy": [
-                            {
-                                "desc": true,
-                                "displayName": "Total Plays"
-                            }
-                        ]
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "expr": "jellyfin_activity_count{instance=~\"$instance\"}",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "A"
-                        }
-                    ],
-                    "title": "Playback Activity",
-                    "transformations": [
-                        {
-                            "id": "organize",
-                            "options": {
-                                "excludeByName": {
-                                    "Time": true,
-                                    "__name__": true,
-                                    "instance": true,
-                                    "job": true,
-                                    "user_id": true
-                                },
-                                "renameByName": {
-                                    "Value": "Total Plays",
-                                    "last_seen": "Last Seen",
-                                    "total_play_time": "Total Play Time",
-                                    "username": "Username"
-                                },
-                                "indexByName": {
-                                    "username": 0,
-                                    "last_seen": 1,
-                                    "total_play_time": 2,
-                                    "Value": 3
-                                }
-                            }
-                        }
-                    ],
-                    "type": "table"
-                }
-            ]
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
         },
+        "textMode": "value"
+      },
+      "targets": [
         {
-            "collapsed": true,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 36
-            },
-            "id": 106,
-            "title": "Storage",
-            "type": "row",
-            "panels": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Total storage capacity per location. Libraries sharing the same underlying disk are merged into one entry.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "blue",
-                                        "value": null
-                                    }
-                                ]
-                            },
-                            "unit": "bytes"
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 4,
-                        "w": 24,
-                        "x": 0,
-                        "y": 37
-                    },
-                    "id": 24,
-                    "options": {
-                        "colorMode": "background_solid",
-                        "graphMode": "none",
-                        "justifyMode": "center",
-                        "reduceOptions": {
-                            "calcs": [
-                                "lastNotNull"
-                            ],
-                            "fields": "",
-                            "values": false
-                        },
-                        "textMode": "value_and_name"
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "(jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"} + jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n  + max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "legendFormat": "{{name}} ({{location}})",
-                            "instant": true,
-                            "refId": "A"
-                        }
-                    ],
-                    "title": "Total Storage",
-                    "type": "stat"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Percentage of storage used per location. Libraries sharing the same disk are merged.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "max": 100,
-                            "min": 0,
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    },
-                                    {
-                                        "color": "yellow",
-                                        "value": 70
-                                    },
-                                    {
-                                        "color": "orange",
-                                        "value": 85
-                                    },
-                                    {
-                                        "color": "red",
-                                        "value": 95
-                                    }
-                                ]
-                            },
-                            "unit": "percent"
-                        },
-                        "overrides": []
-                    },
-                    "gridPos": {
-                        "h": 8,
-                        "w": 12,
-                        "x": 0,
-                        "y": 41
-                    },
-                    "id": 18,
-                    "options": {
-                        "displayMode": "gradient",
-                        "maxVizHeight": 50,
-                        "minVizHeight": 16,
-                        "minVizWidth": 75,
-                        "namePlacement": "auto",
-                        "orientation": "horizontal",
-                        "reduceOptions": {
-                            "calcs": [
-                                "lastNotNull"
-                            ],
-                            "fields": "",
-                            "values": false
-                        },
-                        "showUnfilled": true,
-                        "sizing": "auto",
-                        "valueMode": "color"
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "100 * jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"}\n/ (jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"} + jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  100 * max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n  / (\n    max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n    + max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"})\n  ),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "legendFormat": "{{name}} ({{location}})",
-                            "refId": "A"
-                        }
-                    ],
-                    "title": "Storage Usage %",
-                    "type": "bargauge"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Storage breakdown per location. Libraries sharing the same disk are merged into one row.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "auto",
-                                "cellOptions": {
-                                    "type": "auto"
-                                },
-                                "filterable": true,
-                                "inspect": false
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Used"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "bytes"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 120
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Free"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "bytes"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 120
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Total"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "bytes"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 120
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Total"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "bytes"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 120
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 8,
-                        "w": 12,
-                        "x": 12,
-                        "y": 41
-                    },
-                    "id": 19,
-                    "options": {
-                        "cellHeight": "sm",
-                        "footer": {
-                            "countRows": false,
-                            "enablePagination": false,
-                            "fields": [
-                                "Used",
-                                "Free",
-                                "Total"
-                            ],
-                            "reducer": [
-                                "sum"
-                            ],
-                            "show": true
-                        },
-                        "showHeader": true,
-                        "sortBy": [
-                            {
-                                "desc": true,
-                                "displayName": "Used"
-                            }
-                        ]
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (name, location) (jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "used"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (name, location) (jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "free"
-                        }
-                    ],
-                    "title": "Storage Details",
-                    "transformations": [
-                        {
-                            "id": "merge",
-                            "options": {}
-                        },
-                        {
-                            "id": "calculateField",
-                            "options": {
-                                "alias": "Total",
-                                "binary": {
-                                    "left": "Value #used",
-                                    "operator": "+",
-                                    "right": "Value #free"
-                                },
-                                "mode": "binary"
-                            }
-                        },
-                        {
-                            "id": "organize",
-                            "options": {
-                                "excludeByName": {
-                                    "Time": true,
-                                    "Time 1": true,
-                                    "Time 2": true,
-                                    "__name__": true,
-                                    "instance": true,
-                                    "job": true
-                                },
-                                "renameByName": {
-                                    "Value #used": "Used",
-                                    "Value #free": "Free",
-                                    "location": "Location",
-                                    "name": "Name"
-                                },
-                                "indexByName": {
-                                    "name": 0,
-                                    "location": 1,
-                                    "Value #used": 2,
-                                    "Value #free": 3,
-                                    "Total": 4
-                                }
-                            }
-                        }
-                    ],
-                    "type": "table"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "description": "Library storage usage over time. Libraries on the same disk are merged. Stacked area shows used vs free.",
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "palette-classic"
-                            },
-                            "custom": {
-                                "axisBorderShow": false,
-                                "axisCenteredZero": false,
-                                "axisLabel": "",
-                                "axisPlacement": "auto",
-                                "barAlignment": 0,
-                                "drawStyle": "line",
-                                "fillOpacity": 30,
-                                "gradientMode": "scheme",
-                                "hideFrom": {
-                                    "legend": false,
-                                    "tooltip": false,
-                                    "viz": false
-                                },
-                                "lineInterpolation": "smooth",
-                                "lineWidth": 1,
-                                "pointSize": 5,
-                                "showPoints": "never",
-                                "spanNulls": false,
-                                "stacking": {
-                                    "group": "A",
-                                    "mode": "normal"
-                                },
-                                "thresholdsStyle": {
-                                    "mode": "off"
-                                }
-                            },
-                            "unit": "bytes",
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byRegexp",
-                                    "options": ".*Used"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "color",
-                                        "value": {
-                                            "fixedColor": "orange",
-                                            "mode": "fixed"
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byRegexp",
-                                    "options": ".*Free"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "color",
-                                        "value": {
-                                            "fixedColor": "green",
-                                            "mode": "fixed"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 8,
-                        "w": 24,
-                        "x": 0,
-                        "y": 49
-                    },
-                    "id": 20,
-                    "options": {
-                        "legend": {
-                            "calcs": [
-                                "lastNotNull"
-                            ],
-                            "displayMode": "table",
-                            "placement": "right",
-                            "showLegend": true
-                        },
-                        "tooltip": {
-                            "mode": "multi",
-                            "sort": "desc"
-                        }
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "label_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "legendFormat": "{{name}} - Used",
-                            "refId": "A"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "label_replace(\n  max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
-                            "legendFormat": "{{name}} - Free",
-                            "refId": "B"
-                        }
-                    ],
-                    "title": "Library Storage Over Time",
-                    "type": "timeseries"
-                }
-            ]
-        },
-        {
-            "collapsed": true,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 37
-            },
-            "id": 107,
-            "title": "Scheduled Tasks",
-            "type": "row",
-            "panels": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "fieldConfig": {
-                        "defaults": {
-                            "color": {
-                                "mode": "thresholds"
-                            },
-                            "custom": {
-                                "align": "auto",
-                                "cellOptions": {
-                                    "type": "auto"
-                                },
-                                "filterable": true,
-                                "inspect": false
-                            },
-                            "thresholds": {
-                                "mode": "absolute",
-                                "steps": [
-                                    {
-                                        "color": "green",
-                                        "value": null
-                                    }
-                                ]
-                            }
-                        },
-                        "overrides": [
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Running"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "mappings",
-                                        "value": [
-                                            {
-                                                "options": {
-                                                    "0": {
-                                                        "text": "Idle"
-                                                    },
-                                                    "1": {
-                                                        "color": "green",
-                                                        "text": "Running"
-                                                    }
-                                                },
-                                                "type": "value"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "custom.cellOptions",
-                                        "value": {
-                                            "mode": "basic",
-                                            "type": "color-background"
-                                        }
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 90
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Last Status"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "mappings",
-                                        "value": [
-                                            {
-                                                "options": {
-                                                    "0": {
-                                                        "color": "red",
-                                                        "text": "Failed"
-                                                    },
-                                                    "1": {
-                                                        "color": "green",
-                                                        "text": "Completed"
-                                                    }
-                                                },
-                                                "type": "value"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "custom.cellOptions",
-                                        "value": {
-                                            "mode": "basic",
-                                            "type": "color-background"
-                                        }
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 100
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Duration"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "s"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 110
-                                    }
-                                ]
-                            },
-                            {
-                                "matcher": {
-                                    "id": "byName",
-                                    "options": "Progress"
-                                },
-                                "properties": [
-                                    {
-                                        "id": "unit",
-                                        "value": "percent"
-                                    },
-                                    {
-                                        "id": "custom.width",
-                                        "value": 90
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "gridPos": {
-                        "h": 10,
-                        "w": 24,
-                        "x": 0,
-                        "y": 38
-                    },
-                    "id": 21,
-                    "options": {
-                        "cellHeight": "sm",
-                        "footer": {
-                            "countRows": false,
-                            "enablePagination": false,
-                            "fields": "",
-                            "reducer": [
-                                "sum"
-                            ],
-                            "show": false
-                        },
-                        "showHeader": true,
-                        "sortBy": [
-                            {
-                                "desc": false,
-                                "displayName": "Category"
-                            }
-                        ]
-                    },
-                    "targets": [
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (task_name, category, state) (jellyfin_tasks_state{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "state"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (task_name, category) (jellyfin_tasks_progress{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "progress"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (task_name, category) (jellyfin_tasks_last_run_seconds{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "duration"
-                        },
-                        {
-                            "datasource": {
-                                "type": "prometheus"
-                            },
-                            "editorMode": "code",
-                            "expr": "max by (task_name, category, status) (jellyfin_tasks_last_run_status{instance=~\"$instance\"})",
-                            "format": "table",
-                            "instant": true,
-                            "refId": "status"
-                        }
-                    ],
-                    "title": "Scheduled Tasks",
-                    "transformations": [
-                        {
-                            "id": "merge",
-                            "options": {}
-                        },
-                        {
-                            "id": "organize",
-                            "options": {
-                                "excludeByName": {
-                                    "Time": true,
-                                    "Time 1": true,
-                                    "Time 2": true,
-                                    "Time 3": true,
-                                    "Time 4": true,
-                                    "__name__": true,
-                                    "instance": true,
-                                    "job": true,
-                                    "state": true,
-                                    "status": true
-                                },
-                                "renameByName": {
-                                    "Value #state": "Running",
-                                    "Value #progress": "Progress",
-                                    "Value #duration": "Duration",
-                                    "Value #status": "Last Status",
-                                    "category": "Category",
-                                    "task_name": "Task"
-                                },
-                                "indexByName": {
-                                    "category": 0,
-                                    "task_name": 1,
-                                    "Value #state": 2,
-                                    "Value #progress": 3,
-                                    "Value #duration": 4,
-                                    "Value #status": 5
-                                }
-                            }
-                        }
-                    ],
-                    "type": "table"
-                }
-            ]
-        },
-        {
-            "collapsed": false,
-            "gridPos": {
-                "h": 1,
-                "w": 24,
-                "x": 0,
-                "y": 38
-            },
-            "id": 108,
-            "title": "Scrape Performance",
-            "type": "row"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "palette-classic"
-                    },
-                    "custom": {
-                        "axisBorderShow": false,
-                        "axisCenteredZero": false,
-                        "axisLabel": "",
-                        "axisPlacement": "auto",
-                        "barAlignment": 0,
-                        "drawStyle": "line",
-                        "fillOpacity": 15,
-                        "gradientMode": "scheme",
-                        "hideFrom": {
-                            "legend": false,
-                            "tooltip": false,
-                            "viz": false
-                        },
-                        "lineInterpolation": "smooth",
-                        "lineWidth": 2,
-                        "pointSize": 5,
-                        "showPoints": "never",
-                        "spanNulls": false,
-                        "stacking": {
-                            "group": "A",
-                            "mode": "none"
-                        },
-                        "thresholdsStyle": {
-                            "mode": "off"
-                        }
-                    },
-                    "unit": "s",
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "green",
-                                "value": null
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 7,
-                "w": 12,
-                "x": 0,
-                "y": 39
-            },
-            "id": 22,
-            "options": {
-                "legend": {
-                    "calcs": [
-                        "mean",
-                        "max"
-                    ],
-                    "displayMode": "table",
-                    "placement": "bottom",
-                    "showLegend": true
-                },
-                "tooltip": {
-                    "mode": "multi",
-                    "sort": "desc"
-                }
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_scrape_collector_duration_seconds{instance=~\"$instance\"}",
-                    "legendFormat": "{{collector}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Collector Scrape Duration",
-            "type": "timeseries"
-        },
-        {
-            "datasource": {
-                "type": "prometheus"
-            },
-            "fieldConfig": {
-                "defaults": {
-                    "color": {
-                        "mode": "thresholds"
-                    },
-                    "mappings": [
-                        {
-                            "options": {
-                                "0": {
-                                    "color": "red",
-                                    "text": "Fail"
-                                },
-                                "1": {
-                                    "color": "green",
-                                    "text": "OK"
-                                }
-                            },
-                            "type": "value"
-                        }
-                    ],
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": [
-                            {
-                                "color": "red",
-                                "value": null
-                            },
-                            {
-                                "color": "green",
-                                "value": 1
-                            }
-                        ]
-                    }
-                },
-                "overrides": []
-            },
-            "gridPos": {
-                "h": 7,
-                "w": 12,
-                "x": 12,
-                "y": 39
-            },
-            "id": 23,
-            "options": {
-                "colorMode": "background",
-                "graphMode": "none",
-                "justifyMode": "center",
-                "reduceOptions": {
-                    "calcs": [
-                        "lastNotNull"
-                    ],
-                    "fields": "",
-                    "values": false
-                },
-                "textMode": "auto"
-            },
-            "targets": [
-                {
-                    "datasource": {
-                        "type": "prometheus"
-                    },
-                    "expr": "jellyfin_scrape_collector_success{instance=~\"$instance\"}",
-                    "legendFormat": "{{collector}}",
-                    "refId": "A"
-                }
-            ],
-            "title": "Collector Status",
-            "type": "stat"
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_up{instance=~\"$instance\"}",
+          "legendFormat": "",
+          "refId": "A"
         }
-    ],
-    "preload": false,
-    "schemaVersion": 42,
-    "tags": [
-        "jellyfin",
-        "media",
-        "prometheus"
-    ],
-    "templating": {
-        "list": [
+      ],
+      "title": "Jellyfin Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "text"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 3,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_system_info{instance=~\"$instance\"}",
+          "instant": true,
+          "legendFormat": "{{server_name}} ({{version}})",
+          "refId": "A"
+        }
+      ],
+      "title": "Server",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
             {
-                "allValue": ".*",
-                "current": {
-                    "selected": false,
-                    "text": "All",
-                    "value": "$__all"
+              "options": {
+                "0": {
+                  "color": "green",
+                  "text": "No"
                 },
-                "datasource": {
-                    "type": "prometheus"
-                },
-                "definition": "label_values(jellyfin_up, instance)",
-                "hide": 0,
-                "includeAll": true,
-                "label": "Instance",
-                "multi": false,
-                "name": "instance",
-                "options": [],
-                "query": {
-                    "qryType": 1,
-                    "query": "label_values(jellyfin_up, instance)",
-                    "refId": "PrometheusVariableQueryEditor-VariableQuery"
-                },
-                "refresh": 2,
-                "regex": "",
-                "skipUrlSync": false,
-                "sort": 1,
-                "type": "query"
+                "1": {
+                  "color": "orange",
+                  "text": "Yes"
+                }
+              },
+              "type": "value"
             }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 10,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_system_pending_restart{instance=~\"$instance\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Pending Restart",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 13,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "count(jellyfin_now_playing_state{instance=~\"$instance\"}) or vector(0)",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Active Streams",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "text": "None"
+                },
+                "1": {
+                  "color": "yellow",
+                  "text": "Active"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              }
+            ]
+          },
+          "color": {
+            "mode": "thresholds"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 16,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_transcoding_sessions{instance=~\"$instance\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Transcoding",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 19,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "count(jellyfin_user_active{instance=~\"$instance\"}) or vector(0)",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Connected Users",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "description": "Timeline of active playback sessions. Gaps indicate paused or stopped playback.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "1": {
+                  "color": "green",
+                  "text": "Playing"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 10,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "sum by (user_device, item_index_clean, type) (\n  label_replace(\n    label_join(\n      label_join(\n        label_join(\n          jellyfin_now_playing_state{instance=~\"$instance\"} == 1,\n          \"item_index\",\n          \" \",\n          \"series_season\",\n          \"series_episode\"\n        ),\n        \"full_name\",\n        \" - \",\n        \"series_title\",\n        \"item_index\",\n        \"title\"\n      ),\n      \"user_device\",\n      \" - \",\n      \"username\",\n      \"device\"\n    ),\n    \"item_index_clean\",\n    \"$1\",\n    \"full_name\",\n    \"^[- ]*(.*?)[- ]*$\"\n  )\n)\n",
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Now Playing",
+      "transformations": [
+        {
+          "id": "seriesToRows",
+          "options": {}
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "keepTime": false,
+            "replace": false,
+            "source": "Metric"
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNotNull",
+                  "options": {}
+                },
+                "fieldName": "user_device"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Item",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["item_index_clean"],
+              "reducer": "lastNotNull"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Name",
+            "mode": "reduceRow",
+            "reduce": {
+              "include": ["user_device"],
+              "reducer": "lastNotNull"
+            }
+          }
+        },
+        {
+          "id": "partitionByValues",
+          "options": {
+            "fields": ["Name"],
+            "keepFields": true
+          }
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "item_index_clean|Time (.*)"
+            }
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "item_index_clean (.*)",
+            "renamePattern": "$1"
+          }
+        }
+      ],
+      "type": "state-timeline"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 103,
+      "title": "Users",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "text": "Disabled"
+                      },
+                      "1": {
+                        "color": "green",
+                        "text": "Active"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 90
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Admin"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "text": "No"
+                      },
+                      "1": {
+                        "color": "blue",
+                        "text": "Yes"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.width",
+                "value": 70
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Last Access"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
         ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "id": 12,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Last Access"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_user_account{instance=~\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "User Accounts",
+      "transformations": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "destinationType": "number",
+                "targetField": "last_access"
+              }
+            ]
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "last_access_ms",
+            "binary": {
+              "left": "last_access",
+              "operator": "*",
+              "right": "1000"
+            },
+            "mode": "binary"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "instance": true,
+              "job": true,
+              "user_id": true,
+              "last_access": true
+            },
+            "renameByName": {
+              "Value": "Status",
+              "admin": "Admin",
+              "last_access_ms": "Last Access",
+              "username": "Username"
+            },
+            "indexByName": {
+              "username": 0,
+              "admin": 1,
+              "last_access_ms": 2,
+              "Value": 3
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
-    "time": {
-        "from": "now/d",
-        "to": "now"
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "inspect": false
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 13,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "enablePagination": false,
+          "fields": "",
+          "reducer": ["sum"],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_user_active{instance=~\"$instance\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Active Sessions",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": true,
+              "__name__": true,
+              "instance": true,
+              "job": true,
+              "user_id": true
+            },
+            "renameByName": {
+              "client": "Client",
+              "client_version": "Version",
+              "device": "Device",
+              "ip_address": "IP Address",
+              "username": "Username"
+            },
+            "indexByName": {
+              "username": 0,
+              "device": 1,
+              "client": 2,
+              "client_version": 3,
+              "ip_address": 4
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
-    "timepicker": {},
-    "timezone": "browser",
-    "title": "Jellyfin",
-    "uid": "jellyfin",
-    "version": 0
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 104,
+      "title": "Transcoding",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Active transcoding sessions with playback and codec details.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": false,
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Video"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "yellow",
+                            "text": "Transcoding"
+                          },
+                          "1": {
+                            "color": "green",
+                            "text": "Direct"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Audio"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "yellow",
+                            "text": "Transcoding"
+                          },
+                          "1": {
+                            "color": "green",
+                            "text": "Direct"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 35
+          },
+          "id": 14,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (session_id, username, device, title, series_title, series_season, series_episode, video_codec, audio_codec, hardware_acceleration) (jellyfin_transcoding_session_info{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "info"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (session_id) (jellyfin_transcoding_session_video_direct{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "video"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (session_id) (jellyfin_transcoding_session_audio_direct{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "audio"
+            }
+          ],
+          "title": "Transcoding Sessions",
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true,
+                  "session_id": true,
+                  "Value #info": true
+                },
+                "renameByName": {
+                  "username": "User",
+                  "device": "Device",
+                  "title": "Title",
+                  "series_title": "Series",
+                  "series_season": "Season",
+                  "series_episode": "Episode",
+                  "video_codec": "Video Codec",
+                  "audio_codec": "Audio Codec",
+                  "hardware_acceleration": "HW Accel",
+                  "Value #video": "Video",
+                  "Value #audio": "Audio"
+                },
+                "indexByName": {
+                  "username": 0,
+                  "device": 1,
+                  "title": 2,
+                  "series_title": 3,
+                  "series_season": 4,
+                  "series_episode": 5,
+                  "video_codec": 6,
+                  "audio_codec": 7,
+                  "hardware_acceleration": 8,
+                  "Value #video": 9,
+                  "Value #audio": 10
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Transcode reasons for each active session.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": false,
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Reason"
+                },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 0,
+            "y": 40
+          },
+          "id": 16,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "label_join(\n  max by (session_id, reason) (jellyfin_transcoding_session_reason{instance=~\"$instance\"})\n  * on (session_id) group_left(username, title)\n  max by (session_id, username, title) (jellyfin_transcoding_session_info{instance=~\"$instance\"}),\n  \"session\", \" - \", \"username\", \"title\"\n)",
+              "format": "table",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Transcode Reasons",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value": true,
+                  "session_id": true,
+                  "username": true,
+                  "title": true
+                },
+                "renameByName": {
+                  "session": "Session",
+                  "reason": "Reason"
+                },
+                "indexByName": {
+                  "session": 0,
+                  "reason": 1
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Transcoding bitrate over time per session.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 20,
+                "gradientMode": "scheme",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 2,
+                "pointSize": 5,
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "unit": "bitsps",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 12,
+            "x": 12,
+            "y": 40
+          },
+          "id": 15,
+          "options": {
+            "legend": {
+              "calcs": ["mean", "max"],
+              "displayMode": "table",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "label_join(\n  jellyfin_transcoding_session_bitrate_bits_per_second{instance=~\"$instance\"}\n  * on (session_id) group_left(username, title)\n  max by (session_id, username, title) (jellyfin_transcoding_session_info{instance=~\"$instance\"}),\n  \"display\", \" - \", \"username\", \"title\"\n)",
+              "legendFormat": "{{display}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Transcoding Bitrate",
+          "type": "timeseries"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "id": 105,
+      "title": "Activity",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total Plays"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 36
+          },
+          "id": 17,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Total Plays"
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "expr": "jellyfin_activity_count{instance=~\"$instance\"}",
+              "format": "table",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Playback Activity",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true,
+                  "instance": true,
+                  "job": true,
+                  "user_id": true
+                },
+                "renameByName": {
+                  "Value": "Total Plays",
+                  "last_seen": "Last Seen",
+                  "total_play_time": "Total Play Time",
+                  "username": "Username"
+                },
+                "indexByName": {
+                  "username": 0,
+                  "last_seen": 1,
+                  "total_play_time": 2,
+                  "Value": 3
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 106,
+      "title": "Storage",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Total storage capacity per location. Libraries sharing the same underlying disk are merged into one entry.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "bytes"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 24,
+            "x": 0,
+            "y": 37
+          },
+          "id": 24,
+          "options": {
+            "colorMode": "background_solid",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "reduceOptions": {
+              "calcs": ["lastNotNull"],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "(jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"} + jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n  + max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "legendFormat": "{{name}} ({{location}})",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "title": "Total Storage",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Percentage of storage used per location. Libraries sharing the same disk are merged.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "max": 100,
+              "min": 0,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 70
+                  },
+                  {
+                    "color": "orange",
+                    "value": 85
+                  },
+                  {
+                    "color": "red",
+                    "value": 95
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 41
+          },
+          "id": 18,
+          "options": {
+            "displayMode": "gradient",
+            "maxVizHeight": 50,
+            "minVizHeight": 16,
+            "minVizWidth": 75,
+            "namePlacement": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": ["lastNotNull"],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true,
+            "sizing": "auto",
+            "valueMode": "color"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "100 * jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"}\n/ (jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"} + jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  100 * max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n  / (\n    max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"})\n    + max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"})\n  ),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "legendFormat": "{{name}} ({{location}})",
+              "refId": "A"
+            }
+          ],
+          "title": "Storage Usage %",
+          "type": "bargauge"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Storage breakdown per location. Libraries sharing the same disk are merged into one row.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Used"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Free"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 120
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 41
+          },
+          "id": 19,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": ["Used", "Free", "Total"],
+              "reducer": ["sum"],
+              "show": true
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Used"
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (name, location) (jellyfin_storage_used_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "format": "table",
+              "instant": true,
+              "refId": "used"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (name, location) (jellyfin_storage_free_bytes{instance=~\"$instance\",location!=\"library\"})\nor\nlabel_replace(\n  max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "format": "table",
+              "instant": true,
+              "refId": "free"
+            }
+          ],
+          "title": "Storage Details",
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "Total",
+                "binary": {
+                  "left": "Value #used",
+                  "operator": "+",
+                  "right": "Value #free"
+                },
+                "mode": "binary"
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Time 1": true,
+                  "Time 2": true,
+                  "__name__": true,
+                  "instance": true,
+                  "job": true
+                },
+                "renameByName": {
+                  "Value #used": "Used",
+                  "Value #free": "Free",
+                  "location": "Location",
+                  "name": "Name"
+                },
+                "indexByName": {
+                  "name": 0,
+                  "location": 1,
+                  "Value #used": 2,
+                  "Value #free": 3,
+                  "Total": 4
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "description": "Library storage usage over time. Libraries on the same disk are merged. Stacked area shows used vs free.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 30,
+                "gradientMode": "scheme",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "unit": "bytes",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Used"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": ".*Free"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 49
+          },
+          "id": 20,
+          "options": {
+            "legend": {
+              "calcs": ["lastNotNull"],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "label_replace(\n  max without (name) (jellyfin_storage_used_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "legendFormat": "{{name}} - Used",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "label_replace(\n  max without (name) (jellyfin_storage_free_bytes{instance=~\"$instance\",location=\"library\"}),\n  \"name\", \"Libraries\", \"\", \"\"\n)",
+              "legendFormat": "{{name}} - Free",
+              "refId": "B"
+            }
+          ],
+          "title": "Library Storage Over Time",
+          "type": "timeseries"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 107,
+      "title": "Scheduled Tasks",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": "auto",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "filterable": true,
+                "inspect": false
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Running"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "text": "Idle"
+                          },
+                          "1": {
+                            "color": "green",
+                            "text": "Running"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 90
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Last Status"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "0": {
+                            "color": "red",
+                            "text": "Failed"
+                          },
+                          "1": {
+                            "color": "green",
+                            "text": "Completed"
+                          }
+                        },
+                        "type": "value"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "mode": "basic",
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Duration"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 110
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Progress"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "percent"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 90
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 38
+          },
+          "id": 21,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "enablePagination": false,
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "Category"
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (task_name, category, state) (jellyfin_tasks_state{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "state"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (task_name, category) (jellyfin_tasks_progress{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "progress"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (task_name, category) (jellyfin_tasks_last_run_seconds{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "duration"
+            },
+            {
+              "datasource": {
+                "type": "prometheus"
+              },
+              "editorMode": "code",
+              "expr": "max by (task_name, category, status) (jellyfin_tasks_last_run_status{instance=~\"$instance\"})",
+              "format": "table",
+              "instant": true,
+              "refId": "status"
+            }
+          ],
+          "title": "Scheduled Tasks",
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Time 1": true,
+                  "Time 2": true,
+                  "Time 3": true,
+                  "Time 4": true,
+                  "__name__": true,
+                  "instance": true,
+                  "job": true,
+                  "state": true,
+                  "status": true
+                },
+                "renameByName": {
+                  "Value #state": "Running",
+                  "Value #progress": "Progress",
+                  "Value #duration": "Duration",
+                  "Value #status": "Last Status",
+                  "category": "Category",
+                  "task_name": "Task"
+                },
+                "indexByName": {
+                  "category": 0,
+                  "task_name": 1,
+                  "Value #state": 2,
+                  "Value #progress": 3,
+                  "Value #duration": 4,
+                  "Value #status": 5
+                }
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 38
+      },
+      "id": 108,
+      "title": "Scrape Performance",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 39
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_scrape_collector_duration_seconds{instance=~\"$instance\"}",
+          "legendFormat": "{{collector}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Collector Scrape Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "text": "Fail"
+                },
+                "1": {
+                  "color": "green",
+                  "text": "OK"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 39
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "expr": "jellyfin_scrape_collector_success{instance=~\"$instance\"}",
+          "legendFormat": "{{collector}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Collector Status",
+      "type": "stat"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": ["jellyfin", "media", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus"
+        },
+        "definition": "label_values(jellyfin_up, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(jellyfin_up, instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Jellyfin",
+  "uid": "jellyfin",
+  "version": 0
 }
