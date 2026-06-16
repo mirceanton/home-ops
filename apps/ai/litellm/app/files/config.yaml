@@ -28,7 +28,10 @@ model_list:
   - model_name: qwen3-embedding-0.6b
     litellm_params:
       model: openai/qwen3-embedding-0.6b
-      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080
+      # llama.cpp's bare /embeddings (no /v1) returns a non-OpenAI-compliant
+      # shape (a top-level list, nested embedding vectors) that breaks the
+      # openai SDK's response parsing. /v1/embeddings is the spec-compliant route.
+      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080/v1
       api_key: "N/A"
     model_info:
       mode: embedding

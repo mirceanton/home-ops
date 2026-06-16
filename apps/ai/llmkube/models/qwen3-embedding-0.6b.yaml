@@ -8,8 +8,12 @@ spec:
   format: gguf
   quantization: Q8_0
   hardware:
-    accelerator: cpu
-    gpu: { enabled: false }
+    accelerator: cuda
+    gpu:
+      enabled: true
+      count: 1
+      vendor: nvidia
+      layers: -1
 
 ---
 apiVersion: inference.llmkube.dev/v1alpha1
@@ -20,19 +24,26 @@ metadata:
     krr/ignore: "true"
 spec:
   modelRef: qwen3-embedding-0.6b
-  image: ghcr.io/ggml-org/llama.cpp:server
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda
   replicas: 1
   priority: batch
+  runtimeClassName: nvidia
   parallelSlots: 8
 
+  flashAttention: true
   contextSize: 32768
   uBatchSize: 2048
+  cacheTypeK: q8_0
+  cacheTypeV: q8_0
   extraArgs:
     - "--embeddings"
+    - "--no-mmap"
 
   resources:
-    cpu: 500m
-    memory: 1Gi
+    cpu: "10m"
+    memory: 2Gi
+    gpu: 1
+    gpuMemory: 2Gi
 
   endpoint:
     port: 8080
