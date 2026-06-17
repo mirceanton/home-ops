@@ -53,12 +53,12 @@ spec:
                     key: password
 
             probes:
-              startup: {enabled: false}
+              startup: { enabled: false }
               liveness:
                 enabled: true
                 custom: true
                 spec:
-                  tcpSocket: {port: 47989}
+                  tcpSocket: { port: 47989 }
                   initialDelaySeconds: 180
                   periodSeconds: 30
                   timeoutSeconds: 5
@@ -67,7 +67,7 @@ spec:
                 enabled: true
                 custom: true
                 spec:
-                  tcpSocket: {port: 47989}
+                  tcpSocket: { port: 47989 }
                   initialDelaySeconds: 60
                   periodSeconds: 15
                   timeoutSeconds: 5
