@@ -8,10 +8,8 @@ endpoints:
       apiKey: "$${LITELLM_MASTER_KEY}"
       baseURL: "http://litellm.ai.svc.cluster.local:4000/v1"
       models:
-        default: ["gemma-4-26b-a4b", "qwen-35b", "qwen3-0.6b"]
+        default: ["gemma-4-26b-a4b", "qwen-35b"]
         fetch: true
-      titleConvo: true
-      titleModel: "qwen3-0.6b"
       summarize: false
       temperature: 0.2
       modelSpecs:
@@ -19,8 +17,6 @@ endpoints:
           maxContextTokens: 262144
         - name: "qwen-35b"
           maxContextTokens: 262144
-        - name: "qwen3-0.6b"
-          maxContextTokens: 32768
 
 webSearch:
   searchProvider: searxng
