@@ -8,7 +8,7 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout

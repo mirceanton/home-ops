@@ -14,7 +14,7 @@ concurrency:
 jobs:
   test:
     name: Flate Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout
@@ -30,7 +30,7 @@ jobs:
 
   diff:
     name: Flate Diff
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout
