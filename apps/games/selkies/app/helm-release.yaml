@@ -53,12 +53,25 @@ spec:
                     key: password
 
             probes:
+              startup: {enabled: false}
               liveness:
-                enabled: false
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: {port: 47989}
+                  initialDelaySeconds: 180
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               readiness:
-                enabled: false
-              startup:
-                enabled: false
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: {port: 47989}
+                  initialDelaySeconds: 60
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 30
 
             resources:
               requests:
@@ -72,7 +85,7 @@ spec:
                 devic.es/uinput: "1"
 
             securityContext:
-              privileged: true
+              privileged: false
               capabilities:
                 add: [CAP_SYS_NICE]
 
@@ -83,6 +96,8 @@ spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       runtimeClassName: nvidia
+      # Give Steam time to flush saves / cloud sync on shutdown.
+      terminationGracePeriodSeconds: 60
       securityContext:
         seccompProfile:
           type: Unconfined
@@ -92,6 +107,19 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
 
     persistence:
+      sunshine-config:
+        type: configMap
+        name: selkies-sunshine-config
+        advancedMounts:
+          selkies:
+            app:
+              - path: /etc/sunshine/sunshine.conf
+                subPath: sunshine.conf
+                readOnly: true
+              - path: /etc/sunshine/apps.json
+                subPath: apps.json
+                readOnly: true
+
       home:
         existingClaim: ${APP}
         globalMounts:
@@ -129,15 +157,9 @@ spec:
           - path: /run/udev
             readOnly: true
 
-      sunshine-config:
-        type: configMap
-        name: selkies-sunshine-config
-        advancedMounts:
-          selkies:
-            app:
-              - path: /etc/sunshine/sunshine.conf
-                subPath: sunshine.conf
-                readOnly: true
-              - path: /etc/sunshine/apps.json
-                subPath: apps.json
-                readOnly: true
+      uhid:
+        type: hostPath
+        hostPath: /dev/uhid
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/uhid
