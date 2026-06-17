@@ -15,15 +15,12 @@ jobs:
   test:
     name: Flate Test
     runs-on: ubuntu-slim
-    container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
-      - name: Install dependencies
-        run: mise install
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Setup mise
+        uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
 
       - name: Run flate test
         run: mise exec -- flate test all --path ./apps | tee test
@@ -31,7 +28,6 @@ jobs:
   diff:
     name: Flate Diff
     runs-on: ubuntu-slim
-    container: ghcr.io/mirceanton/actions-runner:latest
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
@@ -39,10 +35,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Install dependencies
-        run: mise install
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Setup mise
+        uses: jdx/mise-action@dba19683ed58901619b14f395a24841710cb4925 # v4.1.0
 
       - name: Run flate diff
         id: diff
