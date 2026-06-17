@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/homeassistant-ai/ha-mcp
-              tag: 7.8.1@sha256:6a61538449d425e690dd23f00fb418b8575931426449a162fcf9f260e7014b00
+              tag: 7.8.1@sha256:8639b177d83bc27a74332ea83513e961fbe7e1a9504c945d979a9e0a914ffe69
             args: ["ha-mcp-web"]
             env:
               TZ: Europe/Bucharest
