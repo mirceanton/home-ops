@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/selkies-gaming
-              tag: 24.04-sunshine-2026.516.143833
+              tag: date-2026.06.17@sha256:8401c2f74971f1abbb81ac60f8642530efeed948636769054bdfdc3a118a031f
               # pullPolicy: Always
 
             env:
@@ -73,6 +73,8 @@ spec:
 
             securityContext:
               privileged: true
+              capabilities:
+                add: [CAP_SYS_NICE]
 
     defaultPodOptions:
       automountServiceAccountToken: false
@@ -88,20 +90,6 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-
-    service:
-      selkies:
-        type: ClusterIP
-        ports:
-          webrtc:
-            port: 8080
-
-    route:
-      home:
-        hostnames: ["selkies.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
 
     persistence:
       home:
