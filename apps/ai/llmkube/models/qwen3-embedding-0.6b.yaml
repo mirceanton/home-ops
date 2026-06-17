@@ -28,7 +28,7 @@ spec:
   replicas: 1
   priority: batch
   runtimeClassName: nvidia
-  parallelSlots: 8
+  parallelSlots: 4
 
   flashAttention: true
   contextSize: 32768
@@ -43,7 +43,7 @@ spec:
     cpu: "10m"
     memory: 2Gi
     gpu: 1
-    gpuMemory: 2Gi
+    gpuMemory: 3Gi
 
   endpoint:
     port: 8080
