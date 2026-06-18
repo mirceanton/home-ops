@@ -20,26 +20,8 @@ spec:
         containers:
           navidrome-mcp:
             image:
-              repository: ghcr.io/mirceanton/navidrome-mcp
-              tag: 2.1.0
-            args:
-              - npx
-              - supergateway
-              - --stdio
-              - navidrome-mcp
-              - --outputTransport
-              - streamableHttp
-              - --stateful
-              - --port
-              - "3000"
-              - --httpPath
-              - /mcp
-              - --healthEndpoint
-              - /healthz
-
-            env:
-              HOME: /tmp
-              NAVIDROME_CONFIG_PATH: /config/settings.json
+              repository: ghcr.io/mircea-pavel-anton/navidrome-mcp
+              tag: 2.2.1
 
             resources:
               requests:
@@ -80,18 +62,17 @@ spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        seccompProfile:
-          type: RuntimeDefault
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       navidrome-mcp:
         ports:
-          http:
-            port: 3000
+          http: { port: 3000 }
 
     persistence:
       config:
