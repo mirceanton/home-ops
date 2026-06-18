@@ -1,0 +1,68 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: grimmory-mariadb-restore
+spec:
+  suspend: true # Disabled - to be triggered manually when needed
+  schedule: "0 0 31 2 *" # February 31st = never runs
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+
+          containers:
+            - name: restore
+              image: docker.io/library/mariadb:12.3.2-noble
+              command: ["/bin/bash", "/scripts/restore.sh"]
+              env:
+                - name: APP_NAME
+                  value: grimmory
+                - name: BACKUP_DIR
+                  value: /backup/grimmory
+                - name: MARIADB_HOST
+                  value: grimmory-mariadb
+                - name: MARIADB_PORT
+                  value: "3306"
+                - name: MARIADB_USER
+                  value: root
+                - name: MARIADB_DATABASE
+                  value: grimmory
+                - name: MARIADB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: grimmory-secret
+                      key: mariadb_root_password
+
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: backup
+                  mountPath: /backup
+                  readOnly: true
+
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+
+          volumes:
+            - name: scripts
+              configMap:
+                name: grimmory-mariadb-scripts
+                defaultMode: 0755
+            - name: backup
+              nfs:
+                server: nas.stor.h.mirceanton.com
+                path: /mnt/tank/Backups/HomeOps

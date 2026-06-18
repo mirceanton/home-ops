@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grimmory-mariadb
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: grimmory-mariadb
+
+  values:
+    fullnameOverride: grimmory-mariadb
+
+    auth:
+      database: grimmory
+      username: grimmory
+      existingSecret: grimmory-secret
+      secretKeys:
+        rootPasswordKey: mariadb_root_password
+        userPasswordKey: mariadb_password
+
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+
+    persistence:
+      enabled: true
+      size: 4Gi
+
+    podSecurityContext:
+      fsGroup: 568
+
+    containerSecurityContext:
+      runAsUser: 568
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: false

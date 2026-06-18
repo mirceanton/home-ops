@@ -1,0 +1,66 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: grimmory-mariadb-backup
+spec:
+  schedule: "0 3 * * *" # Daily at 3 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+
+          containers:
+            - name: backup
+              image: docker.io/library/mariadb:12.3.2-noble
+              command: ["/bin/bash", "/scripts/backup.sh"]
+              env:
+                - name: APP_NAME
+                  value: grimmory
+                - name: BACKUP_DIR
+                  value: /backup/grimmory
+                - name: MARIADB_HOST
+                  value: grimmory-mariadb
+                - name: MARIADB_PORT
+                  value: "3306"
+                - name: MARIADB_USER
+                  value: root
+                - name: MARIADB_DATABASE
+                  value: grimmory
+                - name: MARIADB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: grimmory-secret
+                      key: mariadb_root_password
+
+              volumeMounts:
+                - name: scripts
+                  mountPath: /scripts
+                  readOnly: true
+                - name: backup
+                  mountPath: /backup
+
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
+                readOnlyRootFilesystem: true
+
+          volumes:
+            - name: scripts
+              configMap:
+                name: grimmory-mariadb-scripts
+                defaultMode: 0755
+            - name: backup
+              nfs:
+                server: nas.stor.h.mirceanton.com
+                path: /mnt/tank/Backups/HomeOps

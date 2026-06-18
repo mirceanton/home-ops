@@ -9,6 +9,7 @@ resources:
   - ./grafana-folder.yaml
   - ./booklore
   - ./feishin
+  - ./grimmory
   - ./immich
   - ./jellyfin
   - ./karakeep
