@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/selkies-gaming
-              tag: date-2026.06.17@sha256:8401c2f74971f1abbb81ac60f8642530efeed948636769054bdfdc3a118a031f
+              tag: date-2026.06.18@sha256:856d108373f00bc7a8dc988653c22f43a77464aa6a47cf84bb1d5d8189d2f39f
               # pullPolicy: Always
 
             env:
@@ -85,7 +85,7 @@ spec:
                 devic.es/uinput: "1"
 
             securityContext:
-              privileged: false
+              privileged: true
               capabilities:
                 add: [CAP_SYS_NICE]
 
