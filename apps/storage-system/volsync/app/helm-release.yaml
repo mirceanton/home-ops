@@ -21,14 +21,14 @@ spec:
         memory: 128Mi
       limits:
         cpu: null
-        memory: 256Mi
+        memory: 1Gi
     kube-rbac-proxy-resources:
       requests:
         cpu: 5m
         memory: 64Mi
       limits:
         cpu: null
-        memory: 96Mi
+        memory: 128Mi
 
     metrics:
       disableAuth: true
