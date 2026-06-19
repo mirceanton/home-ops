@@ -6,7 +6,7 @@ metadata:
   name: mirceanton
 spec:
   schedule: 15/30 * * * * # every 30 minutes
-  image: ghcr.io/renovatebot/renovate:43.233.0
+  image: ghcr.io/renovatebot/renovate:43.233.1
   parallelism: 5
 
   resources:
