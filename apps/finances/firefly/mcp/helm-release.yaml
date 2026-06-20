@@ -26,13 +26,6 @@ spec:
 
             env:
               FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
-              # Public OAuth client (no secret) registered solely to satisfy this
-              # image's startup check. The actual credential is a PAT, forwarded
-              # by litellm as a Bearer token — the OAuth flow is never exercised.
-              # Remove once daften/fireflyiii-mcp ships native PAT-only HTTP mode
-              # (https://github.com/daften/fireflyiii-mcp/pull/30).
-              FIREFLY_OAUTH_CLIENT_ID: "019ed106-79b5-7361-8613-765e72e38098"
-              MCP_BASE_URL: "http://firefly-mcp.finances.svc.cluster.local:3000"
 
             probes:
               liveness: &probe
