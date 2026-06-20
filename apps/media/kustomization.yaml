@@ -7,7 +7,6 @@ namespace: media
 resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
-  - ./booklore
   - ./feishin
   - ./grimmory
   - ./immich
