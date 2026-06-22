@@ -8,8 +8,14 @@ spec:
   format: gguf
   quantization: Q8_0
   hardware:
-    accelerator: cpu
-    gpu: { enabled: false }
+    accelerator: vulkan
+    gpu:
+      enabled: true
+      count: 1
+      vendor: amd
+      runtime: vulkan
+      layers: -1
+      resourceName: devic.es/dri-render
 
 ---
 apiVersion: inference.llmkube.dev/v1alpha1
@@ -20,11 +26,12 @@ metadata:
     krr/ignore: "true"
 spec:
   modelRef: qwen3-embedding-0.6b
-  image: ghcr.io/ggml-org/llama.cpp:server
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan
   replicas: 1
   priority: batch
-  parallelSlots: 8
+  parallelSlots: 2 # up to 2 concurrent sessions
 
+  flashAttention: true
   contextSize: 32768
   uBatchSize: 2048
   extraArgs:
@@ -33,6 +40,8 @@ spec:
   resources:
     cpu: 500m
     memory: 1Gi
+    gpu: 1
+    gpuMemory: 3Gi
 
   endpoint:
     port: 8080

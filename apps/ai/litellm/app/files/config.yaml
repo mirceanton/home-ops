@@ -17,21 +17,21 @@ model_list:
       api_base: http://gemma-4-26b-a4b-proxy.ai.svc.cluster.local:8080
       api_key: "N/A"
 
-  # - model_name: qwen3-0.6b
-  #   litellm_params:
-  #     model: openai/qwen3-0.6b
-  #     api_base: http://qwen3-0-6b.ai.svc.cluster.local:8080
-  #     api_key: "N/A"
-  #   model_info:
-  #     supports_response_schema: false
+  - model_name: qwen3-0.6b
+    litellm_params:
+      model: openai/qwen3-0.6b
+      api_base: http://qwen3-0-6b.ai.svc.cluster.local:8080
+      api_key: "N/A"
+    model_info:
+      supports_response_schema: false
 
-  # - model_name: qwen3-embedding-0.6b
-  #   litellm_params:
-  #     model: openai/qwen3-embedding-0.6b
-  #     api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080
-  #     api_key: "N/A"
-  #   model_info:
-  #     mode: embedding
+  - model_name: qwen3-embedding-0.6b
+    litellm_params:
+      model: openai/qwen3-embedding-0.6b
+      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080
+      api_key: "N/A"
+    model_info:
+      mode: embedding
 
 mcp_servers:
   github:
