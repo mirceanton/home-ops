@@ -31,7 +31,7 @@ spec:
           pre-status: &talosctl
             image:
               repository: ghcr.io/siderolabs/talosctl
-              tag: v1.13.4
+              tag: v1.13.5
             args:
               - --talosconfig=/var/run/secrets/talos.dev/config
               - --nodes=10.0.0.15
