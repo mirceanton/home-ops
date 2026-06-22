@@ -15,5 +15,13 @@
 
   "helmfile": {
     "managerFilePatterns": ["/helmfile\\.yaml$/"]
+  },
+
+  "mise": {
+    "postUpgradeTasks": {
+      "commands": ["mise install"],
+      "fileFilters": ["mise.lock"],
+      "executionMode": "branch"
+    }
   }
 }
