@@ -1,0 +1,114 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app umami
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: umami
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      umami:
+        replicas: 1
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: umami-postgres-app
+                    key: uri
+        containers:
+          app:
+            image:
+              repository: ghcr.io/umami-software/umami
+              tag: 3.1.0
+            env:
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: umami-postgres-app
+                    key: uri
+              APP_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: umami-keys
+                    key: APP_SECRET
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/heartbeat
+                    port: &port 3000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/heartbeat
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 30
+            resources:
+              requests:
+                cpu: 25m
+                memory: 150Mi
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: umami
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["analytics.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      next-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /app/.next/cache

@@ -3,12 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: renovate-operator
+  name: llmkube
 spec:
   interval: 15m
-  url: oci://ghcr.io/mogenius/helm-charts/renovate-operator
+  url: oci://ghcr.io/defilantech/charts/llmkube
   ref:
-    tag: 4.13.0
+    tag: 0.8.14
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip

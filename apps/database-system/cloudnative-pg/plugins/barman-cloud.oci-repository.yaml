@@ -3,12 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: renovate-operator
+  name: plugin-barman-cloud
 spec:
-  interval: 15m
-  url: oci://ghcr.io/mogenius/helm-charts/renovate-operator
+  interval: 1h
+  url: oci://ghcr.io/cloudnative-pg/charts/plugin-barman-cloud
   ref:
-    tag: 4.13.0
+    tag: 0.7.0
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip

@@ -3,12 +3,12 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: renovate-operator
+  name: umami
 spec:
   interval: 15m
-  url: oci://ghcr.io/mogenius/helm-charts/renovate-operator
+  url: oci://ghcr.io/bjw-s-labs/helm/app-template
   ref:
-    tag: 4.13.0
+    tag: 5.0.1
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip

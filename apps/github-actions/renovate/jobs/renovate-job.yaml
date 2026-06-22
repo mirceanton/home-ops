@@ -6,7 +6,7 @@ metadata:
   name: mirceanton
 spec:
   schedule: 15/30 * * * * # every 30 minutes
-  image: ghcr.io/renovatebot/renovate:43.231.2
+  image: ghcr.io/renovatebot/renovate:43.235.1
   parallelism: 5
 
   resources:
@@ -28,7 +28,7 @@ spec:
       value: debug
     - name: RENOVATE_ALLOWED_COMMANDS
       value: |-
-        ["pnpm run bundle"]
+        ["pnpm run bundle", "mise install"]
     - name: DOCKERHUB_USERNAME
       valueFrom:
         secretKeyRef:

@@ -45,7 +45,7 @@ spec:
           grimmory:
             image:
               repository: ghcr.io/grimmory-tools/grimmory
-              tag: v3.2.1
+              tag: v3.2.2
             env:
               USER_ID: "568"
               GROUP_ID: "568"

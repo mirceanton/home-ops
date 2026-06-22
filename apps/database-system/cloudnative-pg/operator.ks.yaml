@@ -10,7 +10,7 @@ spec:
   wait: true
   targetNamespace: database-system
 
-  path: ./apps/database-system/cloudnative-pg-operator/app
+  path: ./apps/database-system/cloudnative-pg/operator
   sourceRef:
     kind: GitRepository
     name: flux-system
