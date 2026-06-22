@@ -9,3 +9,4 @@ resources:
   - ./grafana-folder.yaml
   - ./cloudnative-pg-operator
   - ./dragonfly-operator
+  - ./plugin-barman-cloud
