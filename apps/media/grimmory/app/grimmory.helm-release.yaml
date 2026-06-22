@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: booklore
+  name: grimmory
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: booklore
+    name: grimmory
 
   dependsOn:
-    - name: booklore-mariadb
+    - name: grimmory-mariadb
 
   values:
     global:
@@ -21,7 +21,7 @@ spec:
       automountServiceAccountToken: false
 
     controllers:
-      booklore:
+      grimmory:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -33,16 +33,16 @@ spec:
             image:
               repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
-            args: ["mysql", "booklore:$(DB_PASSWORD)@tcp(booklore-mariadb:3306)/booklore"]
+            args: ["mysql", "grimmory:$(DB_PASSWORD)@tcp(grimmory-mariadb:3306)/grimmory"]
             env:
               DB_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: booklore-secret
+                    name: grimmory-secret
                     key: mariadb_password
 
         containers:
-          booklore:
+          grimmory:
             image:
               repository: ghcr.io/grimmory-tools/grimmory
               tag: v3.2.2
@@ -50,12 +50,12 @@ spec:
               USER_ID: "568"
               GROUP_ID: "568"
               DISK_TYPE: NETWORK
-              DATABASE_URL: jdbc:mariadb://booklore-mariadb:3306/booklore
-              DATABASE_USERNAME: booklore
+              DATABASE_URL: jdbc:mariadb://grimmory-mariadb:3306/grimmory
+              DATABASE_USERNAME: grimmory
               DATABASE_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: booklore-secret
+                    name: grimmory-secret
                     key: mariadb_password
             probes:
               liveness: &probe
@@ -91,7 +91,7 @@ spec:
 
     route:
       home:
-        hostnames: ["booklore.home.mirceanton.com", "books.home.mirceanton.com"]
+        hostnames: ["grimmory.home.mirceanton.com", "books.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
@@ -100,29 +100,29 @@ spec:
       data:
         existingClaim: ${APP}
         advancedMounts:
-          booklore:
-            booklore:
+          grimmory:
+            grimmory:
               - path: /app/data
       books:
         type: nfs
         server: nas.stor.h.mirceanton.com
         path: /mnt/tank/Media/Books
         advancedMounts:
-          booklore:
-            booklore:
+          grimmory:
+            grimmory:
               - path: /books
 
       bookdrop:
         type: emptyDir
         advancedMounts:
-          booklore:
-            booklore:
+          grimmory:
+            grimmory:
               - path: /bookdrop
       tmpfs:
         type: emptyDir
         medium: Memory
         sizeLimit: 100Mi
         advancedMounts:
-          booklore:
-            booklore:
+          grimmory:
+            grimmory:
               - path: /tmp

@@ -2,13 +2,12 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: booklore-mariadb-restore
+  name: grimmory-mariadb-backup
 spec:
-  suspend: true # Disabled - to be triggered manually when needed
-  schedule: "0 0 31 2 *" # February 31st = never runs
+  schedule: "0 3 * * *" # Daily at 3 AM
   concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 1
-  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
 
   jobTemplate:
     spec:
@@ -21,26 +20,26 @@ spec:
             fsGroup: 568
 
           containers:
-            - name: restore
+            - name: backup
               image: docker.io/library/mariadb:12.3.2-noble
-              command: ["/bin/bash", "/scripts/restore.sh"]
+              command: ["/bin/bash", "/scripts/backup.sh"]
               env:
                 - name: APP_NAME
-                  value: booklore
+                  value: grimmory
                 - name: BACKUP_DIR
-                  value: /backup/booklore
+                  value: /backup/grimmory
                 - name: MARIADB_HOST
-                  value: booklore-mariadb
+                  value: grimmory-mariadb
                 - name: MARIADB_PORT
                   value: "3306"
                 - name: MARIADB_USER
                   value: root
                 - name: MARIADB_DATABASE
-                  value: booklore
+                  value: grimmory
                 - name: MARIADB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: booklore-secret
+                      name: grimmory-secret
                       key: mariadb_root_password
 
               volumeMounts:
@@ -49,18 +48,17 @@ spec:
                   readOnly: true
                 - name: backup
                   mountPath: /backup
-                  readOnly: true
 
               securityContext:
                 allowPrivilegeEscalation: false
-                readOnlyRootFilesystem: true
                 capabilities:
                   drop: ["ALL"]
+                readOnlyRootFilesystem: true
 
           volumes:
             - name: scripts
               configMap:
-                name: booklore-mariadb-scripts
+                name: grimmory-mariadb-scripts
                 defaultMode: 0755
             - name: backup
               nfs:

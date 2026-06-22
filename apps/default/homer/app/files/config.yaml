@@ -42,7 +42,7 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/paperless-ng.webp"
 
-      - name: "Booklore"
+      - name: "Grimmory"
         subtitle: "Book Library"
         url: "https://books.home.mirceanton.com"
         target: "_blank"
