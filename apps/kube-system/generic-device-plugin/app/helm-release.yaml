@@ -60,6 +60,11 @@ spec:
                     paths:
                       - path: /dev/input
                         mountType: DirectoryOrCreate
+              - name: dri-render
+                groups:
+                  - count: 10
+                    paths:
+                      - path: /dev/dri/renderD128
 
     persistence:
       config:
