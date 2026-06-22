@@ -3,14 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cloudnative-pg-operator
+  name: cloudnative-pg-plugins
 spec:
   interval: 10m
   prune: true
   wait: true
   targetNamespace: database-system
 
-  path: ./apps/database-system/cloudnative-pg/operator/app
+  path: ./apps/database-system/cloudnative-pg/plugins
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -19,4 +19,6 @@ spec:
   postBuild:
     substitute: {}
 
-  dependsOn: []
+  dependsOn:
+    - name: cloudnative-pg-operator
+      namespace: database-system
