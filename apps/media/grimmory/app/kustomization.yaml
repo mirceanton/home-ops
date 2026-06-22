@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./grimmory.oci-repository.yaml
   - ./grimmory.helm-release.yaml
-  - ./grimmory.secret.sops.yaml
+  - ./grimmory.external-secret.yaml
 
   - ./mariadb.oci-repository.yaml
   - ./mariadb.helm-release.yaml
