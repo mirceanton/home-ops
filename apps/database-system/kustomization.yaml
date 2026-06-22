@@ -7,6 +7,5 @@ namespace: database-system
 resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
-  - ./cloudnative-pg-operator
+  - ./cloudnative-pg
   - ./dragonfly-operator
-  - ./plugin-barman-cloud
