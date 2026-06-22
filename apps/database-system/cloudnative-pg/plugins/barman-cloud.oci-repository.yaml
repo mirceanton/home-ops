@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: plugin-barman-cloud
+spec:
+  interval: 1h
+  url: oci://ghcr.io/cloudnative-pg/charts/plugin-barman-cloud
+  ref:
+    tag: 0.7.0
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
