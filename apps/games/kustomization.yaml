@@ -7,4 +7,4 @@ namespace: games
 resources:
   - ./namespace.yaml
   - ./minecraft
-  - ./selkies
+  - ./steam-sunshine

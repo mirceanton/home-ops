@@ -3,28 +3,27 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app selkies
+  name: &app steam-sunshine
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: selkies
+    name: steam-sunshine
 
   values:
     global:
       createDefaultServiceAccount: false
 
     controllers:
-      selkies:
+      steam-sunshine:
         type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/mirceanton/selkies-gaming
-              tag: date-2026.06.18@sha256:856d108373f00bc7a8dc988653c22f43a77464aa6a47cf84bb1d5d8189d2f39f
-              # pullPolicy: Always
+              repository: ghcr.io/mirceanton/steam-sunshine
+              tag: date-2026.06.23@sha256:cc72a722ca665d3d75c2706edb6ca4eaa41b179b52ea8bccaaf27f5031512e88
 
             env:
               TZ: Europe/Bucharest
@@ -44,12 +43,12 @@ spec:
               SUNSHINE_USER:
                 valueFrom:
                   secretKeyRef:
-                    name: selkies-secret
+                    name: steam-sunshine-secret
                     key: username
               SUNSHINE_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: selkies-secret
+                    name: steam-sunshine-secret
                     key: password
 
             probes:
@@ -92,7 +91,7 @@ spec:
     defaultPodOptions:
       automountServiceAccountToken: false
       enableServiceLinks: false
-      hostname: selkies
+      hostname: steam-sunshine
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       runtimeClassName: nvidia
@@ -109,9 +108,9 @@ spec:
     persistence:
       sunshine-config:
         type: configMap
-        name: selkies-sunshine-config
+        name: steam-sunshine-config
         advancedMounts:
-          selkies:
+          steam-sunshine:
             app:
               - path: /etc/sunshine/sunshine.conf
                 subPath: sunshine.conf
@@ -126,12 +125,12 @@ spec:
           - path: /home
 
       cache:
-        existingClaim: selkies-cache
+        existingClaim: steam-sunshine-cache
         globalMounts:
           - path: /home/ubuntu/.cache
 
       games:
-        existingClaim: selkies-games
+        existingClaim: steam-sunshine-games
         globalMounts:
           - path: /mnt/games
 

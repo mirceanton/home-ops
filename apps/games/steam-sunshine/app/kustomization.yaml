@@ -10,7 +10,7 @@ resources:
   - ./oci-repository.yaml
 
 configMapGenerator:
-  - name: selkies-sunshine-config
+  - name: steam-sunshine-config
     options:
       disableNameSuffixHash: true
     files:
