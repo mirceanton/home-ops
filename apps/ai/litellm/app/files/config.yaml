@@ -27,7 +27,7 @@ model_list:
   - model_name: qwen3-embedding-0.6b
     litellm_params:
       model: openai/qwen3-embedding-0.6b
-      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080
+      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080/v1
       api_key: "N/A"
     model_info:
       mode: embedding
@@ -79,8 +79,11 @@ litellm_settings:
   num_retries: 2
   retry_after: 5
   set_verbose: false
-  # mcp_semantic_tool_filter:
-  #   enabled: true
-  #   embedding_model: "qwen3-embedding-0.6b"
-  #   top_k: 20
-  #   similarity_threshold: 0.3
+  mcp_semantic_tool_filter:
+    enabled: true
+    embedding_model: "qwen3-embedding-0.6b"
+    top_k: 10
+    # Relevant and irrelevant tools both score ~0.7-0.9 with this model, so no
+    # threshold cleanly separates them; rely on top_k and keep this at 0 so a
+    # genuinely-relevant tool is never dropped by score.
+    similarity_threshold: 0.0
