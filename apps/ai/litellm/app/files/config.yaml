@@ -16,10 +16,10 @@ model_list:
       api_base: http://gemma-4-26b-a4b-proxy.ai.svc.cluster.local:8080
       api_key: "N/A"
 
-  - model_name: qwen3-0.6b
+  - model_name: qwen3-4b
     litellm_params:
-      model: openai/qwen3-0.6b
-      api_base: http://qwen3-0-6b.ai.svc.cluster.local:8080
+      model: openai/qwen3-4b
+      api_base: http://qwen3-4b.ai.svc.cluster.local:8080
       api_key: "N/A"
     model_info:
       supports_response_schema: false
