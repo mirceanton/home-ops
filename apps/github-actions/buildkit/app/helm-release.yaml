@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: moby/buildkit
-              tag: v0.31.0
+              tag: v0.31.1
             args:
               - --addr
               - unix:///run/buildkit/buildkitd.sock
