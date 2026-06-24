@@ -100,7 +100,7 @@ spec:
           cron:
             image:
               repository: curlimages/curl
-              tag: 8.20.0
+              tag: 8.21.0
             command:
               - sh
               - -c
