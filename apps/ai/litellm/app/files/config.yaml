@@ -1,4 +1,3 @@
----
 model_list:
   - model_name: qwen-35b
     litellm_params:
@@ -62,6 +61,10 @@ mcp_servers:
     url: "http://firefly-mcp.finances.svc.cluster.local:3000"
     auth_type: bearer_token
     auth_value: os.environ/FIREFLY_MCP_TOKEN
+
+  stockii:
+    url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
+    transport: sse
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
