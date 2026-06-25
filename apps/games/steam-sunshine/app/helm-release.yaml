@@ -1,0 +1,164 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app steam-sunshine
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: steam-sunshine
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      steam-sunshine:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/steam-sunshine
+              tag: date-2026.06.23@sha256:cc72a722ca665d3d75c2706edb6ca4eaa41b179b52ea8bccaaf27f5031512e88
+
+            env:
+              TZ: Europe/Bucharest
+              NVIDIA_DRIVER_CAPABILITIES: all
+
+              DISPLAY_SIZEW: "2560"
+              DISPLAY_SIZEH: "1440"
+              DISPLAY_REFRESH: "120"
+              DISPLAY_DPI: "96"
+              DISPLAY_CDEPTH: "24"
+              VIDEO_PORT: DFP
+
+              # One Wine thread per physical core (siblings are 0,8/1,9/.../7,15);
+              # keeps Proton games from spawning 16 spinning workers on 8C/16T
+              WINE_CPU_TOPOLOGY: "8:0,1,2,3,4,5,6,7"
+
+              SUNSHINE_USER:
+                valueFrom:
+                  secretKeyRef:
+                    name: steam-sunshine-secret
+                    key: username
+              SUNSHINE_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: steam-sunshine-secret
+                    key: password
+
+            probes:
+              startup: { enabled: false }
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: { port: 47989 }
+                  initialDelaySeconds: 180
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: { port: 47989 }
+                  initialDelaySeconds: 60
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+                nvidia.com/gpu: "1"
+                devic.es/uinput: "1"
+              limits:
+                memory: 40Gi
+                nvidia.com/gpu: "1"
+                devic.es/uinput: "1"
+
+            securityContext:
+              privileged: true
+              capabilities:
+                add: [CAP_SYS_NICE]
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      hostname: steam-sunshine
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      runtimeClassName: nvidia
+      # Give Steam time to flush saves / cloud sync on shutdown.
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        seccompProfile:
+          type: Unconfined
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    persistence:
+      sunshine-config:
+        type: configMap
+        name: steam-sunshine-config
+        advancedMounts:
+          steam-sunshine:
+            app:
+              - path: /etc/sunshine/sunshine.conf
+                subPath: sunshine.conf
+                readOnly: true
+              - path: /etc/sunshine/apps.json
+                subPath: apps.json
+                readOnly: true
+
+      home:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /home
+
+      cache:
+        existingClaim: steam-sunshine-cache
+        globalMounts:
+          - path: /home/ubuntu/.cache
+
+      games:
+        existingClaim: steam-sunshine-games
+        globalMounts:
+          - path: /mnt/games
+
+      dshm:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 8Gi
+        globalMounts:
+          - path: /dev/shm
+
+      input-devices:
+        type: hostPath
+        hostPath: /dev/input
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/input
+
+      udev-run:
+        type: hostPath
+        hostPath: /run/udev
+        hostPathType: Directory
+        globalMounts:
+          - path: /run/udev
+            readOnly: true
+
+      uhid:
+        type: hostPath
+        hostPath: /dev/uhid
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/uhid

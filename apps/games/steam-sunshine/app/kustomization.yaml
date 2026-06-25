@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./cache-pvc.yaml
+  - ./external-secret.yaml
+  - ./games-pv.yaml
+  - ./helm-release.yaml
+  - ./oci-repository.yaml
+
+configMapGenerator:
+  - name: steam-sunshine-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - files/sunshine.conf
+      - files/apps.json

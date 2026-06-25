@@ -32,3 +32,27 @@ machine:
 
     # Disable slow start after idle - better for bursty traffic patterns
     net.ipv4.tcp_slow_start_after_idle: "0"
+
+    # User namespaces - required by Steam, Firefox/Chromium sandboxes, etc.
+    # Talos defaults to 0 (disabled). 15000 matches the Ubuntu default.
+    user.max_user_namespaces: "15000"
+
+    # Memory map limit - GameGuard (anti-cheat) and Vulkan require a much higher
+    # limit than the kernel default of 65530; 2097152 is the Steam Deck default.
+    vm.max_map_count: "2097152"
+
+    # Keep filesystem metadata (dentries/inodes) in cache longer - reduces Steam
+    # library scan time on repeated launches. Default 100 evicts aggressively.
+    vm.vfs_cache_pressure: "50"
+
+    # Allow same-UID ptrace without CAP_SYS_PTRACE - GameGuard inspects the game
+    # process via ptrace to verify integrity; scope 2 (require capability) blocks
+    # it entirely since the container runs with no capabilities. Scope 0 allows
+    # any process to ptrace others it owns.
+    kernel.yama.ptrace_scope: "0"
+
+    # Reserve Sunshine/Moonlight streaming ports so the kernel never picks them
+    # as ephemeral source ports for outgoing connections. Without this, a
+    # persistent kube-apiserver→etcd connection can claim port 47984, preventing
+    # Sunshine from binding when the pod runs with hostNetwork=true.
+    net.ipv4.ip_local_reserved_ports: "47984,47989,47990,47998,47999,48000,48010,50000-50001"

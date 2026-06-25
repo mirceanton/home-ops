@@ -53,6 +53,7 @@ nodes:
       - "@./patches/nvidia.yaml"
       - "@./patches/uinput.yaml"
       - "@./patches/zfs.yaml"
+      - "@./patches/cpu-governor.yaml"
       - | #? Use the Intel Optane for the etcd disk
         machine:
           disks:
@@ -61,14 +62,19 @@ nodes:
                 - mountpoint: /var/lib/etcd
     schematic:
       customization:
+        extraKernelArgs:
+          - cpufreq.default_governor=performance
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
             - siderolabs/amdgpu
             - siderolabs/nvidia-container-toolkit-production
-            - siderolabs/nonfree-kmod-nvidia-production
+            - siderolabs/nvidia-open-gpu-kernel-modules-production
             - siderolabs/zfs
             - siderolabs/iscsi-tools
+            - siderolabs/uinput # mouse/keyboard emulation (Sunshine)
+            - siderolabs/uhid # gamepad emulation (Sunshine)
+            - siderolabs/joydev # legacy joystick interface (Sunshine)
 
 controlPlane:
   patches:
