@@ -48,9 +48,7 @@ spec:
               PORT: "3000"
               PUID: "568"
               PGID: "568"
-              # k8s manages volume ownership via fsGroup; skip the entrypoint chown
-              BOOKORBIT_FIX_PERMISSIONS: "false"
-              # External/public URL used by emails, OIDC redirects and Kobo sync endpoints
+              BOOKORBIT_FIX_PERMISSIONS: "true"
               APP_URL: https://bookorbit.home.mirceanton.com
               # Allow OIDC issuers that resolve to private/LAN addresses (internal IdP)
               OIDC_ALLOW_LOCAL_ISSUERS: "true"
