@@ -21,12 +21,18 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: sparkyfitness-cnpg-backup
+        optional: true
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
 
   dependsOn:
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system

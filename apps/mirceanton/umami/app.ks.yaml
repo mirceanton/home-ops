@@ -20,12 +20,18 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: umami-cnpg-backup
+        optional: true
     substitute:
       APP: *app
 
   decryption: { provider: sops }
   dependsOn:
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system

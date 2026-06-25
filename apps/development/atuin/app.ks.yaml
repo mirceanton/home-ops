@@ -19,10 +19,20 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: atuin-cnpg-backup
+        optional: true
     substitute:
       APP: *app
 
   decryption: { provider: sops }
   dependsOn:
+    - name: 1password-connect
+      namespace: security-system
     - name: cloudnative-pg-operator
       namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: external-secrets-operator
+      namespace: security-system

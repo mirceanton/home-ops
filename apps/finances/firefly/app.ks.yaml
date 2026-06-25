@@ -22,6 +22,10 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: firefly-cnpg-backup
+        optional: true
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
@@ -33,6 +37,8 @@ spec:
     - name: dragonfly-operator
       namespace: database-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: 1password-connect
       namespace: security-system

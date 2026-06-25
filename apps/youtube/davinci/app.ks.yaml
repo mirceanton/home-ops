@@ -19,12 +19,18 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: davinci-cnpg-backup
+        optional: true
     substitute:
       APP: *app
 
   decryption: { provider: sops }
   dependsOn:
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: 1password-connect
       namespace: security-system

@@ -20,6 +20,10 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: litellm-cnpg-backup
+        optional: true
     substitute:
       APP: *app
 
@@ -27,6 +31,8 @@ spec:
     - name: 1password-connect
       namespace: security-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system

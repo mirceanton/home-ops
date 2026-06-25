@@ -22,6 +22,10 @@ spec:
     namespace: flux-system
 
   postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: paperless-cnpg-backup
+        optional: true
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
@@ -34,6 +38,8 @@ spec:
     - name: volsync
       namespace: storage-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: dragonfly-operator
       namespace: database-system
