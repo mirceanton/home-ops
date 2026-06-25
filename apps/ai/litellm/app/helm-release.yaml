@@ -13,6 +13,7 @@ spec:
   values:
     controllers:
       litellm:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
 
@@ -105,6 +106,7 @@ spec:
 
     defaultPodOptions:
       enableServiceLinks: false
+      terminationGracePeriodSeconds: 120
       securityContext:
         seccompProfile:
           type: RuntimeDefault
