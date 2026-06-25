@@ -4,7 +4,7 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
-  - ./github-acess-token.yaml
+  - ./github-access-token.yaml
   - ./grafana-dashboard.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
