@@ -5,4 +5,13 @@ kind: Kustomization
 resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
+
+  - ./prometheus-rule.yaml
   - ./grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: external-secrets-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - external-secrets.json
