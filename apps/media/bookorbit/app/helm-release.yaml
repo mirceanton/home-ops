@@ -1,0 +1,149 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bookorbit
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: bookorbit
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
+    controllers:
+      bookorbit:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DATABASE_URL)"]
+            env:
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-postgres-app
+                    key: uri
+
+        containers:
+          bookorbit:
+            image:
+              repository: ghcr.io/bookorbit/bookorbit
+              tag: 1.12.0
+            env:
+              NODE_ENV: production
+              PORT: "3000"
+              PUID: "568"
+              PGID: "568"
+              BOOKORBIT_FIX_PERMISSIONS: "true"
+              APP_URL: https://bookorbit.home.mirceanton.com
+              # Allow OIDC issuers that resolve to private/LAN addresses (internal IdP)
+              OIDC_ALLOW_LOCAL_ISSUERS: "true"
+              BOOK_DOCK_PATH: /bookdrop
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-postgres-app
+                    key: uri
+              JWT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-secret
+                    key: jwt_secret
+              SETUP_BOOTSTRAP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-secret
+                    key: setup_bootstrap_token
+              EMAIL_ENCRYPTION_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-secret
+                    key: email_encryption_key
+              MIGRATION_ENCRYPTION_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookorbit-secret
+                    key: migration_encryption_key
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health
+                    port: 3000
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health
+                    port: 3000
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              readOnlyRootFilesystem: false
+
+    service:
+      app:
+        ports:
+          http:
+            port: 3000
+
+    route:
+      home:
+        hostnames: ["bookorbit.home.mirceanton.com", "books.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        advancedMounts:
+          bookorbit:
+            bookorbit:
+              - path: /data
+      books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        advancedMounts:
+          bookorbit:
+            bookorbit:
+              - path: /books
+      bookdrop:
+        type: emptyDir
+        advancedMounts:
+          bookorbit:
+            bookorbit:
+              - path: /bookdrop
+      tmpfs:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 100Mi
+        advancedMounts:
+          bookorbit:
+            bookorbit:
+              - path: /tmp

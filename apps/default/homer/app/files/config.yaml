@@ -42,9 +42,9 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/paperless-ng.webp"
 
-      - name: "Grimmory"
+      - name: "BookOrbit"
         subtitle: "Book Library"
-        url: "https://books.home.mirceanton.com"
+        url: "https://bookorbit.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/booklore.webp"
 
