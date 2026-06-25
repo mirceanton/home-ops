@@ -12,6 +12,7 @@ spec:
 
   values:
     defaultPodOptions:
+      terminationGracePeriodSeconds: 600
       securityContext:
         fsGroup: 10000
         fsGroupChangePolicy: OnRootMismatch
@@ -19,6 +20,7 @@ spec:
 
     controllers:
       hermes:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
 
