@@ -16,6 +16,7 @@ spec:
 
     controllers:
       kubesearch-mcp:
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -23,13 +24,6 @@ spec:
             image:
               repository: ghcr.io/perfectra1n/kubesearch-mcp
               tag: 1.0.1
-
-            env:
-              GITHUB_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: kubesearch-mcp-secret
-                    key: GITHUB_TOKEN
 
             probes:
               liveness: &probes
