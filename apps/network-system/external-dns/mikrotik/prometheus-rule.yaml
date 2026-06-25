@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: external-dns
+spec:
+  groups:
+    - name: external-dns.rules
+      rules:
+        # ---- Recording Rules ----
+        - record: job:external_dns_registry_records:sum
+          expr: sum(external_dns_registry_records{container="external-dns"}) by (job)
+
+        - record: job:external_dns_source_records:sum
+          expr: sum(external_dns_source_records{container="external-dns"}) by (job)
+
+        - record: job:external_dns_registry_errors:rate5m
+          expr: sum(rate(external_dns_registry_errors_total{container="external-dns"}[5m])) by (job)
+
+        - record: job:external_dns_source_errors:rate5m
+          expr: sum(rate(external_dns_source_errors_total{container="external-dns"}[5m])) by (job)
+
+        # ---- Availability ----
+        - alert: ExternalDNSDown
+          expr: absent(up{job=~"external-dns.*"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ExternalDNS metrics endpoint is absent"
+            description: >-
+              Prometheus cannot find any ExternalDNS scrape target.
+              The controller may be down or the ServiceMonitor misconfigured.
+
+        # ---- Sync Health ----
+        - alert: ExternalDNSNoSuccessfulSync
+          expr: (time() - external_dns_controller_last_sync_timestamp_seconds{container="external-dns"}) > 300
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ExternalDNS {{ $labels.job }} has not synced in over 5 minutes"
+            description: >-
+              ExternalDNS instance {{ $labels.job }} last synced
+              {{ $value | humanizeDuration }} ago. Expected sync interval is 1 minute.
+              This may indicate a provider outage or controller stall.
+
+        - alert: ExternalDNSSyncStalledCritical
+          expr: (time() - external_dns_controller_last_sync_timestamp_seconds{container="external-dns"}) > 900
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ExternalDNS {{ $labels.job }} has not synced in over 15 minutes"
+            description: >-
+              ExternalDNS instance {{ $labels.job }} last synced
+              {{ $value | humanizeDuration }} ago. DNS records may be stale.
+              Investigate the controller logs immediately.
+
+        # ---- Error Rates ----
+        - alert: ExternalDNSSyncFailuresHigh
+          expr: external_dns_controller_consecutive_soft_errors{container="external-dns"} >= 3
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ExternalDNS {{ $labels.job }} has {{ $value }} consecutive soft errors"
+            description: >-
+              ExternalDNS instance {{ $labels.job }} has encountered
+              {{ $value }} consecutive non-fatal errors during reconciliation.
+              Check the controller logs for root cause.
+
+        - alert: ExternalDNSUpdateFailuresHigh
+          expr: job:external_dns_registry_errors:rate5m > 0.1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "ExternalDNS {{ $labels.job }} registry error rate is elevated"
+            description: >-
+              ExternalDNS instance {{ $labels.job }} is experiencing registry errors at
+              {{ $value | humanize }} errors/s over the last 5 minutes.
+              DNS record updates may be failing.
+
+        - alert: ExternalDNSHighErrorRate
+          expr: >-
+            (
+              sum(rate(external_dns_registry_errors_total{container="external-dns"}[5m])) by (job)
+              +
+              sum(rate(external_dns_source_errors_total{container="external-dns"}[5m])) by (job)
+            ) > 0.5
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ExternalDNS {{ $labels.job }} has a high combined error rate"
+            description: >-
+              ExternalDNS instance {{ $labels.job }} is experiencing a combined source and
+              registry error rate of {{ $value | humanize }} errors/s.
+              DNS synchronization may be severely degraded.
