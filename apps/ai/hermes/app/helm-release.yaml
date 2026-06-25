@@ -59,11 +59,6 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: Europe/Bucharest
-              GH_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: mr-borboto-auth-token
-                    key: GITHUB_COM_TOKEN
             resources:
               requests:
                 cpu: 100m
