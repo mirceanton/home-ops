@@ -38,3 +38,5 @@ spec:
       namespace: kube-system
     - name: cloudnative-pg-operator
       namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system

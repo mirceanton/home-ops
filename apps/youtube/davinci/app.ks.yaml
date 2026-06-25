@@ -26,5 +26,7 @@ spec:
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
     - name: 1password-connect
       namespace: security-system

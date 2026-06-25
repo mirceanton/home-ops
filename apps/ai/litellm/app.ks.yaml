@@ -28,6 +28,8 @@ spec:
       namespace: security-system
     - name: cloudnative-pg-operator
       namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
     - name: external-secrets-operator
       namespace: security-system
     - name: llmkube
