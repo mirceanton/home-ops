@@ -3,13 +3,13 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: mr-borboto-pem
+  name: &name mr-borboto-pem
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: onepassword
   target:
-    name: mr-borboto-pem
+    name: *name
   data:
     - secretKey: private_key_pem
       remoteRef:
@@ -30,25 +30,3 @@ spec:
       secretRef:
         name: mr-borboto-pem
         key: private_key_pem
-
----
-# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: &name litellm-github-mcp-token
-spec:
-  refreshInterval: 55m
-  target:
-    name: *name
-    template:
-      type: Opaque
-      engineVersion: v2
-      data:
-        GITHUB_MCP_TOKEN: "{{ .token }}"
-  dataFrom:
-    - sourceRef:
-        generatorRef:
-          apiVersion: generators.external-secrets.io/v1alpha1
-          kind: GithubAccessToken
-          name: mr-borboto-auth-token

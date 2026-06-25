@@ -61,13 +61,13 @@ spec:
               GITHUB_MCP_TOKEN:
                 valueFrom:
                   secretKeyRef:
-                    name: litellm-github-mcp-token
+                    name: litellm-secret
                     key: GITHUB_MCP_TOKEN
 
               FIREFLY_MCP_TOKEN:
                 valueFrom:
                   secretKeyRef:
-                    name: litellm-firefly-mcp-token
+                    name: litellm-secret
                     key: FIREFLY_MCP_TOKEN
 
             resources:
