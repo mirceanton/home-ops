@@ -21,10 +21,6 @@ spec:
     namespace: flux-system
 
   postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: immich-cnpg-backup
-        optional: true
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 100Gi

@@ -22,10 +22,6 @@ spec:
     namespace: flux-system
 
   postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: paperless-cnpg-backup
-        optional: true
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi

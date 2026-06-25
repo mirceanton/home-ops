@@ -20,10 +20,6 @@ spec:
     namespace: flux-system
 
   postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: litellm-cnpg-backup
-        optional: true
     substitute:
       APP: *app
 

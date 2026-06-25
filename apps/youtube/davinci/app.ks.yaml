@@ -19,10 +19,6 @@ spec:
     namespace: flux-system
 
   postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: davinci-cnpg-backup
-        optional: true
     substitute:
       APP: *app
 
