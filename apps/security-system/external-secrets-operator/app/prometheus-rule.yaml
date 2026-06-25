@@ -1,0 +1,120 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: external-secrets
+spec:
+  groups:
+    - name: external-secrets.rules
+      rules:
+        # ---- Recording Rules ----
+        - record: job:externalsecret_sync_calls:rate5m
+          expr: sum(rate(externalsecret_sync_calls_total{job="external-secrets-metrics"}[5m])) by (exported_namespace)
+
+        - record: job:externalsecret_sync_errors:rate5m
+          expr: sum(rate(externalsecret_sync_calls_error{job="external-secrets-metrics"}[5m])) by (exported_namespace)
+
+        - record: job:externalsecret_ready:sum
+          expr: sum(externalsecret_status_condition{job="external-secrets-metrics", condition="Ready", status="True"})
+
+        - record: job:externalsecret_not_ready:sum
+          expr: sum(externalsecret_status_condition{job="external-secrets-metrics", condition="Ready", status="False"})
+
+        # ---- Availability ----
+        - alert: ESODown
+          expr: absent(up{job="external-secrets-metrics"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "External Secrets Operator metrics endpoint is absent"
+            description: >-
+              Prometheus cannot find any External Secrets Operator scrape target.
+              The controller may be down or the ServiceMonitor misconfigured.
+
+        # ---- Sync Health ----
+        - alert: ESOSyncFailuresHigh
+          expr: >-
+            (
+              sum(rate(externalsecret_sync_calls_error{job="external-secrets-metrics"}[5m]))
+              /
+              sum(rate(externalsecret_sync_calls_total{job="external-secrets-metrics"}[5m]))
+            ) > 0.1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "External Secrets Operator sync failure rate is elevated"
+            description: >-
+              More than 10% of ExternalSecret sync attempts are failing over the last 5 minutes.
+              Some secrets may be stale or failing to resolve from the secret backend.
+              Check the operator logs and the secret backend (e.g. 1Password Connect) for errors.
+
+        - alert: ESONoSuccessfulSync
+          expr: >-
+            sum(externalsecret_status_condition{job="external-secrets-metrics", condition="Ready", status="True"}) == 0
+            and on()
+            sum(externalsecret_status_condition{job="external-secrets-metrics", condition="Ready", status="False"}) > 0
+          for: 15m
+          labels:
+            severity: critical
+          annotations:
+            summary: "No ExternalSecrets are in a Ready state"
+            description: >-
+              All tracked ExternalSecrets report Ready=False for over 15 minutes.
+              This may indicate a secret backend outage or a misconfigured ClusterSecretStore.
+              Applications depending on these secrets may fail to start or operate correctly.
+
+        # ---- Error Rates ----
+        - alert: ESOReconcileErrorsHigh
+          expr: >-
+            sum(rate(controller_runtime_reconcile_errors_total{job="external-secrets-metrics", controller="externalsecret"}[5m])) > 0.1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "External Secrets Operator controller reconcile error rate is elevated"
+            description: >-
+              The ExternalSecret controller is encountering reconcile panics or fatal errors at
+              {{ $value | humanize }} errors/s. This is distinct from sync failures and may indicate
+              a bug or resource constraint in the operator itself.
+
+        # ---- Secret Store Health ----
+        - record: job:clustersecretstore_ready:sum
+          expr: sum(clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="True"})
+
+        - record: job:clustersecretstore_not_ready:sum
+          expr: sum(clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"})
+
+        - record: job:secretstore_ready:sum
+          expr: sum(secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="True"})
+
+        - record: job:secretstore_not_ready:sum
+          expr: sum(secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"})
+
+        - alert: ESOClusterSecretStoreNotReady
+          expr: >-
+            clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"} == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ClusterSecretStore {{ $labels.name }} is not Ready"
+            description: >-
+              ClusterSecretStore {{ $labels.name }} has reported Ready=False for over 5 minutes.
+              All ExternalSecrets across any namespace that reference this store will fail to sync.
+              Check the store configuration and the secret backend connectivity.
+
+        - alert: ESOSecretStoreNotReady
+          expr: >-
+            secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"} == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SecretStore {{ $labels.exported_namespace }}/{{ $labels.name }} is not Ready"
+            description: >-
+              SecretStore {{ $labels.name }} in namespace {{ $labels.exported_namespace }} has reported
+              Ready=False for over 5 minutes. ExternalSecrets in that namespace that reference this
+              store will fail to sync. Check the store configuration and backend connectivity.
