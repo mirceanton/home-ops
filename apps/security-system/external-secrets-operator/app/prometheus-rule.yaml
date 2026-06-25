@@ -79,3 +79,42 @@ spec:
               The ExternalSecret controller is encountering reconcile panics or fatal errors at
               {{ $value | humanize }} errors/s. This is distinct from sync failures and may indicate
               a bug or resource constraint in the operator itself.
+
+        # ---- Secret Store Health ----
+        - record: job:clustersecretstore_ready:sum
+          expr: sum(clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="True"})
+
+        - record: job:clustersecretstore_not_ready:sum
+          expr: sum(clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"})
+
+        - record: job:secretstore_ready:sum
+          expr: sum(secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="True"})
+
+        - record: job:secretstore_not_ready:sum
+          expr: sum(secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"})
+
+        - alert: ESOClusterSecretStoreNotReady
+          expr: >-
+            clustersecretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"} == 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "ClusterSecretStore {{ $labels.name }} is not Ready"
+            description: >-
+              ClusterSecretStore {{ $labels.name }} has reported Ready=False for over 5 minutes.
+              All ExternalSecrets across any namespace that reference this store will fail to sync.
+              Check the store configuration and the secret backend connectivity.
+
+        - alert: ESOSecretStoreNotReady
+          expr: >-
+            secretstore_status_condition{job="external-secrets-metrics", condition="Ready", status="False"} == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "SecretStore {{ $labels.exported_namespace }}/{{ $labels.name }} is not Ready"
+            description: >-
+              SecretStore {{ $labels.name }} in namespace {{ $labels.exported_namespace }} has reported
+              Ready=False for over 5 minutes. ExternalSecrets in that namespace that reference this
+              store will fail to sync. Check the store configuration and backend connectivity.
