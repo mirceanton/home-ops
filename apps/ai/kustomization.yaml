@@ -6,9 +6,9 @@ namespace: ai
 resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
+
   - ./github-mcp
   - ./hermes
   - ./kubesearch-mcp
-  - ./librechat
   - ./litellm
   - ./llmkube
