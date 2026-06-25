@@ -1,4 +1,22 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: mr-borboto-pem
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: mr-borboto-pem
+  data:
+    - secretKey: private_key_pem
+      remoteRef:
+        key: Renovate Operator - GitHub App PEM
+        property: key
+
+---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/generators.external-secrets.io/githubaccesstoken_v1alpha1.json
 apiVersion: generators.external-secrets.io/v1alpha1
 kind: GithubAccessToken
