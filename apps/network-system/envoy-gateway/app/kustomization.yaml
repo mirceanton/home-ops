@@ -8,7 +8,6 @@ resources:
 
   - ./admin # -> local network, admin access
   - ./home # -> local network, client access
-  - ./remote # -> tailscale
 
   - ./backend-traffic-policy.yaml
   - ./client-traffic-policy.yaml
