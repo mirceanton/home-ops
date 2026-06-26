@@ -28,7 +28,7 @@ spec:
           secretKeyRef:
             name: "${APP}-cnpg-backup"
             key: ENDPOINT_URL
-  
+
     resources:
       requests:
         cpu: 10m
