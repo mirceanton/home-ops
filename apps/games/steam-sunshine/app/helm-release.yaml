@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/steam-sunshine
-              tag: date-2026.06.23@sha256:cc72a722ca665d3d75c2706edb6ca4eaa41b179b52ea8bccaaf27f5031512e88
+              tag: date-2026.06.23@sha256:3c8516b4f158e6ad0469efcf1cf3ecccbb09ee1b4c50290b9da074a5e15c642b
 
             env:
               TZ: Europe/Bucharest
