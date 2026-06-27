@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: home-automation
+  targetNamespace: maker
 
-  path: ./apps/home-automation/manyfold/app
+  path: ./apps/maker/manyfold/app
   components:
     - ../../../../components/volsync/
     - ../../../../components/dragonfly/

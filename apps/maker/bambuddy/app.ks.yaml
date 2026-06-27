@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: home-automation
+  targetNamespace: maker
 
-  path: ./apps/home-automation/bambuddy/app
+  path: ./apps/maker/bambuddy/app
   components:
     - ../../../../components/volsync/
   sourceRef:
