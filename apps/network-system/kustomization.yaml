@@ -10,4 +10,3 @@ resources:
   - ./envoy-gateway
   - ./external-dns
   - ./metallb
-  - ./tailscale
