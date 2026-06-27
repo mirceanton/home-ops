@@ -3,14 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: nvidia-exporter
+  name: nvidia-device-plugin
 spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: monitoring-system
+  targetNamespace: kube-system
 
-  path: ./apps/monitoring-system/nvidia-exporter/app
+  path: ./apps/kube-system/nvidia/device-plugin/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -19,6 +19,4 @@ spec:
   postBuild:
     substitute: {}
 
-  dependsOn:
-    - name: nvidia-device-plugin
-      namespace: kube-system
+  dependsOn: []

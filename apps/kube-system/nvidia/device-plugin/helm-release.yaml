@@ -13,8 +13,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: nvidia-device-plugin
-  dependsOn: []
-
   values:
     runtimeClassName: nvidia
     resources:

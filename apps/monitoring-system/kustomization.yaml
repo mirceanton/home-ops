@@ -17,5 +17,4 @@ resources:
   - ./kube-state-metrics
   - ./mikrotik-exporter
   - ./node-exporter
-  - ./nvidia-exporter
   - ./speedtest-exporter
