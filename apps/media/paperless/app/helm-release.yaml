@@ -19,6 +19,20 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          fix-run-permissions:
+            image:
+              repository: busybox
+              tag: latest
+            command: ["/bin/sh", "-c", "chown 1000:1000 /run"]
+            securityContext:
+              runAsUser: 0
+              runAsNonRoot: false
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+                add: ["CHOWN"]
+
         containers:
           app:
             image:
@@ -93,17 +107,21 @@ spec:
                   failureThreshold: 30
                   periodSeconds: 5
 
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
     defaultPodOptions:
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
+        runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+        seccompProfile: {type: RuntimeDefault}
 
     service:
       app:
@@ -133,3 +151,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run
