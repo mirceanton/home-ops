@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: nvidia-dcgm
 spec:
+  folderRef: kubernetes
   configMapRef:
     name: nvidia-dcgm-dashboard
     key: dashboard.json
@@ -13,6 +14,7 @@ spec:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
 
+  allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
