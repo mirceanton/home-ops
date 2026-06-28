@@ -12,6 +12,21 @@ spec:
 
   values:
     replicas: 1
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      seccompProfile: { type: RuntimeDefault }
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+      runAsNonRoot: true
+      seccompProfile: { type: RuntimeDefault }
+
     resources:
       requests:
         cpu: 20m
