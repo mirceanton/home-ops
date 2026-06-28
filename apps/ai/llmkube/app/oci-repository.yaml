@@ -8,7 +8,7 @@ spec:
   interval: 15m
   url: oci://ghcr.io/defilantech/charts/llmkube
   ref:
-    tag: 0.8.19
+    tag: 0.8.20
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
