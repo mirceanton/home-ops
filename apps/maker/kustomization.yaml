@@ -6,5 +6,7 @@ namespace: maker
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
+
   - ./bambuddy
   - ./manyfold

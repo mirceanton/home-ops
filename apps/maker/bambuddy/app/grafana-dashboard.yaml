@@ -5,6 +5,7 @@ kind: GrafanaDashboard
 metadata:
   name: bambuddy
 spec:
+  folderRef: maker
   configMapRef:
     name: bambuddy-dashboard
     key: dashboard.json
