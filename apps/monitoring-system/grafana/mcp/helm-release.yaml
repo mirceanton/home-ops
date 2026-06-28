@@ -24,7 +24,7 @@ spec:
               repository: grafana/mcp-grafana
               tag: 0.17.0
             env:
-              GRAFANA_URL: http://grafana-service.monitoring-system:3000
+              GRAFANA_URL: http://grafana-service:3000
               GRAFANA_ORG_ID: "1"
               #! TODO: this has been manually created for now, but I should automate it and store it in the repo as well
               #! maybe look for a terraform provider for Grafana and manage it that way?
