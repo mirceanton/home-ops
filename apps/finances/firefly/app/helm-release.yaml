@@ -32,11 +32,6 @@ spec:
                   secretKeyRef:
                     name: firefly-postgres-app
                     key: uri
-          wait-for-dragonfly:
-            image:
-              repository: ghcr.io/wait4x/wait4x
-              tag: 3.6.0
-            args: ["redis", "redis://firefly-dragonfly:6379"]
         containers:
           app:
             image:
@@ -44,12 +39,22 @@ spec:
               tag: version-6.6.3
             envFrom:
               - secretRef: { name: firefly-keys }
-              - configMapRef: { name: firefly-settings }
             env:
-              CACHE_DRIVER: "redis"
-              SESSION_DRIVER: "redis"
-              REDIS_HOST: "firefly-dragonfly"
-              REDIS_PORT: "6379"
+              TZ: "Europe/Bucharest"
+              SEND_TELEMETRY: "false"
+              TRUSTED_PROXIES: "**"
+              DEFAULT_LANGUAGE: "en_US"
+              DEFAULT_LOCALE: "equal"
+
+              SEND_REGISTRATION_MAIL: "false"
+              SEND_ERROR_MESSAGE: "false"
+              SEND_LOGIN_NEW_IP_WARNING: "false"
+
+              LOG_CHANNEL: "stdout"
+              AUDIT_LOG_CHANNEL: "stdout"
+              APP_LOG_LEVEL: "notice"
+              CACHE_DRIVER: "file"
+              SESSION_DRIVER: "file"
 
               DB_CONNECTION: "pgsql"
               DB_HOST:
@@ -77,6 +82,7 @@ spec:
                   secretKeyRef:
                     name: firefly-postgres-app
                     key: password
+
             probes:
               startup: { enabled: true }
               liveness: { enabled: true }
@@ -120,6 +126,15 @@ spec:
                 memory: 16Mi
               limits:
                 memory: 64Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
+              runAsNonRoot: true
+              runAsUser: 65534
+              runAsGroup: 65534
+              fsGroup: 65534
 
     service:
       firefly:
