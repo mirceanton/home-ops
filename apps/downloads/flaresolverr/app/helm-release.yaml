@@ -16,6 +16,13 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
 
     controllers:
       flaresolverr:
@@ -34,8 +41,14 @@ spec:
                 cpu: 20m
                 memory: 1Gi
               limits:
-                cpu: 4000m
                 memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              # readOnlyRootFilesystem: true  # incompatible: undetected_chromedriver
+              # patches /app/chromedriver in-place at startup (r+b open)
+              capabilities: { drop: ["ALL"] }
+
     service:
       app:
         ports:
