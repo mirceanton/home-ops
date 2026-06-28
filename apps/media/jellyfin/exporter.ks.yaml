@@ -10,7 +10,7 @@ spec:
   wait: true
   targetNamespace: media
 
-  path: ./apps/media/jellyfin/exporter/app
+  path: ./apps/media/jellyfin/exporter/
   sourceRef:
     kind: GitRepository
     name: flux-system

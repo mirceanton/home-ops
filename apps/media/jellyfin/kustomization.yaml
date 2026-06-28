@@ -4,4 +4,4 @@ kind: Kustomization
 
 resources:
   - ./app.ks.yaml
-  - ./exporter/app.ks.yaml
+  - ./exporter.ks.yaml
