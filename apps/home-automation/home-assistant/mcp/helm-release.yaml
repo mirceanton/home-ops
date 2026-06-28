@@ -42,6 +42,11 @@ spec:
               limits:
                 memory: 512Mi
 
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+
     defaultPodOptions:
       automountServiceAccountToken: false
       enableServiceLinks: false
@@ -49,8 +54,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
+        seccompProfile: {type: RuntimeDefault}
 
     service:
       app:
@@ -59,10 +63,8 @@ spec:
           http:
             port: 8086
 
-    #? do i even need to expose this outside the cluster?
-    # route:
-    #   home:
-    #     hostnames: ["ha-mcp.home.mirceanton.com"]
-    #     parentRefs:
-    #       - name: envoy-internal
-    #         namespace: network-system
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
