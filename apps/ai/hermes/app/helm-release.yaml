@@ -21,7 +21,7 @@ spec:
           fix-run:
             image:
               repository: docker.io/library/busybox
-              tag: "1.37.0"
+              tag: latest
             command: ["sh", "-c", "chown 10000:10000 /run && chmod 755 /run"]
             securityContext:
               runAsUser: 0
