@@ -108,8 +108,15 @@ spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 120
       securityContext:
-        seccompProfile:
-          type: RuntimeDefault
+        # litellm cannot run as non-root: the Prisma CLI is pre-cached at
+        # /root/.cache/prisma-python/ in the image. Running as uid=568 forces
+        # a fresh nodeenv download that fails (libatomic.so.1 missing in image).
+        # runAsNonRoot: true
+        # runAsUser: 568
+        # runAsGroup: 568
+        # fsGroup: 568
+        # fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: {type: RuntimeDefault}
 
     service:
       app:

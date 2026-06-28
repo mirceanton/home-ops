@@ -11,12 +11,6 @@ spec:
     name: hermes
 
   values:
-    defaultPodOptions:
-      terminationGracePeriodSeconds: 600
-      securityContext:
-        fsGroup: 10000
-        fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
 
     controllers:
       hermes:
@@ -25,6 +19,16 @@ spec:
           reloader.stakater.com/auto: "true"
 
         initContainers:
+          fix-run:
+            image:
+              repository: docker.io/library/busybox
+              tag: "1.37.0"
+            command: ["sh", "-c", "chown 10000:10000 /run && chmod 755 /run"]
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
+
           init:
             image:
               repository: docker.io/mikefarah/yq
@@ -59,6 +63,7 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: Europe/Bucharest
+
             resources:
               requests:
                 cpu: 100m
@@ -69,6 +74,11 @@ spec:
               - containerPort: &port 8642
                 name: http
                 protocol: TCP
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
 
           dashboard:
             image: *image
@@ -90,6 +100,21 @@ spec:
               - containerPort: &dashboard_port 9119
                 name: dashboard
                 protocol: TCP
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      terminationGracePeriodSeconds: 600
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
@@ -119,6 +144,17 @@ spec:
         existingClaim: hermes
         globalMounts:
           - path: /opt/data
+
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /run
+
       config-secret:
         type: secret
         name: hermes-secret
