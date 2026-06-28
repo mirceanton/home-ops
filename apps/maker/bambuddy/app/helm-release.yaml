@@ -14,16 +14,6 @@ spec:
     global:
       createDefaultServiceAccount: false
 
-    defaultPodOptions:
-      automountServiceAccountToken: false
-      enableServiceLinks: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 2000
-        runAsGroup: 2000
-        fsGroup: 2000
-        fsGroupChangePolicy: OnRootMismatch
-
     controllers:
       bambuddy:
         annotations:
@@ -35,7 +25,6 @@ spec:
               tag: 0.2.4.7
             env:
               PORT: &httpPort 8000
-              SLICER_API_URL: http://bambuddy-slicer:3000
 
             resources:
               requests:
@@ -74,43 +63,22 @@ spec:
                 add: [NET_BIND_SERVICE]
                 drop: [ALL]
 
-      slicer:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            runAsNonRoot: false
-        containers:
-          app:
-            image:
-              repository: ghcr.io/mirceanton/bambu-studio-api
-              tag: 02.06.00.51
-            env:
-              PORT: &slicerPort 3000
-              NODE_ENV: production
-            resources:
-              requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 4Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 2000
+        runAsGroup: 2000
+        fsGroup: 2000
+        fsGroupChangePolicy: OnRootMismatch
 
     service:
       app:
-        controller: bambuddy
         ports:
           http:
             appProtocol: kubernetes.io/ws
             port: *httpPort
-
-      slicer:
-        controller: slicer
-        ports:
-          http:
-            port: *slicerPort
 
     serviceMonitor:
       app:
@@ -128,10 +96,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: http
 
     persistence:
       config:
@@ -141,10 +105,6 @@ spec:
             app:
               - path: /app/data
                 subPath: data
-          slicer:
-            app:
-              - path: /app/data
-                subPath: bambu-studio-data
 
       tmpfs:
         type: emptyDir
@@ -155,7 +115,3 @@ spec:
                 subPath: tmp
               - path: /app/logs
                 subPath: logs
-          slicer:
-            app:
-              - path: /tmp
-                subPath: slicer-tmp
