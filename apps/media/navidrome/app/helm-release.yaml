@@ -56,7 +56,7 @@ spec:
 
             securityContext:
               allowPrivilegeEscalation: false
-              # readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
@@ -108,3 +108,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
