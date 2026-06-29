@@ -21,7 +21,7 @@ spec:
           navidrome-mcp:
             image:
               repository: ghcr.io/mircea-pavel-anton/navidrome-mcp
-              tag: 2.2.1
+              tag: 2.2.2
 
             resources:
               requests:
