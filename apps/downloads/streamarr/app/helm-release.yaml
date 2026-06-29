@@ -33,7 +33,7 @@ spec:
                 cpu: 20m
                 memory: 256Mi
               limits:
-                memory: 2Gi
+                memory: 6Gi
 
             probes:
               liveness: { enabled: true }
