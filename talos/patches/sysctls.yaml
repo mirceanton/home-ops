@@ -16,6 +16,10 @@ machine:
     # Socket buffer sizes - increased for better network throughput
     net.core.rmem_max: "16777216"
     net.core.wmem_max: "16777216"
+    # Raise the default socket buffer from 208KB so large UDP bursts (e.g. NVENC IDR
+    # keyframes ~1-2MB) don't immediately stall sendmmsg() while the kernel drains the queue.
+    net.core.wmem_default: "4194304"
+    net.core.rmem_default: "4194304"
 
     # Allow unprivileged containers to use ping
     net.ipv4.ping_group_range: 0 2147483647
@@ -40,6 +44,14 @@ machine:
     # Memory map limit - GameGuard (anti-cheat) and Vulkan require a much higher
     # limit than the kernel default of 65530; 2097152 is the Steam Deck default.
     vm.max_map_count: "2097152"
+
+    # Disable proactive background memory compaction. The compaction daemon's default
+    # proactiveness=20 causes constant background scanning (91B pages scanned, 1M+
+    # compact_stall events on this node) which can stall memory allocations for hundreds
+    # of milliseconds — exactly the sendmmsg() latency spikes seen during Sunshine IDR
+    # keyframe bursts. Compaction still runs on-demand when THP or large allocations
+    # actually need it; this only disables the gratuitous background scanning.
+    vm.compaction_proactiveness: "0"
 
     # Keep filesystem metadata (dentries/inodes) in cache longer - reduces Steam
     # library scan time on repeated launches. Default 100 evicts aggressively.
