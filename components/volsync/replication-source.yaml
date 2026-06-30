@@ -7,7 +7,7 @@ metadata:
 spec:
   sourcePVC: "${VOLSYNC_PVC:=${APP}}"
   trigger:
-    schedule: "0 */2 * * *"
+    schedule: "0 4,16 * * *" # 4AM & 4PM
 
   restic:
     copyMethod: "${VOLSYNC_COPYMETHOD:=Snapshot}"
@@ -27,5 +27,5 @@ spec:
       fsGroupChangePolicy: "OnRootMismatch"
 
     retain:
-      hourly: 24
+      hourly: 6
       daily: 7
