@@ -8,7 +8,7 @@ metadata:
 spec:
   url: oci://ghcr.io/stakater/charts/reloader
   interval: 15m
-  ref: { tag: 2.2.12 }
+  ref: { tag: 2.2.13 }
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
