@@ -44,7 +44,7 @@ spec:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
               # renovate: datasource=github-releases depName=immich-app/immich
-              tag: v3.0.0-cuda
+              tag: v3.0.1-cuda
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
