@@ -85,10 +85,11 @@ spec:
               - dashboard
               - --host
               - "0.0.0.0"
-              - --insecure
             env:
               TZ: Europe/Bucharest
               GATEWAY_HEALTH_URL: http://localhost:8642
+            envFrom:
+              - secretRef: { name: hermes-secret }
             resources:
               requests:
                 cpu: 50m
