@@ -8,7 +8,7 @@ spec:
   interval: 15m
   url: oci://ghcr.io/mogenius/helm-charts/renovate-operator
   ref:
-    tag: 4.14.0
+    tag: 4.14.1
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
