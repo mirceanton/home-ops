@@ -59,3 +59,11 @@ discord:
     replied_user: true
 
 group_sessions_per_user: false
+
+dashboard:
+  oauth:
+    provider: self-hosted
+    self_hosted:
+      issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+      client_id: hermes-dashboard
+      scopes: "openid profile email"
