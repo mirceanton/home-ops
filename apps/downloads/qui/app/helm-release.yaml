@@ -34,8 +34,12 @@ spec:
               QUI__HOST: 0.0.0.0
               QUI__PORT: &port 80
               TZ: Europe/Bucharest
-            # envFrom:
-            #   - secretRef: { name: qui-secrets }
+              QUI__OIDC_ENABLED: "true"
+              QUI__OIDC_ISSUER: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              QUI__OIDC_CLIENT_ID: qui
+              QUI__OIDC_REDIRECT_URL: https://qui.home.mirceanton.com/api/auth/oidc/callback
+            envFrom:
+              - secretRef: { name: qui-secret }
 
             probes:
               liveness: &probes
