@@ -45,7 +45,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v2.7.5
+              tag: v3.0.0
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
