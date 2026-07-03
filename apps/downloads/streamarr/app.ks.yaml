@@ -15,6 +15,7 @@ spec:
   components:
     - ../../../../components/volsync/
     - ../../../../components/nfs-scaler/
+    - ../../../../components/oidc/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -26,6 +27,8 @@ spec:
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
+      OIDC_CLIENT_ID: arr-apps
+      OIDC_OP_ITEM: "Arr Apps - Keycloak"
 
   decryption: { provider: sops }
   dependsOn:

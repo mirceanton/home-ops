@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/backend_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: "${APP}-keycloak"
+spec:
+  endpoints:
+    - fqdn:
+        hostname: keycloak.nas.svc.h.mirceanton.com
+        port: 443
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.networking.k8s.io/backendtlspolicy_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: "${APP}-keycloak-tls"
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: "${APP}-keycloak"
+  validation:
+    hostname: keycloak.nas.svc.h.mirceanton.com
+    wellKnownCACertificates: System
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: "${APP}-oidc"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: "${APP}"
+
+  oidc:
+    provider:
+      issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+      # Explicit endpoints so the envoy-gateway controller skips its own
+      # OIDC discovery fetch (.well-known/openid-configuration) — that
+      # fetch runs from the controller pod itself, not the data-plane
+      # Envoy proxy, and its Go HTTP client's CA trust store doesn't
+      # validate our cert chain (unrelated to the BackendTLSPolicy below,
+      # which only covers the data-plane token-exchange call). Envoy
+      # Gateway only honors these if both are set together.
+      authorizationEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
+      tokenEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token
+      backendRefs:
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: "${APP}-keycloak"
+          port: 443
+    clientID: "${OIDC_CLIENT_ID}"
+    clientSecret:
+      name: "${APP}-oidc-secret"
+    redirectURL: "https://${APP}.home.mirceanton.com/oauth2/callback"
+    logoutPath: "/oauth2/logout"
