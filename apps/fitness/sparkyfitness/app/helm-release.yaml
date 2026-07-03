@@ -100,6 +100,19 @@ spec:
                     name: sparkyfitness-secret
                     key: BETTER_AUTH_SECRET
 
+              # OIDC / Keycloak SSO (BetterAuth SSO plugin, env-configured provider)
+              SPARKY_FITNESS_OIDC_AUTH_ENABLED: "true"
+              SPARKY_FITNESS_OIDC_PROVIDER_SLUG: keycloak
+              SPARKY_FITNESS_OIDC_PROVIDER_NAME: Keycloak
+              SPARKY_FITNESS_OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              SPARKY_FITNESS_OIDC_CLIENT_ID: sparkyfitness
+              SPARKY_FITNESS_OIDC_AUTO_REGISTER: "true"
+              SPARKY_FITNESS_OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-secret
+                    key: SPARKY_FITNESS_OIDC_CLIENT_SECRET
+
             probes:
               liveness: { enabled: true }
               readiness: { enabled: true }
