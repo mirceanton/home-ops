@@ -45,15 +45,28 @@ spec:
               tag: 0.146.0@sha256:8e4b197141d673440cb81b6884ff4f53cbd98990f4296302d9a54606db5478b7
             env:
               DATABASE_URL: sqlite3:/data/database/manyfold.sqlite3
-              MULTIUSER: false
+              MULTIUSER: enabled
               PORT: &port 3214
               REDIS_URL: "redis://manyfold-dragonfly:6379"
-              REGISTRATION: false
+              REGISTRATION: "true"
               SECRET_KEY_BASE:
                 valueFrom:
                   secretKeyRef:
                     name: manyfold-secret
                     key: MANYFOLD_SECRET_KEY
+
+              # OIDC / Keycloak SSO
+              PUBLIC_HOSTNAME: manyfold.home.mirceanton.com
+              HTTPS_ONLY: enabled
+              OIDC_NAME: Keycloak
+              FORCE_OIDC: enabled
+              OIDC_ISSUER: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              OIDC_CLIENT_ID: manyfold
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: manyfold-secret
+                    key: OIDC_CLIENT_SECRET
 
             probes:
               liveness: &probes
