@@ -41,6 +41,23 @@ spec:
               repository: ghcr.io/wait4x/wait4x
               tag: 3.6.0
             args: ["redis", "redis://immich-dragonfly:6379"]
+          render-config:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: "4"
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                yq -o=yaml '.oauth.clientSecret = env(IMMICH_OAUTH_CLIENT_SECRET)' \
+                  /tmp/config.json > /config/config.yaml
+            env:
+              IMMICH_OAUTH_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: immich-secret
+                    key: IMMICH_OAUTH_CLIENT_SECRET
         containers:
           main:
             image:
@@ -51,6 +68,7 @@ spec:
               REDIS_HOSTNAME: immich-dragonfly
               IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning:3003
               IMMICH_TELEMETRY_INCLUDE: all
+              IMMICH_CONFIG_FILE: /config/config.yaml
               DB_URL:
                 valueFrom:
                   secretKeyRef:
@@ -108,3 +126,16 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /data
+
+      config-template:
+        type: configMap
+        name: immich-config-template
+        defaultMode: 0444
+        globalMounts:
+          - path: /tmp/config.json
+            subPath: config.json
+
+      config:
+        type: emptyDir
+        globalMounts:
+          - path: /config

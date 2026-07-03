@@ -6,6 +6,15 @@ resources:
   - ./oci-repository.yaml
   - ./immich-server.helm-release.yaml
   - ./immich-ml.helm-release.yaml
+  - ./external-secret.yaml
 
 patchesStrategicMerge:
   - ./patches/cnpg.yaml
+
+configMapGenerator:
+  - name: immich-config-template
+    files:
+      - config.json=./files/config.json
+
+generatorOptions:
+  disableNameSuffixHash: true
