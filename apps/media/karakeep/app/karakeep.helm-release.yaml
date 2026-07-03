@@ -38,6 +38,7 @@ spec:
               CRAWLER_NUM_WORKERS: 4
               DATA_DIR: /data
               DISABLE_SIGNUPS: true
+              DISABLE_PASSWORD_AUTH: true
               DISABLE_NEW_RELEASE_CHECK: true
               COREPACK_INTEGRITY_KEYS: 0
               MEILI_ADDR: http://karakeep-meilisearch:7700
