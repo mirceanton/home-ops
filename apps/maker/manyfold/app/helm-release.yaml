@@ -45,7 +45,7 @@ spec:
               tag: 0.146.0@sha256:8e4b197141d673440cb81b6884ff4f53cbd98990f4296302d9a54606db5478b7
             env:
               DATABASE_URL: sqlite3:/data/database/manyfold.sqlite3
-              MULTIUSER: false
+              MULTIUSER: true
               PORT: &port 3214
               REDIS_URL: "redis://manyfold-dragonfly:6379"
               REGISTRATION: false
