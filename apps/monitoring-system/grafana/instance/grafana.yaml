@@ -24,7 +24,7 @@ spec:
       enable_gzip: "true"
       root_url: https://grafana.admin.mirceanton.com
 
-    auth: { disable_login_form: "false" }
+    auth: { disable_login_form: "true" }
     auth.anonymous: { enabled: "false" }
     metrics: { enabled: "true" }
     news: { news_feed_enabled: "false" }
