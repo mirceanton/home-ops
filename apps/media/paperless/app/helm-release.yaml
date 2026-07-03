@@ -51,6 +51,8 @@ spec:
               # Authentication
               PAPERLESS_ACCOUNT_ALLOW_SIGNUPS: "false"
               PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS: "false"
+              PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+              PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
               # Folders
               PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
               PAPERLESS_EXPORT_DIR: /data/nas/export
