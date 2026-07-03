@@ -107,6 +107,7 @@ spec:
               SPARKY_FITNESS_OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
               SPARKY_FITNESS_OIDC_CLIENT_ID: sparkyfitness
               SPARKY_FITNESS_OIDC_AUTO_REGISTER: "true"
+              SPARKY_FITNESS_DISABLE_EMAIL_LOGIN: "true"
               SPARKY_FITNESS_OIDC_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
