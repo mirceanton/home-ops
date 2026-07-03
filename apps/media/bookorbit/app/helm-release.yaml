@@ -42,7 +42,7 @@ spec:
           bookorbit:
             image:
               repository: ghcr.io/bookorbit/bookorbit
-              tag: 2.0.1
+              tag: 2.1.0
             env:
               NODE_ENV: production
               PORT: "3000"
