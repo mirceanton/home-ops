@@ -55,6 +55,18 @@ spec:
                     name: manyfold-secret
                     key: MANYFOLD_SECRET_KEY
 
+              # OIDC / Keycloak SSO
+              PUBLIC_HOSTNAME: manyfold.home.mirceanton.com
+              HTTPS_ONLY: enabled
+              OIDC_NAME: Keycloak
+              OIDC_ISSUER: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              OIDC_CLIENT_ID: manyfold
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: manyfold-secret
+                    key: OIDC_CLIENT_SECRET
+
             probes:
               liveness: &probes
                 enabled: true
