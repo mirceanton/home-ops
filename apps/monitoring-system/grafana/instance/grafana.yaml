@@ -6,6 +6,8 @@ metadata:
   name: grafana
   labels:
     grafana.internal/instance: grafana
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 
 spec:
   config:
@@ -23,11 +25,23 @@ spec:
       root_url: https://grafana.admin.mirceanton.com
 
     auth: { disable_login_form: "false" }
-    auth.anonymous: { enabled: "true" }
+    auth.anonymous: { enabled: "false" }
     metrics: { enabled: "true" }
     news: { news_feed_enabled: "false" }
     plugins: { plugin_admin_enabled: "false" }
     security: { angular_support_enabled: "true" }
+
+    auth.generic_oauth:
+      enabled: "true"
+      name: Keycloak
+      client_id: grafana
+      client_secret: ${AUTH_CLIENT_SECRET}
+      scopes: "openid profile email"
+      auth_url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
+      token_url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token
+      api_url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/userinfo
+      allow_sign_up: "true"
+      use_pkce: "true"
 
   deployment:
     spec:
@@ -43,6 +57,11 @@ spec:
                     secretKeyRef:
                       name: grafana-admin-password-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
+                - name: AUTH_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-admin-password-secret
+                      key: AUTH_CLIENT_SECRET
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
