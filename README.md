@@ -19,3 +19,5 @@ Thanks to all the people who donate their time to the [Home Operations](https://
 ## 📜 Changelog
 
 See my _awful_ [commit history](https://github.com/mirceanton/home-ops/commits/main)
+
+Hello
