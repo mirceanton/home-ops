@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter
-              tag: v3.0.3
+              tag: v3.1.1
             env:
               PORT: &port 8080
             resources:
