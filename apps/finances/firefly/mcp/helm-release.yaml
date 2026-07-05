@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/firefly-iii-mcp
-              tag: v0.3.1-fix36@sha256:d8b2b2618775e7400dcc0cae50011008b786a528998cb518d992379836e88708
+              tag: v0.3.1-fix37@sha256:65cbd69f8f171242a1bccc8d2dc3084b8dfb8f6af71ac3f8a19c82e508dcf99a
 
             env:
               FIREFLY_URL: "http://firefly.finances.svc.cluster.local:8080"
