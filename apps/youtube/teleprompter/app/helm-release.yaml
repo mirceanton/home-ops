@@ -25,6 +25,11 @@ spec:
               tag: v3.1.1
             env:
               PORT: &port 8080
+              OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              OIDC_CLIENT_ID: teleprompter
+              OIDC_REDIRECT_URL: https://teleprompter.home.mirceanton.com/auth/callback
+            envFrom:
+              - secretRef: { name: teleprompter-secret }
             resources:
               requests:
                 cpu: 10m
