@@ -150,12 +150,6 @@ services:
   - name: "YouTube"
     icon: "fab fa-youtube"
     items:
-      - name: "Penpot"
-        subtitle: "Design Tool // Figma Alternative"
-        url: "https://penpot.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/penpot.webp"
-
       - name: "Teleprompter"
         subtitle: ""
         url: "https://teleprompter.home.mirceanton.com"
