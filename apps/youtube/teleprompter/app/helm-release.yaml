@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter
-              tag: v3.1.1
+              tag: v3.1.2
             env:
               PORT: &port 8080
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
