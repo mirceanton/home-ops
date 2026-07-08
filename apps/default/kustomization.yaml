@@ -5,4 +5,12 @@ kind: Kustomization
 namespace: default
 
 resources:
+  - ./carbon
+  - ./convertx
   - ./homer
+  - ./omni-tools
+  - ./openspeedtest
+  - ./searxng
+  - ./sparkyfitness
+  - ./sure
+  - ./vikunja

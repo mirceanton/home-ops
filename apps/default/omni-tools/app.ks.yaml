@@ -8,9 +8,9 @@ spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: tools
+  targetNamespace: default
 
-  path: ./apps/tools/omni-tools/app
+  path: ./apps/default/omni-tools/app
   sourceRef:
     kind: GitRepository
     name: flux-system

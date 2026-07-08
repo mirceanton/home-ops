@@ -3,18 +3,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app sparkyfitness
+  name: &app vikunja
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: fitness
+  targetNamespace: default
 
-  path: ./apps/fitness/sparkyfitness/app
+  path: ./apps/default/vikunja/app
   components:
-    - ../../../../components/volsync/
     - ../../../../components/cnpg/
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,13 +24,16 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
 
+  decryption: { provider: sops }
   dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: cloudnative-pg-plugins
       namespace: database-system
-    - name: external-secrets-operator
-      namespace: security-system
-    - name: volsync
-      namespace: storage-system
