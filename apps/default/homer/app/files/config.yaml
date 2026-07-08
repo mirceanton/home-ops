@@ -75,6 +75,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sure.webp"
 
+      - name: "Vikunja"
+        subtitle: "Task Manager"
+        url: "https://tasks.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/vikunja.webp"
+
   - name: "Tools"
     icon: "fas fa-tools"
     items:

@@ -11,3 +11,4 @@ resources:
   - ./omni-tools
   - ./openspeedtest
   - ./searxng
+  - ./vikunja
