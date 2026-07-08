@@ -94,7 +94,12 @@ spec:
 
               # Chat assistant + auto-categorization/merchant detection, routed through the LiteLLM gateway
               OPENAI_URI_BASE: "https://llm.home.mirceanton.com/v1"
-              OPENAI_MODEL: "qwen-35b"
+              OPENAI_MODEL: "qwen-4b"
+
+              # Sure's default (2048) is far below what our local models actually support
+              # (qwen3-4b is configured with --ctx-size 32768); raise so tool-calling
+              # requests with larger fixed-prompt overhead (e.g. merchant detection) fit.
+              LLM_CONTEXT_WINDOW: "8192"
 
               # Family-vault document search (RAG), backed by the pgvector extension on this CNPG cluster
               VECTOR_STORE_PROVIDER: "pgvector"
