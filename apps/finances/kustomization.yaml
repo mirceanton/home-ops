@@ -6,5 +6,4 @@ namespace: finances
 
 resources:
   - ./namespace.yaml
-  - ./firefly
   - ./sure

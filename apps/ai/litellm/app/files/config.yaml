@@ -57,11 +57,6 @@ mcp_servers:
   streamarr:
     url: "http://streamarr.downloads.svc.cluster.local:8080/mcp"
 
-  firefly:
-    url: "http://firefly-mcp.finances.svc.cluster.local:3000"
-    auth_type: bearer_token
-    auth_value: os.environ/FIREFLY_MCP_TOKEN
-
   stockii:
     url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
     transport: sse

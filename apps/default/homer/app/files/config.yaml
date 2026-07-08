@@ -63,12 +63,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/home-assistant.webp"
 
-      - name: "Firefly"
-        subtitle: "Financial Manager"
-        url: "https://firefly.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/firefly-iii.webp"
-
       - name: "SparkyFitness"
         subtitle: "Fitness Tracker"
         url: "https://fitness.home.mirceanton.com"
