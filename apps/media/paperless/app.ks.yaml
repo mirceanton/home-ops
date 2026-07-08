@@ -15,6 +15,7 @@ spec:
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/
+    - ../../../../components/nfs-scaler/
     - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
@@ -33,6 +34,8 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
+    - name: keda
+      namespace: kube-system
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: cloudnative-pg-plugins
