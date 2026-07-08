@@ -14,6 +14,7 @@ spec:
   path: ./apps/maker/manyfold/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/nfs-scaler/
     - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
@@ -33,5 +34,7 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
+    - name: keda
+      namespace: kube-system
     - name: dragonfly-operator
       namespace: database-system
