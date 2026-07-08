@@ -70,7 +70,7 @@ spec:
             env: &sure_env
               TZ: "Europe/Bucharest"
               SELF_HOSTED: "true"
-              APP_DOMAIN: "sure.home.mirceanton.com"
+              APP_DOMAIN: "finance.home.mirceanton.com"
               RAILS_FORCE_SSL: "false"
               RAILS_ASSUME_SSL: "true"
 
@@ -112,7 +112,7 @@ spec:
               # Native OIDC login via Keycloak (Homelab realm) - register the client there first
               OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
               OIDC_CLIENT_ID: "sure"
-              OIDC_REDIRECT_URI: "https://sure.home.mirceanton.com/auth/openid_connect/callback"
+              OIDC_REDIRECT_URI: "https://finance.home.mirceanton.com/auth/openid_connect/callback"
 
               EXCHANGE_RATE_PROVIDER: "yahoo_finance"
               SECURITIES_PROVIDER: "yahoo_finance"
@@ -189,7 +189,7 @@ spec:
 
     route:
       home:
-        hostnames: ["sure.home.mirceanton.com"]
+        hostnames: ["finance.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
