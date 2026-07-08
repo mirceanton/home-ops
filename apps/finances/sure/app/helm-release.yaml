@@ -100,6 +100,8 @@ spec:
               # (qwen3-4b is configured with --ctx-size 32768); raise so tool-calling
               # requests with larger fixed-prompt overhead (e.g. merchant detection) fit.
               LLM_CONTEXT_WINDOW: "8192"
+              # Default (60s) is too tight for local tool-calling inference on qwen3-4b.
+              OPENAI_REQUEST_TIMEOUT: "180"
 
               # Family-vault document search (RAG), backed by the pgvector extension on this CNPG cluster
               VECTOR_STORE_PROVIDER: "pgvector"
