@@ -13,3 +13,6 @@ configMapGenerator:
   - name: homer-config
     files:
       - config.yml=files/config.yaml
+      - admin.yml=files/admin.yaml
+      - bomkii.yml=files/bomkii.yaml
+      - mirceanton.yml=files/mirceanton.yaml

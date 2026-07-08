@@ -1,0 +1,14 @@
+---
+services:
+  - items:
+      - name: "Teleprompter"
+        subtitle: ""
+        url: "https://teleprompter.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-scroll"
+
+      - name: "Hermes"
+        subtitle: "AI Agent"
+        url: "https://hermes.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/hermes-icon.webp"

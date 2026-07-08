@@ -6,7 +6,22 @@ footer: false
 columns: 5
 connectivityCheck: true
 
-links: []
+links:
+  - name: "Home"
+    icon: "fas fa-home"
+    url: "/"
+
+  - name: "Bomkii"
+    icon: "fas fa-boxes-stacked"
+    url: "#bomkii"
+
+  - name: "mirceanton"
+    icon: "fas fa-user"
+    url: "#mirceanton"
+
+  - name: "Admin"
+    icon: "fas fa-server"
+    url: "#admin"
 
 services:
   - name: "Media"
@@ -81,26 +96,20 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
 
-  - name: "Tools"
-    icon: "fas fa-tools"
+  - name: "Maker"
+    icon: "fas fa-cube"
     items:
-      - name: ConvertX
-        subtitle: "File Converter"
-        url: "https://convert.home.mirceanton.com"
+      - name: "Bambuddy"
+        subtitle: "3D Printer Manager"
+        url: "https://bambuddy.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/convertx.webp"
+        logo: "assets/icons/webp/bambu-lab.webp"
 
-      - name: "Omni-Tools"
-        subtitle: "Various Utilities"
-        url: "https://tools.home.mirceanton.com"
+      - name: "Manyfold"
+        subtitle: "3D Model Library"
+        url: "https://manyfold.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/omni-tools.webp"
-
-      - name: "OpenSpeedTest"
-        subtitle: "Network Speed Test"
-        url: "https://speedtest.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/openspeedtest.webp"
+        logo: "assets/icons/webp/manyfold.webp"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
@@ -153,44 +162,41 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/prowlarr.webp"
 
-  - name: "YouTube"
-    icon: "fab fa-youtube"
+  - name: "Tools"
+    icon: "fas fa-tools"
     items:
-      - name: "Teleprompter"
-        subtitle: ""
-        url: "https://teleprompter.home.mirceanton.com"
+      - name: ConvertX
+        subtitle: "File Converter"
+        url: "https://convert.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-scroll"
+        logo: "assets/icons/webp/convertx.webp"
 
-  - name: "Admin"
-    icon: "fas fa-server"
-    items:
-      - name: "Grafana"
-        subtitle: "Monitoring"
-        url: "https://grafana.admin.mirceanton.com"
+      - name: "Omni-Tools"
+        subtitle: "Various Utilities"
+        url: "https://tools.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/grafana.webp"
+        logo: "assets/icons/webp/omni-tools.webp"
 
-      - name: "Prometheus"
-        subtitle: "Metrics"
-        url: "https://prometheus.admin.mirceanton.com"
+      - name: "OpenSpeedTest"
+        subtitle: "Network Speed Test"
+        url: "https://speedtest.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/prometheus.webp"
+        logo: "assets/icons/webp/openspeedtest.webp"
 
-      - name: "AlertManager"
-        subtitle: "Alerting"
-        url: "https://alertmanager.admin.mirceanton.com"
+      - name: "Carbon"
+        subtitle: "Code Screenshot Tool"
+        url: "https://carbon.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/alertmanager.webp"
+        icon: "fas fa-code"
 
-      - name: "Flux"
-        subtitle: "GitOps"
-        url: "https://flux.admin.mirceanton.com"
+      - name: "Draw.io"
+        subtitle: "Diagram Editor"
+        url: "https://diagrams.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/flux-cd.webp"
+        logo: "assets/icons/webp/draw-io.webp"
 
-      - name: "Hubble"
-        subtitle: "Network Observability"
-        url: "https://hubble.admin.mirceanton.com"
+      - name: "SearXNG"
+        subtitle: "Meta Search Engine"
+        url: "https://search.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/hubble.webp"
+        logo: "assets/icons/webp/searxng.webp"

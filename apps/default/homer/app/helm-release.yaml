@@ -84,6 +84,18 @@ spec:
               - path: /www/assets/config.yml
                 subPath: config.yml
                 readOnly: true
+              - path: /www/assets/admin.yml
+                subPath: admin.yml
+                readOnly: true
+              - path: /www/assets/tools.yml
+                subPath: tools.yml
+                readOnly: true
+              - path: /www/assets/bomkii.yml
+                subPath: bomkii.yml
+                readOnly: true
+              - path: /www/assets/mirceanton.yml
+                subPath: mirceanton.yml
+                readOnly: true
       icons:
         type: emptyDir
         advancedMounts:

@@ -1,0 +1,8 @@
+---
+services:
+  - items:
+      - name: "Stockii"
+        subtitle: "Inventory Manager"
+        url: "https://stockii.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-boxes-stacked"

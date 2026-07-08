@@ -1,0 +1,154 @@
+---
+services:
+  - name: "Monitoring"
+    icon: "fas fa-chart-line"
+    items:
+      - name: "Grafana"
+        subtitle: "Monitoring"
+        url: "https://grafana.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/grafana.webp"
+
+      - name: "Prometheus"
+        subtitle: "Metrics"
+        url: "https://prometheus.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/prometheus.webp"
+
+      - name: "AlertManager"
+        subtitle: "Alerting"
+        url: "https://alertmanager.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/alertmanager.webp"
+
+  - name: "GitOps"
+    icon: "fas fa-code-branch"
+    items:
+      - name: "Flux"
+        subtitle: "GitOps"
+        url: "https://flux.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/flux-cd.webp"
+
+      - name: "Renovate"
+        subtitle: "Dependency Updates"
+        url: "https://renovate.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/renovate.webp"
+
+  - name: "Networking"
+    icon: "fas fa-network-wired"
+    items:
+      - name: MikroTik
+        subtitle: "RouterOS"
+        url: "https://10.0.0.1"
+        target: "_blank"
+        logo: "assets/icons/webp/mikrotik.webp"
+
+      - name: "Hubble"
+        subtitle: "Network Observability"
+        url: "https://hubble.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/hubble.webp"
+
+  - name: "Home Automation"
+    icon: "fas fa-house-signal"
+    items:
+      - name: "Zigbee2MQTT"
+        subtitle: "Zigbee Network"
+        url: "https://z2m.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/zigbee2mqtt.webp"
+
+      - name: "Sonoff Dongle"
+        subtitle: "Zigbee Dongle Manager"
+        url: "http://sonoff-dongle-max.mgmt.h.mirceanton.com/"
+        target: "_blank"
+        icon: "fas fa-satellite-dish"
+
+  - name: "AI"
+    icon: "fas fa-robot"
+    items:
+      - name: "LiteLLM"
+        subtitle: "LLM Gateway"
+        url: "https://llm.home.mirceanton.com/ui/"
+        target: "_blank"
+        icon: "fas fa-brain"
+
+  - name: "Servers"
+    icon: "fas fa-hard-drive"
+    items:
+      - name: "TrueNAS"
+        subtitle: "NAS"
+        url: "https://nas.mgmt.h.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/truenas.webp"
+
+      - name: "Proxmox"
+        subtitle: "Virtualization"
+        url: "https://pve.mgmt.h.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/proxmox.webp"
+
+  - name: "Core Services"
+    icon: "fas fa-box"
+    items:
+      - name: "Keycloak"
+        subtitle: "Identity Provider"
+        url: "https://keycloak.nas.svc.h.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/keycloak.webp"
+
+      - name: "Nexus"
+        subtitle: "Artifact Registry"
+        url: "https://registry.nas.svc.h.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/nexus.webp"
+
+      - name: "Garage"
+        subtitle: "Object Storage"
+        url: "https://garage.nas.svc.h.mirceanton.com/"
+        target: "_blank"
+        logo: "assets/icons/webp/garage.webp"
+
+  - name: "Hardware"
+    icon: "fas fa-microchip"
+    items:
+      - name: "JetKVM"
+        subtitle: "Remote KVM"
+        url: "http://jetkvm.mgmt.h.mirceanton.com/"
+        target: "_blank"
+        logo: "assets/icons/webp/jetkvm.webp"
+
+      - name: "TrueNAS BMC"
+        subtitle: "Out-of-Band Management"
+        url: "https://bmc-nas.mgmt.h.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-server"
+
+  - name: "External"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Cloudflare"
+        subtitle: "DNS & CDN"
+        url: "https://dash.cloudflare.com/"
+        target: "_blank"
+        logo: "assets/icons/webp/cloudflare.webp"
+
+      - name: "Backblaze B2"
+        subtitle: "Object Storage"
+        url: "https://secure.backblaze.com/b2_buckets.htm"
+        target: "_blank"
+        logo: "assets/icons/webp/backblaze.webp"
+
+      - name: "1Password"
+        subtitle: "Secrets Manager"
+        url: "https://my.1password.com/"
+        target: "_blank"
+        logo: "assets/icons/webp/1password.webp"
+
+      - name: "Migadu"
+        subtitle: "Email Hosting"
+        url: "https://admin.migadu.com/"
+        target: "_blank"
+        icon: "fas fa-envelope"
