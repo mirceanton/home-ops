@@ -69,6 +69,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sparky-fitness.webp"
 
+      - name: "Sure"
+        subtitle: "Financial Manager"
+        url: "https://finance.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/sure.webp"
+
   - name: "Tools"
     icon: "fas fa-tools"
     items:
