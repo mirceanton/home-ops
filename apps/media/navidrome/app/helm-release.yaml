@@ -20,7 +20,7 @@ spec:
           navidrome:
             image:
               repository: ghcr.io/navidrome/navidrome
-              tag: 0.63.0
+              tag: 0.63.1
             env:
               ND_DATAFOLDER: /data
               ND_ENABLEDOWNLOADS: "true"
