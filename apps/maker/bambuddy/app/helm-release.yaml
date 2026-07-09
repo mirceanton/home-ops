@@ -25,6 +25,12 @@ spec:
               tag: 0.2.4.9
             env:
               PORT: &httpPort 8000
+              HA_URL: http://home-assistant.home-automation.svc.cluster.local:8123
+              HA_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: bambuddy-secret
+                    key: HA_TOKEN
 
             resources:
               requests:

@@ -6,6 +6,7 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./grafana-dashboard.yaml
+  - ./external-secret.yaml
 
 configMapGenerator:
   - name: bambuddy-dashboard
