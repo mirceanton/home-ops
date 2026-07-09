@@ -3,7 +3,7 @@ clusterName: home-ops
 endpoint: "https://home-ops.mgmt.h.mirceanton.com:6443"
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-talosVersion: v1.13.5
+talosVersion: v1.13.6
 
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
 kubernetesVersion: v1.36.2
