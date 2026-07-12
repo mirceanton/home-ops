@@ -1,26 +1,12 @@
 model_list:
-  - model_name: qwen-35b
+  - model_name: qwen35b-mtp
     litellm_params:
-      model: openai/qwen-35b
-      api_base: http://qwen-35b-proxy.ai.svc.cluster.local:8080
+      model: openai/qwen35b-mtp
+      api_base: http://qwen35b-mtp.ai.svc.cluster.local:8080
       api_key: "N/A"
       extra_body:
         chat_template_kwargs:
           enable_thinking: false
-    model_info:
-      supports_response_schema: false
-
-  - model_name: gemma-4-26b-a4b
-    litellm_params:
-      model: openai/gemma-4-26b-a4b
-      api_base: http://gemma-4-26b-a4b-proxy.ai.svc.cluster.local:8080
-      api_key: "N/A"
-
-  - model_name: qwen3-4b
-    litellm_params:
-      model: openai/qwen3-4b
-      api_base: http://qwen3-4b.ai.svc.cluster.local:8080
-      api_key: "N/A"
     model_info:
       supports_response_schema: false
 
