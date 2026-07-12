@@ -1,0 +1,35 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app budget-board
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: default
+
+  path: ./apps/default/budget-board/app
+  components:
+    - ../../../../components/cnpg/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+
+  decryption: { provider: sops }
+  # dependsOn:
+  #   - name: 1password-connect
+  #     namespace: security-system
+  #   - name: external-secrets-operator
+  #     namespace: security-system
+  #   - name: cloudnative-pg-operator
+  #     namespace: database-system
+  #   - name: cloudnative-pg-plugins
+  #     namespace: database-system

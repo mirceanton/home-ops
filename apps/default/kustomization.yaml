@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: default
 
 resources:
+  - ./budget-board
   - ./carbon
   - ./convertx
   - ./drawio
