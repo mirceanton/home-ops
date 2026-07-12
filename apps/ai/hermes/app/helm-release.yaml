@@ -51,10 +51,19 @@ spec:
 
         containers:
           app:
-            image: &image
+            # Single container: the image's own s6-rc supervisor starts
+            # both the messaging gateway and (when HERMES_DASHBOARD=true)
+            # the dashboard service internally, based on persisted
+            # profile state on the data volume. Passing CLI args like
+            # "gateway run" here fights that supervisor and crashes with
+            # "gateway is already running under s6". `sleep infinity` is
+            # the wrapper script's documented way to give the container
+            # an inert foreground process while s6 runs the real
+            # services in the background.
+            image:
               repository: nousresearch/hermes-agent
               tag: v2026.7.7@sha256:ce3b39adf33fffae8cb19dcae74f971975b972efe91207f7d7539f80a0aae66a
-            args: ["gateway", "run", "--no-supervise"]
+            args: ["sleep", "infinity"]
 
             envFrom:
               - secretRef: { name: hermes-secret }
@@ -62,38 +71,12 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: Europe/Bucharest
+              HERMES_DASHBOARD: "true"
 
             resources:
               requests:
-                cpu: 100m
-                memory: 512Mi
-              limits:
-                memory: 2Gi
-            ports:
-              - containerPort: &port 8642
-                name: http
-                protocol: TCP
-
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-
-          dashboard:
-            image: *image
-            args:
-              - dashboard
-              - --host
-              - "0.0.0.0"
-            env:
-              TZ: Europe/Bucharest
-              GATEWAY_HEALTH_URL: http://localhost:8642
-            envFrom:
-              - secretRef: { name: hermes-secret }
-            resources:
-              requests:
-                cpu: 50m
-                memory: 256Mi
+                cpu: 150m
+                memory: 768Mi
               limits:
                 memory: 2Gi
             ports:
@@ -117,11 +100,6 @@ spec:
         seccompProfile: { type: RuntimeDefault }
 
     service:
-      app:
-        controller: hermes
-        ports:
-          http:
-            port: *port
       dashboard:
         controller: hermes
         ports:
