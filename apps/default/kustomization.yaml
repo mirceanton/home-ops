@@ -7,6 +7,7 @@ namespace: default
 resources:
   - ./carbon
   - ./convertx
+  - ./drawio
   - ./homer
   - ./omni-tools
   - ./openspeedtest
