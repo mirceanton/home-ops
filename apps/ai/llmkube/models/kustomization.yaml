@@ -4,5 +4,5 @@ kind: Kustomization
 
 resources:
   - ./servicemonitor.yaml
-  - ./qwen35b-mtp.yaml
+  # - ./qwen35b-mtp.yaml
   - ./qwen3-embedding-0.6b.yaml
