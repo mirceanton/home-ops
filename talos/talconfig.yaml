@@ -63,6 +63,7 @@ nodes:
       customization:
         extraKernelArgs:
           - cpufreq.default_governor=performance
+          - amdgpu.gttsize=40960 # 40GiB GTT ceiling for iGPU LLM inference
         systemExtensions:
           officialExtensions:
             - siderolabs/amd-ucode
