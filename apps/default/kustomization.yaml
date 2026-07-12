@@ -9,6 +9,7 @@ resources:
   - ./carbon
   - ./convertx
   - ./drawio
+  - ./firefly
   - ./homer
   - ./omni-tools
   - ./openspeedtest
