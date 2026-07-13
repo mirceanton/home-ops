@@ -10,4 +10,3 @@ spec:
       - name: ${APP}
         ensure: present
         login: true
-        superuser: true
