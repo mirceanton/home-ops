@@ -23,13 +23,6 @@
       "minimumGroupSize": 2
     },
     {
-      "description": "Group Firefly III components",
-      "groupName": "firefly-iii",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["/fireflyiii/"],
-      "minimumGroupSize": 2
-    },
-    {
       "description": "Group 1Password Connect components",
       "groupName": "1password-connect",
       "matchDatasources": ["docker"],

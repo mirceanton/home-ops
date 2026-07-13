@@ -90,18 +90,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sure.webp"
 
-      - name: "Firefly"
-        subtitle: "Financial Manager"
-        url: "https://firefly.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/firefly-iii.webp"
-
-      - name: "Budget Board"
-        subtitle: "Financial Manager"
-        url: "https://budget-board.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/budget-board.webp"
-
       - name: "Vikunja"
         subtitle: "Task Manager"
         url: "https://tasks.home.mirceanton.com"

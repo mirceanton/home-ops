@@ -8,11 +8,6 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["fireflyiii/core", "fireflyiii/data-importer"],
-      "versioning": "regex:^version-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
-    },
-    {
-      "matchDatasources": ["docker"],
       "matchPackageNames": ["onerahmet/openai-whisper-asr-webservice"],
       "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-gpu$"
     },
