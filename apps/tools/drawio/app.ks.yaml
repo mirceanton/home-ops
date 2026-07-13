@@ -8,9 +8,9 @@ spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: default
+  targetNamespace: tools
 
-  path: ./apps/default/drawio/app
+  path: ./apps/tools/drawio/app
   sourceRef:
     kind: GitRepository
     name: flux-system
