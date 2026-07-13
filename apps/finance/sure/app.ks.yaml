@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: default
+  targetNamespace: finance
 
-  path: ./apps/default/sure/app
+  path: ./apps/finance/sure/app
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/
