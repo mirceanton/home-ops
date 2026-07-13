@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: grafana/mcp-grafana
-              tag: 0.17.1
+              tag: 0.17.2
             env:
               GRAFANA_URL: http://grafana-service:3000
               GRAFANA_ORG_ID: "1"
