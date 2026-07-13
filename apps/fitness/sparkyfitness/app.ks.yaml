@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: default
+  targetNamespace: fitness
 
-  path: ./apps/default/sparkyfitness/app
+  path: ./apps/fitness/sparkyfitness/app
   components:
     - ../../../../components/volsync/
     - ../../../../components/cnpg/

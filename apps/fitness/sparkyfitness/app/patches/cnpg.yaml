@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${APP}-postgres
+spec:
+  # TEMPORARY: one-time recovery bootstrap for the default -> fitness namespace
+  # migration. Remove this bootstrap/externalClusters override once the
+  # recovered cluster has been verified healthy (bootstrap is a one-time,
+  # immutable decision — this block has no effect after the first reconcile).
+  bootstrap:
+    initdb: null
+    recovery:
+      source: origin
+      database: ${APP}
+      owner: ${APP}
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: ${APP}-postgres-backup
+          serverName: ${APP}-postgres
+
+  managed:
+    roles:
+      - name: ${APP}
+        ensure: present
+        login: true
