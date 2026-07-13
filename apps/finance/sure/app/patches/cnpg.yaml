@@ -5,23 +5,13 @@ kind: Cluster
 metadata:
   name: ${APP}-postgres
 spec:
-  # TEMPORARY: one-time recovery bootstrap for the default -> finance namespace
-  # migration. Once recovery completes and is verified, this must be swapped
-  # to `bootstrap: null` permanently (see migrate-cnpg-cluster.md Step 10) —
-  # CNPG forbids ever reverting to bootstrap.initdb afterward.
-  bootstrap:
-    initdb: null
-    recovery:
-      source: origin
-      database: ${APP}
-      owner: ${APP}
-  externalClusters:
-    - name: origin
-      plugin:
-        name: barman-cloud.cloudnative-pg.io
-        parameters:
-          barmanObjectName: ${APP}-postgres-backup
-          serverName: ${APP}-postgres
+  # This cluster was bootstrapped via recovery (migrated from the default
+  # namespace on 2026-07-13). CNPG's webhook forbids ever switching an
+  # already-bootstrapped cluster back to bootstrap.initdb — the component
+  # default — so `bootstrap: null` must stay here permanently to suppress
+  # it. Confirmed via `kubectl apply --dry-run=server`.
+  bootstrap: null
+  externalClusters: null
 
   postgresql:
     extensions:
