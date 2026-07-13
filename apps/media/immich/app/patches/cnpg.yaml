@@ -37,7 +37,6 @@ spec:
       - name: immich
         ensure: present
         login: true
-        superuser: true
 
 ---
 apiVersion: postgresql.cnpg.io/v1
