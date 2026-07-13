@@ -5,23 +5,15 @@ kind: Cluster
 metadata:
   name: ${APP}-postgres
 spec:
-  # TEMPORARY: one-time recovery bootstrap for the default -> fitness namespace
-  # migration. Remove this bootstrap/externalClusters override once the
-  # recovered cluster has been verified healthy (bootstrap is a one-time,
-  # immutable decision — this block has no effect after the first reconcile).
-  bootstrap:
-    initdb: null
-    recovery:
-      source: origin
-      database: ${APP}
-      owner: ${APP}
-  externalClusters:
-    - name: origin
-      plugin:
-        name: barman-cloud.cloudnative-pg.io
-        parameters:
-          barmanObjectName: ${APP}-postgres-backup
-          serverName: ${APP}-postgres
+  # This cluster was bootstrapped via recovery (migrated from the default
+  # namespace on 2026-07-13). CNPG's webhook forbids ever switching an
+  # already-bootstrapped cluster back to bootstrap.initdb — the component
+  # default — so `bootstrap: null` must stay here permanently to suppress
+  # it. Confirmed via `kubectl apply --dry-run=server`: reverting to initdb
+  # is rejected ("Only one bootstrap method can be specified at a time"),
+  # but omitting bootstrap entirely is accepted.
+  bootstrap: null
+  externalClusters: null
 
   managed:
     roles:
