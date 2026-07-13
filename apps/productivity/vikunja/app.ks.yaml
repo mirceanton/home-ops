@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: default
+  targetNamespace: productivity
 
-  path: ./apps/default/vikunja/app
+  path: ./apps/productivity/vikunja/app
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/

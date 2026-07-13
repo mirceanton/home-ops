@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ${APP}-postgres
+spec:
+  bootstrap:
+    initdb: null
+    recovery:
+      source: origin
+      database: ${APP}
+      owner: ${APP}
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: ${APP}-postgres-backup
+          serverName: ${APP}-postgres
+  managed:
+    roles:
+      - name: ${APP}
+        ensure: present
+        login: true
