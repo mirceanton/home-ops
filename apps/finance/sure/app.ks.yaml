@@ -29,14 +29,14 @@ spec:
       VOLSYNC_PGID: "1000"
 
   decryption: { provider: sops }
-  # dependsOn:
-  #   - name: 1password-connect
-  #     namespace: security-system
-  #   - name: volsync
-  #     namespace: storage-system
-  #   - name: cloudnative-pg-operator
-  #     namespace: database-system
-  #   - name: cloudnative-pg-plugins
-  #     namespace: database-system
-  #   - name: dragonfly-operator
-  #     namespace: database-system
+  dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: dragonfly-operator
+      namespace: database-system
