@@ -8,11 +8,13 @@ to a new namespace always means: **freeze writes → take a final backup → in 
 manifests AND configure the new cluster to recover from that backup from its very first
 reconcile → push → verify → clean up.**
 
-This was validated end-to-end by migrating `sparkyfitness` from `default` to a dedicated `fitness`
-namespace. Two things about that run matter more than anything below: **a suspended Flux
-Kustomization does not cascade-prune its resources when deleted**, and **CNPG's `bootstrap` field
-is permanently immutable post-creation, not just "don't touch it during recovery."** Both bit us
-for real; see Common Pitfalls.
+This was validated end-to-end twice — migrating `sparkyfitness` from `default` to a dedicated
+`fitness` namespace, then `sure` from `default` to `finance`. Two things from the first run matter
+more than anything below: **a suspended Flux Kustomization does not cascade-prune its resources
+when deleted**, and **CNPG's `bootstrap` field is permanently immutable post-creation, not just
+"don't touch it during recovery."** Both bit us for real; see Common Pitfalls. The second run
+confirmed the fix for the first issue works, and surfaced one more thing worth expecting going in:
+**`ReplicationDestination` never gets auto-pruned either, not just the data PVC** — see Step 9.
 
 Applies to any app using the shared `components/cnpg` (and, if stateful data beyond the DB exists,
 `components/volsync`) pattern.
@@ -107,6 +109,11 @@ kubectl patch replicationsource <app> -n <src-ns> --type merge \
   -p '{"spec":{"trigger":{"manual":"migration-'"$(date +%s)"'"}}}'
 # poll status.lastManualSync until it matches what you just set
 ```
+
+The mover job's `jitter` init container adds a randomized startup delay before the actual sync
+begins — this has taken anywhere from ~20 seconds to ~5 minutes across two real runs. A pod stuck
+at `Init:0/1` on the `jitter` container for a few minutes is normal, not stuck; check
+`kubectl describe pod` for `FailedScheduling`/actual errors before assuming something's wrong.
 
 ---
 
@@ -234,10 +241,20 @@ done
 If anything's still there (see Step 2 for why this happens), delete it explicitly in this order —
 `HelmRelease` first (cascades to Deployments/Services via helm uninstall), then VolSync objects,
 then the `Cluster` (drops its PVCs), then `Database`/`ObjectStore`/`ScheduledBackup`, then
-`ExternalSecret`s, then check for leftover PVCs by hand. **The app's own VolSync-backed data PVC
-has `kustomize.toolkit.fluxcd.io/prune: disabled` and is never auto-pruned by Flux even when
-everything else works correctly** — it always needs an explicit `kubectl delete pvc`, migration or
-not.
+`ExternalSecret`s, then check for leftover PVCs by hand.
+
+**Two things never get auto-pruned by Flux, even in a clean run where you resumed the Kustomization
+correctly and everything else cascaded fine — confirmed on both real migrations:**
+
+- The app's own VolSync-backed data `PersistentVolumeClaim` — it carries
+  `kustomize.toolkit.fluxcd.io/prune: disabled` by design, so Flux always leaves it behind.
+- The `ReplicationDestination` object — no protective annotation involved this time (it carries
+  `kustomize.toolkit.fluxcd.io/ssa: IfNotPresent` instead, which appears to be what exempts it from
+  normal prune tracking), but the effect is the same: it survives every time regardless of whether
+  the rest of the cleanup worked.
+
+Both always need an explicit `kubectl delete pvc` / `kubectl delete replicationdestination` —
+budget in the time for it on every migration, not just as a fallback for when Step 2 goes wrong.
 
 Deleting the old `ObjectStore` K8s object does not touch the underlying S3 data — the new
 cluster's `ObjectStore` (same `destinationPath`) already owns that backup history going forward.
@@ -291,6 +308,10 @@ kubectl apply --dry-run=server -f /tmp/current.json
 - **`kubectl kustomize` on the app directory alone** — fails or silently omits the CNPG/VolSync
   resources, since those only get wired in via `components:` at the Flux Kustomization level. Use
   `flux build kustomization --dry-run` instead.
-- **The app's data PVC (`kustomize.toolkit.fluxcd.io/prune: disabled`)** never gets auto-pruned by
-  Flux, migration or not — always requires an explicit manual `kubectl delete pvc` once you're
-  certain the new copy is good.
+- **The app's data PVC (`kustomize.toolkit.fluxcd.io/prune: disabled`) and its
+  `ReplicationDestination`** never get auto-pruned by Flux, migration or not, even on a run where
+  everything else cascaded correctly — always requires explicit manual cleanup for both, every
+  time, not just as a fallback.
+- **Assuming a `volsync-src-*` pod stuck at `Init:0/1` is broken** — it's the mover job's `jitter`
+  init container adding a randomized startup delay, observed anywhere from ~20s to ~5 minutes.
+  Check for actual errors before assuming it's stuck.
