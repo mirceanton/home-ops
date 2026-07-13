@@ -91,23 +91,6 @@ spec:
                 valueFrom:
                   secretKeyRef: { name: sure-postgres-app, key: port }
 
-              # Chat assistant + auto-categorization/merchant detection, routed through the LiteLLM gateway
-              OPENAI_URI_BASE: "https://llm.home.mirceanton.com/v1"
-              OPENAI_MODEL: "qwen3-4b"
-
-              # Sure's default (2048) is far below what our local models actually support
-              # (qwen3-4b is configured with --ctx-size 32768); raise so tool-calling
-              # requests with larger fixed-prompt overhead (e.g. merchant detection) fit.
-              LLM_CONTEXT_WINDOW: "8192"
-              # Default (60s) is too tight for local tool-calling inference on qwen3-4b.
-              OPENAI_REQUEST_TIMEOUT: "300"
-
-              # Family-vault document search (RAG), backed by the pgvector extension on this CNPG cluster
-              VECTOR_STORE_PROVIDER: "pgvector"
-              EMBEDDING_MODEL: "qwen3-embedding-0.6b"
-              EMBEDDING_DIMENSIONS: "1024" # verify against the actual model's output dimension
-              EMBEDDING_URI_BASE: "https://llm.home.mirceanton.com/v1"
-
               # Native OIDC login via Keycloak (Homelab realm) - register the client there first
               OIDC_CLIENT_ID: "sure"
               OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
