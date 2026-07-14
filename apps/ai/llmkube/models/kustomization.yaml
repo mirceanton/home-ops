@@ -4,6 +4,6 @@ kind: Kustomization
 
 resources:
   - ./servicemonitor.yaml
-  # - ./qwen35b-mtp.yaml
-  - ./gemma-4-26b-a4b.yaml
+  - ./qwen35b-mtp.yaml
+  # - ./gemma-4-26b-a4b.yaml
   - ./qwen3-embedding-0.6b.yaml
