@@ -36,6 +36,11 @@ spec:
   uBatchSize: 1024
   cacheTypeK: q8_0
   cacheTypeV: q8_0
+  extraArgs:
+    - "--spec-type"
+    - "draft-mtp"
+    - "--spec-draft-n-max"
+    - "2"
 
   resources:
     cpu: 500m # just for scheduling purposes...
