@@ -1,4 +1,10 @@
 model_list:
+  - model_name: gemma-4-26b-a4b
+    litellm_params:
+      model: openai/gemma-4-26b-a4b
+      api_base: http://gemma-4-26b-a4b.ai.svc.cluster.local:8080
+      api_key: "N/A"
+
   - model_name: qwen35b-mtp
     litellm_params:
       model: openai/qwen35b-mtp
