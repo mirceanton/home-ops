@@ -28,6 +28,7 @@
 
 - **Deploy a new app**: `.agents/skills/deploy-app.md` — adds a new application to the cluster using the bjw-s-labs app-template chart.
 - **Migrate a CNPG cluster**: `.agents/skills/migrate-cnpg-cluster.md` — moves a Postgres cluster's data to a new namespace/name via backup → redeploy → recover (no in-place migration or auto-restore exists in CNPG).
+- **Unlock a stuck VolSync backup**: `.agents/skills/volsync-unlock.md` — clears a stale restic repo lock (usually from apiserver flakiness killing the mover pod mid-`forget`) that otherwise loops backup Jobs forever.
 
 ## Critical Operational Notes
 
