@@ -44,6 +44,18 @@ tasks:
       NS: '{{.NS | default ""}}'
     cmd: bash {{.ROOT_DIR}}/.scripts/volsync-backup-all.sh {{.NS}}
 
+  unlock:
+    desc: |
+      Scan for volsync source pods stuck on a stale restic lock and remove it.
+      Root cause: an apiserver hiccup (or any pod eviction) kills the mover pod
+      mid "forget/prune" step, leaving the restic repo locked. Every subsequent
+      sync then fails immediately with "repo already locked" and retries forever.
+      Usage: task volsync:unlock [NS=<ns>]
+    silent: true
+    vars:
+      NS: '{{.NS | default ""}}'
+    cmd: bash {{.ROOT_DIR}}/.scripts/volsync-unlock.sh {{.NS}}
+
   restore:
     desc: |
       Trigger a volsync restore.
