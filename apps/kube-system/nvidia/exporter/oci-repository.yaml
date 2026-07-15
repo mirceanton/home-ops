@@ -8,7 +8,7 @@ spec:
   interval: 5m
   url: oci://ghcr.io/home-operations/charts-mirror/dcgm-exporter
   ref:
-    tag: 4.8.2
+    tag: 4.8.3
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
