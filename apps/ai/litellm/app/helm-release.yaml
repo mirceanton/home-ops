@@ -42,6 +42,7 @@ spec:
               LITELLM_MODE: PRODUCTION
               LITELLM_LOG: INFO
               LITELLM_LOCAL_MODEL_COST_MAP: "False"
+              PROXY_BASE_URL: "https://llm.home.mirceanton.com"
               LITELLM_MASTER_KEY:
                 valueFrom:
                   secretKeyRef:
