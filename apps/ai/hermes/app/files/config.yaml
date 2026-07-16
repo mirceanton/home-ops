@@ -45,7 +45,7 @@ platform_toolsets:
 discord:
   require_mention: true
   thread_require_mention: false
-  auto_thread: false
+  auto_thread: true
   reactions: true
   ignored_channels: []
   no_thread_channels: []
