@@ -21,7 +21,7 @@ spec:
 
           initContainers:
             - name: dump
-              image: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
+              image: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.4-minimal-trixie}
               command: ["/bin/bash", "/scripts/backup.sh"]
               env:
                 - name: APP_NAME

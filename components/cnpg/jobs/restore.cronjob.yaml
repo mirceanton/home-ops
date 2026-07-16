@@ -61,7 +61,7 @@ spec:
 
           containers:
             - name: restore
-              image: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
+              image: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.4-minimal-trixie}
               command: ["/bin/bash", "/scripts/restore.sh"]
               env:
                 - name: APP_NAME
