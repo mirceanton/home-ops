@@ -25,6 +25,7 @@ metadata:
 spec:
   modelRef: gemma-4-12b
   image: ghcr.io/ggml-org/llama.cpp:server-cuda
+  runtimeClassName: nvidia
   replicas: 1
   priority: batch
   parallelSlots: 1 # single concurrent session
