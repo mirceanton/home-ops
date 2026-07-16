@@ -4,4 +4,3 @@ kind: Kustomization
 
 resources:
   - ./operator.ks.yaml
-  - ./plugins.ks.yaml

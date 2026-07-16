@@ -6,5 +6,6 @@ resources:
   - cnpg.yaml
   - database.yaml
   - external-secret.yaml
-  - objectstore.yaml
-  - scheduled-backup.yaml
+  - scripts.configmap.yaml
+  - jobs/backup.cronjob.yaml
+  - jobs/restore.cronjob.yaml
