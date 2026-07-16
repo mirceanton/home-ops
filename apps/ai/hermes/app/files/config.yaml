@@ -1,5 +1,5 @@
 model:
-  default: qwen35b-mtp
+  default: gemma-4-12b
 
 providers:
   litellm:
