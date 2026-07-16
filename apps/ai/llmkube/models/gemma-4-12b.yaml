@@ -31,7 +31,7 @@ spec:
   parallelSlots: 1 # single concurrent session
 
   flashAttention: true
-  contextSize: 16384
+  contextSize: 100000
   uBatchSize: 512
   cacheTypeK: q8_0
   cacheTypeV: q8_0
@@ -40,7 +40,7 @@ spec:
     cpu: 500m # just for scheduling purposes...
     memory: 1Gi # just for scheduling purposes...
     gpu: 1
-    gpuMemory: 8Gi
+    gpuMemory: 9Gi
 
   endpoint:
     port: 8080
