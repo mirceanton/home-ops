@@ -21,7 +21,10 @@ spec:
 
       containers:
         - name: seed
-          image: ${CNPG_SEED_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.4-system-trixie}
+          # Must track the operand's PostgreSQL version (CNPG_IMAGE, default
+          # 18.1) so the base backup is recoverable by the real cluster — keep
+          # these in lockstep. The -system variant ships the barman-cloud CLI.
+          image: ${CNPG_SEED_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-system-trixie}
           command: ["/bin/bash", "/scripts/seed.sh"]
           env:
             - name: APP_DB_NAME
