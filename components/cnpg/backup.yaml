@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/backup_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: "${APP}-postgres-init"
+spec:
+  # One-off base backup to seed the barman object store on first reconcile so
+  # a recovery point exists immediately, without waiting for the ScheduledBackup.
+  # Backup objects run once on creation and are not re-triggered by Flux.
+  cluster:
+    name: "${APP}-postgres"
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

@@ -8,3 +8,4 @@ resources:
   - external-secret.yaml
   - objectstore.yaml
   - scheduled-backup.yaml
+  - backup.yaml
