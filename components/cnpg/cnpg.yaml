@@ -10,10 +10,23 @@ spec:
   instances: ${CNPG_REPLICAS:-1}
   imageName: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
 
+  # VolSync-like behaviour: always bootstrap by recovering the latest backup
+  # from S3. On a genuine first-ever deploy the object store is empty, so the
+  # ${APP}-postgres-seed Job (see seed.job.yaml) pre-seeds an empty base backup
+  # containing the ${APP} database/owner, giving recovery something to restore.
   bootstrap:
-    initdb:
+    recovery:
+      source: origin
       database: ${APP}
       owner: ${APP}
+
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: "${APP}-postgres-backup"
+          serverName: "${APP}-postgres"
 
   storage:
     storageClass: ${CNPG_DATA_STORAGE_CLASS:-openebs-zfs}

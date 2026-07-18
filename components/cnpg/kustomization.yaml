@@ -9,3 +9,5 @@ resources:
   - objectstore.yaml
   - scheduled-backup.yaml
   - backup.yaml
+  - seed.configmap.yaml
+  - seed.job.yaml
