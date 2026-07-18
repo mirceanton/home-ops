@@ -49,3 +49,5 @@ spec:
     - name: vchord
     - name: cube
     - name: earthdistance
+    - name: postgis
+    - name: timescaledb
