@@ -30,6 +30,18 @@ model_list:
     model_info:
       mode: embedding
 
+  - model_name: qwen3.6-plus
+    litellm_params:
+      model: openai/qwen3.6-plus
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
+
+  - model_name: qwen3.6-max
+    litellm_params:
+      model: openai/qwen3.6-max
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
+
 mcp_servers:
   github:
     url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"
