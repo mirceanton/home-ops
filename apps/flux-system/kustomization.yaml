@@ -10,3 +10,4 @@ resources:
   - ./flux-operator
   - ./flux-instance
   - ./flux-mcp
+  - ./headlamp
