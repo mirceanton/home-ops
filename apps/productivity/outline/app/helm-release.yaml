@@ -116,6 +116,68 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
+      # https://docs.getoutline.com/s/hosting/doc/scheduled-jobs-RhZzCt770H
+      outline-cron-hourly:
+        type: cronjob
+        cronjob:
+          schedule: "0 * * * *" # hourly
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        pod:
+          restartPolicy: OnFailure
+
+        containers:
+          app: &cronContainer
+            image:
+              repository: docker.io/curlimages/curl
+              tag: 8.21.0
+
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                curl --fail --silent --show-error -K - "https://wiki.home.mirceanton.com/api/cron.hourly" <<EOF
+                data = "token=$UTILS_SECRET"
+                EOF
+
+            env:
+              UTILS_SECRET:
+                valueFrom:
+                  secretKeyRef: { name: outline-secret, key: UTILS_SECRET }
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+      outline-cron-daily:
+        type: cronjob
+        cronjob:
+          schedule: "0 3 * * *" # daily at 3am
+          concurrencyPolicy: Forbid
+          successfulJobsHistory: 1
+          failedJobsHistory: 1
+
+        pod:
+          restartPolicy: OnFailure
+
+        containers:
+          app:
+            <<: *cronContainer
+            args:
+              - |
+                curl --fail --silent --show-error -K - "https://wiki.home.mirceanton.com/api/cron.daily" <<EOF
+                data = "token=$UTILS_SECRET"
+                EOF
+
     service:
       app:
         controller: outline
@@ -133,13 +195,19 @@ spec:
     persistence:
       data:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /var/lib/outline/data
+        advancedMounts:
+          outline:
+            app:
+              - path: /var/lib/outline/data
       tmp:
         type: emptyDir
-        globalMounts:
-          - path: /tmp
+        advancedMounts:
+          outline:
+            app:
+              - path: /tmp
       home:
         type: emptyDir
-        globalMounts:
-          - path: /home/node
+        advancedMounts:
+          outline:
+            app:
+              - path: /home/node
