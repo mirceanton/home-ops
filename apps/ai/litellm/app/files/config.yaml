@@ -48,6 +48,12 @@ model_list:
       api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
+  - model_name: qwen3.5-flash
+    litellm_params:
+      model: openai/qwen3.5-flash
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
+
   - model_name: qwen3.7-plus
     litellm_params:
       model: openai/qwen3.7-plus
