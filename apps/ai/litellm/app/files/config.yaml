@@ -72,27 +72,6 @@ model_list:
       api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
-  # aliases: app-facing model names decoupled from the underlying model
-  - model_name: hermes
-    litellm_params:
-      model: openai/qwen3.7-plus
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-      api_key: os.environ/QWEN_KEY
-
-  - model_name: karakeep
-    litellm_params:
-      model: openai/qwen3.5-flash
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-      api_key: os.environ/QWEN_KEY
-
-  - model_name: karakeep-embeddings
-    litellm_params:
-      model: openai/qwen3-embedding-0.6b
-      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080/v1
-      api_key: "N/A"
-    model_info:
-      mode: embedding
-
 mcp_servers:
   github:
     url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"
@@ -121,6 +100,12 @@ mcp_servers:
   stockii:
     url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
     transport: sse
+
+router_settings:
+  model_group_alias:
+    hermes: qwen3.7-plus
+    karakeep: qwen3.5-flash
+    karakeep-embeddings: qwen3-embedding-0.6b
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
