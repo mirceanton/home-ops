@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: headlamp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: headlamp
+
+  values:
+    fullnameOverride: headlamp
+
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+
+    config:
+      pluginsDir: /build/plugins
+      oidc:
+        externalSecret:
+          enabled: true
+          name: headlamp-secret
+          hasScopes: true
+
+    initContainers:
+      - name: headlamp-plugins
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-flux:v0.6.0
+        command: ["/bin/sh", "-c"]
+        args:
+          - mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/
+        volumeMounts:
+          - name: headlamp-plugins
+            mountPath: /build/plugins
+
+    volumeMounts:
+      - name: headlamp-plugins
+        mountPath: /build/plugins
+
+    volumes:
+      - name: headlamp-plugins
+        emptyDir: {}
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        cpu: null
+        memory: 512Mi
