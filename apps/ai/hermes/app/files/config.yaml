@@ -1,5 +1,5 @@
 model:
-  default: gemma-4-12b
+  default: hermes
 
 providers:
   litellm:

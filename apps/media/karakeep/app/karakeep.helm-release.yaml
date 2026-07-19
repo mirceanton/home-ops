@@ -32,8 +32,8 @@ spec:
               # LLM auto-tagging/summarization, routed through the LiteLLM gateway.
               # No vision model is deployed, so OCR_USE_LLM stays off (Tesseract handles OCR).
               OPENAI_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
-              INFERENCE_TEXT_MODEL: qwen35b-mtp
-              EMBEDDING_TEXT_MODEL: qwen3-embedding-0.6b
+              INFERENCE_TEXT_MODEL: karakeep
+              EMBEDDING_TEXT_MODEL: karakeep-embeddings
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
               BROWSER_WEB_URL: http://karakeep-chrome:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true

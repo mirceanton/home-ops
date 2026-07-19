@@ -67,6 +67,12 @@ spec:
                     name: litellm-secret
                     key: GITHUB_MCP_TOKEN
 
+              QWEN_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: QWEN_KEY
+
             resources:
               requests:
                 cpu: 10m
