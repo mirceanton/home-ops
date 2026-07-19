@@ -1,0 +1,145 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app outline
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: outline
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      outline:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: outline-postgres-app
+                    key: uri
+
+          wait-for-dragonfly:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["redis", "redis://outline-dragonfly:6379"]
+
+        containers:
+          app:
+            image:
+              repository: docker.io/outlinewiki/outline
+              tag: 1.9.2-0
+
+            envFrom:
+              - secretRef: { name: outline-secret }
+            env:
+              TZ: "Europe/Bucharest"
+              URL: "https://wiki.home.mirceanton.com"
+              PORT: &port 3000
+              FORCE_HTTPS: "false"
+              ENABLE_UPDATES: "false"
+              WEB_CONCURRENCY: "1"
+
+              FILE_STORAGE: local
+              FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
+              FILE_STORAGE_UPLOAD_MAX_SIZE: "26214400"
+
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef: { name: outline-postgres-app, key: uri }
+              REDIS_URL: "redis://outline-dragonfly:6379"
+
+              OIDC_CLIENT_ID: "outline"
+              OIDC_DISPLAY_NAME: "Keycloak"
+              OIDC_SCOPES: "openid profile email"
+              OIDC_USERNAME_CLAIM: "preferred_username"
+              OIDC_AUTH_URI: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth"
+              OIDC_TOKEN_URI: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token"
+              OIDC_USERINFO_URI: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/userinfo"
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /_health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /_health
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 30
+
+            resources:
+              requests:
+                cpu: 25m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: outline
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["wiki.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /var/lib/outline/data
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      home:
+        type: emptyDir
+        globalMounts:
+          - path: /home/node
