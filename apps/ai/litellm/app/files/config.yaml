@@ -66,14 +66,6 @@ model_list:
       api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
-  - model_name: wan2.7-t2v
-    litellm_params:
-      model: openai/wan2.7-t2v
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
-      api_key: os.environ/QWEN_KEY
-    model_info:
-      mode: video_generation
-
 mcp_servers:
   github:
     url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"
