@@ -66,6 +66,19 @@ model_list:
       api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
+  # aliases: app-facing model names decoupled from the underlying model
+  - model_name: hermes
+    litellm_params:
+      model: openai/qwen3.7-plus
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
+
+  - model_name: karakeep
+    litellm_params:
+      model: openai/qwen3.5-flash
+      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
+
 mcp_servers:
   github:
     url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"

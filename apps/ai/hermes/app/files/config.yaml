@@ -1,5 +1,5 @@
 model:
-  default: qwen3.7-plus
+  default: hermes
 
 providers:
   litellm:
