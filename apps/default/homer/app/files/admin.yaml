@@ -36,6 +36,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/renovate.webp"
 
+      - name: "Headlamp"
+        subtitle: "Kubernetes Dashboard"
+        url: "https://headlamp.admin.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/headlamp.webp"
+
   - name: "Networking"
     icon: "fas fa-network-wired"
     items:
