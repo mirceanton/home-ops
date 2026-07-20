@@ -96,6 +96,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
 
+      - name: "Outline"
+        subtitle: "Team Wiki"
+        url: "https://wiki.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/outline.webp"
+
   - name: "Maker"
     icon: "fas fa-cube"
     items:
