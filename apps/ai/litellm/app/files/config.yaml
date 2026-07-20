@@ -1,39 +1,29 @@
 model_list:
-  - model_name: gemma-4-26b-a4b
+  # -------------------------------- QWEN EMBEDDING --------------------------------
+  - model_name: text-embedding-v4
     litellm_params:
-      model: openai/gemma-4-26b-a4b
-      api_base: http://gemma-4-26b-a4b.ai.svc.cluster.local:8080
-      api_key: "N/A"
+      model: openai/text-embedding-v4
+      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+      api_key: os.environ/QWEN_KEY
 
-  - model_name: gemma-4-12b
+  # ----------------------------------- QWEN 3.5 -----------------------------------
+  - model_name: qwen3.5-flash
     litellm_params:
-      model: openai/gemma-4-12b
-      api_base: http://gemma-4-12b.ai.svc.cluster.local:8080
-      api_key: "N/A"
+      model: openai/qwen3.5-flash
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
 
-  - model_name: qwen35b-mtp
+  # ----------------------------------- QWEN 3.6 -----------------------------------
+  - model_name: qwen3.6-flash
     litellm_params:
-      model: openai/qwen35b-mtp
-      api_base: http://qwen35b-mtp.ai.svc.cluster.local:8080
-      api_key: "N/A"
-      extra_body:
-        chat_template_kwargs:
-          enable_thinking: false
-    model_info:
-      supports_response_schema: false
-
-  - model_name: qwen3-embedding-0.6b
-    litellm_params:
-      model: openai/qwen3-embedding-0.6b
-      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080/v1
-      api_key: "N/A"
-    model_info:
-      mode: embedding
+      model: openai/qwen3.6-flash
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.6-plus
     litellm_params:
       model: openai/qwen3.6-plus
-      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.6-max
@@ -42,18 +32,7 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
-  - model_name: qwen3.6-flash
-    litellm_params:
-      model: openai/qwen3.6-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
-  - model_name: qwen3.5-flash
-    litellm_params:
-      model: openai/qwen3.5-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
+  # ----------------------------------- QWEN 3.7 -----------------------------------
   - model_name: qwen3.7-plus
     litellm_params:
       model: openai/qwen3.7-plus
@@ -66,6 +45,7 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
+  # ----------------------------------- GLM -----------------------------------
   - model_name: glm-5.2
     litellm_params:
       model: openai/glm-5.2
@@ -105,7 +85,7 @@ router_settings:
   model_group_alias:
     hermes: qwen3.7-plus
     karakeep: qwen3.5-flash
-    karakeep-embeddings: qwen3-embedding-0.6b
+    karakeep-embeddings: text-embedding-v4
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -117,14 +97,16 @@ litellm_settings:
   failure_callback: ["prometheus"]
   prometheus_adapter: true
   require_auth_for_metrics_endpoint: false
+
   drop_params: true
   request_timeout: 600
   num_retries: 2
   retry_after: 5
   set_verbose: false
+
   mcp_semantic_tool_filter:
     enabled: true
-    embedding_model: "qwen3-embedding-0.6b"
+    embedding_model: "text-embedding-v4"
     top_k: 10
     # Relevant and irrelevant tools both score ~0.7-0.9 with this model, so no
     # threshold cleanly separates them; rely on top_k and keep this at 0 so a

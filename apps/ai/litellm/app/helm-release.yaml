@@ -42,6 +42,7 @@ spec:
               LITELLM_MODE: PRODUCTION
               LITELLM_LOG: INFO
               LITELLM_LOCAL_MODEL_COST_MAP: "False"
+              STORE_MODEL_IN_DB: "True"
               PROXY_BASE_URL: "https://llm.home.mirceanton.com"
               LITELLM_MASTER_KEY:
                 valueFrom:
@@ -53,25 +54,35 @@ spec:
                   secretKeyRef:
                     name: litellm-secret
                     key: salt-key
-
-              STORE_MODEL_IN_DB: "True"
               DATABASE_URL:
                 valueFrom:
                   secretKeyRef:
                     name: litellm-postgres-app
                     key: uri
-
               GITHUB_MCP_TOKEN:
                 valueFrom:
                   secretKeyRef:
                     name: litellm-secret
                     key: GITHUB_MCP_TOKEN
-
               QWEN_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: litellm-secret
                     key: QWEN_KEY
+
+              # SSO Configuration (Generic OIDC / Keycloak)
+              GENERIC_CLIENT_ID: "litellm"
+              GENERIC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: OIDC_CLIENT_SECRET
+              GENERIC_AUTHORIZATION_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth"
+              GENERIC_TOKEN_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token"
+              GENERIC_USERINFO_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/userinfo"
+              GENERIC_SCOPE: "openid profile email"
+              AUTO_REDIRECT_UI_LOGIN_TO_SSO: "true"
+              PROXY_ADMIN_ID: "mirk" #? admin user for oidc login
 
             resources:
               requests:
@@ -111,14 +122,6 @@ spec:
       enableServiceLinks: false
       terminationGracePeriodSeconds: 120
       securityContext:
-        # litellm cannot run as non-root: the Prisma CLI is pre-cached at
-        # /root/.cache/prisma-python/ in the image. Running as uid=568 forces
-        # a fresh nodeenv download that fails (libatomic.so.1 missing in image).
-        # runAsNonRoot: true
-        # runAsUser: 568
-        # runAsGroup: 568
-        # fsGroup: 568
-        # fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
 
     service:
