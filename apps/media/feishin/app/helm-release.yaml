@@ -20,7 +20,7 @@ spec:
           feishin:
             image:
               repository: ghcr.io/jeffvli/feishin
-              tag: 1.15.0
+              tag: 1.15.1
             env:
               SERVER_LOCK: true
               SERVER_NAME: Navidrome
