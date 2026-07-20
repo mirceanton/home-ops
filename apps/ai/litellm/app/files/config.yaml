@@ -33,43 +33,43 @@ model_list:
   - model_name: qwen3.6-plus
     litellm_params:
       model: openai/qwen3.6-plus
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.6-max
     litellm_params:
       model: openai/qwen3.6-max
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.6-flash
     litellm_params:
       model: openai/qwen3.6-flash
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.5-flash
     litellm_params:
       model: openai/qwen3.5-flash
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.7-plus
     litellm_params:
       model: openai/qwen3.7-plus
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen3.7-max
     litellm_params:
       model: openai/qwen3.7-max
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   - model_name: glm-5.2
     litellm_params:
       model: openai/glm-5.2
-      api_base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
 mcp_servers:
