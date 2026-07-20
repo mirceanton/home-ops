@@ -1,35 +1,18 @@
 model_list:
   # -------------------------------- QWEN EMBEDDING --------------------------------
-  - model_name: text-embedding-v4
+  - model_name: qwen3-embedding-0.6b
     litellm_params:
-      model: openai/text-embedding-v4
-      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
-      api_key: os.environ/QWEN_KEY
-
-  # ----------------------------------- QWEN 3.5 -----------------------------------
-  - model_name: qwen3.5-flash
-    litellm_params:
-      model: openai/qwen3.5-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
+      model: openai/qwen3-embedding-0.6b
+      api_base: http://qwen3-embedding-0-6b.ai.svc.cluster.local:8080/v1
+      api_key: "N/A"
+    model_info:
+      mode: embedding
 
   # ----------------------------------- QWEN 3.6 -----------------------------------
   - model_name: qwen3.6-flash
     litellm_params:
       model: openai/qwen3.6-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
-  - model_name: qwen3.6-plus
-    litellm_params:
-      model: openai/qwen3.6-plus
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
-  - model_name: qwen3.6-max
-    litellm_params:
-      model: openai/qwen3.6-max
-      api_base: *qwenURL
+      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
   # ----------------------------------- QWEN 3.7 -----------------------------------
@@ -45,10 +28,61 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
+  # ----------------------------------- QWEN 3.8 -----------------------------------
+  - model_name: qwen3.8-max-preview
+    litellm_params:
+      model: openai/qwen3.8-max-preview
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
   # ----------------------------------- GLM -----------------------------------
   - model_name: glm-5.2
     litellm_params:
       model: openai/glm-5.2
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
+  # ---------------------------------- DEEPSEEK ----------------------------------
+  - model_name: deepseek-v4-pro
+    litellm_params:
+      model: openai/deepseek-v4-pro
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
+  # ------------------------------------ WAN ------------------------------------
+  - model_name: wan2.7-image
+    litellm_params:
+      model: openai/wan2.7-image
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+    model_info:
+      mode: image_generation
+
+  - model_name: wan2.7-image-pro
+    litellm_params:
+      model: openai/wan2.7-image-pro
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+    model_info:
+      mode: image_generation
+
+  # --------------------------------- HAPPYHORSE ---------------------------------
+  # video-generation models, called via litellm's /v1/videos endpoints
+  - model_name: happyhorse-1.1-i2v
+    litellm_params:
+      model: openai/happyhorse-1.1-i2v
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
+  - model_name: happyhorse-1.1-t2v
+    litellm_params:
+      model: openai/happyhorse-1.1-t2v
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
+  - model_name: happyhorse-1.1-r2v
+    litellm_params:
+      model: openai/happyhorse-1.1-r2v
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
@@ -84,8 +118,8 @@ mcp_servers:
 router_settings:
   model_group_alias:
     hermes: qwen3.7-plus
-    karakeep: qwen3.5-flash
-    karakeep-embeddings: text-embedding-v4
+    karakeep: qwen3.6-flash
+    karakeep-embeddings: qwen3-embedding-0.6b
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -106,7 +140,7 @@ litellm_settings:
 
   mcp_semantic_tool_filter:
     enabled: true
-    embedding_model: "text-embedding-v4"
+    embedding_model: "qwen3-embedding-0.6b"
     top_k: 10
     # Relevant and irrelevant tools both score ~0.7-0.9 with this model, so no
     # threshold cleanly separates them; rely on top_k and keep this at 0 so a
