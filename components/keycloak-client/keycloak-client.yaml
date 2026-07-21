@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakclient_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakClient
+metadata:
+  name: "${APP}"
+spec:
+  instanceRef:
+    name: homelab
+    kind: ClusterKeycloakInstance
+    namespace: security-system
+
+  clientId: "${OIDC_CLIENT_ID}"
+  name: "${APP}"
+  protocol: openid-connect
+
+  publicClient: false
+  standardFlowEnabled: true
+  directAccessGrantsEnabled: false
+  serviceAccountsEnabled: false
+
+  # Auto-create Secret with client credentials
+  clientSecretRef:
+    name: "${APP}-oidc-secret"
+    create: true
+    clientIdKey: client-id
+    clientSecretKey: client-secret
+
+  redirectUris:
+    - "https://${APP}.home.mirceanton.com/*"
+
+  webOrigins:
+    - "https://${APP}.home.mirceanton.com"
