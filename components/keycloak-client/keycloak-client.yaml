@@ -5,19 +5,24 @@ kind: KeycloakClient
 metadata:
   name: "${APP}"
 spec:
-  instanceRef:
+  clusterRealmRef:
     name: homelab
-    kind: ClusterKeycloakInstance
-    namespace: security-system
 
   clientId: "${APP}"
-  name: "${APP}"
   protocol: openid-connect
 
-  publicClient: false
-  standardFlowEnabled: true
-  directAccessGrantsEnabled: false
-  serviceAccountsEnabled: false
+  definition:
+    clientId: "${APP}"
+    name: "${APP}"
+    protocol: openid-connect
+    publicClient: false
+    standardFlowEnabled: true
+    directAccessGrantsEnabled: false
+    serviceAccountsEnabled: false
+    redirectUris:
+      - "https://${APP}.home.mirceanton.com/*"
+    webOrigins:
+      - "https://${APP}.home.mirceanton.com"
 
   # Auto-create Secret with client credentials
   clientSecretRef:
@@ -25,9 +30,3 @@ spec:
     create: true
     clientIdKey: client-id
     clientSecretKey: client-secret
-
-  redirectUris:
-    - "https://${APP}.home.mirceanton.com/*"
-
-  webOrigins:
-    - "https://${APP}.home.mirceanton.com"
