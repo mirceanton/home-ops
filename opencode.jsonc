@@ -10,7 +10,12 @@
       },
 
       "models": {
-        "qwen35b-mtp": { "name": "Qwen 3.6 35B A3B MTP" }
+        "qwen3.6-flash": { "name": "Qwen 3.6 Flash" },
+        "qwen3.7-plus": { "name": "Qwen 3.7 Plus" },
+        "qwen3.7-max": { "name": "Qwen 3.7 Max" },
+        "qwen3.8-max-preview": { "name": "Qwen 3.8 Max Preview" },
+        "glm-5.2": { "name": "GLM 5.2" },
+        "deepseek-v4-pro": { "name": "DeepSeek V4 Pro" }
       }
     }
   }
