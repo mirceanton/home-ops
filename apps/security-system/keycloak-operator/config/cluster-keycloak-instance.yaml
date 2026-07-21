@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/clusterkeycloakinstance_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: ClusterKeycloakInstance
+metadata:
+  name: homelab
+spec:
+  baseUrl: https://keycloak.nas.svc.h.mirceanton.com
+  realm: master
+
+  auth:
+    passwordGrant:
+      secretRef:
+        name: keycloak-admin-credentials
+        namespace: security-system
+        usernameKey: username
+        passwordKey: password
