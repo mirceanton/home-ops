@@ -10,7 +10,7 @@ spec:
     kind: ClusterKeycloakInstance
     namespace: security-system
 
-  clientId: "${OIDC_CLIENT_ID}"
+  clientId: "${APP}"
   name: "${APP}"
   protocol: openid-connect
 
