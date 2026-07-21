@@ -8,9 +8,6 @@ spec:
   clusterRealmRef:
     name: homelab
 
-  clientId: "${APP}"
-  protocol: openid-connect
-
   definition:
     clientId: "${APP}"
     name: "${APP}"
