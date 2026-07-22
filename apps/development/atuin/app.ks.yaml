@@ -21,12 +21,15 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: atuin-20260722-112249.sql.gz
 
   decryption: { provider: sops }
   dependsOn:
     - name: 1password-connect
       namespace: security-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system

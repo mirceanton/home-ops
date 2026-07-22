@@ -3,31 +3,22 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app davinci
+  name: cloudnative-pg-plugins
 spec:
   interval: 10m
   prune: true
   wait: true
-  targetNamespace: youtube
+  targetNamespace: database-system
 
-  path: ./apps/youtube/davinci/app
-  components:
-    - ../../../../components/cnpg/
+  path: ./apps/database-system/cloudnative-pg/plugins
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
 
   postBuild:
-    substitute:
-      APP: *app
-      CNPG_RESTORE_BACKUP_KEY: davinci-20260722-112253.sql.gz
+    substitute: {}
 
-  decryption: { provider: sops }
   dependsOn:
     - name: cloudnative-pg-operator
       namespace: database-system
-    - name: cloudnative-pg-plugins
-      namespace: database-system
-    - name: 1password-connect
-      namespace: security-system

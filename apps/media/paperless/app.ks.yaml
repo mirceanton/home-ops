@@ -25,6 +25,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: paperless-20260722-112252.sql.gz
       VOLSYNC_CAPACITY: 50Gi
       CNPG_DATA_STORAGE_SIZE: 8Gi
 
@@ -37,6 +38,8 @@ spec:
     - name: keda
       namespace: kube-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: dragonfly-operator
       namespace: database-system

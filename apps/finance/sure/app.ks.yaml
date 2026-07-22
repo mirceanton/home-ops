@@ -24,6 +24,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: sure-20260722-112249.sql.gz
       VOLSYNC_CAPACITY: 2Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
@@ -35,6 +36,8 @@ spec:
     - name: volsync
       namespace: storage-system
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: dragonfly-operator
       namespace: database-system

@@ -23,10 +23,13 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: sparkyfitness-20260722-112250.sql.gz
       VOLSYNC_CAPACITY: 5Gi
 
   dependsOn:
     - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system

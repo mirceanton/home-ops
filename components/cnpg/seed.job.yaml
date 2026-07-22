@@ -1,0 +1,70 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${APP}-postgres-seed
+  annotations:
+    # Let Flux re-run the seed check whenever the manifest changes; the script
+    # itself is a no-op when backups already exist.
+    kustomize.toolkit.fluxcd.io/force: enabled
+spec:
+  backoffLimit: 6
+  ttlSecondsAfterFinished: 3600
+
+  template:
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsUser: 26 # postgres user in the cloudnative-pg operand images
+        runAsGroup: 26
+        fsGroup: 26
+
+      containers:
+        - name: seed
+          # Must track the operand's PostgreSQL version (cnpg.yaml) so the
+          # base backup is recoverable by the real cluster — keep these in
+          # lockstep. The -system variant ships the barman-cloud CLI.
+          image: ghcr.io/cloudnative-pg/postgresql:18.1-system-trixie
+          command: ["/bin/bash", "/scripts/seed.sh"]
+          env:
+            - name: APP_DB_NAME
+              value: ${APP}
+            - name: APP_DB_OWNER
+              value: ${APP}
+            - name: BARMAN_DESTINATION
+              value: s3://home-ops-cnpg/${APP}
+            - name: BARMAN_SERVER
+              value: ${APP}-postgres
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP}-cnpg-backup
+                  key: ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP}-cnpg-backup
+                  key: ACCESS_SECRET_KEY
+            - name: AWS_ENDPOINT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP}-cnpg-backup
+                  key: ENDPOINT_URL
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+              readOnly: true
+            - name: work
+              mountPath: /tmp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+
+      volumes:
+        - name: scripts
+          configMap:
+            name: ${APP}-postgres-seed-scripts
+            defaultMode: 0755
+        - name: work
+          emptyDir: {}

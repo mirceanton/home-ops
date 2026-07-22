@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${APP}-postgres-seed-scripts
+data:
+  seed.sh: |
+    #!/bin/bash
+    # Ensure the barman object store holds at least one base backup so the
+    # cluster's bootstrap.recovery always has something to restore from.
+    #   - If backups already exist: exit cleanly (no-op).
+    #   - If the store is empty: stand up a throwaway PostgreSQL containing the
+    #     app database/owner and push an (empty) base backup to S3.
+    # Idempotent and safe to run on every deploy.
+    set -Eeuo pipefail
+
+    export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_ENDPOINT_URL
+
+    echo "Checking for existing backups at $${BARMAN_DESTINATION} (server=$${BARMAN_SERVER})..."
+    # No stderr redirection here: a bad endpoint/credentials/bucket must fail
+    # the job loudly, not be mistaken for "no backups yet".
+    BACKUP_LIST=$(barman-cloud-backup-list \
+      --cloud-provider aws-s3 \
+      --endpoint-url "$${AWS_ENDPOINT_URL}" \
+      "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}")
+
+    if echo "$${BACKUP_LIST}" | awk 'NR>1{found=1} END{exit found?0:1}'; then
+      echo "Existing backups found; object store already initialized. Nothing to do."
+      exit 0
+    fi
+
+    echo "No backups found; seeding an empty base backup for recovery to bootstrap from."
+
+    export PGDATA=/tmp/pgdata
+    initdb --username=postgres --auth-local=trust --auth-host=reject --encoding=UTF8 -D "$${PGDATA}"
+
+    cat >>"$${PGDATA}/postgresql.conf" <<'EOF'
+    listen_addresses = ''
+    unix_socket_directories = '/tmp'
+    wal_level = replica
+    max_wal_senders = 4
+    archive_mode = on
+    archive_command = 'barman-cloud-wal-archive --cloud-provider aws-s3 --endpoint-url "$${AWS_ENDPOINT_URL}" "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}" %p'
+    EOF
+
+    pg_ctl -D "$${PGDATA}" -w -t 120 start
+
+    psql -h /tmp -U postgres -v ON_ERROR_STOP=1 <<SQL
+    CREATE ROLE "$${APP_DB_OWNER}" WITH LOGIN;
+    CREATE DATABASE "$${APP_DB_NAME}" OWNER "$${APP_DB_OWNER}";
+    SQL
+
+    echo "Uploading base backup to $${BARMAN_DESTINATION} (server=$${BARMAN_SERVER})..."
+    barman-cloud-backup \
+      --cloud-provider aws-s3 \
+      --endpoint-url "$${AWS_ENDPOINT_URL}" \
+      --host /tmp \
+      --user postgres \
+      --immediate-checkpoint \
+      "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}"
+
+    # The backup isn't restorable until the WAL segment covering it has been
+    # archived: force the current segment to close and wait for the archiver
+    # to ship it, instead of racing pg_ctl stop against the background archiver.
+    echo "Forcing a WAL switch and waiting for it to be archived..."
+    psql -h /tmp -U postgres -v ON_ERROR_STOP=1 -c "SELECT pg_switch_wal();"
+    for i in $(seq 1 30); do
+      archived=$(psql -h /tmp -U postgres -Atqc "SELECT archived_count FROM pg_stat_archiver;")
+      failed=$(psql -h /tmp -U postgres -Atqc "SELECT failed_count FROM pg_stat_archiver;")
+      if [ "$${failed}" != "0" ]; then
+        echo "ERROR: archive_command reported $${failed} failed archival(s)."
+        exit 1
+      fi
+      [ "$${archived}" != "0" ] && break
+      sleep 1
+    done
+    if [ "$${archived}" = "0" ]; then
+      echo "ERROR: timed out waiting for the WAL segment to be archived."
+      exit 1
+    fi
+
+    pg_ctl -D "$${PGDATA}" -w stop
+    echo "Seed base backup created for server $${BARMAN_SERVER}."

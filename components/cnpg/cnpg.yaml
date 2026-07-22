@@ -8,12 +8,27 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   instances: ${CNPG_REPLICAS:-1}
-  imageName: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
+  # Keep in lockstep with the seed Job's image (seed.job.yaml) so the seeded
+  # base backup is recoverable by this operand.
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
 
+  # VolSync-like behaviour: always bootstrap by recovering the latest backup
+  # from S3. On a genuine first-ever deploy the object store is empty, so the
+  # ${APP}-postgres-seed Job (see seed.job.yaml) pre-seeds an empty base backup
+  # containing the ${APP} database/owner, giving recovery something to restore.
   bootstrap:
-    initdb:
+    recovery:
+      source: origin
       database: ${APP}
       owner: ${APP}
+
+  externalClusters:
+    - name: origin
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: "${APP}-postgres-backup"
+          serverName: "${APP}-postgres"
 
   storage:
     storageClass: ${CNPG_DATA_STORAGE_CLASS:-openebs-zfs}
@@ -33,6 +48,12 @@ spec:
   postgresql:
     pg_hba:
       - host all all ${CNPG_PG_HBA_CIDR:-10.244.0.0/16} scram-sha-256
+
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: "${APP}-postgres-backup"
 
   monitoring:
     enablePodMonitor: true
