@@ -8,7 +8,9 @@ metadata:
     cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   instances: ${CNPG_REPLICAS:-1}
-  imageName: ${CNPG_IMAGE:-ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie}
+  # Keep in lockstep with the seed Job's image (seed.job.yaml) so the seeded
+  # base backup is recoverable by this operand.
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-minimal-trixie
 
   # VolSync-like behaviour: always bootstrap by recovering the latest backup
   # from S3. On a genuine first-ever deploy the object store is empty, so the
