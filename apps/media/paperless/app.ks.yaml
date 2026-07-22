@@ -25,7 +25,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      CNPG_RESTORE_BACKUP_KEY: paperless-20260722-112252.sql.gz
       VOLSYNC_CAPACITY: 50Gi
       CNPG_DATA_STORAGE_SIZE: 8Gi
 

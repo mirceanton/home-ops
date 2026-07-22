@@ -21,7 +21,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      CNPG_RESTORE_BACKUP_KEY: davinci-20260722-112253.sql.gz
 
   decryption: { provider: sops }
   dependsOn:
