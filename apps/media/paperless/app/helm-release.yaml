@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 2.20.15
+              tag: 3.0.0
 
             envFrom:
               - secretRef: { name: paperless-secret }
@@ -59,9 +59,10 @@ spec:
               PAPERLESS_DATA_DIR: /data/local/data
               PAPERLESS_MEDIA_ROOT: /data/local/media
               # Consumer
-              PAPERLESS_CONSUMER_POLLING: "60"
+              PAPERLESS_CONSUMER_POLLING_INTERVAL: "60"
               PAPERLESS_CONSUMER_RECURSIVE: "true"
               PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS: "true"
+              PAPERLESS_CONSUMER_DELETE_DUPLICATES: "true"
               # Redis
               PAPERLESS_REDIS: "redis://paperless-dragonfly:6379"
               # Postgres
