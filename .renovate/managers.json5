@@ -15,5 +15,17 @@
 
   "helmfile": {
     "managerFilePatterns": ["/helmfile\\.yaml$/"]
-  }
+  },
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track CNPG Cluster spec.imageName - a non-standard CRD field the built-in kubernetes manager doesn't recognize (it only matches image: inside standard workload container specs)",
+      "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"],
+      "matchStrings": [
+        "imageName:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)\\s"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
 }
