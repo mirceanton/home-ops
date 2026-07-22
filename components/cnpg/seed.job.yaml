@@ -32,7 +32,7 @@ spec:
             - name: APP_DB_OWNER
               value: ${APP}
             - name: BARMAN_DESTINATION
-              value: s3://home-ops-cnpg/${APP}
+              value: s3://home-ops-cnpg
             - name: BARMAN_SERVER
               value: ${APP}-postgres
             - name: AWS_ACCESS_KEY_ID

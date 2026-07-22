@@ -8,7 +8,7 @@ spec:
   retentionPolicy: "30d"
 
   configuration:
-    destinationPath: "s3://home-ops-cnpg/${APP}"
+    destinationPath: "s3://home-ops-cnpg"
     s3Credentials:
       accessKeyId:
         name: "${APP}-cnpg-backup"
