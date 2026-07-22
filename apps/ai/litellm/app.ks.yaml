@@ -22,6 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: litellm-20260722-112245.sql.gz
 
   dependsOn:
     - name: 1password-connect

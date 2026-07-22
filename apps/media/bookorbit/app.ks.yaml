@@ -24,6 +24,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: bookorbit-20260722-112250.sql.gz
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"

@@ -23,6 +23,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: sparkyfitness-20260722-112250.sql.gz
       VOLSYNC_CAPACITY: 5Gi
 
   dependsOn:

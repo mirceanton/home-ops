@@ -23,6 +23,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      CNPG_RESTORE_BACKUP_KEY: immich-20260722-112251.sql.gz
       VOLSYNC_CAPACITY: 100Gi
       CNPG_DATA_STORAGE_SIZE: 8Gi
       CNPG_CPU_REQUEST: 1000m
