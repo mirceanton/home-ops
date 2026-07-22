@@ -36,5 +36,7 @@ spec:
       namespace: storage-system
     - name: cloudnative-pg-operator
       namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
     - name: dragonfly-operator
       namespace: database-system
