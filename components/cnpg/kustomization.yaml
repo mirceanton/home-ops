@@ -10,3 +10,12 @@ resources:
   - scheduled-backup.yaml
   - seed.configmap.yaml
   - seed.job.yaml
+  # TEMPORARY, migration-only: the old pg_dump backup/restore CronJobs, kept
+  # around solely so the 10 pre-existing apps can be cut over to the
+  # barman-cloud plugin per ~/.claude/plans/cnpg-barman-migration-runbook.md
+  # (trigger backup one more time pre-cutover, trigger restore post-cutover).
+  # Remove this line and the two files below once that migration is done —
+  # do not let this become permanent, it defeats the purpose of this PR.
+  - scripts.configmap.yaml
+  - jobs/backup.cronjob.yaml
+  - jobs/restore.cronjob.yaml

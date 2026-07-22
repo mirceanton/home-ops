@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${APP}-postgres-scripts
+data:
+  backup.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    mkdir -p /work
+    FILE="/work/$${APP_NAME}-$(date +%Y%m%d-%H%M%S).sql.gz"
+    echo "Dumping $${PGDATABASE} to $${FILE}..."
+
+    PGPASSWORD="$${PGPASSWORD}" pg_dump \
+      --host="$${PGHOST}" \
+      --port="$${PGPORT}" \
+      --username="$${PGUSER}" \
+      --dbname="$${PGDATABASE}" \
+      --format=custom \
+      --compress=6 \
+      --no-owner \
+      --no-acl \
+      > "$${FILE}"
+
+    echo "Dump completed: $${FILE}"
+
+  upload.sh: |
+    #!/bin/sh
+    set -euo pipefail
+
+    FILE=$(ls -t /work/*.sql.gz 2>/dev/null | head -1)
+    if [ -z "$${FILE}" ]; then
+      echo "ERROR: no dump file found in /work"
+      exit 1
+    fi
+
+    DEST="s3://$${S3_BUCKET}/$${S3_PREFIX}/$(basename "$${FILE}")"
+    echo "Uploading $${FILE} to $${DEST}..."
+    aws --endpoint-url "$${AWS_ENDPOINT_URL}" s3 cp "$${FILE}" "$${DEST}"
+    echo "Upload completed: $${DEST}"
+
+    KEEP="$${KEEP_COUNT:-7}"
+    echo "Pruning to the last $${KEEP} backups..."
+    OLD_KEYS=$(aws --endpoint-url "$${AWS_ENDPOINT_URL}" s3api list-objects-v2 \
+      --bucket "$${S3_BUCKET}" --prefix "$${S3_PREFIX}/$${APP_NAME}-" \
+      --query 'sort_by(Contents, &LastModified)[:-'"$${KEEP}"'].Key' --output text)
+    if [ -n "$${OLD_KEYS}" ] && [ "$${OLD_KEYS}" != "None" ]; then
+      echo "$${OLD_KEYS}" | tr '\t' '\n' | while read -r KEY; do
+        [ -z "$${KEY}" ] && continue
+        echo "  removing s3://$${S3_BUCKET}/$${KEY}"
+        aws --endpoint-url "$${AWS_ENDPOINT_URL}" s3 rm "s3://$${S3_BUCKET}/$${KEY}"
+      done
+    else
+      echo "Nothing to prune."
+    fi
+    echo "Prune completed."
+
+  download.sh: |
+    #!/bin/sh
+    set -euo pipefail
+
+    mkdir -p /work
+    if [ -n "$${BACKUP_KEY:-}" ]; then
+      KEY="$${S3_PREFIX}/$${BACKUP_KEY}"
+    else
+      KEY=$(aws --endpoint-url "$${AWS_ENDPOINT_URL}" s3api list-objects-v2 \
+        --bucket "$${S3_BUCKET}" --prefix "$${S3_PREFIX}/$${APP_NAME}-" \
+        --query 'sort_by(Contents, &LastModified)[-1].Key' --output text)
+      if [ -z "$${KEY}" ] || [ "$${KEY}" = "None" ]; then
+        echo "ERROR: no backups found under s3://$${S3_BUCKET}/$${S3_PREFIX}/"
+        exit 1
+      fi
+    fi
+
+    echo "Downloading s3://$${S3_BUCKET}/$${KEY}..."
+    aws --endpoint-url "$${AWS_ENDPOINT_URL}" s3 cp "s3://$${S3_BUCKET}/$${KEY}" /work/restore.sql.gz
+    echo "Download completed."
+
+  restore.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    FILE=/work/restore.sql.gz
+    if [ ! -f "$${FILE}" ]; then
+      echo "ERROR: no downloaded backup found at $${FILE}"
+      exit 1
+    fi
+
+    echo "Restoring $${PGDATABASE} from $${FILE}..."
+    PGPASSWORD="$${PGPASSWORD}" pg_restore \
+      --host="$${PGHOST}" \
+      --port="$${PGPORT}" \
+      --username="$${PGUSER}" \
+      --dbname="$${PGDATABASE}" \
+      --clean \
+      --if-exists \
+      --no-owner \
+      --no-acl \
+      "$${FILE}"
+
+    echo "Restore completed from: $${FILE}"
