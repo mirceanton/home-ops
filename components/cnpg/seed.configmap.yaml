@@ -17,11 +17,14 @@ data:
     export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_ENDPOINT_URL
 
     echo "Checking for existing backups at $${BARMAN_DESTINATION} (server=$${BARMAN_SERVER})..."
-    if barman-cloud-backup-list \
+    # No stderr redirection here: a bad endpoint/credentials/bucket must fail
+    # the job loudly, not be mistaken for "no backups yet".
+    BACKUP_LIST=$(barman-cloud-backup-list \
       --cloud-provider aws-s3 \
       --endpoint-url "$${AWS_ENDPOINT_URL}" \
-      "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}" 2>/dev/null \
-      | awk 'NR>1{found=1} END{exit found?0:1}'; then
+      "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}")
+
+    if echo "$${BACKUP_LIST}" | awk 'NR>1{found=1} END{exit found?0:1}'; then
       echo "Existing backups found; object store already initialized. Nothing to do."
       exit 0
     fi
