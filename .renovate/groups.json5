@@ -47,6 +47,12 @@
       "description": "Group envoy-gateway chart updates (OCIRepository + helmfile in sync)",
       "groupName": "envoy-gateway",
       "matchPackageNames": ["/envoyproxy.gateway-helm/"]
+    },
+    {
+      "description": "Group CNPG postgres operand + seed image updates (must stay in lockstep - the seed job's base backup has to be recoverable by the actual Cluster operand)",
+      "groupName": "cnpg-postgres",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/cloudnative-pg/postgresql/"]
     }
   ]
 }
