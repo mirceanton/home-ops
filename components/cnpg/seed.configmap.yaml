@@ -39,6 +39,8 @@ data:
     unix_socket_directories = '/tmp'
     wal_level = replica
     max_wal_senders = 4
+    archive_mode = on
+    archive_command = 'barman-cloud-wal-archive --cloud-provider aws-s3 --endpoint-url "$${AWS_ENDPOINT_URL}" "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}" %p'
     EOF
 
     pg_ctl -D "$${PGDATA}" -w -t 120 start
@@ -56,6 +58,26 @@ data:
       --user postgres \
       --immediate-checkpoint \
       "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}"
+
+    # The backup isn't restorable until the WAL segment covering it has been
+    # archived: force the current segment to close and wait for the archiver
+    # to ship it, instead of racing pg_ctl stop against the background archiver.
+    echo "Forcing a WAL switch and waiting for it to be archived..."
+    psql -h /tmp -U postgres -v ON_ERROR_STOP=1 -c "SELECT pg_switch_wal();"
+    for i in $(seq 1 30); do
+      archived=$(psql -h /tmp -U postgres -Atqc "SELECT archived_count FROM pg_stat_archiver;")
+      failed=$(psql -h /tmp -U postgres -Atqc "SELECT failed_count FROM pg_stat_archiver;")
+      if [ "$${failed}" != "0" ]; then
+        echo "ERROR: archive_command reported $${failed} failed archival(s)."
+        exit 1
+      fi
+      [ "$${archived}" != "0" ] && break
+      sleep 1
+    done
+    if [ "$${archived}" = "0" ]; then
+      echo "ERROR: timed out waiting for the WAL segment to be archived."
+      exit 1
+    fi
 
     pg_ctl -D "$${PGDATA}" -w stop
     echo "Seed base backup created for server $${BARMAN_SERVER}."
