@@ -4,8 +4,6 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: ${APP}-postgres
-  annotations:
-    cnpg.io/skipEmptyWalArchiveCheck: enabled
 spec:
   managed:
     services:
