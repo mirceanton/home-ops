@@ -1,0 +1,116 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/backend_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: firefly-keycloak
+spec:
+  endpoints:
+    - fqdn:
+        hostname: keycloak.nas.svc.h.mirceanton.com
+        port: 443
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.networking.k8s.io/backendtlspolicy_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: firefly-keycloak-tls
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: firefly-keycloak
+  validation:
+    hostname: keycloak.nas.svc.h.mirceanton.com
+    wellKnownCACertificates: System
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: firefly-oidc-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: firefly-oidc-secret
+    creationPolicy: Owner
+
+  data:
+    - secretKey: client-secret
+      remoteRef:
+        # Reusing the existing "sure" Keycloak client rather than
+        # provisioning a dedicated "firefly" one - the Homelab realm's
+        # "sure" client also needs firefly's redirect URI added to its
+        # Valid Redirect URIs list for this to work.
+        key: "Sure - Keycloak"
+        property: keycloak_client_secret
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: firefly-oidc
+spec:
+  # Only the main app route - not firefly-importer, which keeps its own
+  # separate access story for now.
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: firefly-home
+
+  # Stage 1: log in against Keycloak and forward the access token upstream
+  # via the standard Authorization: Bearer header. NOTE: forwardIDToken looks
+  # like the more obvious fit here, but it's a known-broken no-op in Envoy
+  # Gateway v1.8.x (https://github.com/envoyproxy/gateway/issues/9082) - it
+  # only forwards Envoy's own opaque session cookie, never a real JWT. The
+  # access token, forwarded via the older/stable Authorization-header path,
+  # actually works.
+  oidc:
+    provider:
+      issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+      # Explicit endpoints so the envoy-gateway controller skips its own
+      # OIDC discovery fetch (.well-known/openid-configuration) - see
+      # components/oidc/security-policy.yaml for why.
+      authorizationEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
+      tokenEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token
+      backendRefs:
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: firefly-keycloak
+          port: 443
+    clientID: sure
+    clientSecret:
+      name: firefly-oidc-secret
+    scopes: ["openid", "email", "profile"]
+    redirectURL: "https://firefly.home.mirceanton.com/oauth2/callback"
+    logoutPath: "/oauth2/logout"
+    forwardAccessToken: true
+
+  # Stage 2: independently re-verify that access token's signature against
+  # Keycloak's JWKS and extract the "email" claim into Remote-User, which
+  # Firefly is configured (AUTHENTICATION_GUARD*, see helm-release.yaml) to
+  # trust blindly. Envoy overwrites this header on every request - it can't
+  # be spoofed by a client presenting its own Remote-User/Authorization
+  # header, since the claim only ever comes from a signature-verified token.
+  # No audience check: Keycloak access tokens don't reliably carry aud=<client
+  # id> the way ID tokens do unless a dedicated audience mapper is added, and
+  # this policy is already scoped to a single route/issuer.
+  jwt:
+    providers:
+      - name: keycloak
+        issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        remoteJWKS:
+          uri: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/certs
+          backendRefs:
+            - group: gateway.envoyproxy.io
+              kind: Backend
+              name: firefly-keycloak
+              port: 443
+        claimToHeaders:
+          - header: Remote-User
+            claim: email

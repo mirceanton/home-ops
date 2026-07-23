@@ -54,6 +54,13 @@ spec:
               SEND_ERROR_MESSAGE: "false"
               SEND_LOGIN_NEW_IP_WARNING: "false"
 
+              # SSO via Keycloak: Envoy Gateway (see oidc.yaml) does the login
+              # and injects the verified email claim into a Remote-User
+              # header that Firefly trusts without further checks - native
+              # username/password login is disabled as a result.
+              AUTHENTICATION_GUARD: "remote_user_guard"
+              AUTHENTICATION_GUARD_HEADER: "HTTP_REMOTE_USER"
+
               LOG_CHANNEL: "stdout"
               AUDIT_LOG_CHANNEL: "stdout"
               APP_LOG_LEVEL: "notice"
