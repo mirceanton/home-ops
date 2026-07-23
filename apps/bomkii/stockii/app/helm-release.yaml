@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/stockii
-              tag: v1.9.13
+              tag: v1.9.14
             env:
               STOCKII_PORT: &port "8080"
               STOCKII_CONFIG_PATH: "/config/stockii.db"
