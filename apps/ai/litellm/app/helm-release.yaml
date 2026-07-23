@@ -64,6 +64,11 @@ spec:
                   secretKeyRef:
                     name: litellm-secret
                     key: GITHUB_MCP_TOKEN
+              FIREFLY_MCP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: FIREFLY_MCP_TOKEN
               QWEN_KEY:
                 valueFrom:
                   secretKeyRef:
