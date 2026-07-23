@@ -7,7 +7,7 @@ node = "latest"
 uv = "latest"
 
 # Kubectl + Tools + Plugins
-"aqua:kubectl" = "1.36.2"
+"aqua:kubectl" = "1.36.3"
 "github:mirceanton/kubectl-switch" = "latest"
 "github:josegonzalez/kubectl-eso" = "latest"
 "github:cloudnative-pg/cloudnative-pg" = "latest"
