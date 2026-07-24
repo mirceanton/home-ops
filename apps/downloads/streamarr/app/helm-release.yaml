@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/streamarr
-              tag: v0.36.2
+              tag: v0.36.3
             env:
               TZ: "Europe/Bucharest"
               STREAMARR_PORT: &port 8080
