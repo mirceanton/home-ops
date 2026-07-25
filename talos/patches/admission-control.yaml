@@ -1,0 +1,10 @@
+---
+cluster:
+  apiServer:
+    admissionControl:
+      - name: PodSecurity
+        $$patch: delete
+      - name: PodNodeSelector
+        configuration:
+          podNodeSelectorPluginConfig:
+            clusterDefaultNodeSelector: "k8s.mirceanton.com/default-node=true"

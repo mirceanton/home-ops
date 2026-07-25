@@ -1,5 +1,0 @@
----
-cluster:
-  apiServer:
-    admissionControl:
-      $$patch: delete

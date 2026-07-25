@@ -24,6 +24,9 @@ nodes:
     installDiskSelector: { size: "<= 300Gb" }
     nodeLabels:
       nvidia.com/gpu.present: "true"
+      k8s.mirceanton.com/default-node: "true"
+      # TODO: drop once the PN64 controlplane node is added and takes over this label
+      k8s.mirceanton.com/remote-node: "true"
 
     networkInterfaces:
       - interface: enp6s0 #? Management
@@ -86,7 +89,7 @@ controlPlane:
     - "@./patches/network-binding.yaml"
     - "@./patches/mutating-admission.yaml"
     - "@./patches/host-dns.yaml"
-    - "@./patches/disable-admission-control.yaml"
+    - "@./patches/admission-control.yaml"
     - "@./patches/sysctls.yaml"
     - "@./patches/disable-kube-proxy.yaml" #? Cilium CNI
     - "@./patches/registry-mirrors.yaml"
