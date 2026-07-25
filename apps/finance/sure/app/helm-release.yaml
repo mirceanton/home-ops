@@ -99,6 +99,12 @@ spec:
               EXCHANGE_RATE_PROVIDER: "twelve_data"
               SECURITIES_PROVIDER: "twelve_data"
 
+              # AI assistant + auto-categorization, routed through the LiteLLM
+              # gateway (OPENAI_ACCESS_TOKEN comes from sure-secret via envFrom
+              # above - a LiteLLM virtual key scoped to the "sure" model alias)
+              OPENAI_URI_BASE: "http://litellm.ai.svc.cluster.local:4000/v1"
+              OPENAI_MODEL: "sure"
+
             probes:
               liveness: &probe
                 enabled: true

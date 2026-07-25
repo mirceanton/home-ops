@@ -125,6 +125,7 @@ router_settings:
     hermes: qwen3.7-plus
     karakeep: qwen3.6-flash
     karakeep-embeddings: qwen3-embedding-0.6b
+    sure: qwen3.7-plus
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
