@@ -9,4 +9,3 @@ resources:
   - ./cert-manager
   - ./envoy-gateway
   - ./external-dns
-  - ./metallb

@@ -22,7 +22,7 @@ spec:
   dependsOn:
     - name: openebs
       namespace: storage-system
-    - name: metallb
-      namespace: network-system
+    - name: cilium
+      namespace: kube-system
     - name: 1password-connect
       namespace: security-system
