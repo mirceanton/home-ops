@@ -94,6 +94,11 @@ controlPlane:
     - |-
       cluster:
         apiServer:
+          extraArgs:
+            oidc-issuer-url: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
+            oidc-client-id: "headlamp"
+            oidc-username-claim: "preferred_username"
+            oidc-groups-claim: "groups"
           resources:
             requests:
               cpu: 500m
