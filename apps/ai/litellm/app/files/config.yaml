@@ -92,6 +92,11 @@ mcp_servers:
     auth_type: bearer_token
     auth_value: os.environ/GITHUB_MCP_TOKEN
 
+  firefly:
+    url: "http://firefly-mcp.finance.svc.cluster.local:3000"
+    auth_type: bearer_token
+    auth_value: os.environ/FIREFLY_MCP_TOKEN
+
   kubesearch:
     url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
 
