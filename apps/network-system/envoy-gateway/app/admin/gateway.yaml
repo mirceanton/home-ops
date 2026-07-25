@@ -10,8 +10,10 @@ spec:
   gatewayClassName: envoy-admin
 
   infrastructure:
+    labels:
+      lbipam.cilium.io/reserved: "true"
     annotations:
-      metallb.io/loadBalancerIPs: *loadbalancerIP
+      lbipam.cilium.io/ips: *loadbalancerIP
 
   listeners:
     - name: http

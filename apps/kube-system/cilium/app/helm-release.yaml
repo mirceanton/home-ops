@@ -32,7 +32,7 @@ spec:
     # -----------------------------------------------------------------------------
     # IPAM CONFIGURATION
     # -----------------------------------------------------------------------------
-    enableLBIPAM: false #? MetalLB handles LoadBalancer IP allocation
+    enableLBIPAM: true
     ipam:
       mode: kubernetes
 
@@ -166,7 +166,7 @@ spec:
     bgpControlPlane:
       enabled: false
     l2announcements:
-      enabled: false
+      enabled: true
     ingressController:
       enabled: false
       secretsNamespace:

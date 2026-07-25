@@ -53,6 +53,8 @@ spec:
       minecraft:
         type: LoadBalancer
         port: 25565
+        labels:
+          lbipam.cilium.io/reserved: "true"
         annotations:
-          metallb.universe.tf/loadBalancerIPs: 10.0.10.253
+          lbipam.cilium.io/ips: 10.0.10.253
           external-dns.alpha.kubernetes.io/hostname: badoink-mc.home.mirceanton.com

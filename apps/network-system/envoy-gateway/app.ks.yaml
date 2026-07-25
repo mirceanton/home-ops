@@ -21,7 +21,8 @@ spec:
 
   dependsOn:
     #? needed for the LoadBalancer IPs
-    - name: metallb
+    - name: cilium
+      namespace: kube-system
 
     #? needed for the TLS certs
     - name: cert-manager-issuers
