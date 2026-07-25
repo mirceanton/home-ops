@@ -12,8 +12,6 @@ spec:
           serviceTemplate:
             metadata:
               name: ${APP}-postgres-lb
-              labels:
-                lbipam.cilium.io/reserved: "true"
               annotations:
                 lbipam.cilium.io/ips: 10.0.10.251
                 external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com

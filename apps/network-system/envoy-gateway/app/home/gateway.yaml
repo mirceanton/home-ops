@@ -10,8 +10,6 @@ spec:
   gatewayClassName: envoy-internal
 
   infrastructure:
-    labels:
-      lbipam.cilium.io/reserved: "true"
     annotations:
       lbipam.cilium.io/ips: *loadbalancerIP
 

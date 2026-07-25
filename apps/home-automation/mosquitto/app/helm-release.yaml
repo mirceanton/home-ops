@@ -54,8 +54,6 @@ spec:
     service:
       app:
         type: LoadBalancer
-        labels:
-          lbipam.cilium.io/reserved: "true"
         annotations:
           lbipam.cilium.io/ips: 10.0.10.252
         ports:
