@@ -24,9 +24,9 @@ nodes:
     installDiskSelector: { size: "<= 300Gb" }
     nodeLabels:
       nvidia.com/gpu.present: "true"
-      # TODO: drop once the PN64 controlplane node is added and takes over this label
       k8s.mirceanton.com/default-node: "true"
-      k8s.mirceanton.com/gpu-node: "true"
+      # TODO: drop once the PN64 controlplane node is added and takes over this label
+      k8s.mirceanton.com/remote-node: "true"
 
     networkInterfaces:
       - interface: enp6s0 #? Management
