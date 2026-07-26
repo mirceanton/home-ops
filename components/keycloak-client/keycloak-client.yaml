@@ -23,5 +23,6 @@ spec:
     standardFlowEnabled: ${KEYCLOAK_CLIENT_STANDARD_FLOW:-true}
     directAccessGrantsEnabled: ${KEYCLOAK_CLIENT_DIRECT_ACCESS_GRANTS:-true}
     serviceAccountsEnabled: ${KEYCLOAK_CLIENT_SERVICE_ACCOUNTS:-true}
-    redirectUris: [${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}]
+    redirectUris:
+      - ${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}
     webOrigins: ["https://${APP}.home.mirceanton.com"]
