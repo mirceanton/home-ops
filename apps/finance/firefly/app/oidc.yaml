@@ -56,12 +56,14 @@ kind: SecurityPolicy
 metadata:
   name: firefly-oidc
 spec:
-  # Only the main app route - not firefly-importer, which keeps its own
-  # separate access story for now.
+  # Only the "web" rule of the main app route (see route.home.rules in
+  # helm-release.yaml) - not firefly-importer, and not the "api" rule, which
+  # the mobile app needs to reach without going through Keycloak.
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       name: firefly-home
+      sectionName: web
 
   # Stage 1: log in against Keycloak and forward the access token upstream
   # via the standard Authorization: Bearer header. NOTE: forwardIDToken looks

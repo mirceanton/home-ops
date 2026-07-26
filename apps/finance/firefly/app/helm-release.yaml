@@ -196,7 +196,19 @@ spec:
           - name: envoy-internal
             namespace: network-system
         rules:
-          - backendRefs:
+          # Split out so the Keycloak SecurityPolicy (oidc.yaml) can target
+          # only the "web" rule by sectionName - the mobile app hits /api/*
+          # directly with its own Firefly Passport Bearer token (Firefly's
+          # separate "api" guard), which can't complete a browser OIDC
+          # redirect and isn't a Keycloak-signed JWT either.
+          - name: api
+            matches:
+              - path: { type: PathPrefix, value: /api }
+            backendRefs:
+              - identifier: firefly
+                port: http
+          - name: web
+            backendRefs:
               - identifier: firefly
                 port: http
       importer:
