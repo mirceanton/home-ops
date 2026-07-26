@@ -1,0 +1,210 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app affine
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: affine
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      affine:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: affine-postgres-app
+                    key: uri
+
+          wait-for-dragonfly:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.6.0
+            args: ["redis", "redis://affine-dragonfly:6379"]
+
+          render-config:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: "4"
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                yq -o=json \
+                  '.oauth.providers.oidc.clientSecret = env(OIDC_CLIENT_SECRET) | .copilot.providers.openai.apiKey = env(LITELLM_API_KEY)' \
+                  /tmp/config.json > /home/affine/.affine/config/config.json
+            env:
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: affine-oidc-secret
+                    key: client-secret
+              LITELLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: affine-secret
+                    key: LITELLM_API_KEY
+
+          migrate:
+            image:
+              repository: ghcr.io/toeverything/affine
+              tag: &tag "0.27.3"
+            command: ["sh", "-c"]
+            args: ["node ./scripts/self-host-predeploy.js"]
+            env: &appEnv
+              HOME: /home/affine
+              REDIS_SERVER_HOST: affine-dragonfly
+              AFFINE_INDEXER_ENABLED: "false"
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef: { name: affine-postgres-app, key: uri }
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/toeverything/affine
+              tag: *tag
+
+            env:
+              <<: *appEnv
+              TZ: "Europe/Bucharest"
+              AFFINE_SERVER_HOST: "notes.home.mirceanton.com"
+              AFFINE_SERVER_HTTPS: "true"
+              AFFINE_SERVER_EXTERNAL_URL: "https://notes.home.mirceanton.com"
+              AFFINE_SERVER_PORT: &port 3010
+              LISTEN_ADDR: "0.0.0.0"
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/health
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 60
+
+            resources:
+              requests:
+                cpu: 25m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: affine
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["notes.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      home:
+        type: emptyDir
+        advancedMounts:
+          affine:
+            app:
+              - path: /home/affine
+            migrate:
+              - path: /home/affine
+
+      data:
+        existingClaim: ${APP}
+        advancedMounts:
+          affine:
+            app:
+              - path: /home/affine/.affine/storage
+            migrate:
+              - path: /home/affine/.affine/storage
+
+      config:
+        type: emptyDir
+        advancedMounts:
+          affine:
+            app:
+              - path: /home/affine/.affine/config
+            migrate:
+              - path: /home/affine/.affine/config
+            render-config:
+              - path: /home/affine/.affine/config
+
+      config-template:
+        type: configMap
+        name: affine-config-template
+        defaultMode: 0444
+        advancedMounts:
+          affine:
+            render-config:
+              - path: /tmp/config.json
+                subPath: config.json
+
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          affine:
+            app:
+              - path: /tmp
+            migrate:
+              - path: /tmp
+
+      # NestJS GraphQL writes its generated schema here on boot.
+      app-src:
+        type: emptyDir
+        advancedMounts:
+          affine:
+            app:
+              - path: /app/src
+            migrate:
+              - path: /app/src
