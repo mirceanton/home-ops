@@ -1,0 +1,27 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakclient_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakClient
+metadata:
+  name: "${APP}"
+spec:
+  clusterRealmRef:
+    name: homelab
+
+  clientId: "${APP}" #? defaults to metadata.name
+
+  # Auto-create Secret with client credentials
+  clientSecretRef:
+    create: true
+    name: "${APP}-oidc-secret"
+    clientIdKey: client-id
+    clientSecretKey: client-secret
+
+  definition:
+    protocol: ${KEYCLOAK_CLIENT_PROTOCOL:-openid-connect}
+    publicClient: ${KEYCLOAK_CLIENT_PUBLIC:-false}
+    standardFlowEnabled: ${KEYCLOAK_CLIENT_STANDARD_FLOW:-true}
+    directAccessGrantsEnabled: ${KEYCLOAK_CLIENT_DIRECT_ACCESS_GRANTS:-true}
+    serviceAccountsEnabled: ${KEYCLOAK_CLIENT_SERVICE_ACCOUNTS:-true}
+    redirectUris: [${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}]
+    webOrigins: ["https://${APP}.home.mirceanton.com"]

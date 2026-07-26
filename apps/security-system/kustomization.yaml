@@ -8,3 +8,4 @@ resources:
   - ./namespace.yaml
   - ./1password-connect
   - ./external-secrets-operator
+  - ./keycloak-operator
