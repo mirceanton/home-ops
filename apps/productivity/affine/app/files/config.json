@@ -4,6 +4,9 @@
     "name": "AFFiNE",
     "externalUrl": "https://notes.home.mirceanton.com"
   },
+  "flags": {
+    "allowGuestDemoWorkspace": false
+  },
   "oauth": {
     "providers": {
       "oidc": {
