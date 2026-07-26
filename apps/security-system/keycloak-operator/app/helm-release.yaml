@@ -36,9 +36,9 @@ spec:
         interval: 30s
         scrapeTimeout: 10s
 
-    rbac: {create: true}
-    serviceAccount: {create: true}
-    leaderElection: {enabled: true}
+    rbac: { create: true }
+    serviceAccount: { create: true }
+    leaderElection: { enabled: true }
 
     podSecurityContext:
       runAsNonRoot: true
@@ -46,11 +46,11 @@ spec:
       runAsGroup: 1000
       fsGroup: 1000
       fsGroupChangePolicy: OnRootMismatch
-      seccompProfile: {type: RuntimeDefault}
+      seccompProfile: { type: RuntimeDefault }
 
     securityContext:
       allowPrivilegeEscalation: false
-      capabilities: {drop: ["ALL"]}
+      capabilities: { drop: ["ALL"] }
       readOnlyRootFilesystem: true
 
     health:
