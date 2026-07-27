@@ -24,32 +24,6 @@ spec:
     hostname: keycloak.nas.svc.h.mirceanton.com
     wellKnownCACertificates: System
 ---
-# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: firefly-oidc-secret
-spec:
-  refreshInterval: 1h
-
-  secretStoreRef:
-    name: onepassword
-    kind: ClusterSecretStore
-
-  target:
-    name: firefly-oidc-secret
-    creationPolicy: Owner
-
-  data:
-    - secretKey: client-secret
-      remoteRef:
-        # Reusing the existing "sure" Keycloak client rather than
-        # provisioning a dedicated "firefly" one - the Homelab realm's
-        # "sure" client also needs firefly's redirect URI added to its
-        # Valid Redirect URIs list for this to work.
-        key: "Sure - Keycloak"
-        property: keycloak_client_secret
----
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
@@ -85,7 +59,7 @@ spec:
           kind: Backend
           name: firefly-keycloak
           port: 443
-    clientID: sure
+    clientID: firefly
     clientSecret:
       name: firefly-oidc-secret
     scopes: ["openid", "email", "profile"]
