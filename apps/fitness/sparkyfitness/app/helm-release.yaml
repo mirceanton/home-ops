@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness_server
-              tag: v0.16.6.3
+              tag: v1.6.0
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_DISABLE_SIGNUP: "false"
@@ -105,14 +105,18 @@ spec:
               SPARKY_FITNESS_OIDC_PROVIDER_SLUG: keycloak
               SPARKY_FITNESS_OIDC_PROVIDER_NAME: Keycloak
               SPARKY_FITNESS_OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              SPARKY_FITNESS_OIDC_CLIENT_ID: sparkyfitness
               SPARKY_FITNESS_OIDC_AUTO_REGISTER: "true"
               SPARKY_FITNESS_DISABLE_EMAIL_LOGIN: "true"
+              SPARKY_FITNESS_OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: sparkyfitness-oidc-secret
+                    key: client-id
               SPARKY_FITNESS_OIDC_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: sparkyfitness-secret
-                    key: SPARKY_FITNESS_OIDC_CLIENT_SECRET
+                    name: sparkyfitness-oidc-secret
+                    key: client-secret
 
             probes:
               liveness: { enabled: true }
@@ -132,7 +136,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness
-              tag: v0.16.6.3
+              tag: v1.6.0
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
@@ -172,7 +176,7 @@ spec:
           app:
             image:
               repository: codewithcj/sparkyfitness_garmin
-              tag: v0.16.6.3
+              tag: v1.6.0
             env:
               GARMIN_SERVICE_PORT: "8000"
               GARMIN_MICROSERVICE_URL: http://sparkyfitness-garmin:8000

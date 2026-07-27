@@ -15,6 +15,7 @@ spec:
   components:
     - ../../../../components/volsync/
     - ../../../../components/cnpg/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,6 +25,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://fitness.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://fitness.home.mirceanton.com"
 
   dependsOn:
     - name: cloudnative-pg-operator
@@ -34,3 +37,5 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
+    - name: keycloak-operator-config
+      namespace: security-system
