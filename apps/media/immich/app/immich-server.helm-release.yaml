@@ -56,8 +56,8 @@ spec:
               IMMICH_OAUTH_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-secret
-                    key: IMMICH_OAUTH_CLIENT_SECRET
+                    name: immich-oidc-secret
+                    key: client-secret
         containers:
           main:
             image:
