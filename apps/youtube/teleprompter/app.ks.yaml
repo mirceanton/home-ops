@@ -11,7 +11,8 @@ spec:
   targetNamespace: youtube
 
   path: ./apps/youtube/teleprompter/app
-  components: []
+  components:
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,4 +22,6 @@ spec:
     substitute:
       APP: *app
 
-  dependsOn: []
+  dependsOn:
+    - name: keycloak-operator-config
+      namespace: security-system
