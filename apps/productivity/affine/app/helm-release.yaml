@@ -59,7 +59,7 @@ spec:
               - |
                 set -euo pipefail
                 yq -o=json \
-                  '.oauth.providers.oidc.clientSecret = env(OIDC_CLIENT_SECRET) | .copilot.providers.openai.apiKey = env(LITELLM_API_KEY)' \
+                  '.oauth.providers.oidc.clientSecret = env(OIDC_CLIENT_SECRET) | .copilot.providers.openai.apiKey = env(LITELLM_API_KEY) | .copilot.providers.gemini.apiKey = env(LITELLM_API_KEY)' \
                   /tmp/config.json > /home/affine/.affine/config/config.json
             env:
               OIDC_CLIENT_SECRET:

@@ -28,6 +28,9 @@
     "providers": {
       "openai": {
         "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1"
+      },
+      "gemini": {
+        "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1beta"
       }
     }
   }
