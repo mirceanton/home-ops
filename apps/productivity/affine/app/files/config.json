@@ -23,7 +23,8 @@
     "enabled": true,
     "byok": {
       "enabled": true,
-      "allowCustomEndpoint": true
+      "allowCustomEndpoint": true,
+      "allowPrivateEndpoint": true
     },
     "providers": {
       "openai": {
