@@ -73,13 +73,6 @@ spec:
           http:
             port: 3000
 
-    route:
-      home:
-        hostnames: ["kubesearch.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-
     persistence:
       data:
         existingClaim: ${APP}
