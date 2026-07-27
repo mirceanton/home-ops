@@ -84,12 +84,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sparky-fitness.webp"
 
-      - name: "Sure"
-        subtitle: "Financial Manager"
-        url: "https://finance.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/sure.webp"
-
       - name: "Firefly"
         subtitle: "Financial Manager"
         url: "https://firefly.home.mirceanton.com"
@@ -101,12 +95,6 @@ services:
         url: "https://tasks.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
-
-      - name: "Outline"
-        subtitle: "Team Wiki"
-        url: "https://wiki.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/outline.webp"
 
   - name: "Maker"
     icon: "fas fa-cube"
