@@ -29,7 +29,8 @@ spec:
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
       KEYCLOAK_CLIENT_REDIRECT_URL: "https://notes.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEBORIGIN: "https://notes.home.mirceanton.com"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://notes.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://notes.home.mirceanton.com"
       # Affine's BullMQ queues (doc, indexer, copilot, etc.) each select a
       # different logical redis DB index; the shared dragonfly component
       # otherwise defaults to a single DB.
@@ -47,5 +48,5 @@ spec:
       namespace: database-system
     - name: dragonfly-operator
       namespace: database-system
-    - name: keycloak-operator
+    - name: keycloak-operator-config
       namespace: security-system
