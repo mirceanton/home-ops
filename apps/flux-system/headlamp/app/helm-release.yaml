@@ -19,10 +19,13 @@ spec:
     config:
       pluginsDir: /build/plugins
       oidc:
-        externalSecret:
-          enabled: true
-          name: headlamp-secret
-          hasScopes: true
+        secret:
+          create: false
+        issuerURL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        scopes: "openid,email,profile,groups"
+      extraArgs:
+        - -oidc-client-id=$(OIDC_CLIENT_ID)
+        - -oidc-client-secret=$(OIDC_CLIENT_SECRET)
 
     initContainers:
       - name: headlamp-plugins
@@ -49,3 +52,35 @@ spec:
       limits:
         cpu: 500m
         memory: 1Gi
+
+  # The headlamp chart's values.schema.json only allows literal `value:`
+  # strings in the top-level `env` list (no valueFrom), so the OIDC client
+  # credentials can't be wired to headlamp-oidc-secret via values. Inject
+  # them with a post-render patch instead.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: headlamp
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: headlamp
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: headlamp
+                        env:
+                          - name: OIDC_CLIENT_ID
+                            valueFrom:
+                              secretKeyRef:
+                                name: headlamp-oidc-secret
+                                key: client-id
+                          - name: OIDC_CLIENT_SECRET
+                            valueFrom:
+                              secretKeyRef:
+                                name: headlamp-oidc-secret
+                                key: client-secret
