@@ -34,7 +34,7 @@ spec:
     auth.generic_oauth:
       enabled: "true"
       name: Keycloak
-      client_id: grafana
+      client_id: ${AUTH_CLIENT_ID}
       client_secret: ${AUTH_CLIENT_SECRET}
       scopes: "openid profile email"
       auth_url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
@@ -57,11 +57,16 @@ spec:
                     secretKeyRef:
                       name: grafana-admin-password-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
+                - name: AUTH_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-oidc-secret
+                      key: client-id
                 - name: AUTH_CLIENT_SECRET
                   valueFrom:
                     secretKeyRef:
-                      name: grafana-admin-password-secret
-                      key: AUTH_CLIENT_SECRET
+                      name: grafana-oidc-secret
+                      key: client-secret
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
