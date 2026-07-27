@@ -8,7 +8,7 @@ spec:
   clusterRealmRef:
     name: homelab
 
-  clientId: "${APP}" #? defaults to metadata.name
+  clientId: ${KEYCLOAK_CLIENT_ID:-"${APP}"} #? defaults to metadata.name
 
   # Auto-create Secret with client credentials
   clientSecretRef:
