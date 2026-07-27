@@ -22,7 +22,7 @@ spec:
       APP: *app
 
   dependsOn:
-    # - name: 1password-connect
-    #   namespace: security-system
-    # - name: external-secrets-operator
-    #   namespace: security-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: external-secrets-operator
+      namespace: security-system
