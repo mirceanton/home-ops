@@ -31,6 +31,25 @@
       },
       "gemini": {
         "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1beta"
+      },
+      "profiles": [
+        {
+          "id": "litellm",
+          "displayName": "Self-Hosted (LiteLLM)",
+          "type": "openai",
+          "priority": 100,
+          "models": ["gpt-4o", "gpt-4o-mini", "text-embedding-3-small"],
+          "config": {
+            "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1"
+          }
+        }
+      ],
+      "defaults": {
+        "text": "litellm",
+        "object": "litellm",
+        "embedding": "litellm",
+        "rerank": "litellm",
+        "fallback": "litellm"
       }
     }
   }

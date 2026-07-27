@@ -137,8 +137,16 @@ router_settings:
     # against whatever provider is configured, regardless of the "affine"
     # alias above. Alias them to real models so those requests resolve.
     gemini-2.5-flash: qwen3.7-plus
+    gemini-embedding-001: qwen3-embedding-0.6b
     claude-sonnet-4: qwen3.7-plus
     text-embedding-3-large: qwen3-embedding-0.6b
+
+    # Explicit "openai"-typed copilot profile (config.json copilot.providers.profiles)
+    # uses these well-known names so Affine's native model catalog recognizes
+    # them without needing the gemini detour above.
+    gpt-4o: qwen3.7-plus
+    gpt-4o-mini: qwen3.7-plus
+    text-embedding-3-small: qwen3-embedding-0.6b
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
