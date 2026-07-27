@@ -6,5 +6,4 @@ namespace: productivity
 
 resources:
   - ./namespace.yaml
-  - ./outline
   - ./vikunja
