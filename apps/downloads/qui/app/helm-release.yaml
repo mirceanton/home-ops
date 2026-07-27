@@ -36,11 +36,18 @@ spec:
               TZ: Europe/Bucharest
               QUI__OIDC_ENABLED: "true"
               QUI__OIDC_ISSUER: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              QUI__OIDC_CLIENT_ID: qui
               QUI__OIDC_REDIRECT_URL: https://qui.home.mirceanton.com/api/auth/oidc/callback
               QUI__OIDC_DISABLE_BUILT_IN_LOGIN: "true"
-            envFrom:
-              - secretRef: { name: qui-secret }
+              QUI__OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: qui-oidc-secret
+                    key: client-id
+              QUI__OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: qui-oidc-secret
+                    key: client-secret
 
             probes:
               liveness: &probes
