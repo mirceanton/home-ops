@@ -48,9 +48,18 @@ spec:
               MEILI_ADDR: http://karakeep-meilisearch:7700
               NEXTAUTH_URL: https://karakeep.home.mirceanton.com
               OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
-              OAUTH_CLIENT_ID: karakeep
               OAUTH_PROVIDER_NAME: Keycloak
               OAUTH_WELLKNOWN_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/.well-known/openid-configuration
+              OAUTH_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-oidc-secret
+                    key: client-id
+              OAUTH_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-oidc-secret
+                    key: client-secret
 
             probes:
               liveness:
