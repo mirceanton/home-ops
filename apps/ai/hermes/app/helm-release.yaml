@@ -72,6 +72,11 @@ spec:
               HOME: /opt/data
               TZ: Europe/Bucharest
               HERMES_DASHBOARD: "true"
+              HERMES_DASHBOARD_OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-oidc-secret
+                    key: client-secret
 
             resources:
               requests:
