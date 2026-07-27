@@ -81,6 +81,12 @@ services:
         target: "_blank"
         icon: "fas fa-brain"
 
+      - name: "KubeSearch"
+        subtitle: "Kubernetes Search MCP"
+        url: "https://kubesearch.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/kubesearch.webp"
+
   - name: "Servers"
     icon: "fas fa-hard-drive"
     items:
