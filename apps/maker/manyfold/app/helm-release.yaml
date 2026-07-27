@@ -61,12 +61,16 @@ spec:
               OIDC_NAME: Keycloak
               FORCE_OIDC: enabled
               OIDC_ISSUER: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              OIDC_CLIENT_ID: manyfold
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: manyfold-oidc-secret
+                    key: client-id
               OIDC_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: manyfold-secret
-                    key: OIDC_CLIENT_SECRET
+                    name: manyfold-oidc-secret
+                    key: client-secret
 
             probes:
               liveness: &probes

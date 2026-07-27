@@ -16,6 +16,7 @@ spec:
     - ../../../../components/volsync/
     - ../../../../components/nfs-scaler/
     - ../../../../components/dragonfly/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -38,3 +39,5 @@ spec:
       namespace: kube-system
     - name: dragonfly-operator
       namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system
