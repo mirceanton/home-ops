@@ -7,4 +7,5 @@ namespace: productivity
 resources:
   - ./namespace.yaml
   - ./affine
+  - ./keep
   - ./vikunja
