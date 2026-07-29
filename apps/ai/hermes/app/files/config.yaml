@@ -12,6 +12,13 @@ mcp_servers:
     headers:
       x-litellm-api-key: "Bearer {{ .LITELLM_API_KEY }}"
 
+  image_gen:
+    command: "npx"
+    args: ["-y", "mcp-openai-image-generator", "--models", "wan2.7", "wan2.7-pro"]
+    env:
+      OPENAI_API_KEY: "{{ .LITELLM_API_KEY }}"
+      OPENAI_BASE_URL: "http://litellm:4000/v1"
+
 toolsets:
   - hermes-cli
 
