@@ -56,9 +56,90 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
+          # Reverse proxy that injects the rotating GitHub App installation
+          # token as an Authorization header. The token file is a live
+          # (non-subPath) secret mount, refreshed in place by kubelet
+          # roughly every ~60-90s after github-mcp-secret changes; a poll
+          # loop rewrites an nginx include file and does `nginx -s reload`
+          # (graceful, in-place) on change. This keeps the token current
+          # without ever restarting this pod, so Hermes's long-lived
+          # connection to this service never sees a rotation-driven
+          # disconnect, and Hermes's own config no longer needs the token
+          # at all.
+          nginx:
+            image:
+              repository: docker.io/nginxinc/nginx-unprivileged
+              tag: 1.27-alpine
+
+            command: ["sh", "-c"]
+            args:
+              - |
+                set -eu
+
+                TOKEN_FILE=/run/secrets/github-mcp/token
+                AUTH_CONF=/etc/nginx/dynamic/auth.conf
+
+                write_conf() {
+                  printf 'set $github_mcp_token "Bearer %s";\n' "$1" > "$AUTH_CONF.new"
+                  mv "$AUTH_CONF.new" "$AUTH_CONF"
+                }
+
+                LAST_TOKEN=$(cat "$TOKEN_FILE")
+                write_conf "$LAST_TOKEN"
+
+                nginx -g 'daemon off;' &
+                NGINX_PID=$!
+                trap 'kill -TERM "$NGINX_PID" 2>/dev/null; wait "$NGINX_PID"; exit 0' TERM INT
+
+                while kill -0 "$NGINX_PID" 2>/dev/null; do
+                  sleep 30
+                  CURRENT_TOKEN=$(cat "$TOKEN_FILE")
+                  if [ "$CURRENT_TOKEN" != "$LAST_TOKEN" ]; then
+                    write_conf "$CURRENT_TOKEN"
+                    nginx -s reload
+                    LAST_TOKEN="$CURRENT_TOKEN"
+                  fi
+                done
+
+                wait "$NGINX_PID"
+
+            probes:
+              liveness: &nginx_probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *nginx_probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+
+            securityContext:
+              runAsUser: 101
+              runAsGroup: 101
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
     defaultPodOptions:
       automountServiceAccountToken: false
-      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
@@ -71,10 +152,80 @@ spec:
         controller: github-mcp
         ports:
           http:
-            port: 8082
+            port: 8080
+            targetPort: 8080
+
+    configMaps:
+      nginx-conf:
+        data:
+          nginx.conf: |
+            worker_processes 1;
+            pid /tmp/nginx.pid;
+
+            events {
+              worker_connections 1024;
+            }
+
+            http {
+              include /etc/nginx/mime.types;
+              default_type application/octet-stream;
+
+              client_body_temp_path /tmp/client_temp;
+              proxy_temp_path /tmp/proxy_temp;
+              fastcgi_temp_path /tmp/fastcgi_temp;
+              uwsgi_temp_path /tmp/uwsgi_temp;
+              scgi_temp_path /tmp/scgi_temp;
+
+              access_log /dev/stdout;
+              error_log /dev/stderr;
+              client_max_body_size 0;
+
+              server {
+                listen 8080;
+
+                location / {
+                  include /etc/nginx/dynamic/auth.conf;
+
+                  proxy_pass http://127.0.0.1:8082;
+                  proxy_http_version 1.1;
+                  proxy_set_header Authorization $github_mcp_token;
+                  proxy_set_header Connection "";
+                  proxy_buffering off;
+                  proxy_read_timeout 3600s;
+                  proxy_send_timeout 3600s;
+                }
+              }
+            }
 
     persistence:
       tmp:
         type: emptyDir
         globalMounts:
           - path: /tmp
+
+      github-token:
+        type: secret
+        name: github-mcp-secret
+        defaultMode: 0400
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /run/secrets/github-mcp
+                readOnly: true
+
+      nginx-conf:
+        type: configMap
+        identifier: nginx-conf
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /etc/nginx/nginx.conf
+                subPath: nginx.conf
+                readOnly: true
+
+      nginx-dynamic:
+        type: emptyDir
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /etc/nginx/dynamic

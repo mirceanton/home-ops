@@ -20,3 +20,9 @@ spec:
   postBuild:
     substitute:
       APP: *app
+
+  dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: litellm
+      namespace: ai

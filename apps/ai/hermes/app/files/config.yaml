@@ -8,11 +8,10 @@ providers:
 
 mcp_servers:
   github:
-    url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"
-    headers:
-      # GitHub App installation token, same generator litellm uses for its
-      # own "github" MCP server entry (see apps/ai/litellm/app/files/config.yaml)
-      Authorization: "Bearer {{ .token }}"
+    # github-mcp's own nginx sidecar injects the Authorization header with
+    # a live-refreshed GitHub App installation token, so this config never
+    # changes on token rotation and Hermes never restarts because of it.
+    url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
 
   firefly:
     url: "http://firefly-mcp.finance.svc.cluster.local:3000"
