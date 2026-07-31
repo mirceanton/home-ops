@@ -40,6 +40,12 @@ spec:
               HERMES_PORT: &port "8080"
               HERMES_DB_DRIVER: sqlite
               HERMES_CONFIG_PATH: /data/hermes-alertmanager.db
+              HERMES_AGENT_WEBHOOK_URL: http://hermes.ai.svc.cluster.local:8644/webhooks/alertmanager
+              HERMES_AGENT_WEBHOOK_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-alertmanager-secret
+                    key: WEBHOOK_SECRET
 
             resources:
               requests:
