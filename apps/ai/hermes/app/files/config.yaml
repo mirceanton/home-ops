@@ -8,9 +8,6 @@ providers:
 
 mcp_servers:
   github:
-    # github-mcp's own nginx sidecar injects the Authorization header with
-    # a live-refreshed GitHub App installation token, so this config never
-    # changes on token rotation and Hermes never restarts because of it.
     url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
 
   firefly:
@@ -42,16 +39,16 @@ mcp_servers:
   streamarr:
     url: "http://streamarr.downloads.svc.cluster.local:8080/mcp"
 
-  stockii:
-    url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
-    transport: sse
+  # stockii:
+  #   url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
+  #   transport: sse
 
-  image_gen:
-    command: "npx"
-    args: ["-y", "mcp-openai-image-generator", "--models", "wan2.7", "wan2.7-pro"]
-    env:
-      OPENAI_API_KEY: "{{ .LITELLM_API_KEY }}"
-      OPENAI_BASE_URL: "http://litellm:4000/v1"
+  # image_gen:
+  #   command: "npx"
+  #   args: ["-y", "mcp-openai-image-generator", "--models", "wan2.7", "wan2.7-pro"]
+  #   env:
+  #     OPENAI_API_KEY: "{{ .LITELLM_API_KEY }}"
+  #     OPENAI_BASE_URL: "http://litellm:4000/v1"
 
 toolsets:
   - hermes-cli
