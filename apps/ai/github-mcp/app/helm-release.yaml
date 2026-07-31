@@ -69,7 +69,7 @@ spec:
           nginx:
             image:
               repository: docker.io/nginxinc/nginx-unprivileged
-              tag: 1.27-alpine
+              tag: 1.31-alpine
 
             command: ["sh", "/scripts/entrypoint.sh"]
 
