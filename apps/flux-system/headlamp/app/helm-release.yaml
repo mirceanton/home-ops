@@ -29,7 +29,7 @@ spec:
 
     initContainers:
       - name: headlamp-plugins
-        image: ghcr.io/headlamp-k8s/headlamp-plugin-flux:v0.6.0
+        image: ghcr.io/headlamp-k8s/headlamp-plugin-flux:v0.7.0
         command: ["/bin/sh", "-c"]
         args:
           - mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/
