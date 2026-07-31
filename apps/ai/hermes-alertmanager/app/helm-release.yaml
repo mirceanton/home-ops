@@ -35,17 +35,17 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/hermes-alertmanager
-              tag: v0.4.0
+              tag: v1.0.0
             env:
               HERMES_PORT: &port "8080"
               HERMES_DB_DRIVER: sqlite
               HERMES_CONFIG_PATH: /data/hermes-alertmanager.db
-              HERMES_AGENT_WEBHOOK_URL: http://hermes-webhook.ai.svc.cluster.local:8644/webhooks/alertmanager
-              HERMES_AGENT_WEBHOOK_SECRET:
+              HERMES_AGENT_API_URL: http://hermes-api.ai.svc.cluster.local:8642
+              HERMES_AGENT_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: hermes-alertmanager-secret
-                    key: WEBHOOK_SECRET
+                    key: API_SERVER_KEY
 
             resources:
               requests:

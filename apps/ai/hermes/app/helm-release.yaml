@@ -88,8 +88,8 @@ spec:
               - containerPort: &dashboard_port 9119
                 name: dashboard
                 protocol: TCP
-              - containerPort: &webhook_port 8644
-                name: webhook
+              - containerPort: &api_port 8642
+                name: api
                 protocol: TCP
 
             securityContext:
@@ -114,11 +114,11 @@ spec:
           http:
             port: *dashboard_port
 
-      webhook:
+      api:
         controller: hermes
         ports:
           http:
-            port: *webhook_port
+            port: *api_port
 
     route:
       dashboard:

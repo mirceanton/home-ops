@@ -6,37 +6,16 @@ providers:
     base_url: http://litellm:4000/v1
     api_key: "{{ .LITELLM_API_KEY }}"
 
-platforms:
-  webhook:
+gateway:
+  api_server:
     enabled: true
-    extra:
-      port: 8644
-      secret: "{{ .WEBHOOK_SECRET }}"
-      routes:
-        alertmanager:
-          prompt: |
-            An alert was delegated to you by hermes-alertmanager. Investigate
-            it and, if safe, remediate it. When you're done — whether you
-            fixed it, couldn't, or need to bail — you MUST call the
-            `report_delegation_result` MCP tool with
-            delegation_id="{alert.request_id}", status ("completed" or
-            "failed"), and a concise summary. This is the only way
-            hermes-alertmanager finds out you're done.
-
-            Alert: {alert.name}
-            Severity: {alert.severity}
-            Fingerprint: {alert.fingerprint}
-            Times fired: {alert.notification_count}
-            Labels: {alert.labels}
-            Annotations: {alert.annotations}
-          deliver: discord
-          deliver_extra:
-            chat_id: "{{ .DISCORD_ALERTMANAGER_CHANNEL }}"
+    # Defaults to 127.0.0.1 - binds loopback-only and is unreachable from
+    # hermes-alertmanager (a separate pod) without this.
+    host: "0.0.0.0"
+    port: 8642
+    key: "{{ .API_SERVER_KEY }}"
 
 mcp_servers:
-  hermes_alertmanager:
-    url: "http://hermes-alertmanager.ai.svc.cluster.local:8080/mcp"
-
   github:
     url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
 
