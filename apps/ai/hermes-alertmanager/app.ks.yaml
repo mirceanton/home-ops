@@ -27,7 +27,7 @@ spec:
       VOLSYNC_PGID: "65532"
 
   dependsOn:
-    # - name: external-secrets-operator
-    #   namespace: security-system
-    # - name: volsync
-    #   namespace: storage-system
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
