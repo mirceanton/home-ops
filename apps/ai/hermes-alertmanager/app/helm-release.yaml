@@ -35,7 +35,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/hermes-alertmanager
-              tag: v0.1.1
+              tag: v0.2.0
             env:
               HERMES_PORT: &port "8080"
               HERMES_DB_DRIVER: sqlite
