@@ -59,11 +59,6 @@ spec:
                   secretKeyRef:
                     name: litellm-postgres-app
                     key: uri
-              GITHUB_MCP_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: litellm-secret
-                    key: GITHUB_MCP_TOKEN
               FIREFLY_MCP_TOKEN:
                 valueFrom:
                   secretKeyRef:
