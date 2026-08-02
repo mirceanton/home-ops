@@ -18,12 +18,14 @@ spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
-        # Playwright's official base image (this app bundles headless
-        # Chromium for thumbnails) fixes its non-root user at 1001 (pwuser),
+        # Matches the UID/GID that owns the NFS-exported library on TrueNAS
+        # (the home-operations 568 convention), not the image's own baked-in
+        # pwuser (1001) — file permission checks on the NFS mount are done
+        # against the container's actual runtime UID, not /etc/passwd.
         runAsNonRoot: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        fsGroup: 1001
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         fsGroupChangePolicy: "OnRootMismatch"
 
     controllers:
@@ -39,6 +41,11 @@ spec:
 
             env:
               PORT: &port 4000
+              # UID 568 has no /etc/passwd entry in the image (only 1001/
+              # pwuser does) — Chromium does getpwuid()-style lookups for
+              # its profile dir, so HOME must be set explicitly or it can
+              # fail to launch.
+              HOME: /tmp
               LIBRARY_ROOT: /library
               DATABASE_PATH: /data/modelhub.sqlite3
               LIBRARY_WATCH_USE_POLLING: "true" #? library is an NFS mount; inotify is unreliable across NFS
