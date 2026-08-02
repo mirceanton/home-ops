@@ -9,3 +9,4 @@ resources:
   - ./grafana-folder.yaml
 
   - ./bambuddy
+  - ./modelhub
