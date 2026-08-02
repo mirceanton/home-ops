@@ -46,6 +46,16 @@ spec:
               # its profile dir, so HOME must be set explicitly or it can
               # fail to launch.
               HOME: /tmp
+              # Every project under /library is a git repo the app manages,
+              # discovered dynamically — git refuses to operate on any of
+              # them ("detected dubious ownership") because the NFS mount's
+              # reported owner doesn't cleanly match the container's runtime
+              # UID. Trusting a single path isn't workable since projects
+              # are added at runtime, so trust the whole tree via git's
+              # env-var config (git >=2.31) instead of a static gitconfig.
+              GIT_CONFIG_COUNT: "1"
+              GIT_CONFIG_KEY_0: safe.directory
+              GIT_CONFIG_VALUE_0: "*"
               LIBRARY_ROOT: /library
               DATABASE_PATH: /data/modelhub.sqlite3
               LIBRARY_WATCH_USE_POLLING: "true" #? library is an NFS mount; inotify is unreliable across NFS
