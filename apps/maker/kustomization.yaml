@@ -9,4 +9,3 @@ resources:
   - ./grafana-folder.yaml
 
   - ./bambuddy
-  - ./manyfold
