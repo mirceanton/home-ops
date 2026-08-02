@@ -18,10 +18,6 @@ spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
       securityContext:
-        # Matches the UID/GID that owns the NFS-exported library on TrueNAS
-        # (the home-operations 568 convention), not the image's own baked-in
-        # pwuser (1001) — file permission checks on the NFS mount are done
-        # against the container's actual runtime UID, not /etc/passwd.
         runAsNonRoot: true
         runAsUser: 568
         runAsGroup: 568
@@ -37,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/model-hub
-              tag: v0.1.0@sha256:6cad54a9181cb5cca2111608821708987b1a4a7a72589de4ff4914f85f1fea61
+              tag: v0.2.0
 
             env:
               PORT: &port 4000
