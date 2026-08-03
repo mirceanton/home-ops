@@ -25,9 +25,6 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://keep.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://keep.home.mirceanton.com"
-      KEYCLOAK_CLIENT_HOME_URL: "https://keep.home.mirceanton.com"
 
   decryption: { provider: sops }
   dependsOn:
