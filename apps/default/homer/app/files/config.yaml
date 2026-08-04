@@ -90,6 +90,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/firefly-iii.webp"
 
+      - name: "Firefly Importer"
+        subtitle: "CSV Import Tool"
+        url: "https://firefly-importer.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-file-import"
+
       - name: "Vikunja"
         subtitle: "Task Manager"
         url: "https://tasks.home.mirceanton.com"
@@ -105,11 +111,11 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/bambu-lab.webp"
 
-      - name: "Manyfold"
+      - name: "ModelHub"
         subtitle: "3D Model Library"
-        url: "https://manyfold.home.mirceanton.com"
+        url: "https://modelhub.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/manyfold.webp"
+        logo: "assets/icons/webp/modelhub.webp"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
