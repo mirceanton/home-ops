@@ -16,3 +16,4 @@ configMapGenerator:
       - admin.yml=files/admin.yaml
       - bomkii.yml=files/bomkii.yaml
       - mirceanton.yml=files/mirceanton.yaml
+      - modelhub.svg=files/modelhub.svg
