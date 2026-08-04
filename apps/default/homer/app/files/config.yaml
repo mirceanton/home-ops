@@ -1,4 +1,3 @@
----
 title: "Home Dashboard"
 subtitle: ""
 header: false
@@ -89,12 +88,6 @@ services:
         url: "https://firefly.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/firefly-iii.webp"
-
-      - name: "Firefly Importer"
-        subtitle: "CSV Import Tool"
-        url: "https://firefly-importer.home.mirceanton.com"
-        target: "_blank"
-        icon: "fas fa-file-import"
 
       - name: "Vikunja"
         subtitle: "Task Manager"
