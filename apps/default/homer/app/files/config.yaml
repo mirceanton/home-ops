@@ -115,7 +115,7 @@ services:
         subtitle: "3D Model Library"
         url: "https://modelhub.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/modelhub.webp"
+        logo: "assets/modelhub.svg"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"

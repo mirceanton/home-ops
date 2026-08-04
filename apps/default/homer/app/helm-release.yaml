@@ -96,6 +96,9 @@ spec:
               - path: /www/assets/mirceanton.yml
                 subPath: mirceanton.yml
                 readOnly: true
+              - path: /www/assets/modelhub.svg
+                subPath: modelhub.svg
+                readOnly: true
       icons:
         type: emptyDir
         advancedMounts:
