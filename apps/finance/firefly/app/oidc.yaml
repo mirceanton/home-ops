@@ -35,7 +35,7 @@ spec:
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      name: firefly-home
+      name: firefly
       sectionName: web
 
   # Stage 1: log in against Keycloak and forward the access token upstream
