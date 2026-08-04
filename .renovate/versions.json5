@@ -8,7 +8,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["fireflyiii/core", "fireflyiii/data-importer"],
+      "matchPackageNames": ["fireflyiii/core"],
       "versioning": "regex:^version-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
     {
