@@ -32,6 +32,23 @@ spec:
                     name: bambuddy-secret
                     key: HA_TOKEN
 
+              # OIDC / Keycloak SSO, env-managed provider (upstream PR:
+              # https://github.com/maziggy/bambuddy/pull/2625, fixes #2593).
+              # Not active until that PR merges and ships in a release.
+              BAMBUDDY_OIDC_NAME: Keycloak
+              BAMBUDDY_OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              BAMBUDDY_OIDC_AUTO_CREATE_USERS: "true"
+              BAMBUDDY_OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: bambuddy-oidc-secret
+                    key: client-id
+              BAMBUDDY_OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: bambuddy-oidc-secret
+                    key: client-secret
+
             resources:
               requests:
                 cpu: 10m
