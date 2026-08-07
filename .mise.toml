@@ -16,7 +16,7 @@ uv = "latest"
 "aqua:cilium/hubble" = "latest"
 
 # Flux Tools
-"aqua:fluxcd/flux2" = "2.9.3"
+"aqua:fluxcd/flux2" = "2.9.4"
 "github:home-operations/flate" = "latest"
 
 # Helm + Plugins
