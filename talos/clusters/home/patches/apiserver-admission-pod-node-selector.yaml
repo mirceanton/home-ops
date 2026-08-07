@@ -2,8 +2,6 @@
 cluster:
   apiServer:
     admissionControl:
-      - name: PodSecurity
-        $$patch: delete
       - name: PodNodeSelector
         configuration:
           podNodeSelectorPluginConfig:

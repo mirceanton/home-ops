@@ -1,0 +1,86 @@
+---
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+clusterName: home-ops
+controlPlaneEndpoint: https://home-ops.mgmt.h.mirceanton.com:6443
+secrets: ./talsecret.sops.yaml
+
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.36.3
+
+installer:
+  # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
+  talosVersion: v1.13.8
+
+additionalSubjectAltNames:
+  - home-ops.mgmt.h.mirceanton.com
+  - 10.0.0.15
+  - 127.0.0.1 # KubePrism
+
+nodes:
+  home-ops:
+    ip: 10.0.0.15
+    kind: controlplane
+    patches:
+      - ../../base/nvidia.yaml
+      - ../../base/zfs.yaml
+      - ./patches/uinput.yaml
+      - ./patches/home-ops/networking.yaml
+      - machine: # Install disk selector
+          install:
+            diskSelector:
+              size: "<= 300Gb"
+      - machine: #? Use the Intel Optane for the etcd disk
+          disks:
+            - device: /dev/nvme0n1
+              partitions:
+                - mountpoint: /var/lib/etcd
+      - machine: # Node Labels
+          nodeLabels:
+            nvidia.com/gpu.present: "true"
+            k8s.mirceanton.com/default-node: "true"
+            k8s.mirceanton.com/remote-node: "true" # TODO: drop once 2nd node is added
+
+    installer:
+      schematic:
+        customization:
+          extraKernelArgs:
+            - cpufreq.default_governor=performance
+            - amdgpu.gttsize=40960 # 40GiB GTT ceiling for iGPU LLM inference
+          systemExtensions:
+            officialExtensions:
+              - siderolabs/amd-ucode
+              - siderolabs/amdgpu
+              - siderolabs/nvidia-container-toolkit-production
+              - siderolabs/nvidia-open-gpu-kernel-modules-production
+              - siderolabs/zfs
+              - siderolabs/iscsi-tools
+              - siderolabs/uinput # mouse/keyboard emulation (Sunshine)
+              - siderolabs/uhid # gamepad emulation (Sunshine)
+              - siderolabs/joydev # legacy joystick interface (Sunshine)
+
+patches:
+  - cluster: {allowSchedulingOnControlPlanes: true}
+  - ../../base/registry-mirrors.yaml #? Self-hosted Nexus registry pull-through mirror
+  - ../../base/disable-cni.yaml #? Cilium CNI
+  - ../../base/disable-kube-proxy.yaml #? Cilium CNI
+  - ../../base/cluster-discovery.yaml
+  - ../../base/kubelet-tuning.yaml
+  - ../../base/disable-search-domain.yaml
+  - ../../base/kubeprism.yaml
+  - ../../base/host-dns.yaml
+  - ./patches/sysctls.yaml
+  - ./patches/kubelet-node-ip.yaml
+  - ./patches/talos-api-access.yaml
+
+controlplanePatches:
+  - ../../base/etcd-tuning.yaml
+  - ../../base/mutating-admission-enable.yaml
+  - ../../base/apiserver-admission-pod-security-disable.yaml
+  - ../../base/apiserver-oidc.yaml
+  - ../../base/apiserver-resources.yaml
+  - ./patches/network-binding.yaml
+  - ./patches/apiserver-admission-pod-node-selector.yaml
+
+workerPatches: []

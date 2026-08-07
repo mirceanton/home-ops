@@ -1,11 +1,6 @@
 ---
-#? Bind the kubelet and etcd to the management network subnet
+#? Bind etcd to the management network subnet
 #? Expose controller-manager and scheduler metrics for Prometheus scraping
-machine:
-  kubelet:
-    nodeIP:
-      validSubnets: ["10.0.0.0/24"]
-
 cluster:
   etcd:
     extraArgs:

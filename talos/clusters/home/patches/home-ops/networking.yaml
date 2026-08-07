@@ -1,0 +1,44 @@
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links: [enp4s0, enp4s0d1]
+bondMode: 802.3ad
+miimon: 100
+updelay: 200
+downdelay: 200
+xmitHashPolicy: layer3+4
+lacpRate: fast
+mtu: 9000
+
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: enp6s0 #? Management
+routeMetric: 1024
+
+---
+apiVersion: v1alpha1
+kind: VLANConfig
+name: bond0.1255
+vlanID: 1255
+parent: bond0
+
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: bond0.1255
+routeMetric: 4095
+
+---
+apiVersion: v1alpha1
+kind: VLANConfig
+name: bond0.1010
+vlanID: 1010
+parent: bond0
+
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: bond0.1010
+routeMetric: 4095

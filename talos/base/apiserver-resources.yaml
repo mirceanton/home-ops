@@ -1,0 +1,11 @@
+---
+#! Control-plane-only: kube-apiserver only runs on controlplane nodes, so
+#! this stays a role patch rather than moving to the cluster-wide list.
+cluster:
+  apiServer:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        memory: 6Gi

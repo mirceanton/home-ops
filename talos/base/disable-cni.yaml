@@ -1,0 +1,5 @@
+---
+cluster:
+  network:
+    cni:
+      name: none

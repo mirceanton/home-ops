@@ -1,5 +1,7 @@
 ---
-#! Uses talhelper variables: ${registry_username}, ${registry_password}
+#! Populated via talstomize's envsubst support - export registry_username
+#! and registry_password before building (e.g. source the decrypted
+#! talenv.sops.yaml, or `op run -- talstomize build .`).
 machine:
   registries:
     config:

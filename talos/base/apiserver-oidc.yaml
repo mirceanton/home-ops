@@ -1,0 +1,10 @@
+---
+#! Control-plane-only: kube-apiserver only runs on controlplane nodes, so
+#! this stays a role patch rather than moving to the cluster-wide list.
+cluster:
+  apiServer:
+    extraArgs:
+      oidc-issuer-url: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
+      oidc-client-id: "headlamp"
+      oidc-username-claim: "preferred_username"
+      oidc-groups-claim: "groups"
