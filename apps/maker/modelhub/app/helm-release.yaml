@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/model-hub
-              tag: v0.4.3
+              tag: v0.4.4
 
             env:
               PORT: &port 4000
