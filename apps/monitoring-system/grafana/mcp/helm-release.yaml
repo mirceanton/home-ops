@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: grafana/mcp-grafana
-              tag: 1.0.0
+              tag: 1.1.0
             args:
               - --allowed-hosts=localhost:8000,127.0.0.1:8000,grafana-mcp.monitoring-system.svc.cluster.local:8000,grafana-mcp.monitoring-system:8000,grafana-mcp:8000
             env:
