@@ -1,0 +1,58 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/apps/deployment_v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP}-tengine
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP}
+      app.kubernetes.io/component: tengine
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP}
+        app.kubernetes.io/component: tengine
+    spec:
+      # Each SafeLine component gets its own Pod: several of them (mgt,
+      # luigi, tengine) independently bind port 80 internally, so sharing a
+      # network namespace between any two of them causes a bind conflict.
+      containers:
+        - name: tengine
+          image: chaitin/safeline-tengine:9.3.11
+          env:
+            # Headless Services named after tengine's upstream container_name
+            # peers (see service.yaml) - resolves to real pod IPs, not a
+            # NAT'd ClusterIP.
+            - name: TCD_MGT_API
+              value: https://safeline-mgt:1443/api/open/publish/server
+            - name: TCD_SNSERVER
+              value: safeline-detector:8000
+            - name: SNSERVER_ADDR
+              value: safeline-detector:8000
+            - name: CHAOS_ADDR
+              value: safeline-chaos
+          ports:
+            - { name: waf-http, containerPort: 80 }
+            - { name: waf-https, containerPort: 443 }
+          volumeMounts:
+            - { name: data, mountPath: /etc/nginx, subPath: resources/nginx }
+            - { name: data, mountPath: /resources/detector, subPath: resources/detector }
+            - { name: data, mountPath: /resources/chaos, subPath: resources/chaos }
+            - { name: data, mountPath: /var/log/nginx, subPath: logs/nginx }
+            - { name: data, mountPath: /usr/local/nginx/cache, subPath: resources/cache }
+            - { name: data, mountPath: /app/sock, subPath: resources/sock }
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: { cpu: 100m, memory: 512Mi }
+            limits: { memory: 2Gi }
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ${APP}

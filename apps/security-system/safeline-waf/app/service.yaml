@@ -1,0 +1,123 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/core/service_v1.json
+# Headless services named after SafeLine's upstream docker-compose
+# container_names. Several internal calls (e.g. mgt -> fvm, luigi -> detect)
+# use these hostnames hardcoded in the binaries rather than the configurable
+# TCD_*/CHAOS_ADDR env vars, so they must resolve by these exact names
+# regardless of which Pod actually hosts each component. Headless (no
+# ClusterIP) resolves straight to the pod IP, avoiding NAT'd-port
+# restrictions for ports not declared below. publishNotReadyAddresses is
+# required too: without it, a component that isn't Ready yet (e.g. because
+# it's waiting on one of these very DNS names) never gets an Endpoint, so
+# DNS never resolves and it can never become Ready - a deadlock.
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-mgt
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: mgt
+  ports:
+    - { name: https, port: 1443 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-detector
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: detect
+  ports:
+    - { name: sn, port: 8000 }
+    - { name: stat, port: 8001 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-fvm
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: fvm
+  ports:
+    - { name: http, port: 80 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-chaos
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: chaos
+  ports:
+    - { name: http, port: 9000 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-luigi
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: luigi
+  ports:
+    - { name: http, port: 80 }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safeline-tengine
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: tengine
+  ports:
+    - { name: http, port: 80 }
+    - { name: https, port: 443 }
+---
+# ClusterIP (not headless) - this one's a real backend target for the
+# HTTPRoute/Envoy Gateway, which needs a stable Service, not pod-IP DNS.
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP}-mgt
+spec:
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: mgt
+  ports:
+    - name: https
+      port: 1443
+      targetPort: 1443
+      appProtocol: https
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP}-tengine
+spec:
+  selector:
+    app.kubernetes.io/name: ${APP}
+    app.kubernetes.io/component: tengine
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: https
+      port: 443
+      targetPort: 443

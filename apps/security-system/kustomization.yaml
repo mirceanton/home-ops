@@ -9,3 +9,4 @@ resources:
   - ./1password-connect
   - ./external-secrets-operator
   - ./keycloak-operator
+  - ./safeline-waf

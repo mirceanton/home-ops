@@ -1,0 +1,56 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/apps/deployment_v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP}-mgt
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP}
+      app.kubernetes.io/component: mgt
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP}
+        app.kubernetes.io/component: mgt
+    spec:
+      containers:
+        - name: mgt
+          image: chaitin/safeline-mgt:9.3.11
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP}-postgres-app
+                  key: password
+            - name: MGT_PG
+              value: postgres://${APP}:$(POSTGRES_PASSWORD)@${APP}-postgres-rw:5432/${APP}?sslmode=disable
+          ports:
+            - name: https
+              containerPort: 1443
+          readinessProbe:
+            httpGet: { path: /api/open/health, port: 1443, scheme: HTTPS }
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /api/open/health, port: 1443, scheme: HTTPS }
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          volumeMounts:
+            - { name: data, mountPath: /app/data, subPath: resources/mgt }
+            - { name: data, mountPath: /app/log/nginx, subPath: logs/nginx }
+            - { name: data, mountPath: /app/sock, subPath: resources/sock }
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { memory: 512Mi }
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ${APP}

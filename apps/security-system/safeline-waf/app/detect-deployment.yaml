@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/apps/deployment_v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP}-detect
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP}
+      app.kubernetes.io/component: detect
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP}
+        app.kubernetes.io/component: detect
+    spec:
+      containers:
+        - name: detect
+          image: chaitin/safeline-detector:9.3.11
+          env:
+            - name: LOG_DIR
+              value: /logs/detector
+          volumeMounts:
+            - { name: data, mountPath: /resources/detector, subPath: resources/detector }
+            - { name: data, mountPath: /logs/detector, subPath: logs/detector }
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: { cpu: 200m, memory: 512Mi }
+            limits: { memory: 1Gi }
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ${APP}

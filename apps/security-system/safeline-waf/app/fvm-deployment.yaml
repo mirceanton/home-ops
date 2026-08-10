@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/apps/deployment_v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP}-fvm
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP}
+      app.kubernetes.io/component: fvm
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP}
+        app.kubernetes.io/component: fvm
+    spec:
+      containers:
+        - name: fvm
+          image: chaitin/safeline-fvm:9.3.11
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { memory: 256Mi }

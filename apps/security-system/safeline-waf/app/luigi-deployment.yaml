@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/apps/deployment_v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP}-luigi
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${APP}
+      app.kubernetes.io/component: luigi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${APP}
+        app.kubernetes.io/component: luigi
+    spec:
+      containers:
+        - name: luigi
+          image: chaitin/safeline-luigi:9.3.11
+          env:
+            - name: MGT_IP
+              value: safeline-mgt
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ${APP}-postgres-app
+                  key: password
+            - name: LUIGI_PG
+              value: postgres://${APP}:$(POSTGRES_PASSWORD)@${APP}-postgres-rw:5432/${APP}?sslmode=disable
+          volumeMounts:
+            - { name: data, mountPath: /app/data, subPath: resources/luigi }
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { memory: 256Mi }
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: ${APP}
