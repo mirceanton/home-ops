@@ -9,7 +9,7 @@ spec:
     - name: streamarr.rules
       rules:
         - alert: StreamarrMediaNeedsAttention
-          expr: sum(streamarr_media_needs_attention_total) > 1
+          expr: sum(streamarr_media_needs_attention_total) > 0
           for: 5m
           labels:
             severity: warning
