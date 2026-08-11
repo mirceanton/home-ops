@@ -10,7 +10,7 @@ gateway:
   api_server:
     enabled: true
     # Defaults to 127.0.0.1 - binds loopback-only and is unreachable from
-    # hermes-alertmanager (a separate pod) without this.
+    # hermano (a separate pod) without this.
     host: "0.0.0.0"
     port: 8642
     key: "{{ .API_SERVER_KEY }}"

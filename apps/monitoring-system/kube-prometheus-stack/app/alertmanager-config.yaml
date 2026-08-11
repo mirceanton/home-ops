@@ -6,31 +6,12 @@ metadata:
   name: alertmanager
 spec:
   route:
-    receiver: pushover
+    receiver: hermano
     groupBy: [alertname, namespace]
     groupWait: 30s
     groupInterval: 5m
     repeatInterval: 12h
     routes:
-      - receiver: hermes-alertmanager
-        continue: true
-        matchers:
-          - name: alertname
-            value: "InfoInhibitor|Watchdog"
-            matchType: "!~"
-
-      - receiver: pushover-silent
-        matchers:
-          - name: alertname
-            value: TargetDown
-          - name: job
-            value: node-exporter
-
-      - receiver: pushover-silent
-        matchers:
-          - name: severity
-            value: info
-
       - receiver: "null"
         matchers:
           - name: alertname
@@ -53,33 +34,7 @@ spec:
 
   receivers:
     - name: "null"
-    - name: hermes-alertmanager
+    - name: hermano
       webhookConfigs:
-        - url: http://hermes-alertmanager.ai.svc.cluster.local:8080/api/v1/webhook
+        - url: http://hermano.ai.svc.cluster.local:8080/api/webhook
           sendResolved: true
-    - name: pushover-silent
-      pushoverConfigs:
-        - userKey:
-            name: alertmanager-pushover-secret
-            key: user-key
-          token:
-            name: alertmanager-pushover-secret
-            key: token
-          title: '{{ template "pushover.default.title" . }}'
-          message: '{{ template "pushover.default.message" . }}'
-          url: '{{ template "pushover.default.url" . }}'
-          priority: "-1"
-          sound: none
-    - name: pushover
-      pushoverConfigs:
-        - userKey:
-            name: alertmanager-pushover-secret
-            key: user-key
-          token:
-            name: alertmanager-pushover-secret
-            key: token
-          title: '{{ template "pushover.default.title" . }}'
-          message: '{{ template "pushover.default.message" . }}'
-          url: '{{ template "pushover.default.url" . }}'
-          priority: "0"
-          sound: gamelan

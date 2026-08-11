@@ -8,8 +8,8 @@ resources:
   - ./grafana-folder.yaml
 
   - ./github-mcp
+  - ./hermano
   - ./hermes
-  - ./hermes-alertmanager
   - ./kubesearch-mcp
   - ./litellm
   - ./llmkube

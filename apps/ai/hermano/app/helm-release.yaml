@@ -3,12 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app hermes-alertmanager
+  name: &app hermano
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: hermes-alertmanager
+    name: hermano
 
   values:
     global:
@@ -18,39 +18,46 @@ spec:
       automountServiceAccountToken: false
 
     controllers:
-      hermes-alertmanager:
+      hermano:
         replicas: 1
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
           securityContext:
-            fsGroup: 65532
+            fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 65532
+            runAsGroup: 1000
             runAsNonRoot: true
-            runAsUser: 65532
+            runAsUser: 1000
 
         containers:
           app:
             image:
-              repository: ghcr.io/mirceanton/hermes-alertmanager
-              tag: v2.0.0
+              repository: ghcr.io/mirceanton/hermano
+              tag: v0.1.1
             env:
-              HERMES_PORT: &port "8080"
-              HERMES_DB_DRIVER: sqlite
-              HERMES_CONFIG_PATH: /data/hermes-alertmanager.db
-              HERMES_AGENT_API_URL: http://hermes-api.ai.svc.cluster.local:8642
-              HERMES_AGENT_API_KEY:
+              HERMANO_HERMES_AGENT_URL: http://hermes-api.ai.svc.cluster.local:8642
+              HERMANO_HERMES_AGENT_API_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: hermes-alertmanager-secret
+                    name: hermano-secret
                     key: API_SERVER_KEY
+              HERMANO_PUSHOVER_API_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_TOKEN
+              HERMANO_PUSHOVER_USER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_USER_KEY
 
             resources:
               requests:
                 cpu: 10m
-                memory: 32Mi
+                memory: 64Mi
               limits:
                 memory: 256Mi
 
@@ -60,12 +67,12 @@ spec:
               capabilities: { drop: ["ALL"] }
 
     service:
-      hermes-alertmanager:
-        ports: { http: { port: *port } }
+      hermano:
+        ports: { http: { port: 8080 } }
 
     route:
       home:
-        hostnames: ["hermes-alertmanager.home.mirceanton.com"]
+        hostnames: ["hermano.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
