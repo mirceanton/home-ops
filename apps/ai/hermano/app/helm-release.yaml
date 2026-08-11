@@ -36,6 +36,13 @@ spec:
             image:
               repository: ghcr.io/mirceanton/hermano
               tag: v0.1.1
+            env:
+              HERMANO_HERMES_AGENT_URL: http://hermes-api.ai.svc.cluster.local:8642
+              HERMANO_HERMES_AGENT_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: API_SERVER_KEY
 
             resources:
               requests:

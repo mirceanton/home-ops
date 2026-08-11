@@ -12,6 +12,13 @@ spec:
     groupInterval: 5m
     repeatInterval: 12h
     routes:
+      - receiver: hermano
+        continue: true
+        matchers:
+          - name: alertname
+            value: "InfoInhibitor|Watchdog"
+            matchType: "!~"
+
       - receiver: pushover-silent
         matchers:
           - name: alertname
@@ -46,6 +53,10 @@ spec:
 
   receivers:
     - name: "null"
+    - name: hermano
+      webhookConfigs:
+        - url: http://hermano.ai.svc.cluster.local:8080/api/webhook
+          sendResolved: true
     - name: pushover-silent
       pushoverConfigs:
         - userKey:

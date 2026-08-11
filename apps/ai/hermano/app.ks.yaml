@@ -27,5 +27,9 @@ spec:
       VOLSYNC_PGID: "1000"
 
   dependsOn:
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: hermes
+      namespace: ai
     - name: volsync
       namespace: storage-system
