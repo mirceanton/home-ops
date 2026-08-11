@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/perfectra1n/kubesearch-mcp
-              tag: 1.0.1
+              tag: 1.1.0
 
             probes:
               liveness: &probes
@@ -49,7 +49,7 @@ spec:
                 cpu: 10m
                 memory: 64Mi
               limits:
-                memory: 256Mi
+                memory: 1Gi
 
             securityContext:
               allowPrivilegeEscalation: false

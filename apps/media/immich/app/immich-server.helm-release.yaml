@@ -56,13 +56,13 @@ spec:
               IMMICH_OAUTH_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: immich-secret
-                    key: IMMICH_OAUTH_CLIENT_SECRET
+                    name: immich-oidc-secret
+                    key: client-secret
         containers:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v3.0.3
+              tag: v3.1.0
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly

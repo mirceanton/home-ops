@@ -27,6 +27,7 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       KEYCLOAK_CLIENT_REDIRECT_URL: "https://fitness.home.mirceanton.com/*"
       KEYCLOAK_CLIENT_WEB_ORIGIN: "https://fitness.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://fitness.home.mirceanton.com"
 
   dependsOn:
     - name: cloudnative-pg-operator

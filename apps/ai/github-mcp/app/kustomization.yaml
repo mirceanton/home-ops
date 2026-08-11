@@ -5,3 +5,14 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
+  - ./external-secret.yaml
+
+configMapGenerator:
+  - name: github-mcp-nginx-config
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    files:
+      - nginx.conf=./files/nginx.conf
+      - entrypoint.sh=./files/entrypoint.sh

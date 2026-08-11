@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: ghcr.io/github/github-mcp-server
-              tag: v1.7.0@sha256:c491ffdf6f4c85cb5397021bc655edb8ab825c6f5f568e7597d77a1bd7c4d308
+              tag: v1.9.0@sha256:881b53d6f75f69bdbc1b5b10fc2f1361717c19054143b3a8529fb5c32061a50e
             args: ["http"]
 
             probes:
@@ -56,9 +56,60 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
+          # Reverse proxy that injects the rotating GitHub App installation
+          # token as an Authorization header. The token file is a live
+          # (non-subPath) secret mount, refreshed in place by kubelet
+          # roughly every ~60-90s after github-mcp-secret changes; a poll
+          # loop rewrites an nginx include file and does `nginx -s reload`
+          # (graceful, in-place) on change. This keeps the token current
+          # without ever restarting this pod, so Hermes's long-lived
+          # connection to this service never sees a rotation-driven
+          # disconnect, and Hermes's own config no longer needs the token
+          # at all.
+          nginx:
+            image:
+              repository: docker.io/nginxinc/nginx-unprivileged
+              tag: 1.31-alpine
+
+            command: ["sh", "/scripts/entrypoint.sh"]
+
+            probes:
+              liveness: &nginx_probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *nginx_probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+
+            securityContext:
+              runAsUser: 101
+              runAsGroup: 101
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
     defaultPodOptions:
       automountServiceAccountToken: false
-      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 65532
@@ -71,10 +122,41 @@ spec:
         controller: github-mcp
         ports:
           http:
-            port: 8082
+            port: 8080
+            targetPort: 8080
 
     persistence:
       tmp:
         type: emptyDir
         globalMounts:
           - path: /tmp
+
+      github-token:
+        type: secret
+        name: github-mcp-secret
+        defaultMode: 0400
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /run/secrets/github-mcp
+                readOnly: true
+
+      nginx-conf:
+        type: configMap
+        name: github-mcp-nginx-config
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /etc/nginx/nginx.conf
+                subPath: nginx.conf
+                readOnly: true
+              - path: /scripts/entrypoint.sh
+                subPath: entrypoint.sh
+                readOnly: true
+
+      nginx-dynamic:
+        type: emptyDir
+        advancedMounts:
+          github-mcp:
+            nginx:
+              - path: /etc/nginx/dynamic

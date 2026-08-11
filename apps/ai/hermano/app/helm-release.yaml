@@ -1,0 +1,84 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app hermano
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: hermano
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
+    controllers:
+      hermano:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/hermano
+              tag: v0.1.1
+            env:
+              HERMANO_HERMES_AGENT_URL: http://hermes-api.ai.svc.cluster.local:8642
+              HERMANO_HERMES_AGENT_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: API_SERVER_KEY
+              HERMANO_PUSHOVER_API_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_TOKEN
+              HERMANO_PUSHOVER_USER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_USER_KEY
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      hermano:
+        ports: { http: { port: 8080 } }
+
+    route:
+      home:
+        hostnames: ["hermano.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /data

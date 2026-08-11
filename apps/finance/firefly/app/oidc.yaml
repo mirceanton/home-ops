@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/backend_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
@@ -24,32 +23,6 @@ spec:
     hostname: keycloak.nas.svc.h.mirceanton.com
     wellKnownCACertificates: System
 ---
-# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: firefly-oidc-secret
-spec:
-  refreshInterval: 1h
-
-  secretStoreRef:
-    name: onepassword
-    kind: ClusterSecretStore
-
-  target:
-    name: firefly-oidc-secret
-    creationPolicy: Owner
-
-  data:
-    - secretKey: client-secret
-      remoteRef:
-        # Reusing the existing "sure" Keycloak client rather than
-        # provisioning a dedicated "firefly" one - the Homelab realm's
-        # "sure" client also needs firefly's redirect URI added to its
-        # Valid Redirect URIs list for this to work.
-        key: "Sure - Keycloak"
-        property: keycloak_client_secret
----
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
@@ -57,12 +30,12 @@ metadata:
   name: firefly-oidc
 spec:
   # Only the "web" rule of the main app route (see route.home.rules in
-  # helm-release.yaml) - not firefly-importer, and not the "api" rule, which
-  # the mobile app needs to reach without going through Keycloak.
+  # helm-release.yaml) - not the "api" rule, which the mobile app needs
+  # to reach without going through Keycloak.
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      name: firefly-home
+      name: firefly
       sectionName: web
 
   # Stage 1: log in against Keycloak and forward the access token upstream
@@ -75,7 +48,7 @@ spec:
   oidc:
     provider:
       issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-      # Explicit endpoints so the envoy-gateway controller skips its own
+      # Explicit endpoint so the envoy-gateway controller skips its own
       # OIDC discovery fetch (.well-known/openid-configuration) - see
       # components/oidc/security-policy.yaml for why.
       authorizationEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
@@ -85,7 +58,7 @@ spec:
           kind: Backend
           name: firefly-keycloak
           port: 443
-    clientID: sure
+    clientID: firefly
     clientSecret:
       name: firefly-oidc-secret
     scopes: ["openid", "email", "profile"]

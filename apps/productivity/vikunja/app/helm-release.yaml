@@ -47,7 +47,7 @@ spec:
           app:
             image:
               repository: vikunja/vikunja
-              tag: 2.4.0
+              tag: 2.5.0
 
             envFrom:
               - secretRef: { name: vikunja-secret }
@@ -58,7 +58,16 @@ spec:
               VIKUNJA_AUTH_OPENID_ENABLED: "true"
               VIKUNJA_AUTH_OPENID_PROVIDERS_KEYCLOAK_NAME: "Keycloak"
               VIKUNJA_AUTH_OPENID_PROVIDERS_KEYCLOAK_AUTHURL: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
-              VIKUNJA_AUTH_OPENID_PROVIDERS_KEYCLOAK_CLIENTID: "vikunja"
+              VIKUNJA_AUTH_OPENID_PROVIDERS_KEYCLOAK_CLIENTID:
+                valueFrom:
+                  secretKeyRef:
+                    name: vikunja-oidc-secret
+                    key: client-id
+              VIKUNJA_AUTH_OPENID_PROVIDERS_KEYCLOAK_CLIENTSECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: vikunja-oidc-secret
+                    key: client-secret
 
               VIKUNJA_DATABASE_TYPE: postgres
               VIKUNJA_DATABASE_HOST:

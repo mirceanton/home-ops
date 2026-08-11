@@ -52,7 +52,7 @@ spec:
           kind: Backend
           name: "${APP}-keycloak"
           port: 443
-    clientID: "${OIDC_CLIENT_ID}"
+    clientID: ${OIDC_CLIENT_ID:-"${APP}"}
     clientSecret:
       name: "${APP}-oidc-secret"
     redirectURL: "https://${APP}.home.mirceanton.com/oauth2/callback"

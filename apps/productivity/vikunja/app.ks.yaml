@@ -15,6 +15,7 @@ spec:
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -26,6 +27,9 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://tasks.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://tasks.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://tasks.home.mirceanton.com"
 
   decryption: { provider: sops }
   dependsOn:
@@ -37,3 +41,5 @@ spec:
       namespace: database-system
     - name: cloudnative-pg-plugins
       namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system

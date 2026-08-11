@@ -3,19 +3,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app sure
+  name: &app affine
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: finance
+  targetNamespace: productivity
 
-  path: ./apps/finance/sure/app
+  path: ./apps/productivity/affine/app
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/
     - ../../../../components/dragonfly/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,9 +25,16 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 2Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://notes.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://notes.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://notes.home.mirceanton.com"
+      # Affine's BullMQ queues (doc, indexer, copilot, etc.) each select a
+      # different logical redis DB index; the shared dragonfly component
+      # otherwise defaults to a single DB.
+      DRAGONFLY_DBNUM: "16"
 
   decryption: { provider: sops }
   dependsOn:
@@ -40,3 +48,5 @@ spec:
       namespace: database-system
     - name: dragonfly-operator
       namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system

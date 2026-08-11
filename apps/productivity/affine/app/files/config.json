@@ -1,0 +1,57 @@
+{
+  "$schema": "https://github.com/toeverything/affine/releases/latest/download/config.schema.json",
+  "server": {
+    "name": "Self-Hosted",
+    "externalUrl": "https://notes.home.mirceanton.com"
+  },
+  "flags": {
+    "allowGuestDemoWorkspace": false
+  },
+  "oauth": {
+    "providers": {
+      "oidc": {
+        "clientId": "affine",
+        "issuer": "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab",
+        "allowPrivateNetwork": true,
+        "args": {
+          "scope": "openid profile email"
+        }
+      }
+    }
+  },
+  "copilot": {
+    "enabled": true,
+    "byok": {
+      "enabled": true,
+      "allowCustomEndpoint": true,
+      "allowPrivateEndpoint": true
+    },
+    "providers": {
+      "openai": {
+        "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1"
+      },
+      "gemini": {
+        "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1beta"
+      },
+      "profiles": [
+        {
+          "id": "litellm",
+          "displayName": "Self-Hosted (LiteLLM)",
+          "type": "openai",
+          "priority": 100,
+          "models": ["gpt-4o", "gpt-4o-mini", "text-embedding-3-small"],
+          "config": {
+            "baseURL": "http://litellm.ai.svc.cluster.local:4000/v1"
+          }
+        }
+      ],
+      "defaults": {
+        "text": "litellm",
+        "object": "litellm",
+        "embedding": "litellm",
+        "rerank": "litellm",
+        "fallback": "litellm"
+      }
+    }
+  }
+}

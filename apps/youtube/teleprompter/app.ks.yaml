@@ -8,10 +8,13 @@ spec:
   interval: 10m
   prune: true
   wait: true
+  timeout: 15m
   targetNamespace: youtube
 
   path: ./apps/youtube/teleprompter/app
-  components: []
+  components:
+    - ../../../../components/keycloak-client/
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -20,5 +23,13 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: 1Gi
 
-  dependsOn: []
+  decryption: { provider: sops }
+  dependsOn:
+    - name: keycloak-operator-config
+      namespace: security-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system

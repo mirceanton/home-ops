@@ -1,4 +1,3 @@
----
 title: "Home Dashboard"
 subtitle: ""
 header: false
@@ -84,12 +83,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/sparky-fitness.webp"
 
-      - name: "Sure"
-        subtitle: "Financial Manager"
-        url: "https://finance.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/sure.webp"
-
       - name: "Firefly"
         subtitle: "Financial Manager"
         url: "https://firefly.home.mirceanton.com"
@@ -102,12 +95,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
 
-      - name: "Outline"
-        subtitle: "Team Wiki"
-        url: "https://wiki.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/outline.webp"
-
   - name: "Maker"
     icon: "fas fa-cube"
     items:
@@ -117,11 +104,11 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/bambu-lab.webp"
 
-      - name: "Manyfold"
+      - name: "ModelHub"
         subtitle: "3D Model Library"
-        url: "https://manyfold.home.mirceanton.com"
+        url: "https://modelhub.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/manyfold.webp"
+        logo: "assets/modelhub.svg"
 
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"

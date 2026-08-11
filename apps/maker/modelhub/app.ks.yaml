@@ -3,19 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app outline
+  name: &app modelhub
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: productivity
+  targetNamespace: maker
 
-  path: ./apps/productivity/outline/app
+  path: ./apps/maker/modelhub/app
   components:
-    - ../../../../components/cnpg/
     - ../../../../components/volsync/
-    - ../../../../components/dragonfly/
+    - ../../../../components/nfs-scaler/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -25,8 +25,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_PUID: "1000"
-      VOLSYNC_PGID: "1000"
+      VOLSYNC_PUID: "568"
+      VOLSYNC_PGID: "568"
 
   decryption: { provider: sops }
   dependsOn:
@@ -34,9 +34,7 @@ spec:
       namespace: security-system
     - name: volsync
       namespace: storage-system
-    - name: cloudnative-pg-operator
-      namespace: database-system
-    - name: cloudnative-pg-plugins
-      namespace: database-system
-    - name: dragonfly-operator
-      namespace: database-system
+    - name: keda
+      namespace: kube-system
+    - name: keycloak-operator-config
+      namespace: security-system

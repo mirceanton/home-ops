@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/daften/fireflyiii-mcp
-              tag: 0.3.4
+              tag: 0.4.2
             env:
               # PAT-only HTTP mode: the token is forwarded by litellm as a
               # Bearer header (see apps/ai/litellm/app/files/config.yaml),

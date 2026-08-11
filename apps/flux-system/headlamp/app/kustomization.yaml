@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
-  - ./external-secret.yaml
   - ./http-route.yaml
   - ./cluster-role-binding.yaml

@@ -88,14 +88,17 @@ model_list:
 
 mcp_servers:
   github:
-    url: "http://github-mcp.ai.svc.cluster.local:8082/mcp"
-    auth_type: bearer_token
-    auth_value: os.environ/GITHUB_MCP_TOKEN
+    url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
 
   firefly:
     url: "http://firefly-mcp.finance.svc.cluster.local:3000"
     auth_type: bearer_token
     auth_value: os.environ/FIREFLY_MCP_TOKEN
+
+  affine:
+    url: "http://affine-mcp.productivity.svc.cluster.local:3000/mcp"
+    auth_type: bearer_token
+    auth_value: os.environ/AFFINE_MCP_TOKEN
 
   kubesearch:
     url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
@@ -122,10 +125,26 @@ mcp_servers:
 
 router_settings:
   model_group_alias:
+    affine: qwen3.7-plus
     hermes: qwen3.7-plus
     karakeep: qwen3.6-flash
     karakeep-embeddings: qwen3-embedding-0.6b
-    sure: qwen3.7-plus
+
+    # Affine's built-in AI features hardcode these exact model names per
+    # action (chat, embeddings, etc.) client-side and request them literally
+    # against whatever provider is configured, regardless of the "affine"
+    # alias above. Alias them to real models so those requests resolve.
+    gemini-2.5-flash: qwen3.7-plus
+    gemini-embedding-001: qwen3-embedding-0.6b
+    claude-sonnet-4: qwen3.7-plus
+    text-embedding-3-large: qwen3-embedding-0.6b
+
+    # Explicit "openai"-typed copilot profile (config.json copilot.providers.profiles)
+    # uses these well-known names so Affine's native model catalog recognizes
+    # them without needing the gemini detour above.
+    gpt-4o: qwen3.7-plus
+    gpt-4o-mini: qwen3.7-plus
+    text-embedding-3-small: qwen3-embedding-0.6b
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY

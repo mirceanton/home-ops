@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 3.0.3
+              tag: 3.0.5
 
             envFrom:
               - secretRef: { name: paperless-secret }
@@ -53,6 +53,22 @@ spec:
               PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS: "false"
               PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
               PAPERLESS_DISABLE_REGULAR_LOGIN: "true"
+              PAPERLESS_OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-oidc-secret
+                    key: client-id
+              PAPERLESS_OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: paperless-oidc-secret
+                    key: client-secret
+              PAPERLESS_SOCIALACCOUNT_PROVIDERS:
+                value: >-
+                  {"openid_connect":{"APPS":[{"provider_id":"keycloak","name":"Keycloak","client_id":"$(PAPERLESS_OIDC_CLIENT_ID)","secret":"$(PAPERLESS_OIDC_CLIENT_SECRET)","settings":{"server_url":"https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/.well-known/openid-configuration"}}]}}
+                dependsOn:
+                  - PAPERLESS_OIDC_CLIENT_ID
+                  - PAPERLESS_OIDC_CLIENT_SECRET
               # Folders
               PAPERLESS_CONSUMPTION_DIR: /data/nas/consume
               PAPERLESS_EXPORT_DIR: /data/nas/export

@@ -3,19 +3,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app manyfold
+  name: &app hermano
 spec:
   interval: 10m
   prune: true
   wait: true
   timeout: 15m
-  targetNamespace: maker
+  targetNamespace: ai
 
-  path: ./apps/maker/manyfold/app
+  path: ./apps/ai/hermano/app
   components:
     - ../../../../components/volsync/
-    - ../../../../components/nfs-scaler/
-    - ../../../../components/dragonfly/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -24,17 +22,14 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_PUID: "568"
-      VOLSYNC_PGID: "568"
+      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
 
-  decryption: { provider: sops }
   dependsOn:
-    - name: 1password-connect
+    - name: external-secrets-operator
       namespace: security-system
+    - name: hermes
+      namespace: ai
     - name: volsync
       namespace: storage-system
-    - name: keda
-      namespace: kube-system
-    - name: dragonfly-operator
-      namespace: database-system

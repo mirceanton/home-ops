@@ -15,6 +15,7 @@ spec:
   components:
     - ../../../../components/cnpg/
     - ../../../../components/volsync/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -37,3 +38,5 @@ spec:
       namespace: database-system
     - name: cloudnative-pg-plugins
       namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system

@@ -16,7 +16,7 @@ uv = "latest"
 "aqua:cilium/hubble" = "latest"
 
 # Flux Tools
-"aqua:fluxcd/flux2" = "2.9.3"
+"aqua:fluxcd/flux2" = "2.9.4"
 "github:home-operations/flate" = "latest"
 
 # Helm + Plugins
@@ -24,8 +24,8 @@ uv = "latest"
 helmfile = "latest"
 
 # Talos Stuff
-"aqua:talosctl" = "1.13.7"
-"aqua:talhelper" = "3.1.15"
+"aqua:talosctl" = "1.13.8"
+"aqua:talhelper" = "3.1.16"
 "github:mirceanton/talswitcher" = "latest"
 
 # Misc Tools

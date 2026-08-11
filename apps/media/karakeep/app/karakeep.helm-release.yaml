@@ -25,7 +25,7 @@ spec:
           app:
             image:
               repository: ghcr.io/karakeep-app/karakeep
-              tag: 0.32.0
+              tag: 0.33.2
             envFrom:
               - secretRef: { name: karakeep-secret }
             env:
@@ -48,9 +48,18 @@ spec:
               MEILI_ADDR: http://karakeep-meilisearch:7700
               NEXTAUTH_URL: https://karakeep.home.mirceanton.com
               OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING: true
-              OAUTH_CLIENT_ID: karakeep
               OAUTH_PROVIDER_NAME: Keycloak
               OAUTH_WELLKNOWN_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/.well-known/openid-configuration
+              OAUTH_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-oidc-secret
+                    key: client-id
+              OAUTH_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-oidc-secret
+                    key: client-secret
 
             probes:
               liveness:
@@ -72,7 +81,7 @@ spec:
         containers:
           app:
             image:
-              repository: gcr.io/zenika-hub/alpine-chrome
+              repository: ghcr.io/zenika/alpine-chrome
               tag: "124"
             command:
               - chromium-browser
@@ -100,7 +109,7 @@ spec:
           app:
             image:
               repository: docker.io/getmeili/meilisearch
-              tag: v1.51.0
+              tag: v1.53.0
             args: ["/bin/meilisearch"]
             env:
               MEILI_NO_ANALYTICS: true

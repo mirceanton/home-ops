@@ -22,14 +22,22 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter
-              tag: v3.1.3
+              tag: v3.3.1
             env:
               PORT: &port 8080
+              TOKENS_FILE: /data/tokens.json
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              OIDC_CLIENT_ID: teleprompter
               OIDC_REDIRECT_URL: https://teleprompter.home.mirceanton.com/auth/callback
-            envFrom:
-              - secretRef: { name: teleprompter-secret }
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: teleprompter-oidc-secret
+                    key: client-id
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: teleprompter-oidc-secret
+                    key: client-secret
             resources:
               requests:
                 cpu: 10m
@@ -79,3 +87,9 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /data

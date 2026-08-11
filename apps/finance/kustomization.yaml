@@ -7,4 +7,3 @@ namespace: finance
 resources:
   - ./namespace.yaml
   - ./firefly
-  - ./sure

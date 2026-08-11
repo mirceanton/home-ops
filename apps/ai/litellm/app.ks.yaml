@@ -14,6 +14,7 @@ spec:
   path: ./apps/ai/litellm/app
   components:
     - ../../../../components/cnpg/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -22,6 +23,9 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://llm.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://llm.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://llm.home.mirceanton.com"
 
   dependsOn:
     - name: 1password-connect
@@ -34,3 +38,5 @@ spec:
       namespace: security-system
     - name: llmkube
       namespace: ai
+    - name: keycloak-operator-config
+      namespace: security-system

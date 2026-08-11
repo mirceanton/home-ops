@@ -36,7 +36,7 @@ spec:
           app:
             image:
               repository: ghcr.io/berriai/litellm
-              tag: v1.93.0
+              tag: v1.96.0
             args: ["--config", "/config/config.yaml", "--port", "4000"]
             env:
               LITELLM_MODE: PRODUCTION
@@ -59,16 +59,16 @@ spec:
                   secretKeyRef:
                     name: litellm-postgres-app
                     key: uri
-              GITHUB_MCP_TOKEN:
-                valueFrom:
-                  secretKeyRef:
-                    name: litellm-secret
-                    key: GITHUB_MCP_TOKEN
               FIREFLY_MCP_TOKEN:
                 valueFrom:
                   secretKeyRef:
                     name: litellm-secret
                     key: FIREFLY_MCP_TOKEN
+              AFFINE_MCP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: AFFINE_MCP_TOKEN
               QWEN_KEY:
                 valueFrom:
                   secretKeyRef:
@@ -76,12 +76,16 @@ spec:
                     key: QWEN_KEY
 
               # SSO Configuration (Generic OIDC / Keycloak)
-              GENERIC_CLIENT_ID: "litellm"
+              GENERIC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-oidc-secret
+                    key: client-id
               GENERIC_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: litellm-secret
-                    key: OIDC_CLIENT_SECRET
+                    name: litellm-oidc-secret
+                    key: client-secret
               GENERIC_AUTHORIZATION_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth"
               GENERIC_TOKEN_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token"
               GENERIC_USERINFO_ENDPOINT: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/userinfo"

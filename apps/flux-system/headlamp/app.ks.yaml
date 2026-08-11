@@ -12,6 +12,8 @@ spec:
   targetNamespace: flux-system
 
   path: ./apps/flux-system/headlamp/app
+  components:
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -20,9 +22,10 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://headlamp.admin.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://headlamp.admin.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://headlamp.admin.mirceanton.com"
 
   dependsOn:
-    - name: external-secrets-operator
-      namespace: security-system
-    - name: 1password-connect
+    - name: keycloak-operator-config
       namespace: security-system

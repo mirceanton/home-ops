@@ -8,7 +8,7 @@ spec:
   clusterRealmRef:
     name: homelab
 
-  clientId: "${APP}" #? defaults to metadata.name
+  clientId: ${KEYCLOAK_CLIENT_ID:-"${APP}"} #? defaults to metadata.name
 
   # Auto-create Secret with client credentials
   clientSecretRef:
@@ -18,6 +18,8 @@ spec:
     clientSecretKey: client-secret
 
   definition:
+    description: ${KEYCLOAK_CLIENT_DESCRIPTION:-"Operator Managed"}
+    baseUrl: ${KEYCLOAK_CLIENT_HOME_URL:-"https://${APP}.home.mirceanton.com"}
     protocol: ${KEYCLOAK_CLIENT_PROTOCOL:-openid-connect}
     publicClient: ${KEYCLOAK_CLIENT_PUBLIC:-false}
     standardFlowEnabled: ${KEYCLOAK_CLIENT_STANDARD_FLOW:-true}

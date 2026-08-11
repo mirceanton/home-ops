@@ -62,7 +62,7 @@ spec:
             # services in the background.
             image:
               repository: nousresearch/hermes-agent
-              tag: v2026.7.20@sha256:f7b35053268f532f98955195c909f15a230470fbcbdacaa9fdecb95707dad04a
+              tag: v2026.8.3@sha256:16788311e2fa3035456bdc1bafb8ec2b1777db64ebf020af9bb7eb73c3712c9e
             args: ["sleep", "infinity"]
 
             envFrom:
@@ -72,6 +72,11 @@ spec:
               HOME: /opt/data
               TZ: Europe/Bucharest
               HERMES_DASHBOARD: "true"
+              HERMES_DASHBOARD_OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-oidc-secret
+                    key: client-secret
 
             resources:
               requests:
@@ -82,6 +87,9 @@ spec:
             ports:
               - containerPort: &dashboard_port 9119
                 name: dashboard
+                protocol: TCP
+              - containerPort: &api_port 8642
+                name: api
                 protocol: TCP
 
             securityContext:
@@ -105,6 +113,12 @@ spec:
         ports:
           http:
             port: *dashboard_port
+
+      api:
+        controller: hermes
+        ports:
+          http:
+            port: *api_port
 
     route:
       dashboard:

@@ -6,7 +6,7 @@ metadata:
   name: mirceanton
 spec:
   schedule: 15/30 * * * * # every 30 minutes
-  image: ghcr.io/renovatebot/renovate:43.285.0
+  image: ghcr.io/renovatebot/renovate:44.24.2
   parallelism: 5
 
   resources:
@@ -28,10 +28,16 @@ spec:
       value: debug
     - name: RENOVATE_ALLOWED_COMMANDS
       value: |-
-        ["pnpm run bundle", "mise install", "mise lock"]
+        ["pnpm run bundle", "mise install", "mise lock", "helm-docs --chart-search-root=. --log-level=warn", "helm-schema --chart-search-root . --skip-auto-generation required,additionalProperties --append-newline"]
     - name: RENOVATE_ALLOWED_UNSAFE_EXECUTIONS
       value: |-
         ["mise"]
+    # helm-docs/helm-schema live in their own OCI image volumes (see below)
+    # outside the base image's default PATH dirs, since neither ships a
+    # conveniently-empty directory to mount into like mise does. Appended
+    # (not prepended) so nothing on the existing PATH gets shadowed.
+    - name: PATH
+      value: "/home/ubuntu/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/tools/helm-docs:/opt/tools/helm-schema"
     - name: DOCKERHUB_USERNAME
       valueFrom:
         secretKeyRef:
@@ -57,10 +63,38 @@ spec:
     - name: renovate-cache
       persistentVolumeClaim:
         claimName: renovate-cache
+    - name: mise-bin
+      image:
+        reference: ghcr.io/jdx/mise:2026.8.3
+        pullPolicy: IfNotPresent
+    - name: helm-docs-bin
+      image:
+        reference: docker.io/jnorwood/helm-docs:v1.14.2
+        pullPolicy: IfNotPresent
+    - name: helm-schema-bin
+      image:
+        reference: ghcr.io/dadav/helm-schema:v0.23.4
+        pullPolicy: IfNotPresent
 
   extraVolumeMounts:
     - name: renovate-cache
       mountPath: /tmp/renovate-cache
+    - name: mise-bin
+      # /home/ubuntu/bin is the first entry on PATH and is empty in the base
+      # image, so mounting mise's bin dir there makes `mise` resolvable
+      # without touching PATH or shadowing anything else on it.
+      mountPath: /home/ubuntu/bin
+      subPath: usr/local/bin
+      readOnly: true
+    - name: helm-docs-bin
+      mountPath: /opt/tools/helm-docs
+      subPath: usr/bin
+      readOnly: true
+    - name: helm-schema-bin
+      # helm-schema's binary lives at the image root, so mount the whole
+      # thing (no subPath) rather than trying to isolate a single file.
+      mountPath: /opt/tools/helm-schema
+      readOnly: true
 
   secretRef: mr-borboto-auth-token
   webhook:

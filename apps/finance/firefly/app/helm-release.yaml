@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -144,47 +143,9 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
-      data-importer:
-        containers:
-          main:
-            image:
-              repository: fireflyiii/data-importer
-              tag: version-2.3.4
-
-            envFrom:
-              - secretRef: { name: firefly-data-importer-token }
-            env:
-              FIREFLY_III_URL: "http://firefly:8080"
-              VANITY_URL: "https://firefly.home.mirceanton.com"
-              APP_URL: "https://firefly-importer.home.mirceanton.com"
-              TRUSTED_PROXIES: "**"
-              LOG_CHANNEL: "stdout"
-              FALLBACK_LOCALE: "en_US"
-
-            probes:
-              liveness: { enabled: true }
-              readiness: { enabled: true }
-
-            resources:
-              requests:
-                cpu: 20m
-                memory: 64Mi
-              limits:
-                memory: 8Gi
-
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              capabilities: { drop: ["ALL"] }
-
     service:
       firefly:
         controller: firefly
-        ports:
-          http:
-            port: 8080
-      data-importer:
-        controller: data-importer
         ports:
           http:
             port: 8080
@@ -211,15 +172,6 @@ spec:
             backendRefs:
               - identifier: firefly
                 port: http
-      importer:
-        hostnames: ["firefly-importer.home.mirceanton.com"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: data-importer
-                port: http
 
     persistence:
       data:
@@ -231,7 +183,3 @@ spec:
                 path: /var/www/html/storage
               - subPath: upload
                 path: /var/www/html/storage/upload
-          data-importer:
-            main:
-              - subPath: importer
-                path: /var/www/html/storage/uploads

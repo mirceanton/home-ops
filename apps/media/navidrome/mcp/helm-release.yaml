@@ -20,8 +20,8 @@ spec:
         containers:
           navidrome-mcp:
             image:
-              repository: ghcr.io/mircea-pavel-anton/navidrome-mcp
-              tag: 2.2.2
+              repository: ghcr.io/blakeem/navidrome-mcp
+              tag: 2.2.0
 
             resources:
               requests:

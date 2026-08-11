@@ -11,13 +11,23 @@ spec:
   targetNamespace: monitoring-system
 
   path: ./apps/monitoring-system/grafana/instance
+  components:
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
 
   postBuild:
-    substitute: {}
+    substitute:
+      #? this Kustomization is named "grafana-instance" (to disambiguate from
+      #? the operator/mcp Kustomizations below it), but the Keycloak client
+      #? itself should be identified as plain "grafana"
+      APP: grafana
+      #? Grafana lives on the "admin" subdomain, not "<app>.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://grafana.admin.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://grafana.admin.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://grafana.admin.mirceanton.com"
 
   dependsOn:
     #? wait for the 1password-connect secret store to be ready
@@ -26,3 +36,5 @@ spec:
     - name: grafana-operator
     - name: openebs
       namespace: storage-system
+    - name: keycloak-operator-config
+      namespace: security-system
