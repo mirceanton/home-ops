@@ -14,6 +14,7 @@ spec:
   path: ./apps/maker/bambuddy/app
   components:
     - ../../../../components/volsync/
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -28,3 +29,5 @@ spec:
   dependsOn:
     - name: volsync
       namespace: storage-system
+    - name: keycloak-operator-config
+      namespace: security-system
