@@ -7,6 +7,12 @@ services:
         target: "_blank"
         icon: "fas fa-scroll"
 
+      - name: "Hermano"
+        subtitle: "Alert Triage"
+        url: "https://hermano.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-triangle-exclamation"
+
       - name: "Hermes"
         subtitle: "AI Agent"
         url: "https://hermes.home.mirceanton.com"
