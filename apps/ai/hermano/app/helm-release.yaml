@@ -43,6 +43,16 @@ spec:
                   secretKeyRef:
                     name: hermano-secret
                     key: API_SERVER_KEY
+              HERMANO_PUSHOVER_API_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_TOKEN
+              HERMANO_PUSHOVER_USER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermano-secret
+                    key: PUSHOVER_USER_KEY
 
             resources:
               requests:
