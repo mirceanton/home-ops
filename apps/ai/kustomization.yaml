@@ -9,7 +9,6 @@ resources:
 
   - ./github-mcp
   - ./hermes
-  - ./hermes-alertmanager
   - ./kubesearch-mcp
   - ./litellm
   - ./llmkube
