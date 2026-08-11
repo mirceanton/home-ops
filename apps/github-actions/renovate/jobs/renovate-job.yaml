@@ -57,10 +57,21 @@ spec:
     - name: renovate-cache
       persistentVolumeClaim:
         claimName: renovate-cache
+    - name: mise-bin
+      image:
+        reference: ghcr.io/jdx/mise:2026.8.3
+        pullPolicy: IfNotPresent
 
   extraVolumeMounts:
     - name: renovate-cache
       mountPath: /tmp/renovate-cache
+    - name: mise-bin
+      # /home/ubuntu/bin is the first entry on PATH and is empty in the base
+      # image, so mounting mise's bin dir there makes `mise` resolvable
+      # without touching PATH or shadowing anything else on it.
+      mountPath: /home/ubuntu/bin
+      subPath: usr/local/bin
+      readOnly: true
 
   secretRef: mr-borboto-auth-token
   webhook:
