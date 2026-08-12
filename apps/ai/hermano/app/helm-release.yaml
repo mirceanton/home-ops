@@ -54,9 +54,12 @@ spec:
                     name: hermano-secret
                     key: PUSHOVER_USER_KEY
 
+              # Externally-reachable origin, used to build dashboard links
+              # (Pushover's "View in Hermano", OIDC's redirect default)
+              HERMANO_PUBLIC_URL: https://hermano.home.mirceanton.com
+
               # OIDC / Keycloak SSO
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              OIDC_REDIRECT_URL: https://hermano.home.mirceanton.com/auth/callback
               OIDC_CLIENT_ID:
                 valueFrom:
                   secretKeyRef:
