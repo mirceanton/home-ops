@@ -1,0 +1,36 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: konflate
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: konflate
+
+  values:
+    config:
+      repo: github://mirceanton/home-ops
+      appClientId: "900136"
+      logFormat: json
+
+    secret:
+      existingSecret: konflate-secret
+
+    httpRoute:
+      enabled: true
+      hostnames: ["konflate.home.mirceanton.com"]
+      parentRefs:
+        - name: envoy-internal
+          namespace: network-system
+
+    persistence:
+      enabled: true
+      storageClass: openebs-zfs-cache
+      size: 2Gi
+
+    monitoring:
+      serviceMonitor:
+        enabled: true
