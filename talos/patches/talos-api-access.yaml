@@ -5,4 +5,4 @@ machine:
     kubernetesTalosAPIAccess:
       enabled: true
       allowedRoles: ["os:admin"]
-      allowedKubernetesNamespaces: ["jobs"]
+      allowedKubernetesNamespaces: ["jobs", "github-actions"]

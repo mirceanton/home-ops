@@ -1,0 +1,104 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app downflate
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: downflate
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      downflate:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/home-operations/downflate
+              tag: main@sha256:0a8436716309ae728cb830a71bf876178a30702e5a149bbee41ab4fc14ff811f
+
+            env:
+              DOWNFLATE_REPO: github://mirceanton/home-ops
+              DOWNFLATE_NODES: "10.0.0.15"
+              DOWNFLATE_GITHUB_APP_CLIENT_ID: "900136"
+              DOWNFLATE_LOG_FORMAT: json
+              DOWNFLATE_GITHUB_APP_PRIVATE_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: downflate-secret
+                    key: DOWNFLATE_GITHUB_APP_PRIVATE_KEY
+              DOWNFLATE_WEBHOOK_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: downflate-secret
+                    key: DOWNFLATE_WEBHOOK_SECRET
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: http
+                  initialDelaySeconds: 5
+                  periodSeconds: 15
+              readiness: *probe
+
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      # The pod's own Kubernetes ServiceAccount token is presented to apid
+      # alongside the Talos ServiceAccount CR below; Talos authorizes the
+      # requested roles based on this token's RBAC (see the ClusterRoleBinding).
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    service:
+      app:
+        controller: downflate
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      talos:
+        type: secret
+        name: *app
+        globalMounts:
+          - path: /var/run/secrets/talos.dev
+            readOnly: true
+
+    serviceAccount: { downflate: {} }
+    rbac:
+      bindings:
+        downflate:
+          type: ClusterRoleBinding
+          roleRef:
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+            - identifier: downflate

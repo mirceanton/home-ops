@@ -9,5 +9,6 @@ resources:
   - ./actions-controller
   - ./actions-runners
   # - ./buildkit
+  - ./downflate
   - ./konflate
   - ./renovate
