@@ -40,6 +40,11 @@ spec:
                     name: downflate-secret
                     key: DOWNFLATE_WEBHOOK_SECRET
 
+            ports:
+              - containerPort: 8080
+                name: http
+                protocol: TCP
+
             probes:
               liveness: &probe
                 enabled: true
