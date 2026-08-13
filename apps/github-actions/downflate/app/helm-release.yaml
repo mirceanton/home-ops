@@ -63,7 +63,7 @@ spec:
                 cpu: 25m
                 memory: 64Mi
               limits:
-                memory: 256Mi
+                memory: 512Mi
 
             securityContext:
               allowPrivilegeEscalation: false
@@ -80,7 +80,7 @@ spec:
         runAsUser: 65532
         runAsGroup: 65532
         fsGroup: 65532
-        fsGroupChangePolicy: OnRootMismatch
+        fsGroupChangePolicy: OnMismatch
         seccompProfile: { type: RuntimeDefault }
 
     service:
