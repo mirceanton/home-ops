@@ -1,0 +1,12 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "packageRules": [
+    {
+      "description": "Override default.json5's branch automerge for updates that touch what's actually deployed to the cluster (Flux/Helm/Kubernetes manifests, including the CNPG image custom manager), so downflate (image pre-pull) and konflate (rendered diff) can act on them before merge. Everything else (github-actions, mise, ...) keeps the quieter branch automerge.",
+      "matchManagers": ["flux", "helm-values", "kubernetes", "helmfile", "custom.regex"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest", "pinDigest"],
+      "automerge": true,
+      "automergeType": "pr"
+    }
+  ]
+}
