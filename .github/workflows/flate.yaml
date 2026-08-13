@@ -4,83 +4,62 @@ permissions: { contents: read }
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches: ["main"]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Flate Test
-    runs-on: ubuntu-slim
+  downflate:
+    name: Trigger Downflate
+    # Runs on the in-cluster self-hosted runner (infra-runners scale set) so it
+    # can reach downflate's ClusterIP directly, instead of downflate needing a
+    # public endpoint for GitHub to deliver a real webhook to. Also lets it
+    # reach the in-cluster 1Password Connect server directly.
+    runs-on: infra-runners
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Setup mise
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
-
-      - name: Run flate test
-        run: mise exec -- flate test all --path ./apps | tee test
-
-  diff:
-    name: Flate Diff
-    runs-on: ubuntu-slim
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Load webhook secret from 1Password
+        uses: 1password/load-secrets-action@e544b780808654ba8ceba5fb2fe2897103d92ff4 # v5.0.0
         with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Setup mise
-        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
-
-      - name: Run flate diff
-        id: diff
+          export-env: true
         env:
-          FLATE_BASE: ${{ github.event.repository.default_branch }}
+          OP_CONNECT_HOST: ${{ secrets.OP_CONNECT_HOST }}
+          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
+          DOWNFLATE_WEBHOOK_SECRET: op://kubernetes-home-ops/Downflate - Webhook Secret/password
+
+      - name: Send pull_request event to downflate
+        env:
+          PAYLOAD: ${{ toJSON(github.event) }}
         run: |
-          DIFF=$(mise exec -- flate diff all -o diff 2>&1 || true)
-          if [ -n "$DIFF" ]; then
-            {
-              echo "## Flate Diff"
-              echo ""
-              echo '```diff'
-              echo "$DIFF"
-              echo '```'
-            } > diff.md
-            echo "diff=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "diff=false" >> "$GITHUB_OUTPUT"
-          fi
+          SIGNATURE="sha256=$(printf '%s' "$PAYLOAD" | openssl dgst -sha256 -hmac "$DOWNFLATE_WEBHOOK_SECRET" | sed 's/^.* //')"
+          curl -sf -X POST "http://downflate.github-actions.svc.cluster.local:8080/hooks" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: pull_request" \
+            -H "X-Hub-Signature-256: $SIGNATURE" \
+            --data "$PAYLOAD"
 
-      - name: Generate Token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        if: ${{ steps.diff.outputs.diff == 'true' }}
-        id: app-token
+  konflate:
+    name: Trigger Konflate
+    # Runs on the in-cluster self-hosted runner (infra-runners scale set) so it
+    # can reach konflate's ClusterIP directly instead of waiting on its 30m
+    # poll. Also lets it reach the in-cluster 1Password Connect server directly.
+    runs-on: infra-runners
+    steps:
+      - name: Load push token from 1Password
+        uses: 1password/load-secrets-action@e544b780808654ba8ceba5fb2fe2897103d92ff4 # v5.0.0
         with:
-          client-id: ${{ secrets.BOT_APP_CLIENT_ID }}
-          private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
+          export-env: true
+        env:
+          OP_CONNECT_HOST: ${{ secrets.OP_CONNECT_HOST }}
+          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
+          KONFLATE_PUSH_TOKEN: op://kubernetes-home-ops/Konflate - Push Token/password
 
-      - name: Find Comment
-        if: ${{ steps.diff.outputs.diff == 'true' }}
-        id: find-comment
-        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: ${{ steps.app-token.outputs.app-slug }}[bot]
-          body-includes: "## Flate Diff"
-
-      - name: Create or Update Comment
-        if: ${{ steps.diff.outputs.diff == 'true' }}
-        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          edit-mode: replace
-          body-file: diff.md
+      - name: Refresh PR render
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${KONFLATE_PUSH_TOKEN}" \
+            "http://konflate.github-actions.svc.cluster.local:8080/api/prs/${PR_NUMBER}/refresh"
