@@ -25,6 +25,7 @@ spec:
               tag: main@sha256:0a8436716309ae728cb830a71bf876178a30702e5a149bbee41ab4fc14ff811f
 
             env:
+              HOME: /tmp
               DOWNFLATE_REPO: github://mirceanton/home-ops
               DOWNFLATE_NODES: "10.0.0.15"
               DOWNFLATE_GITHUB_APP_CLIENT_ID: "900136"
