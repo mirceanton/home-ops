@@ -96,6 +96,10 @@ spec:
         globalMounts:
           - path: /var/run/secrets/talos.dev
             readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
 
     serviceAccount: { downflate: {} }
     rbac:
