@@ -15,6 +15,9 @@ spec:
       repo: github://mirceanton/home-ops
       appClientId: "900136"
       logFormat: json
+      statusChecks: true
+      prComments: true
+      publicUrl: https://konflate.home.mirceanton.com
 
     secret:
       existingSecret: konflate-secret
