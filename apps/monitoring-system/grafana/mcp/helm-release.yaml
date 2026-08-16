@@ -28,13 +28,11 @@ spec:
             env:
               GRAFANA_URL: http://grafana-service:3000
               GRAFANA_ORG_ID: "1"
-              #! TODO: this has been manually created for now, but I should automate it and store it in the repo as well
-              #! maybe look for a terraform provider for Grafana and manage it that way?
               GRAFANA_AUTH:
                 valueFrom:
                   secretKeyRef:
-                    name: grafana-mcp-secret
-                    key: GRAFANA_AUTH
+                    name: grafana-mcp-token
+                    key: token
 
             probes:
               liveness:

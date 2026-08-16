@@ -22,7 +22,5 @@ spec:
       APP: *app
 
   dependsOn:
-    - name: 1password-connect
-      namespace: security-system
     - name: grafana-instance
       namespace: monitoring-system
