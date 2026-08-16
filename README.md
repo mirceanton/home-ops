@@ -2,6 +2,8 @@
 
 GitOps repository for my Kubernetes Cluster.
 
+See [AGENTS.md](AGENTS.md) for repository structure, tooling, and operational notes.
+
 ## ⭐ Stargazers
 
 <div align="center">
