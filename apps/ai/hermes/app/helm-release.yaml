@@ -30,8 +30,8 @@ spec:
 
           init:
             image:
-              repository: docker.io/mikefarah/yq
-              tag: "4"
+              repository: docker.io/library/busybox
+              tag: latest
             securityContext:
               runAsUser: 10000
               runAsGroup: 10000
@@ -40,13 +40,11 @@ spec:
               - -c
               - |
                 set -euo pipefail
-                if [ -f /opt/data/config.yaml ]; then
-                  yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' \
-                    /opt/data/config.yaml /tmp/config.yaml > /tmp/merged.yaml
-                  mv /tmp/merged.yaml /opt/data/config.yaml
-                else
-                  cp /tmp/config.yaml /opt/data/config.yaml
-                fi
+                # Always overwrite: config.yaml is fully managed by the
+                # Secret template. A merge previously left stale, renamed,
+                # or removed keys (e.g. old providers) permanently stuck
+                # on the PVC across redeploys.
+                cp /tmp/config.yaml /opt/data/config.yaml
                 cp /tmp/.env /opt/data/.env
 
         containers:
