@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: ["main"]
-    paths: ["kubernetes/**"]
+    paths: ["apps/**", "components/**", "bootstrap/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number }}

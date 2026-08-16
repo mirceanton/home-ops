@@ -2,13 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "packageRules": [
     {
-      "description": "Group Penpot components",
-      "groupName": "penpot",
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["/penpotapp/"],
-      "minimumGroupSize": 4
-    },
-    {
       "description": "Group SparkyFitness components",
       "groupName": "sparkyfitness",
       "matchDatasources": ["docker"],
