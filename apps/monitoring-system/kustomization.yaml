@@ -13,6 +13,7 @@ resources:
   - ./grafana
 
   # Exporters
+  - ./blackbox-exporter
   - ./ipmi-exporter
   - ./kube-state-metrics
   - ./mikrotik-exporter
