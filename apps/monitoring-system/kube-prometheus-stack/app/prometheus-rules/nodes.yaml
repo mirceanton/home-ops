@@ -40,3 +40,19 @@ spec:
           annotations:
             summary: "High memory usage on {{ $labels.instance }}"
             description: 'Memory usage has been above 90% for 5 minutes on {{ $labels.instance }} (current: {{ $value | printf "%.1f" }}%)'
+
+        # -----------------------------------------------------------------------
+        # Systemd (custom replacement for disabled default rule)
+        # Excludes known-benign services that are irrelevant to the hardware
+        # (e.g. openipmi on Raspberry Pis — IPMI doesn't exist on ARM SBCs).
+        # -----------------------------------------------------------------------
+        - alert: NodeSystemdServiceFailed
+          expr: >
+            node_systemd_unit_state{state="failed"} == 1
+              unless on(instance, name) node_systemd_unit_state{name="openipmi.service"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Systemd service {{ $labels.name }} has failed on {{ $labels.instance }}"
+            description: "Systemd service {{ $labels.name }} has entered failed state on {{ $labels.instance }}."

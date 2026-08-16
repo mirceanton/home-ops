@@ -17,6 +17,7 @@ spec:
     defaultRules:
       disabled:
         NodeMemoryHighUtilization: true
+        NodeSystemdServiceFailed: true
 
     # ==========================================================================
     # Alertmanager
