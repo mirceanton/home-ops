@@ -11,6 +11,9 @@ spec:
     name: blackbox-exporter
 
   values:
+    # NOTE: the chart's templates only have a rendering branch for
+    # kind=Deployment. Any other value (e.g. StatefulSet) silently renders no
+    # workload at all, with Helm still reporting success.
     kind: Deployment
     fullnameOverride: blackbox-exporter
 
