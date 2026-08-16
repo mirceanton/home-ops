@@ -2,6 +2,7 @@
 version: "3"
 
 includes:
+  cluster: .taskfiles/cluster.yaml
   lint: .taskfiles/lint.yaml
   sops: .taskfiles/sops.yaml
   volsync: .taskfiles/volsync.yaml
