@@ -1,10 +1,10 @@
 model:
-  default: hermes
+  default: qwen3.7-plus
 
 providers:
-  litellm:
-    base_url: http://litellm:4000/v1
-    api_key: "{{ .LITELLM_API_KEY }}"
+  qwen:
+    base_url: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+    api_key: "{{ .QWEN_KEY }}"
 
 gateway:
   api_server:
@@ -56,8 +56,8 @@ mcp_servers:
   #   command: "npx"
   #   args: ["-y", "mcp-openai-image-generator", "--models", "wan2.7", "wan2.7-pro"]
   #   env:
-  #     OPENAI_API_KEY: "{{ .LITELLM_API_KEY }}"
-  #     OPENAI_BASE_URL: "http://litellm:4000/v1"
+  #     OPENAI_API_KEY: "{{ .QWEN_KEY }}"
+  #     OPENAI_BASE_URL: "https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1"
 
 toolsets:
   - hermes-cli
