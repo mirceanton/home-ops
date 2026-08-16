@@ -1,0 +1,7 @@
+---
+version: "3"
+
+tasks:
+  delete-stuck-ns:
+    desc: Force-delete namespaces stuck in a Terminating state by clearing their finalizers.
+    cmd: bash {{.ROOT_DIR}}/.scripts/delete-stuck-ns.sh
