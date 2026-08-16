@@ -56,8 +56,18 @@ spec:
       level: info
       format: json
 
-    # TODO: keycloak OIDC via Keycloak
-    auth: { oidc: { enabled: false } }
+    auth:
+      oidc:
+        enabled: true
+        issuerUrl: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        clientId: renovate-operator
+        existingSecret: renovate-operator-oidc-secret
+        # the operator auto-detects its callback URL's scheme from `ingress.tls`,
+        # which is unset here since we route via Gateway API instead of Ingress
+        redirectScheme: https
+
+    # authentication only, no per-job access rules - every authenticated user is an admin
+    authorization: { enabled: false }
 
     webhook: { enabled: false }
     route:
