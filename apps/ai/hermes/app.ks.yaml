@@ -23,7 +23,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "10000"
       VOLSYNC_PGID: "10000"
       KEYCLOAK_CLIENT_ID: hermes-dashboard
