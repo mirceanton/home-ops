@@ -1,8 +1,12 @@
 model:
   default: qwen3.7-plus
+  # Must not be named "qwen" - that name collides with Hermes' built-in
+  # Qwen OAuth (Nous Portal) provider and silently shadows this custom
+  # entry, leaving the agent with no usable inference provider at all.
+  provider: qwen-direct
 
 providers:
-  qwen:
+  qwen-direct:
     base_url: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
     api_key: "{{ .QWEN_KEY }}"
 
