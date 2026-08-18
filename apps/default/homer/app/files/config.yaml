@@ -95,6 +95,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
 
+      - name: "Affine"
+        subtitle: "Knowledge Base"
+        url: "https://notes.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/affine.webp"
+
   - name: "Maker"
     icon: "fas fa-cube"
     items:
@@ -199,15 +205,3 @@ services:
         url: "https://search.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/searxng.webp"
-
-      - name: "Affine"
-        subtitle: "Knowledge Base"
-        url: "https://notes.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/affine.webp"
-
-      - name: "Konflate"
-        subtitle: "Integration Platform"
-        url: "https://konflate.home.mirceanton.com"
-        target: "_blank"
-        icon: "fas fa-diagram-project"

@@ -42,6 +42,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/headlamp.webp"
 
+      - name: "Konflate"
+        subtitle: "Integration Platform"
+        url: "https://konflate.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-diagram-project"
+
   - name: "Networking"
     icon: "fas fa-network-wired"
     items:
