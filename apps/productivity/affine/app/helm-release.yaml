@@ -76,7 +76,7 @@ spec:
           migrate:
             image:
               repository: ghcr.io/toeverything/affine
-              tag: &tag "0.27.3"
+              tag: &tag "0.27.4"
             command: ["sh", "-c"]
             args: ["node ./scripts/self-host-predeploy.js"]
             env: &appEnv
