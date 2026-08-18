@@ -95,6 +95,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/vikunja.webp"
 
+      - name: "Affine"
+        subtitle: "Knowledge Base"
+        url: "https://notes.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/affine.webp"
+
   - name: "Maker"
     icon: "fas fa-cube"
     items:
