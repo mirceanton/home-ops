@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/dawncr0w/affine-mcp-server
-              tag: "3.2.1"
+              tag: "3.2.2"
             env:
               MCP_TRANSPORT: http
               PORT: "3000"
