@@ -17,6 +17,10 @@ spec:
     defaultRules:
       disabled:
         NodeMemoryHighUtilization: true
+        # Fires for any failed systemd unit — noisy on devices like Raspberry Pis
+        # where irrelevant services (e.g. openipmi) are installed but have no
+        # hardware to talk to. We monitor specific important services instead.
+        NodeSystemdServiceFailed: true
 
     # ==========================================================================
     # Alertmanager
