@@ -59,6 +59,20 @@
       "groupName": "talos",
       "matchPackageNames": ["ghcr.io/siderolabs/installer", "/talosctl$/"],
       "minimumGroupSize": 2
+    },
+    {
+      "description": "Group CNPG operator + barman-cloud plugin chart updates, since the plugin's compatibility depends on the operator's plugin API version",
+      "groupName": "cnpg-operator",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/cloudnative-pg/charts/cloudnative-pg", "ghcr.io/cloudnative-pg/charts/plugin-barman-cloud"],
+      "minimumGroupSize": 2
+    },
+    {
+      "description": "Group external-dns chart + mikrotik webhook provider updates, since the provider is versioned against external-dns' webhook provider API",
+      "groupName": "external-dns-mikrotik",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/home-operations/charts-mirror/external-dns", "ghcr.io/mirceanton/external-dns-provider-mikrotik"],
+      "minimumGroupSize": 2
     }
   ]
 }
