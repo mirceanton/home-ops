@@ -53,6 +53,11 @@
       "groupName": "cnpg-postgres",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["/cloudnative-pg/postgresql/"]
+    },
+    {
+      "description": "Group Talos version updates (talosctl CLI in mise + container image, siderolabs/installer) so they land as a single commit instead of separate PRs per source",
+      "groupName": "talos",
+      "matchPackageNames": ["ghcr.io/siderolabs/installer", "/talosctl$/"]
     }
   ]
 }
