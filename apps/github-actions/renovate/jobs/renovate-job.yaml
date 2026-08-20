@@ -65,14 +65,17 @@ spec:
         claimName: renovate-cache
     - name: mise-bin
       image:
+        # renovate: depName=ghcr.io/jdx/mise datasource=docker
         reference: ghcr.io/jdx/mise:2026.8.3
         pullPolicy: IfNotPresent
     - name: helm-docs-bin
       image:
+        # renovate: depName=jnorwood/helm-docs datasource=docker
         reference: docker.io/jnorwood/helm-docs:v1.14.2
         pullPolicy: IfNotPresent
     - name: helm-schema-bin
       image:
+        # renovate: depName=ghcr.io/dadav/helm-schema datasource=docker
         reference: ghcr.io/dadav/helm-schema:v0.23.4
         pullPolicy: IfNotPresent
 
