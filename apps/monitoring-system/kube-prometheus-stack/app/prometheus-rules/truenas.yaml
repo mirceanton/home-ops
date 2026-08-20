@@ -19,3 +19,15 @@ spec:
           annotations:
             summary: "NAS {{ $labels.instance }} is unreachable"
             description: "No metrics received from {{ $labels.instance }} for more than 2 minutes."
+
+        # -----------------------------------------------------------------------
+        # Containers
+        # -----------------------------------------------------------------------
+        - alert: NASContainerDown
+          expr: time() - container_last_seen{job="cadvisor", name!=""} > 90
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "NAS container {{ $labels.name }} is down"
+            description: "cadvisor hasn't seen container {{ $labels.name }} ({{ $labels.image }}) for more than 2 minutes — it may have stopped or failed to restart."
