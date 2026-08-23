@@ -9,14 +9,15 @@ spec:
     - name: streamarr.rules
       rules:
         - alert: StreamarrMediaNeedsAttention
-          expr: sum(streamarr_media_needs_attention_total) > 0
+          expr: streamarr_media_item_needs_attention == 1
           for: 5m
           labels:
             severity: warning
           annotations:
-            summary: "Streamarr media needs attention"
+            summary: "{{ $labels.title }} needs attention"
             description: >-
-              {{ $value }} media items are flagged as needing attention
+              {{ $labels.type }} "{{ $labels.title }}"{{ if $labels.season }} S{{ $labels.season }}E{{ $labels.episode }}{{ end }}
+              (streamarr id {{ $labels.id }}) is flagged as needing attention
               (missing language or subtitle preferences).
 
         - alert: StreamarrJobsStuck
