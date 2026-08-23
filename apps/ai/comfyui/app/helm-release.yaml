@@ -77,12 +77,14 @@ spec:
                   timeoutSeconds: 5
                   failureThreshold: 40
 
-            # NOTE: ai-dock images commonly expect to run as root for their
-            # provisioning/supervisord bootstrap - left unrestricted here.
-            # Tighten once you confirm the image works as a non-root user.
+            # Confirmed needed: ai-dock's supervisord starts as root and
+            # setuid/setgid's each managed process (comfyui, jupyter,
+            # syncthing, ...) down to uid 1000 individually. Dropping
+            # capabilities breaks that - every child process fails with
+            # "couldn't setuid to 1000: Could not set groups of effective
+            # user" and the container crash-loops.
             securityContext:
               allowPrivilegeEscalation: false
-              capabilities: { drop: ["ALL"] }
 
     defaultPodOptions:
       enableServiceLinks: false
