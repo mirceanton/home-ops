@@ -22,13 +22,23 @@ spec:
         containers:
           app:
             image:
-              # ai-dock ships CUDA-ready ComfyUI + ComfyUI-Manager preinstalled.
-              # TODO: verify/bump this tag against https://github.com/ai-dock/comfyui
-              # releases - renovate will track it from here on.
-              repository: ghcr.io/ai-dock/comfyui
-              tag: v2-cuda-12.1.1-base-22.04-v0.2.7
+              # yanwk/comfyui-boot: just ComfyUI + ComfyUI-Manager, listens on
+              # whatever CLI_ARGS says. cu130 is the officially recommended
+              # CUDA version for Ada Lovelace (RTX 4070) - see
+              # https://github.com/YanWenKun/ComfyUI-Docker#cuda-compatibility
+              # Switched from ghcr.io/ai-dock/comfyui, whose bundled Caddy +
+              # cloud-rental service portal (designed for RunPod/Vast.ai proxy
+              # tunnels) redirected browser requests to "localhost" instead of
+              # serving the app behind our own ingress hostname.
+              repository: yanwk/comfyui-boot
+              tag: cu130-slim-v2@sha256:32efcc9d6d5ea9d6b73794cd658c9c09524ba932f7aa105580003c9b69d30bbc
 
             env:
+              # ComfyUI defaults to listening on 127.0.0.1 - has to be told
+              # explicitly to listen on all interfaces to be reachable at all
+              # from the Service/route.
+              CLI_ARGS: "--listen 0.0.0.0 --port 8188"
+
               # Used by a ComfyUI custom node (install via ComfyUI-Manager) that
               # calls DashScope directly - going straight to Alibaba rather than
               # through litellm, whose OpenAI-compatible routing doesn't cover
@@ -62,7 +72,7 @@ spec:
                 custom: true
                 spec:
                   tcpSocket: { port: 8188 }
-                  initialDelaySeconds: 180
+                  initialDelaySeconds: 60
                   periodSeconds: 15
                   timeoutSeconds: 5
                   failureThreshold: 10
@@ -72,17 +82,11 @@ spec:
                 custom: true
                 spec:
                   tcpSocket: { port: 8188 }
-                  initialDelaySeconds: 30
+                  initialDelaySeconds: 15
                   periodSeconds: 15
                   timeoutSeconds: 5
                   failureThreshold: 40
 
-            # Confirmed needed: ai-dock's supervisord starts as root and
-            # setuid/setgid's each managed process (comfyui, jupyter,
-            # syncthing, ...) down to uid 1000 individually. Dropping
-            # capabilities breaks that - every child process fails with
-            # "couldn't setuid to 1000: Could not set groups of effective
-            # user" and the container crash-loops.
             securityContext:
               allowPrivilegeEscalation: false
 
@@ -112,14 +116,14 @@ spec:
         advancedMounts:
           comfyui:
             app:
-              - path: /workspace/ComfyUI/models
+              - path: /root/ComfyUI/models
                 subPath: models
       custom-nodes:
         existingClaim: comfyui-cache
         advancedMounts:
           comfyui:
             app:
-              - path: /workspace/ComfyUI/custom_nodes
+              - path: /root/ComfyUI/custom_nodes
                 subPath: custom_nodes
 
       # Backed up via volsync - your actual creative assets: uploaded icons,
@@ -129,19 +133,19 @@ spec:
         advancedMounts:
           comfyui:
             app:
-              - path: /workspace/ComfyUI/input
+              - path: /root/ComfyUI/input
                 subPath: input
       output:
         existingClaim: ${APP}
         advancedMounts:
           comfyui:
             app:
-              - path: /workspace/ComfyUI/output
+              - path: /root/ComfyUI/output
                 subPath: output
       user:
         existingClaim: ${APP}
         advancedMounts:
           comfyui:
             app:
-              - path: /workspace/ComfyUI/user
+              - path: /root/ComfyUI/user
                 subPath: user
