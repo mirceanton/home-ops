@@ -1,0 +1,145 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: comfyui
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: comfyui
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      comfyui:
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              # ai-dock ships CUDA-ready ComfyUI + ComfyUI-Manager preinstalled.
+              # TODO: verify/bump this tag against https://github.com/ai-dock/comfyui
+              # releases - renovate will track it from here on.
+              repository: ghcr.io/ai-dock/comfyui
+              tag: v2-cuda-12.1.1-base-22.04-v0.2.7
+
+            env:
+              # Used by a ComfyUI custom node (install via ComfyUI-Manager) that
+              # calls DashScope directly - going straight to Alibaba rather than
+              # through litellm, whose OpenAI-compatible routing doesn't cover
+              # DashScope's async video-generation task API. Same host your
+              # QwenCloud token-plan subscription uses for litellm's qwen/wan/
+              # happyhorse models (apps/ai/litellm/app/files/config.yaml), minus
+              # the /compatible-mode/v1 suffix that's specific to litellm's
+              # OpenAI-style chat/embedding calls.
+              # TODO: confirm the exact path/task-polling shape the DashScope
+              # node you install expects (native video-synthesis API is
+              # async: submit task -> poll -> fetch result URL).
+              DASHSCOPE_BASE_URL: https://token-plan.ap-southeast-1.maas.aliyuncs.com
+              DASHSCOPE_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: comfyui-secret
+                    key: QWEN_KEY
+
+            resources:
+              requests:
+                cpu: 500m
+                memory: 4Gi
+                nvidia.com/gpu: "1"
+              limits:
+                memory: 24Gi
+                nvidia.com/gpu: "1"
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: { port: 8188 }
+                  initialDelaySeconds: 180
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 10
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket: { port: 8188 }
+                  initialDelaySeconds: 30
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 40
+
+            # NOTE: ai-dock images commonly expect to run as root for their
+            # provisioning/supervisord bootstrap - left unrestricted here.
+            # Tighten once you confirm the image works as a non-root user.
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      enableServiceLinks: false
+      runtimeClassName: nvidia
+      terminationGracePeriodSeconds: 30
+
+    service:
+      app:
+        controller: comfyui
+        ports:
+          http:
+            port: 8188
+
+    route:
+      main:
+        hostnames: ["comfyui.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      # Not backed up - model weights & installed nodes are re-fetchable.
+      models:
+        existingClaim: comfyui-cache
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /workspace/ComfyUI/models
+                subPath: models
+      custom-nodes:
+        existingClaim: comfyui-cache
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /workspace/ComfyUI/custom_nodes
+                subPath: custom_nodes
+
+      # Backed up via volsync - your actual creative assets: uploaded icons,
+      # generated clips, and saved workflows.
+      input:
+        existingClaim: ${APP}
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /workspace/ComfyUI/input
+                subPath: input
+      output:
+        existingClaim: ${APP}
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /workspace/ComfyUI/output
+                subPath: output
+      user:
+        existingClaim: ${APP}
+        advancedMounts:
+          comfyui:
+            app:
+              - path: /workspace/ComfyUI/user
+                subPath: user
