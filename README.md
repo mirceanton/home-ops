@@ -1,8 +1,8 @@
 # HomeOps
 
-GitOps repository for my Kubernetes cluster — a single source of truth for a
-bare-metal, [Talos Linux](https://www.talos.dev/)-powered cluster reconciled
-continuously by [Flux](https://fluxcd.io/).
+GitOps repository for my Kubernetes cluster, a bare-metal
+[Talos Linux](https://www.talos.dev/) cluster reconciled continuously by
+[Flux](https://fluxcd.io/).
 
 <div align="center">
 
@@ -27,23 +27,22 @@ continuously by [Flux](https://fluxcd.io/).
 
 ## 🎯 Scope
 
-This repository declaratively describes **everything** running on my
-homelab Kubernetes cluster: the OS, the cluster bootstrap, every
-cluster-wide platform component, and every application workload. Nothing is
-applied by hand — a change only takes effect once it's committed to `main`
-and reconciled by Flux.
+This repo holds everything running on my homelab Kubernetes cluster: the
+OS config, the cluster bootstrap, all the platform components, and all the
+application workloads. There's no manual `kubectl apply` step, a change only
+takes effect once it's committed to `main` and Flux picks it up.
 
 It covers:
 
-- **OS & node config** — [Talos Linux](https://www.talos.dev/) machine
+- **OS & node config**: [Talos Linux](https://www.talos.dev/) machine
   configuration, patches, and system extensions (`talos/`).
-- **Cluster bootstrap** — the minimal, one-time `helmfile` bootstrap that
+- **Cluster bootstrap**: the minimal, one-time `helmfile` bootstrap that
   gets Flux running (`bootstrap/`).
-- **Platform components** — CNI, ingress, DNS, TLS, secrets, storage,
+- **Platform components**: CNI, ingress, DNS, TLS, secrets, storage,
   databases, and observability (`apps/*-system/`).
-- **Application workloads** — everything from AI/LLM tooling to media,
+- **Application workloads**: everything from AI/LLM tooling to media,
   home automation, games, and productivity apps (`apps/<domain>/`).
-- **Reusable building blocks** — Kustomize components for common patterns
+- **Reusable building blocks**: Kustomize components for common patterns
   like Postgres, Redis-compatible caches, backups, and OIDC clients
   (`components/`).
 
@@ -67,11 +66,11 @@ It covers:
 ## 🔄 GitOps Logic Flow
 
 Everything starts with a commit. Flux is the only thing with write access to
-the cluster — there is no `kubectl apply` in the happy path.
+the cluster, nobody runs `kubectl apply` directly.
 
 ```mermaid
 flowchart LR
-    Dev([👤 Developer]) -->|"git push / PR"| GH[("GitHub\nmirceanton/home-ops")]
+    Dev([Developer]) -->|"git push / PR"| GH[("GitHub\nmirceanton/home-ops")]
 
     GH -->|"PR opened"| Flate["Flate CI\n(diff preview via\ndownflate/konflate)"]
     GH -->|"push to main"| Lint["Lint CI\n(task lint:check)"]
@@ -86,12 +85,7 @@ flowchart LR
     ESO["external-secrets-operator"] -->|"pulls live secrets"| API
     OnePw[("1Password")] --> ESO
 
-    API --> Workloads["🚀 Running workloads"]
-
-    style Dev fill:#2563eb,color:#fff
-    style GH fill:#24292e,color:#fff
-    style API fill:#326CE5,color:#fff
-    style Workloads fill:#16a34a,color:#fff
+    API --> Workloads["Running workloads"]
 ```
 
 **Bootstrap** (only needed once, or after a full rebuild) breaks the
@@ -103,7 +97,7 @@ flowchart LR
     HF --> Cilium["Cilium\n(CNI)"]
     Cilium --> FO["flux-operator"]
     FO --> FI["flux-instance\n(source/kustomize/helm-controller)"]
-    FI -->|"takes over from here"| GitOps["🔄 Continuous GitOps loop\n(see diagram above)"]
+    FI -->|"takes over from here"| GitOps["Continuous GitOps loop\n(see diagram above)"]
 
     CRDs["helmfile sync\n(bootstrap/crds/helmfile.yaml)"] -.->|"pre-installs CRDs for\nenvoy-gateway, keda,\ngrafana-operator, kube-prometheus-stack"| GitOps
 ```
