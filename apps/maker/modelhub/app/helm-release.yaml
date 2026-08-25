@@ -59,12 +59,6 @@ spec:
 
               # OIDC / Keycloak SSO
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              # Bootstrap escape hatch (v0.9.0+): the OIDC group->role mapping
-              # is otherwise DB-only, configured via /admin — which itself
-              # requires admin role, so a fresh instance has no way to reach
-              # it. Enforced fresh on every boot ("always wins"), so this
-              # group can never get locked out of admin even via a stray DB
-              # edit. See CLAUDE.md's Auth/Roles section in model-hub.
               OIDC_ADMIN_GROUPS: modelhub-admins
               OIDC_CLIENT_ID:
                 valueFrom:
