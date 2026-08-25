@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/teleprompter
-              tag: v3.3.2
+              tag: v3.4.0
             env:
               PORT: &port 8080
               TOKENS_FILE: /data/tokens.json
