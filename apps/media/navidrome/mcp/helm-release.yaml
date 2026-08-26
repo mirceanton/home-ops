@@ -21,7 +21,7 @@ spec:
           navidrome-mcp:
             image:
               repository: ghcr.io/blakeem/navidrome-mcp
-              tag: 2.2.0
+              tag: 2.3.0
 
             resources:
               requests:
