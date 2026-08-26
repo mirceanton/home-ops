@@ -31,7 +31,7 @@ spec:
               # tunnels) redirected browser requests to "localhost" instead of
               # serving the app behind our own ingress hostname.
               repository: yanwk/comfyui-boot
-              tag: cu130-slim-v2@sha256:32efcc9d6d5ea9d6b73794cd658c9c09524ba932f7aa105580003c9b69d30bbc
+              tag: cu130-slim-v2@sha256:430aa46ece07c8aff58d02f5554a0a6feda3035a8d0af57ec50041c9b4b589ba
 
             env:
               # ComfyUI defaults to listening on 127.0.0.1 - has to be told
