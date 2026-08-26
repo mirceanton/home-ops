@@ -1,10 +1,6 @@
-# HomeOps
-
-GitOps repository for my Kubernetes cluster, a bare-metal
-[Talos Linux](https://www.talos.dev/) cluster reconciled continuously by
-[Flux](https://fluxcd.io/).
-
 <div align="center">
+
+# HomeOps
 
 ![Kubernetes](https://img.shields.io/badge/kubernetes-v1.36-326CE5?logo=kubernetes&logoColor=white)
 ![Talos](https://img.shields.io/badge/talos-v1.13-FF7000?logo=talos&logoColor=white)
@@ -12,27 +8,12 @@ GitOps repository for my Kubernetes cluster, a bare-metal
 ![Renovate](https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white)
 ![License](https://img.shields.io/github/license/mirceanton/home-ops)
 
+GitOps repository for my homelab Kubernetes cluster, a bare-metal [Talos Linux](https://www.talos.dev/) cluster reconciled continuously by [Flux](https://fluxcd.io/).
 </div>
-
-## 📖 Table of Contents
-
-- [Scope](#-scope)
-- [Core Tools](#-core-tools)
-- [GitOps Logic Flow](#-gitops-logic-flow)
-- [Repository Structure](#-repository-structure)
-- [Core Kubernetes Components](#-core-kubernetes-components)
-- [Stargazers](#-stargazers)
-- [Gratitude and Thanks](#-gratitude-and-thanks)
-- [Changelog](#-changelog)
 
 ## 🎯 Scope
 
-This repo holds everything running on my homelab Kubernetes cluster: the
-OS config, the cluster bootstrap, all the platform components, and all the
-application workloads. There's no manual `kubectl apply` step, a change only
-takes effect once it's committed to `main` and Flux picks it up.
-
-It covers:
+This repo holds everything running on my homelab Kubernetes cluster: 
 
 - **OS & node config**: [Talos Linux](https://www.talos.dev/) machine
   configuration, patches, and system extensions (`talos/`).
@@ -45,62 +26,6 @@ It covers:
 - **Reusable building blocks**: Kustomize components for common patterns
   like Postgres, Redis-compatible caches, backups, and OIDC clients
   (`components/`).
-
-## 🛠 Core Tools
-
-| Category               | Tool                                                                                                                           | Purpose                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| **OS**                 | [Talos Linux](https://www.talos.dev/)                                                                                          | Immutable, API-managed, minimal Kubernetes OS                                    |
-| **Node config**        | [talhelper](https://github.com/budimanjojo/talhelper) / `talosctl`                                                             | Generates & applies Talos machine configs from `talconfig.yaml`                  |
-| **GitOps engine**      | [Flux](https://fluxcd.io/) (via [flux-operator](https://github.com/controlplaneio-fluxcd/flux-operator))                       | Continuously reconciles the cluster against this repo                            |
-| **Bootstrap**          | [Helmfile](https://helmfile.readthedocs.io/)                                                                                   | One-shot install of Cilium + Flux to break the chicken-and-egg bootstrap problem |
-| **Package manager**    | [Helm](https://helm.sh/) (via Flux `HelmRelease`)                                                                              | Templating & lifecycle for every platform/app chart                              |
-| **Manifest layering**  | [Kustomize](https://kustomize.io/)                                                                                             | Composes/patches manifests per app, reused via shared `components/`              |
-| **Secrets at rest**    | [SOPS](https://github.com/getsops/sops) + [age](https://github.com/FiloSottile/age)                                            | Encrypts secrets committed to git; decrypted in-cluster by Flux                  |
-| **Secrets at runtime** | [External Secrets Operator](https://external-secrets.io/) + [1Password Connect](https://developer.1password.com/docs/connect/) | Syncs live secrets from 1Password into the cluster                               |
-| **Tool versioning**    | [mise](https://mise.jdx.dev/)                                                                                                  | Pins every CLI (`kubectl`, `flux`, `helm`, `talosctl`, `sops`, …)                |
-| **Task runner**        | [Task](https://taskfile.dev/)                                                                                                  | `task lint`, `task sops:*`, `task volsync:*`, `task cluster:*`                   |
-| **Dependency updates** | [Renovate](https://docs.renovatebot.com/)                                                                                      | Automated PRs for chart/image/tool version bumps                                 |
-| **CI**                 | GitHub Actions                                                                                                                 | Lints every push; renders a manifest diff preview on every PR                    |
-
-## 🔄 GitOps Logic Flow
-
-Everything starts with a commit. Flux is the only thing with write access to
-the cluster, nobody runs `kubectl apply` directly.
-
-```mermaid
-flowchart LR
-    Dev([Developer]) -->|"git push / PR"| GH[("GitHub\nmirceanton/home-ops")]
-
-    GH -->|"PR opened"| Flate["Flate CI\n(diff preview via\ndownflate/konflate)"]
-    GH -->|"push to main"| Lint["Lint CI\n(task lint:check)"]
-
-    GH -->|"poll every 5m"| SC["source-controller\n(GitRepository)"]
-    SC --> KC["kustomize-controller\n(builds apps/ recursively)"]
-
-    KC -->|"decrypt with age key"| SOPS[("SOPS-encrypted\nSecret manifests")]
-    KC -->|"apply Kustomizations\nin dependsOn order"| HC["helm-controller\n(reconciles HelmReleases)"]
-
-    HC --> API["Kubernetes API\n(on Talos)"]
-    ESO["external-secrets-operator"] -->|"pulls live secrets"| API
-    OnePw[("1Password")] --> ESO
-
-    API --> Workloads["Running workloads"]
-```
-
-**Bootstrap** (only needed once, or after a full rebuild) breaks the
-chicken-and-egg problem of "Flux needs a CNI, the CNI needs Flux":
-
-```mermaid
-flowchart LR
-    Talos["Talos Linux\nboots bare node"] --> HF["helmfile sync\n(bootstrap/helmfile.yaml)"]
-    HF --> Cilium["Cilium\n(CNI)"]
-    Cilium --> FO["flux-operator"]
-    FO --> FI["flux-instance\n(source/kustomize/helm-controller)"]
-    FI -->|"takes over from here"| GitOps["Continuous GitOps loop\n(see diagram above)"]
-
-    CRDs["helmfile sync\n(bootstrap/crds/helmfile.yaml)"] -.->|"pre-installs CRDs for\nenvoy-gateway, keda,\ngrafana-operator, kube-prometheus-stack"| GitOps
-```
 
 ## 📁 Repository Structure
 
@@ -126,9 +51,24 @@ home-ops/
 └── .agents/skills/         # Runbooks for common operational tasks
 ```
 
-Each app follows the same pattern: an `app.ks.yaml` (Flux `Kustomization`,
-declaring `dependsOn` and any shared `components/`) pointing at an `app/`
-directory containing the `HelmRelease`/manifests and a `kustomization.yaml`.
+Each app follows the same pattern: an `app.ks.yaml` (Flux `Kustomization`, declaring `dependsOn` and any shared `components/`) pointing at an `app/` directory containing the `HelmRelease`/manifests and a `kustomization.yaml`.
+
+## 🛠 Core Tools
+
+| Category               | Tool                                                                                                                           | Purpose                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| **OS**                 | [Talos Linux](https://www.talos.dev/)                                                                                          | Immutable, API-managed, minimal Kubernetes OS                                    |
+| **Node config**        | [talhelper](https://github.com/budimanjojo/talhelper) / `talosctl`                                                             | Generates & applies Talos machine configs from `talconfig.yaml`                  |
+| **GitOps engine**      | [Flux](https://fluxcd.io/) (via [flux-operator](https://github.com/controlplaneio-fluxcd/flux-operator))                       | Continuously reconciles the cluster against this repo                            |
+| **Bootstrap**          | [Helmfile](https://helmfile.readthedocs.io/)                                                                                   | One-shot install of Cilium + Flux to break the chicken-and-egg bootstrap problem |
+| **Package manager**    | [Helm](https://helm.sh/) (via Flux `HelmRelease`)                                                                              | Templating & lifecycle for every platform/app chart                              |
+| **Manifest layering**  | [Kustomize](https://kustomize.io/)                                                                                             | Composes/patches manifests per app, reused via shared `components/`              |
+| **Secrets at rest**    | [SOPS](https://github.com/getsops/sops) + [age](https://github.com/FiloSottile/age)                                            | Encrypts secrets committed to git; decrypted in-cluster by Flux                  |
+| **Secrets at runtime** | [External Secrets Operator](https://external-secrets.io/) + [1Password Connect](https://developer.1password.com/docs/connect/) | Syncs live secrets from 1Password into the cluster                               |
+| **Tool versioning**    | [mise](https://mise.jdx.dev/)                                                                                                  | Pins every CLI (`kubectl`, `flux`, `helm`, `talosctl`, `sops`, …)                |
+| **Task runner**        | [Task](https://taskfile.dev/)                                                                                                  | `task lint`, `task sops:*`, `task volsync:*`, `task cluster:*`                   |
+| **Dependency updates** | [Renovate](https://docs.renovatebot.com/)                                                                                      | Automated PRs for chart/image/tool version bumps                                 |
+| **CI**                 | GitHub Actions                                                                                                                 | Lints every push; renders a manifest diff preview on every PR                    |
 
 ## ☸️ Core Kubernetes Components
 
@@ -202,6 +142,44 @@ flowchart TB
 | `storage-system`    | OpenEBS, democratic-csi, snapshot-controller, VolSync                 | Local + NFS/iSCSI (ZFS-backed) storage, snapshots, backup/restore   |
 | `database-system`   | CloudNativePG, Dragonfly Operator                                     | Managed Postgres and Redis-compatible instances for apps            |
 | `monitoring-system` | kube-prometheus-stack, Grafana Operator, exporters                    | Metrics, dashboards, alerting for cluster + hardware                |
+
+## 🔄 GitOps Logic Flow
+
+```mermaid
+flowchart LR
+    Dev([Developer]) -->|"git push / PR"| GH[("GitHub\nmirceanton/home-ops")]
+
+    GH -->|"PR opened"| Flate["Flate CI\n(diff preview via\ndownflate/konflate)"]
+    GH -->|"push to main"| Lint["Lint CI\n(task lint:check)"]
+
+    GH -->|"poll every 5m"| SC["source-controller\n(GitRepository)"]
+    SC --> KC["kustomize-controller\n(builds apps/ recursively)"]
+
+    KC -->|"decrypt with age key"| SOPS[("SOPS-encrypted\nSecret manifests")]
+    KC -->|"apply Kustomizations\nin dependsOn order"| HC["helm-controller\n(reconciles HelmReleases)"]
+
+    HC --> API["Kubernetes API\n(on Talos)"]
+    ESO["external-secrets-operator"] -->|"pulls live secrets"| API
+    OnePw[("1Password")] --> ESO
+
+    API --> Workloads["Running workloads"]
+```
+
+The **Bootstrap** process (only needed once, or after a full rebuild) breaks two chicken-and-egg problems:
+
+1. "Flux needs a CNI, the CNI needs Flux",
+2. Installs some core CRDs such as the Gateway API and Kube-Prometheus-Stack CRDs to avoid deadlocks
+
+```mermaid
+flowchart LR
+    Talos["Talos Linux\nboots bare node"] --> HF["helmfile sync\n(bootstrap/helmfile.yaml)"]
+    HF --> Cilium["Cilium\n(CNI)"]
+    Cilium --> FO["flux-operator"]
+    FO --> FI["flux-instance\n(source/kustomize/helm-controller)"]
+    FI -->|"takes over from here"| GitOps["Continuous GitOps loop\n(see diagram above)"]
+
+    CRDs["helmfile sync\n(bootstrap/crds/helmfile.yaml)"] -.->|"pre-installs CRDs for\nenvoy-gateway, keda,\ngrafana-operator, kube-prometheus-stack"| GitOps
+```
 
 ## ⭐ Stargazers
 
