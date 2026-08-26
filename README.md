@@ -9,11 +9,12 @@
 ![License](https://img.shields.io/github/license/mirceanton/home-ops)
 
 GitOps repository for my homelab Kubernetes cluster, a bare-metal [Talos Linux](https://www.talos.dev/) cluster reconciled continuously by [Flux](https://fluxcd.io/).
+
 </div>
 
 ## 🎯 Scope
 
-This repo holds everything running on my homelab Kubernetes cluster: 
+This repo holds everything running on my homelab Kubernetes cluster:
 
 - **OS & node config**: [Talos Linux](https://www.talos.dev/) machine
   configuration, patches, and system extensions (`talos/`).
