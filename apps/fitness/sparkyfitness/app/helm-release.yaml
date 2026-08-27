@@ -37,7 +37,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness_server
-              tag: v1.6.3
+              tag: v1.6.4
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_DISABLE_SIGNUP: "false"
@@ -136,7 +136,7 @@ spec:
           app:
             image:
               repository: docker.io/codewithcj/sparkyfitness
-              tag: v1.6.3
+              tag: v1.6.4
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
               SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
