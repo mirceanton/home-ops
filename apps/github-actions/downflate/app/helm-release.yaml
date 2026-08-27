@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/downflate
-              tag: main@sha256:0a8436716309ae728cb830a71bf876178a30702e5a149bbee41ab4fc14ff811f
+              tag: main@sha256:24fc78bbfdc7a1be233d3c95c2bcb78da58392262affdd6e24a9f01c5f25c70d
 
             env:
               HOME: /tmp
