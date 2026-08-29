@@ -7,7 +7,6 @@ resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
 
-  - ./comfyui
   - ./github-mcp
   - ./hermano
   - ./hermes
