@@ -377,7 +377,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
-          "expr": "youtube_video_view_count",
+          "expr": "label_replace(sum by (video_id, title) (youtube_video_view_count), \"__name__\", \"views\", \"\", \"\")",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -385,7 +385,7 @@
         },
         {
           "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
-          "expr": "youtube_video_like_count",
+          "expr": "label_replace(sum by (video_id, title) (youtube_video_like_count), \"__name__\", \"likes\", \"\", \"\")",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -393,7 +393,7 @@
         },
         {
           "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
-          "expr": "youtube_video_comment_count",
+          "expr": "label_replace(sum by (video_id, title) (youtube_video_comment_count), \"__name__\", \"comments\", \"\", \"\")",
           "format": "table",
           "instant": true,
           "legendFormat": "__auto",
@@ -402,6 +402,16 @@
       ],
       "title": "Per-Video Stats",
       "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "exclude": { "pattern": "__name__" }
+          }
+        },
         {
           "id": "merge",
           "options": {}
@@ -415,16 +425,16 @@
             "indexByName": {
               "title": 0,
               "video_id": 1,
-              "Value #Views": 2,
-              "Value #Likes": 3,
-              "Value #Comments": 4
+              "views": 2,
+              "likes": 3,
+              "comments": 4
             },
             "renameByName": {
               "title": "Title",
               "video_id": "Video ID",
-              "Value #Views": "Views",
-              "Value #Likes": "Likes",
-              "Value #Comments": "Comments"
+              "views": "Views",
+              "likes": "Likes",
+              "comments": "Comments"
             }
           }
         }
