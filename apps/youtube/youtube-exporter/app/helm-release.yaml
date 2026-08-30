@@ -37,8 +37,7 @@ spec:
 
             env:
               YOUTUBE_EXPORTER_PORT: &port 8080
-              # TODO: replace with the real channel ID, e.g. UCxxxxxxxxxxxxxxxxxxxxxxxx
-              YOUTUBE_EXPORTER_CHANNEL_ID: "UCXXXXXXXXXXXXXXXXXXXXXX"
+              YOUTUBE_EXPORTER_CHANNEL_ID: "UChoN8zyrrkFGiHdd9iiqLZQ"
               YOUTUBE_EXPORTER_API_KEY:
                 valueFrom:
                   secretKeyRef:
