@@ -12,7 +12,7 @@
   "tags": ["youtube", "exporter"],
   "panels": [
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -42,7 +42,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_channel_subscriber_count",
           "legendFormat": "Subscribers",
           "refId": "A"
@@ -52,7 +52,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -82,7 +82,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_channel_view_count",
           "legendFormat": "Views",
           "refId": "A"
@@ -92,7 +92,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -122,7 +122,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_channel_video_count",
           "legendFormat": "Videos",
           "refId": "A"
@@ -132,7 +132,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -173,7 +173,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_exporter_collection_success",
           "instant": true,
           "legendFormat": "Status",
@@ -184,7 +184,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -218,7 +218,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "time() - youtube_exporter_last_collection_timestamp_seconds",
           "instant": true,
           "legendFormat": "Age",
@@ -229,7 +229,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -274,7 +274,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_channel_subscriber_count",
           "legendFormat": "Subscribers",
           "refId": "A"
@@ -284,7 +284,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -329,7 +329,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_channel_view_count",
           "legendFormat": "Views",
           "refId": "A"
@@ -339,7 +339,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -376,7 +376,7 @@
       "pluginVersion": "12.3.0",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_video_view_count",
           "format": "table",
           "instant": true,
@@ -384,7 +384,7 @@
           "refId": "Views"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_video_like_count",
           "format": "table",
           "instant": true,
@@ -392,7 +392,7 @@
           "refId": "Likes"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "e4315b0f-3597-475f-8726-10fc0ffbdc75" },
           "expr": "youtube_video_comment_count",
           "format": "table",
           "instant": true,
