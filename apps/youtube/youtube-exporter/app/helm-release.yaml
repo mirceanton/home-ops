@@ -37,7 +37,11 @@ spec:
 
             env:
               YOUTUBE_EXPORTER_PORT: &port 8080
-              YOUTUBE_EXPORTER_CHANNEL_ID: "UChoN8zyrrkFGiHdd9iiqLZQ"
+              YOUTUBE_EXPORTER_CHANNEL_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: youtube-exporter-secret
+                    key: CHANNEL_ID
               YOUTUBE_EXPORTER_API_KEY:
                 valueFrom:
                   secretKeyRef:
