@@ -6,6 +6,7 @@ namespace: youtube
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./davinci
   - ./teleprompter
   - ./youtube-exporter

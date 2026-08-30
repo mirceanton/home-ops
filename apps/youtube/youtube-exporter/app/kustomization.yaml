@@ -6,3 +6,11 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
+  - ./grafana-dashboard.yaml
+
+configMapGenerator:
+  - name: youtube-exporter-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - dashboard.json
