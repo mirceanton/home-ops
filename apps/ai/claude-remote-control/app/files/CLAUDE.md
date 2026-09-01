@@ -21,7 +21,7 @@ pod restarts (image update, node drain, crash, `kubectl rollout restart`).
 
 ## Kubernetes access is real but read-only
 
-`~/.kube/config` is a working kubeconfig for *this* cluster, scoped to the
+`~/.kube/config` is a working kubeconfig for _this_ cluster, scoped to the
 `claude-remote-control` ServiceAccount bound to the built-in `view`
 ClusterRole: cluster-wide `get`/`list`/`watch` on most resources, and
 notably **no access to Secrets** and **no write access of any kind** --
