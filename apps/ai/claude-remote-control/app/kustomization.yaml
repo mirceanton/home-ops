@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./oci-repository.yaml
+  - ./helm-release.yaml
+  - ./rbac.yaml
+  - ./mise-cache.pvc.yaml
+  - ./networkpolicy.yaml
+
+configMapGenerator:
+  # substitute: disabled on both -- CLAUDE.md is meant to be hand-edited
+  # later (see its "fill this in" section) and mcp-servers.json is meant to
+  # gain real server configs, either of which could plausibly end up
+  # containing literal ${VAR} text that Flux would otherwise try to
+  # rewrite.
+  - name: claude-remote-control-claude-md
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    files:
+      - CLAUDE.md=./files/CLAUDE.md
+
+  - name: claude-remote-control-mcp-config
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    files:
+      - mcp-servers.json=./files/mcp-servers.json

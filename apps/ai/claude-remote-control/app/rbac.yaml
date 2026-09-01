@@ -1,0 +1,35 @@
+---
+# Read-only, cluster-wide access for the agent's ~/.kube/config, via the
+# built-in `view` ClusterRole (get/list/watch on most objects; notably
+# excludes Secrets). Expand later by swapping the roleRef for a custom
+# ClusterRole once more access is actually needed.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: claude-remote-control
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: claude-remote-control-view
+subjects:
+  - kind: ServiceAccount
+    name: claude-remote-control
+    namespace: ai
+roleRef:
+  kind: ClusterRole
+  name: view
+  apiGroup: rbac.authorization.k8s.io
+---
+# Explicit, long-lived token for the ServiceAccount above (Kubernetes no
+# longer auto-creates these since 1.24). Not sensitive at rest in git: the
+# `token`/`ca.crt`/`namespace` keys are populated by the control plane after
+# creation, this manifest carries none of them. The init container in
+# helm-release.yaml assembles ~/.kube/config from this at pod startup.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: claude-remote-control-sa-token
+  annotations:
+    kubernetes.io/service-account.name: claude-remote-control
+type: kubernetes.io/service-account-token
