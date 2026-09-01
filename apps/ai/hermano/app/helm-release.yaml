@@ -54,6 +54,11 @@ spec:
                     name: hermano-secret
                     key: PUSHOVER_USER_KEY
 
+              # Reconcile locally active alerts with Alertmanager's read API
+              # to recover from a missed resolved webhook delivery.
+              HERMANO_ALERTMANAGER_URL: http://alertmanager-operated.monitoring-system:9093
+              HERMANO_ALERTMANAGER_RECONCILE_INTERVAL_MS: "300000"
+
               # Externally-reachable origin, used to build dashboard links
               # (Pushover's "View in Hermano", OIDC's redirect default)
               HERMANO_PUBLIC_URL: https://hermano.home.mirceanton.com
