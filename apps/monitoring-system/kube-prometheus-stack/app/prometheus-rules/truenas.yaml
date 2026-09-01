@@ -25,9 +25,18 @@ spec:
         # -----------------------------------------------------------------------
         - alert: NASContainerDown
           expr: time() - container_last_seen{job="cadvisor", name!=""} > 90
-          for: 2m
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "NAS container {{ $labels.name }} is down"
+            description: "cadvisor hasn't seen container {{ $labels.name }} ({{ $labels.image }}) for more than 5 minutes — it may have stopped or failed to restart."
+
+        - alert: NASContainerDown
+          expr: time() - container_last_seen{job="cadvisor", name!=""} > 90
+          for: 10m
           labels:
             severity: critical
           annotations:
-            summary: "NAS container {{ $labels.name }} is down"
-            description: "cadvisor hasn't seen container {{ $labels.name }} ({{ $labels.image }}) for more than 2 minutes — it may have stopped or failed to restart."
+            summary: "NAS container {{ $labels.name }} is down (critical)"
+            description: "cadvisor hasn't seen container {{ $labels.name }} ({{ $labels.image }}) for more than 10 minutes — it has likely stopped or failed to restart."
