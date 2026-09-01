@@ -89,12 +89,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/firefly-iii.webp"
 
-      - name: "Vikunja"
-        subtitle: "Task Manager"
-        url: "https://tasks.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/vikunja.webp"
-
       - name: "Affine"
         subtitle: "Knowledge Base"
         url: "https://notes.home.mirceanton.com"
