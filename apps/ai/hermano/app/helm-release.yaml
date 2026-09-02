@@ -19,7 +19,7 @@ spec:
 
     controllers:
       hermano:
-        replicas: 1
+        replicas: 0
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
