@@ -24,15 +24,11 @@ spec:
     controllers:
       claude-remote-control:
         annotations:
-          # Picks up CLAUDE.md / mcp-servers.json edits and kubeconfig
-          # rotation automatically. Both are subPath mounts, which kubelet
-          # does not live-refresh on its own -- this is what actually
-          # applies the change, via a rolling restart.
+          # subPath mounts (CLAUDE.md, mcp-servers.json) don't live-refresh on
+          # their own -- this is what actually applies an edit, via restart.
           reloader.stakater.com/auto: "true"
 
-        # Always exactly 1: both PVCs below are ReadWriteOnce, a second
-        # concurrent replica couldn't attach them anyway, and two servers
-        # sharing one ~/.claude.json would race writing it.
+        # >1 would race writing ~/.claude.json, and both PVCs are ReadWriteOnce anyway.
         replicas: 1
         strategy: RollingUpdate
 
@@ -47,10 +43,9 @@ spec:
               - |
                 set -eu
                 namespace="$(cat /var/run/secrets/claude-sa-token/namespace)"
-                # Deliberately $namespace, not ${namespace}: Flux's
-                # postBuild.substitute rewrites any ${VAR} it finds across
-                # every resource in this Kustomization, and would choke on
-                # an unbraced-only shell var it doesn't recognize.
+                # $namespace, not ${namespace}: Flux's postBuild.substitute
+                # rewrites ${VAR} across this whole Kustomization and would
+                # choke on a shell var it doesn't recognize.
                 cat >/home/claude/.kube/config <<EOF
                 apiVersion: v1
                 kind: Config
@@ -86,12 +81,9 @@ spec:
               repository: ghcr.io/mirceanton/claude-remote-control
               tag: 2.1.257
 
-            # `claude remote-control` server-mode flags -- see
-            # https://code.claude.com/docs/en/remote-control. same-dir
-            # because $HOME/workspace starts as a plain (non-git) directory
-            # on every restart; `worktree` requires a git repo already
-            # checked out there. Bump --capacity for more concurrent
-            # sessions (scale memory limits with it).
+            # same-dir: $HOME/workspace starts as a plain, non-git directory
+            # on every restart, and `worktree` requires one already checked
+            # out. See https://code.claude.com/docs/en/remote-control.
             args:
               - --spawn=same-dir
               - --capacity=4
@@ -127,11 +119,9 @@ spec:
 
             securityContext:
               allowPrivilegeEscalation: false
-              # Not read-only: this is a general-purpose coding agent that
-              # writes broadly under $HOME on the ephemeral root filesystem
-              # (arbitrary repo clones, per-language build/test artifacts,
-              # scratch files) in ways too broad to enumerate as a static
-              # emptyDir allowlist, unlike a typical single-purpose service.
+              # Not read-only: a general-purpose coding agent writes too
+              # broadly under $HOME (repo clones, build artifacts, scratch
+              # files) to enumerate as a static emptyDir allowlist.
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
 
@@ -165,10 +155,8 @@ spec:
             subPath: mcp-servers.json
             readOnly: true
 
-      # Not subPath: kubelet DOES live-refresh a whole-secret mount, so
-      # ~/.kube/config's `tokenFile:` picks up token rotation without a
-      # restart even though the assembled config itself is written once by
-      # the init container above.
+      # Not subPath: kubelet live-refreshes a whole-secret mount, so
+      # `tokenFile:` in the assembled kubeconfig picks up rotation without a restart.
       kubeconfig-source:
         type: secret
         defaultMode: 0440

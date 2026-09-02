@@ -1,8 +1,6 @@
 ---
-# Read-only, cluster-wide access for the agent's ~/.kube/config, via the
-# built-in `view` ClusterRole (get/list/watch on most objects; notably
-# excludes Secrets). Expand later by swapping the roleRef for a custom
-# ClusterRole once more access is actually needed.
+# Read-only, cluster-wide, via the built-in `view` ClusterRole (no Secrets,
+# no writes). Swap the roleRef below for a custom ClusterRole to expand later.
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -21,11 +19,9 @@ roleRef:
   name: view
   apiGroup: rbac.authorization.k8s.io
 ---
-# Explicit, long-lived token for the ServiceAccount above (Kubernetes no
-# longer auto-creates these since 1.24). Not sensitive at rest in git: the
-# `token`/`ca.crt`/`namespace` keys are populated by the control plane after
-# creation, this manifest carries none of them. The init container in
-# helm-release.yaml assembles ~/.kube/config from this at pod startup.
+# Long-lived token for the ServiceAccount above (k8s stopped auto-creating
+# these in 1.24). Safe to commit unencrypted: token/ca.crt/namespace are
+# populated by the control plane, not by this manifest.
 apiVersion: v1
 kind: Secret
 metadata:

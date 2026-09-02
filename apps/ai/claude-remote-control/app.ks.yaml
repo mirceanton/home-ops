@@ -22,9 +22,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      # ~/.claude auth (OAuth login + trust map + user MCP servers) -- small,
-      # but not rebuildable without redoing the interactive /login flow, so
-      # it gets the volsync-backed, off-cluster-backed-up claim.
+      # ~/.claude: not rebuildable without redoing the interactive /login flow.
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"

@@ -10,11 +10,8 @@ resources:
   - ./networkpolicy.yaml
 
 configMapGenerator:
-  # substitute: disabled on both -- CLAUDE.md is meant to be hand-edited
-  # later (see its "fill this in" section) and mcp-servers.json is meant to
-  # gain real server configs, either of which could plausibly end up
-  # containing literal ${VAR} text that Flux would otherwise try to
-  # rewrite.
+  # substitute: disabled -- both files are meant to be hand-edited later and
+  # could plausibly contain literal ${VAR} text that Flux would otherwise rewrite.
   - name: claude-remote-control-claude-md
     options:
       disableNameSuffixHash: true

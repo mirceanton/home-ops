@@ -1,8 +1,7 @@
 ---
-# First CiliumNetworkPolicy in this cluster -- nowhere else selects pods on
-# egress, so this affects only claude-remote-control. Verify
-# `kubectl get crd ciliumnetworkpolicies.cilium.io` exists and check Hubble
-# flows after the first deploy before assuming this is airtight.
+# First CiliumNetworkPolicy in this cluster. Verify
+# `kubectl get crd ciliumnetworkpolicies.cilium.io` and check Hubble flows
+# after the first deploy before assuming this is airtight.
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -13,9 +12,8 @@ spec:
       app.kubernetes.io/name: claude-remote-control
 
   egress:
-    # DNS -- both to resolve anything below, and because Cilium's DNS proxy
-    # needs to observe the query to learn the FQDN -> IP mapping the
-    # api.anthropic.com rule relies on.
+    # Cilium's DNS proxy must observe the query to learn the FQDN -> IP
+    # mapping the api.anthropic.com rule below relies on.
     - toEndpoints:
         - matchLabels:
             "k8s:io.kubernetes.pod.namespace": kube-system
@@ -28,13 +26,12 @@ spec:
             dns:
               - matchPattern: "*"
 
-    # Kubernetes API server, for the read-only kubeconfig.
+    # For the read-only kubeconfig.
     - toEntities:
         - kube-apiserver
 
-    # api.anthropic.com specifically -- guaranteed reachable regardless of
-    # the broader world rule below. This is the one destination Claude Code
-    # itself actually needs.
+    # The one destination Claude Code itself actually needs -- guaranteed
+    # reachable regardless of the broader world rule below.
     - toFQDNs:
         - matchName: api.anthropic.com
       toPorts:
@@ -42,14 +39,12 @@ spec:
             - port: "443"
               protocol: TCP
 
-    # Everything else this agent legitimately needs as a coding agent: git
-    # clone, whatever registries a repo's own tooling pulls from, mise
-    # fetching tool releases pinned by each repo's own mise.toml. Port-scoped
-    # to plain web traffic only (no arbitrary TCP/UDP), and `world` in Cilium
-    # means outside-the-cluster -- there is deliberately no toEndpoints /
-    # toServices rule for litellm or anything else in-cluster, so it stays
-    # unreachable from this pod regardless of this rule's breadth, and its
-    # port 4000 is never opened either way.
+    # Everything else this agent needs as a coding agent (git, registries,
+    # mise fetching tools pinned by each repo's own mise.toml), port-scoped to
+    # plain web traffic only. `world` in Cilium means outside-the-cluster --
+    # there is deliberately no toEndpoints/toServices rule for litellm or
+    # anything else in-cluster, so it stays unreachable regardless of this
+    # rule's breadth, and its port 4000 is never opened either way.
     - toEntities:
         - world
       toPorts:
