@@ -8,4 +8,4 @@ spec:
   storageClassName: openebs-zfs-cache
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi
