@@ -51,8 +51,8 @@ spec:
               SESSION_SECRET:
                 valueFrom:
                   secretKeyRef:
-                    name: arr-hub-secret
-                    key: SESSION_SECRET
+                    name: arr-hub-session-secret
+                    key: password
 
               SONARR_URL: http://sonarr:8989
               SONARR_API_KEY:
