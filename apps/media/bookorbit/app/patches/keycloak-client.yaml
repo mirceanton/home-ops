@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakclient_v1beta1.json
+# The HTTPRoute serves both hostnames (bookorbit.home.mirceanton.com is a legacy alias for
+# books.home.mirceanton.com), and BookOrbit builds its OAuth redirect_uri from whichever
+# hostname the browser actually used — so both must be registered or logins via the old
+# hostname fail with invalid_redirect_uri.
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakClient
+metadata:
+  name: ${APP}
+spec:
+  definition:
+    redirectUris:
+      - https://books.home.mirceanton.com/*
+      - https://bookorbit.home.mirceanton.com/*
+    webOrigins:
+      - https://books.home.mirceanton.com
+      - https://bookorbit.home.mirceanton.com

@@ -9,3 +9,4 @@ resources:
 
 patchesStrategicMerge:
   - ./patches/cnpg.yaml
+  - ./patches/keycloak-client.yaml
