@@ -1,0 +1,148 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app arr-hub
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: arr-hub
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      arr-hub:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/mirceanton/arr-hub
+              tag: v0.1.0
+
+            env:
+              DATABASE_URL: file:/data/app.db
+              PORT: &port 3000
+              LOG_LEVEL: info
+
+              # This app owns its full OIDC login flow (session cookies, its
+              # own permission model keyed off group claims) rather than
+              # relying on gateway-level auth, so it's deliberately not
+              # behind the components/oidc SecurityPolicy like the other
+              # apps in this namespace — only components/keycloak-client is
+              # used, to provision the client-id/secret below.
+              OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              OIDC_REDIRECT_URI: "https://${APP}.home.mirceanton.com/api/auth/callback/keycloak"
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-oidc-secret"
+                    key: client-id
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: "${APP}-oidc-secret"
+                    key: client-secret
+
+              SESSION_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: SESSION_SECRET
+
+              SONARR_URL: http://sonarr:8989
+              SONARR_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: SONARR_API_KEY
+              RADARR_URL: http://radarr:7878
+              RADARR_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: RADARR_API_KEY
+              LIDARR_URL: http://lidarr:8686
+              LIDARR_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: LIDARR_API_KEY
+              BAZARR_URL: http://bazarr:6767
+              BAZARR_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: BAZARR_API_KEY
+              PROWLARR_URL: http://prowlarr:9696
+              PROWLARR_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: PROWLARR_API_KEY
+
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        # The image's own Dockerfile creates and runs as a fixed uid/gid
+        # 1001 (`adduser --uid 1001 arrhub`) — this must match, not the
+        # usual home-operations 568 convention, since this is a bespoke
+        # image rather than a home-operations-published one.
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["${APP}.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      # DATABASE_URL=file:/data/app.db — the sqlite db plus drizzle's WAL
+      # files live here; migrations run automatically on container start.
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /data
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
