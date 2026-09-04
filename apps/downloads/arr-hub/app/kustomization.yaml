@@ -7,3 +7,4 @@ resources:
   - ./helm-release.yaml
   - ./external-secret.yaml
   - ./session-secret.yaml
+  - ./keycloak-groups.yaml
