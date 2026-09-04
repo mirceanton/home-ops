@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/arr-hub
-              tag: v0.1.1
+              tag: v0.1.2
 
             env:
               DATABASE_URL: file:/data/app.db
