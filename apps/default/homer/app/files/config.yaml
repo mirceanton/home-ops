@@ -114,7 +114,7 @@ services:
     icon: "fa-solid fa-skull-crossbones"
     items:
       - name: "Downloads Manager"
-        subtitle: "Arr Suite Hub"
+        icon: "fa-solid fa-skull-crossbones"
         url: "https://downloads.home.mirceanton.com"
         target: "_blank"
 
