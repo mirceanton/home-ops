@@ -8,3 +8,4 @@ resources:
   - ./external-secret.yaml
   - ./session-secret.yaml
   - ./keycloak-groups.yaml
+  - ./keycloak-groups-mapper.yaml
