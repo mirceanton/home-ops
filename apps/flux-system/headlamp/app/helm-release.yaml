@@ -22,7 +22,7 @@ spec:
         secret:
           create: false
         issuerURL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-        scopes: "openid,email,profile,groups"
+        scopes: "email,profile,groups"
       extraArgs:
         - -oidc-client-id=$(OIDC_CLIENT_ID)
         - -oidc-client-secret=$(OIDC_CLIENT_SECRET)
