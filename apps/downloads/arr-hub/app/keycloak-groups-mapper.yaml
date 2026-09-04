@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakprotocolmapper_v1beta1.json
+# Without this, Keycloak never includes a "groups" claim in the ID token, so
+# arr-hub's Keycloak group -> role mapping (GROUP_ROLE_MAP) never has anything
+# to match against and role changes never take effect on login.
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakProtocolMapper
+metadata:
+  name: arr-hub-groups
+spec:
+  name: groups
+  clientRef:
+    name: arr-hub
+  definition:
+    protocol: openid-connect
+    protocolMapper: oidc-group-membership-mapper
+    config:
+      claim.name: groups
+      full.path: "false"
+      id.token.claim: "true"
+      access.token.claim: "true"
+      userinfo.token.claim: "true"
