@@ -113,6 +113,11 @@ services:
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
     items:
+      - name: "Downloads Manager"
+        subtitle: "Arr Suite Hub"
+        url: "https://downloads.home.mirceanton.com"
+        target: "_blank"
+
       - name: "Qui"
         subtitle: "Torrent Client"
         url: "https://qui.home.mirceanton.com"
