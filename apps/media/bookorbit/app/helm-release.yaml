@@ -113,7 +113,7 @@ spec:
 
     route:
       home:
-        hostnames: ["bookorbit.home.mirceanton.com", "books.home.mirceanton.com"]
+        hostnames: ["books.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system

@@ -58,7 +58,7 @@ services:
 
       - name: "BookOrbit"
         subtitle: "Book Library"
-        url: "https://bookorbit.home.mirceanton.com"
+        url: "https://books.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/booklore.webp"
 
