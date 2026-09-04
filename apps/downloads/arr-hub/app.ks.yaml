@@ -26,6 +26,10 @@ spec:
       VOLSYNC_CAPACITY: 256Mi
       VOLSYNC_PUID: "1001"
       VOLSYNC_PGID: "1001"
+      #? arr-hub is the landing page for the downloads namespace, not "arr-hub.home.mirceanton.com"
+      KEYCLOAK_CLIENT_HOME_URL: "https://downloads.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URL: "https://downloads.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://downloads.home.mirceanton.com"
 
   decryption: { provider: sops }
   dependsOn:
