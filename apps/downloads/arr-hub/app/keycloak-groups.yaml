@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: arr-admin
+spec:
+  name: arr-admin
+  clusterRealmRef:
+    name: homelab
+  definition: {}
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: arr-requester
+spec:
+  name: arr-requester
+  clusterRealmRef:
+    name: homelab
+  definition: {}
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: arr-viewer
+spec:
+  name: arr-viewer
+  clusterRealmRef:
+    name: homelab
+  definition: {}
