@@ -87,7 +87,7 @@ spec:
 
     route:
       home:
-        hostnames: ["torrent.home.mirceanton.com", "qui.home.mirceanton.com"]
+        hostnames: ["qui.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
