@@ -36,7 +36,7 @@ spec:
               # apps in this namespace — only components/keycloak-client is
               # used, to provision the client-id/secret below.
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
-              OIDC_REDIRECT_URI: "https://${APP}.home.mirceanton.com/api/auth/callback/keycloak"
+              OIDC_REDIRECT_URI: "https://downloads.home.mirceanton.com/api/auth/callback/keycloak"
               OIDC_CLIENT_ID:
                 valueFrom:
                   secretKeyRef:
@@ -130,7 +130,7 @@ spec:
 
     route:
       home:
-        hostnames: ["${APP}.home.mirceanton.com"]
+        hostnames: ["downloads.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
