@@ -32,4 +32,4 @@ releases:
   - name: kube-prometheus-stack
     namespace: monitoring-system
     chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-    version: 89.2.1
+    version: 89.2.2
