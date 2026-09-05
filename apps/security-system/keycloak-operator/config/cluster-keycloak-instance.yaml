@@ -30,14 +30,11 @@ spec:
   definition:
     realm: Homelab
 
-    # NOTE: `definition` is a verbatim passthrough to Keycloak's RealmRepresentation
-    # API - the operator doesn't merge/append into list fields, it replaces them.
-    # `defaultDefaultClientScopes` below is therefore the FULL desired list, not
-    # an addition to it: it must include Keycloak's built-in OIDC defaults
-    # (profile, email, roles, web-origins, acr) or every client in the realm
-    # silently loses them. Double-check these against Client Scopes > Default
-    # in the admin console before merging, in case anything else was added
-    # there manually since.
+    # Defines the "groups" client scope + mapper only - it is NOT added to
+    # defaultDefaultClientScopes here. Assignment happens per-client instead,
+    # via each KeycloakClient's own defaultClientScopes (see the keycloak-client
+    # component), since that applies to existing clients too and doesn't
+    # require keeping this realm-wide list in sync with it.
     clientScopes:
       - name: groups
         protocol: openid-connect
@@ -51,11 +48,3 @@ spec:
               access.token.claim: "true"
               userinfo.token.claim: "true"
               claim.name: groups
-
-    defaultDefaultClientScopes:
-      - profile
-      - email
-      - roles
-      - web-origins
-      - acr
-      - groups
