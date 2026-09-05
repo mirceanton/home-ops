@@ -1,0 +1,96 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app arr-dashboard
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: arr-dashboard
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      arr-dashboard:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: khak1s/arr-dashboard
+              tag: 2.24.1
+
+            env:
+              LOG_LEVEL: info
+              # Public origin arr-dashboard's own OIDC callback + WebAuthn
+              # relying-party logic needs, since this sits behind Envoy
+              # rather than being reached directly.
+              APP_URL: "https://arr-dashboard.home.mirceanton.com"
+
+            probes:
+              liveness: &probe
+                enabled: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 3000
+              readiness: *probe
+              startup:
+                enabled: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        # Rootless mode (see docs/AUTH docker section) - PUID/PGID are
+        # ignored when the container is run as a fixed non-root user.
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["arr-dashboard.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
