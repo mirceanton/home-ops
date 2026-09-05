@@ -28,8 +28,8 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
       CNPG_DATA_STORAGE_SIZE: 8Gi
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://documents.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://documents.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://documents.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://documents.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://documents.home.mirceanton.com"
 
   decryption: { provider: sops }

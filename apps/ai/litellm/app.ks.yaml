@@ -23,8 +23,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://llm.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://llm.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://llm.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://llm.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://llm.home.mirceanton.com"
 
   dependsOn:
