@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakclientscope_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakClientScope
+metadata:
+  name: groups
+spec:
+  name: groups
+  clusterRealmRef:
+    name: homelab
+  definition:
+    protocol: openid-connect
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakprotocolmapper_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakProtocolMapper
+metadata:
+  name: groups
+spec:
+  name: groups
+  clientScopeRef:
+    name: groups
+  definition:
+    protocol: openid-connect
+    protocolMapper: oidc-group-membership-mapper
+    config:
+      full.path: "false"
+      id.token.claim: "true"
+      access.token.claim: "true"
+      userinfo.token.claim: "true"
+      claim.name: groups

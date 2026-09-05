@@ -4,3 +4,4 @@ kind: Kustomization
 
 resources:
   - ./cluster-keycloak-instance.yaml
+  - ./keycloak-groups-scope.yaml
