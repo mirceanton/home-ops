@@ -27,6 +27,9 @@ spec:
     serviceAccountsEnabled: ${KEYCLOAK_CLIENT_SERVICE_ACCOUNTS:-true}
     redirectUris:
       - ${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}
+      #? optional 2nd redirect URI (e.g. a mobile app's custom URI scheme);
+      #? left unset it just repeats the URI above, which Keycloak allows as a duplicate
+      - ${KEYCLOAK_CLIENT_MOBILE_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}
     webOrigins:
       - ${KEYCLOAK_CLIENT_WEB_ORIGIN:-"https://${APP}.home.mirceanton.com"}
     defaultClientScopes: ${KEYCLOAK_CLIENT_DEFAULT_SCOPES:-["profile", "email", "roles", "web-origins", "acr", "groups"]}

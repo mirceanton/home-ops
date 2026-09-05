@@ -34,6 +34,7 @@ spec:
       DRAGONFLY_MEMORY_LIMIT: 64Mi
       DRAGONFLY_PROACTOR_THREADS: "2"
       KEYCLOAK_CLIENT_REDIRECT_URL: "https://photos.home.mirceanton.com/*"
+      KEYCLOAK_CLIENT_MOBILE_REDIRECT_URL: "app.immich:///oauth-callback"
       KEYCLOAK_CLIENT_WEB_ORIGIN: "https://photos.home.mirceanton.com"
       KEYCLOAK_CLIENT_HOME_URL: "https://photos.home.mirceanton.com"
 
