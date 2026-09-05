@@ -29,3 +29,15 @@ spec:
       - ${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}
     webOrigins:
       - ${KEYCLOAK_CLIENT_WEB_ORIGIN:-"https://${APP}.home.mirceanton.com"}
+
+    # NOTE: full replace, not an addition - see the realm's defaultDefaultClientScopes
+    # comment for why. Realm-level defaults only apply to clients created after
+    # they're set, so this is what actually gets every EXISTING client (not just
+    # new ones) the groups claim on the next reconcile.
+    defaultClientScopes:
+      - profile
+      - email
+      - roles
+      - web-origins
+      - acr
+      - groups
