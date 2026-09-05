@@ -30,11 +30,6 @@ spec:
   definition:
     realm: Homelab
 
-    # Defines the "groups" client scope + mapper only - it is NOT added to
-    # defaultDefaultClientScopes here. Assignment happens per-client instead,
-    # via each KeycloakClient's own defaultClientScopes (see the keycloak-client
-    # component), since that applies to existing clients too and doesn't
-    # require keeping this realm-wide list in sync with it.
     clientScopes:
       - name: groups
         protocol: openid-connect
