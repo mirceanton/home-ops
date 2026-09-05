@@ -29,3 +29,4 @@ spec:
       - ${KEYCLOAK_CLIENT_REDIRECT_URL:-"https://${APP}.home.mirceanton.com/*"}
     webOrigins:
       - ${KEYCLOAK_CLIENT_WEB_ORIGIN:-"https://${APP}.home.mirceanton.com"}
+    defaultClientScopes: ${KEYCLOAK_CLIENT_DEFAULT_SCOPES:-["profile", "email", "roles", "web-origins", "acr", "groups"]}
