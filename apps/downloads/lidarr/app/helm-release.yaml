@@ -44,6 +44,7 @@ spec:
               LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
               LIDARR__LOG__DBENABLED: "False"
               LIDARR__LOG__LEVEL: info
+              LIDARR__SERVER__ALLOWEDHOSTS: lidarr.home.mirceanton.com,lidarr,lidarr.downloads.svc.cluster.local
               LIDARR__SERVER__PORT: &port 8686
               LIDARR__UPDATE__BRANCH: develop
 
@@ -55,6 +56,9 @@ spec:
                   httpGet:
                     path: /ping
                     port: *port
+                    httpHeaders:
+                      - name: Host
+                        value: localhost
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
