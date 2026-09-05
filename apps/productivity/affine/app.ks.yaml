@@ -28,8 +28,8 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://notes.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://notes.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://notes.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://notes.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://notes.home.mirceanton.com"
       # Affine's BullMQ queues (doc, indexer, copilot, etc.) each select a
       # different logical redis DB index; the shared dragonfly component

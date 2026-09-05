@@ -24,8 +24,8 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 2Gi
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://homeassistant.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://homeassistant.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://homeassistant.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://homeassistant.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://homeassistant.home.mirceanton.com"
 
   decryption: { provider: sops }

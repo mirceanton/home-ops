@@ -26,8 +26,8 @@ spec:
       APP: grafana
       #? Grafana lives on the "admin" subdomain, not "<app>.home.mirceanton.com"
       KEYCLOAK_CLIENT_HOME_URL: "https://grafana.admin.mirceanton.com"
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://grafana.admin.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://grafana.admin.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://grafana.admin.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://grafana.admin.mirceanton.com"]'
 
   dependsOn:
     #? wait for the 1password-connect secret store to be ready

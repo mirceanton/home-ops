@@ -28,8 +28,8 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
-      KEYCLOAK_CLIENT_REDIRECT_URL: "https://books.home.mirceanton.com/*"
-      KEYCLOAK_CLIENT_WEB_ORIGIN: "https://books.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://books.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://books.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://books.home.mirceanton.com"
 
   decryption: { provider: sops }
