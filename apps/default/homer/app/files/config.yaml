@@ -143,6 +143,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/shelfmark.webp"
 
+      - name: "Bindery"
+        subtitle: "Audiobooks & eBooks"
+        url: "https://bindery.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-book-open"
+
       - name: "Bazarr"
         subtitle: "Subtitles"
         url: "https://bazarr.home.mirceanton.com"

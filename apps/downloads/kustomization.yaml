@@ -8,6 +8,7 @@ resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
   - ./bazarr
+  - ./bindery
   - ./flaresolverr
   - ./lidarr
   - ./prowlarr

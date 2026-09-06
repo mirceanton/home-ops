@@ -1,0 +1,124 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bindery
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: bindery
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      bindery:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+        containers:
+          app:
+            image:
+              repository: ghcr.io/vavallee/bindery
+              tag: 1.34.0@sha256:91f9fcfca1116d5e44090282063fc9c2a6c7283752e1a62df2c5953af4c12faf
+            env:
+              BINDERY_PORT: &port 8787
+              BINDERY_DATA_DIR: /config
+              BINDERY_DB_PATH: /config/bindery.db
+              BINDERY_LOG_LEVEL: info
+              BINDERY_LIBRARY_DIR: /books
+              BINDERY_DOWNLOAD_DIR: /downloads
+              BINDERY_PUID: "568"
+              BINDERY_PGID: "568"
+              # Bindery's own auth (local account / OIDC / proxy) is separate
+              # from the gateway-level OIDC below; this only seeds the initial
+              # API key used by its arr-compatible /api endpoints.
+              BINDERY_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: bindery-secret
+                    key: password
+              # Envoy Gateway is the only ingress path for this pod, so trusting
+              # the whole pod CIDR here is safe — it's how the proxy's own pod IP
+              # reaches this container. Needed for correct X-Forwarded-Proto
+              # handling (cookie Secure flag, OPDS feed URLs).
+              BINDERY_TRUSTED_PROXY: 10.244.0.0/24
+              # OpenLibrary rate-limits by User-Agent; without a distinct contact
+              # the whole Bindery fleet shares one default UA bucket.
+              BINDERY_CONTACT: https://mirceanton.com
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v1/health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      home:
+        hostnames: ["bindery.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      # Same NFS-backed library BookOrbit reads from. Bindery places ebooks
+      # and audiobooks side by side in one folder here (BINDERY_AUDIOBOOK_DIR
+      # left unset falls back to this path) — BookOrbit picks up whatever
+      # lands there without any extra wiring.
+      books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        globalMounts:
+          - path: /books
+      downloads:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/scratch/Torrent_Downloads
+        globalMounts:
+          - path: /downloads
+      tmp:
+        type: emptyDir
