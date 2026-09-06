@@ -39,7 +39,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: chaptarr-secret
-                    key: api_key
+                    key: password
               CHAPTARR__AUTH__METHOD: External
               CHAPTARR__AUTH__REQUIRED: DisabledForLocalAddresses
               CHAPTARR__LOG__DBENABLED: "False"
