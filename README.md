@@ -150,7 +150,7 @@ flowchart TB
 flowchart LR
     Dev([Developer]) -->|"git push / PR"| GH[("GitHub\nmirceanton/home-ops")]
 
-    GH -->|"PR opened"| Flate["Flate CI\n(diff preview via\ndownflate/konflate)"]
+    GH -->|"PR opened"| Flate["Flate CI\n(diff preview via\nkonflate)"]
     GH -->|"push to main"| Lint["Lint CI\n(task lint:check)"]
 
     GH -->|"poll every 5m"| SC["source-controller\n(GitRepository)"]
