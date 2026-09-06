@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: chaptarr
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: chaptarr
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
+    controllers:
+      chaptarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+        containers:
+          app:
+            image:
+              repository: docker.io/chaptarr/chaptarr
+              tag: 0.9.958@sha256:941effc0c12c632328c1d6bb032b5e5687a87a8fbe0e37241bcf876e6d4bf868
+            env:
+              CHAPTARR__APP__INSTANCENAME: Chaptarr
+              CHAPTARR__AUTH__APIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: chaptarr-secret
+                    key: api_key
+              CHAPTARR__AUTH__METHOD: External
+              CHAPTARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              CHAPTARR__LOG__DBENABLED: "False"
+              CHAPTARR__LOG__LEVEL: info
+              CHAPTARR__SERVER__ALLOWEDHOSTS: chaptarr.home.mirceanton.com,chaptarr,chaptarr.downloads.svc.cluster.local
+              CHAPTARR__SERVER__PORT: &port 8789
+              CHAPTARR__UPDATE__BRANCH: develop
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                    httpHeaders:
+                      - name: Host
+                        value: localhost
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 20m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      home:
+        hostnames: ["chaptarr.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      # Same NFS-backed library BookOrbit reads from, mounted under both
+      # Chaptarr root-folder paths — Chaptarr can place eBooks and
+      # audiobooks for the same title side by side, and BookOrbit picks
+      # up whatever lands there without any extra wiring.
+      books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        globalMounts:
+          - path: /audiobooks
+          - path: /ebooks
+      downloads:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/scratch/Torrent_Downloads
+        globalMounts:
+          - path: /downloads
+      tmp:
+        type: emptyDir
