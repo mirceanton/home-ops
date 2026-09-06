@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/arr-hub
-              tag: v0.6.0
+              tag: v0.7.0
 
             env:
               DATABASE_URL: file:/data/app.db
@@ -84,6 +84,20 @@ spec:
                   secretKeyRef:
                     name: arr-hub-secret
                     key: PROWLARR_API_KEY
+
+              # Power the "More like this" recommendations panel — TMDB for
+              # movies/shows, Last.fm for artists. Both are optional in the
+              # app itself, but wired here so the feature is live.
+              TMDB_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: TMDB_API_KEY
+              LASTFM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: arr-hub-secret
+                    key: LASTFM_API_KEY
 
             probes:
               liveness:
