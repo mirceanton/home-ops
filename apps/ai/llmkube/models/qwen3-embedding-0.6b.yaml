@@ -36,6 +36,8 @@ spec:
   uBatchSize: 2048
   extraArgs:
     - "--embeddings"
+    - "--cache-ram"
+    - "0" # disable prompt caching; default 8Gi cache exceeds the pod's memory limit and causes OOMKilled
 
   resources:
     cpu: 500m
