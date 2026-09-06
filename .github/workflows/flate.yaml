@@ -13,34 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  downflate:
-    name: Trigger Downflate
-    # Runs on the in-cluster self-hosted runner (infra-runners scale set) so it
-    # can reach downflate's ClusterIP directly, instead of downflate needing a
-    # public endpoint for GitHub to deliver a real webhook to. Also lets it
-    # reach the in-cluster 1Password Connect server directly.
-    runs-on: infra-runners
-    steps:
-      - name: Load webhook secret from 1Password
-        uses: 1password/load-secrets-action@70062d7a876d3eb6334754fa26efd2fbd90c32f2 # v5.0.1
-        with:
-          export-env: true
-        env:
-          OP_CONNECT_HOST: ${{ secrets.OP_CONNECT_HOST }}
-          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
-          DOWNFLATE_WEBHOOK_SECRET: op://kubernetes-home-ops/Downflate - Webhook Secret/password
-
-      - name: Send pull_request event to downflate
-        env:
-          PAYLOAD: ${{ toJSON(github.event) }}
-        run: |
-          SIGNATURE="sha256=$(printf '%s' "$PAYLOAD" | openssl dgst -sha256 -hmac "$DOWNFLATE_WEBHOOK_SECRET" | sed 's/^.* //')"
-          curl -sf -X POST "http://downflate.github-actions.svc.cluster.local:8080/hooks" \
-            -H "Content-Type: application/json" \
-            -H "X-GitHub-Event: pull_request" \
-            -H "X-Hub-Signature-256: $SIGNATURE" \
-            --data "$PAYLOAD"
-
   konflate:
     name: Trigger Konflate
     # Runs on the in-cluster self-hosted runner (infra-runners scale set) so it
