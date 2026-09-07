@@ -143,6 +143,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/shelfmark.webp"
 
+      - name: "Readarr"
+        subtitle: "Audiobooks & eBooks"
+        url: "https://readarr.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/readarr.webp"
+
       - name: "Bazarr"
         subtitle: "Subtitles"
         url: "https://bazarr.home.mirceanton.com"
