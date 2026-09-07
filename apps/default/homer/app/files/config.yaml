@@ -145,9 +145,9 @@ services:
 
       - name: "Bookshelf"
         subtitle: "Audiobooks & eBooks"
-        url: "https://bookshelf.home.mirceanton.com"
+        url: "https://readarr.home.mirceanton.com"
         target: "_blank"
-        icon: "fas fa-book"
+        logo: "assets/icons/webp/readarr.webp"
 
       - name: "Bazarr"
         subtitle: "Subtitles"

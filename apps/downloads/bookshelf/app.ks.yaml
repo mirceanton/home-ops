@@ -28,6 +28,11 @@ spec:
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      # Bookshelf is the canonical Readarr-family instance in this cluster —
+      # give it the readarr.* hostname instead of its own app name.
+      KEYCLOAK_CLIENT_HOME_URL: "https://readarr.home.mirceanton.com"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://readarr.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://readarr.home.mirceanton.com"]'
 
   dependsOn:
     - name: 1password-connect

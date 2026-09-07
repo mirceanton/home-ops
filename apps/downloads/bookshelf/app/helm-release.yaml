@@ -93,7 +93,7 @@ spec:
             port: *port
     route:
       home:
-        hostnames: ["bookshelf.home.mirceanton.com"]
+        hostnames: ["readarr.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
