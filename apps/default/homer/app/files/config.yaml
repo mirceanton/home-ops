@@ -143,6 +143,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/shelfmark.webp"
 
+      - name: "Bookshelf"
+        subtitle: "Audiobooks & eBooks"
+        url: "https://bookshelf.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-book"
+
       - name: "Bazarr"
         subtitle: "Subtitles"
         url: "https://bazarr.home.mirceanton.com"

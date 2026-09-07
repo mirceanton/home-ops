@@ -1,0 +1,122 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: bookshelf
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: bookshelf
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+
+    controllers:
+      bookshelf:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 568
+            runAsNonRoot: true
+            runAsUser: 568
+        containers:
+          app:
+            image:
+              repository: ghcr.io/pennydreadful/bookshelf
+              tag: hardcover-v0.4.20.129@sha256:388eecc94362580eae31ee0a454be6af516f8a311f8432a521c202fb475f4359
+            # This image ships LSIO's s6-overlay init (root-owned chown steps,
+            # PUID/PGID handling) which doesn't work under a non-root pod
+            # securityContext. Bypass it entirely and exec the app binary
+            # directly, same as the one other known in-the-wild k8s deploy
+            # of this image (kondanta/homelab) does.
+            command:
+              - /usr/bin/catatonit
+              - --
+              - /app/readarr/bin/Readarr
+              - --nobrowser
+              - --data=/config
+            env:
+              READARR__APP__INSTANCENAME: Bookshelf
+              READARR__AUTH__APIKEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: bookshelf-secret
+                    key: password
+              READARR__AUTH__METHOD: External
+              READARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              READARR__LOG__LEVEL: info
+              READARR__SERVER__PORT: &port 8787
+              READARR__UPDATE__BRANCH: develop
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                    httpHeaders:
+                      - name: Host
+                        value: localhost
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            resources:
+              requests:
+                cpu: 20m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop: ["ALL"]
+
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      home:
+        hostnames: ["bookshelf.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /config
+      # Same NFS-backed library BookOrbit/Chaptarr read from, mounted under
+      # both root-folder paths.
+      books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        globalMounts:
+          - path: /audiobooks
+          - path: /ebooks
+      downloads:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/scratch/Torrent_Downloads
+        globalMounts:
+          - path: /downloads
+      tmp:
+        type: emptyDir
