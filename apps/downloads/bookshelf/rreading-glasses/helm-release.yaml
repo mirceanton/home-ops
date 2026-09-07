@@ -28,8 +28,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          # CNPG's Database CR creates the DB/owner async — block until the
-          # app's own database is actually reachable, same pattern as atuin.
           wait-for-postgres:
             image:
               repository: ghcr.io/wait4x/wait4x
@@ -99,7 +97,6 @@ spec:
               capabilities:
                 drop: ["ALL"]
 
-    # Internal-only metadata bridge for Bookshelf — no ingress route, no OIDC.
     service:
       app:
         ports:

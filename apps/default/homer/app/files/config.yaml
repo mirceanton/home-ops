@@ -143,7 +143,7 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/shelfmark.webp"
 
-      - name: "Bookshelf"
+      - name: "Readarr"
         subtitle: "Audiobooks & eBooks"
         url: "https://readarr.home.mirceanton.com"
         target: "_blank"

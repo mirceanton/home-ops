@@ -3,12 +3,12 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: bookshelf
+  name: readarr
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: bookshelf
+    name: readarr
 
   values:
     global:
@@ -18,7 +18,7 @@ spec:
       automountServiceAccountToken: false
 
     controllers:
-      bookshelf:
+      readarr:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
@@ -33,11 +33,6 @@ spec:
             image:
               repository: ghcr.io/pennydreadful/bookshelf
               tag: hardcover-v0.4.20.129@sha256:388eecc94362580eae31ee0a454be6af516f8a311f8432a521c202fb475f4359
-            # This image ships LSIO's s6-overlay init (root-owned chown steps,
-            # PUID/PGID handling) which doesn't work under a non-root pod
-            # securityContext. Bypass it entirely and exec the app binary
-            # directly, same as the one other known in-the-wild k8s deploy
-            # of this image (kondanta/homelab) does.
             command:
               - /usr/bin/catatonit
               - --
@@ -45,11 +40,11 @@ spec:
               - --nobrowser
               - --data=/config
             env:
-              READARR__APP__INSTANCENAME: Bookshelf
+              READARR__APP__INSTANCENAME: Readarr
               READARR__AUTH__APIKEY:
                 valueFrom:
                   secretKeyRef:
-                    name: bookshelf-secret
+                    name: readarr-secret
                     key: password
               READARR__AUTH__METHOD: External
               READARR__AUTH__REQUIRED: DisabledForLocalAddresses
@@ -103,8 +98,6 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      # Same NFS-backed library BookOrbit/Chaptarr read from, mounted under
-      # both root-folder paths.
       books:
         type: nfs
         server: nas.stor.h.mirceanton.com
@@ -120,9 +113,6 @@ spec:
           - path: /downloads
       tmp:
         type: emptyDir
-      # The image bakes TMPDIR=/run/readarr-temp (used for e.g. scheduled
-      # backups) — mount it explicitly, otherwise it's read-only rootfs and
-      # the Backup task fails every cycle.
       run-temp:
         type: emptyDir
         globalMounts:
