@@ -120,3 +120,10 @@ spec:
           - path: /downloads
       tmp:
         type: emptyDir
+      # The image bakes TMPDIR=/run/readarr-temp (used for e.g. scheduled
+      # backups) — mount it explicitly, otherwise it's read-only rootfs and
+      # the Backup task fails every cycle.
+      run-temp:
+        type: emptyDir
+        globalMounts:
+          - path: /run/readarr-temp
