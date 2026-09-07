@@ -14,6 +14,7 @@ resources:
   - ./qbittorrent
   - ./qui
   - ./radarr
+  - ./rreading-glasses
   - ./shelfmark
   - ./sonarr
   - ./streamarr
