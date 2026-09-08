@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: docker.io/jgraph/drawio
-              tag: 31.4.4
+              tag: 31.4.5
             probes:
               liveness:
                 enabled: true
