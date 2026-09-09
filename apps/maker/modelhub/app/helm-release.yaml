@@ -36,7 +36,6 @@ spec:
               tag: v0.15.0
 
             env:
-              PORT: &port 4000
               # UID 568 has no /etc/passwd entry in the image (only 1001/
               # pwuser does) — Chromium does getpwuid()-style lookups for
               # its profile dir, so HOME must be set explicitly or it can
@@ -52,14 +51,28 @@ spec:
               GIT_CONFIG_COUNT: "1"
               GIT_CONFIG_KEY_0: safe.directory
               GIT_CONFIG_VALUE_0: "*"
+
+              # Library and Sync
               LIBRARY_ROOT: /library
-              DATABASE_PATH: /data/modelhub.sqlite3
+              LIBRARY_WATCH_ENABLED: "true"
               LIBRARY_WATCH_USE_POLLING: "true" #? library is an NFS mount; inotify is unreliable across NFS
+
+              # Server
+              DATABASE_PATH: /data/modelhub.sqlite3
+              PORT: &port 4000
+              LOG_LEVEL: info
+
+              # Thumbnails
               WEB_BASE_URL: https://modelhub.home.mirceanton.com
+              THUMBNAIL_CONCURRENCY: "2" #? limit concurrent thumbnail generation to avoid OOMs
 
               # OIDC / Keycloak SSO
               OIDC_ISSUER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+              OIDC_GROUPS_CLAIM: groups
+              OIDC_DEFAULT_ROLE: "deny"
               OIDC_ADMIN_GROUPS: modelhub-admins
+              OIDC_EDITOR_GROUPS: modelhub-editors
+              OIDC_READONLY_GROUPS: modelhub-readonly
               OIDC_CLIENT_ID:
                 valueFrom:
                   secretKeyRef:
