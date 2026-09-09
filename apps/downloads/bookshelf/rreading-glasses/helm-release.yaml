@@ -43,7 +43,7 @@ spec:
           app:
             image:
               repository: docker.io/blampe/rreading-glasses
-              tag: hardcover@sha256:6db4551f77c038516b55dab689f3b473c2c5fdf8f13580b91a8ba39360c3d107
+              tag: hardcover@sha256:3f017a51d9007b715303a20f481c822e4df66485fc9e5f57f6fdf1de840dc02f
             command: ["/main", "serve"]
             args: ["--verbose"]
             env:
