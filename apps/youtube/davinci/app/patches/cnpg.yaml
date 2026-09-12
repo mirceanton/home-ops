@@ -14,6 +14,6 @@ spec:
               name: ${APP}-postgres-lb
               annotations:
                 lbipam.cilium.io/ips: 10.0.10.251
-                external-dns.alpha.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
+                external-dns.kubernetes.io/hostname: davinci-pg.home.mirceanton.com
             spec:
               type: LoadBalancer
