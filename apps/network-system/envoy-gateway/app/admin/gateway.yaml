@@ -5,7 +5,7 @@ kind: Gateway
 metadata:
   name: envoy-admin
   annotations:
-    external-dns.alpha.kubernetes.io/target: &loadbalancerIP 10.0.0.250
+    external-dns.kubernetes.io/target: &loadbalancerIP 10.0.0.250
 spec:
   gatewayClassName: envoy-admin
 
