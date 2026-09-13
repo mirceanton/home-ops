@@ -133,6 +133,13 @@ spec:
         globalMounts:
           - path: /data
 
+      library:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Apps/Immich
+        globalMounts:
+          - path: /data/library
+
       config-template:
         type: configMap
         name: immich-config-template
