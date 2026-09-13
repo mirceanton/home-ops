@@ -60,18 +60,19 @@ spec:
                   secretKeyRef: { name: miniflux-postgres-app, key: uri }
               RUN_MIGRATIONS: "1"
 
-              # Bootstrap-only local admin. Local login stays enabled just
-              # long enough to sign in once and link this account to
-              # Keycloak under Settings > "Connect" - after that, flip
-              # DISABLE_LOCAL_AUTH to "1" and redeploy. Miniflux has no way
-              # to mark an OIDC-created user as admin automatically, so this
-              # local account is the only path to admin rights.
+              # Local admin, bootstrapped once and linked to Keycloak under
+              # Settings > "Connect" - Miniflux has no way to mark an
+              # OIDC-created user as admin automatically, so this was the
+              # only path to admin rights. Kept only as a disaster-recovery
+              # fallback: Miniflux blocks local login entirely while
+              # DISABLE_LOCAL_AUTH is set, so flip it to "0" temporarily if
+              # OIDC login ever breaks.
               CREATE_ADMIN: "1"
               ADMIN_USERNAME: "admin"
               ADMIN_PASSWORD:
                 valueFrom:
                   secretKeyRef: { name: miniflux-admin-secret, key: password }
-              DISABLE_LOCAL_AUTH: "0"
+              DISABLE_LOCAL_AUTH: "1"
 
               OAUTH2_PROVIDER: "oidc"
               OAUTH2_OIDC_PROVIDER_NAME: "Keycloak"
