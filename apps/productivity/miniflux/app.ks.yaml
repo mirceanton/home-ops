@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app miniflux
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: productivity
+
+  path: ./apps/productivity/miniflux/app
+  components:
+    - ../../../../components/cnpg/
+    - ../../../../components/keycloak-client/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://rss.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://rss.home.mirceanton.com"]'
+      KEYCLOAK_CLIENT_HOME_URL: "https://rss.home.mirceanton.com"
+
+  dependsOn:
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: keycloak-operator-config
+      namespace: security-system
