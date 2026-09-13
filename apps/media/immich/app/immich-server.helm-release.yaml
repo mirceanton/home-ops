@@ -140,6 +140,13 @@ spec:
         globalMounts:
           - path: /data/library
 
+      external:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Photos
+        globalMounts:
+          - path: /mnt/external
+
       config-template:
         type: configMap
         name: immich-config-template
