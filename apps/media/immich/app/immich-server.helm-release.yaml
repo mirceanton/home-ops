@@ -31,6 +31,17 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          init-backups-marker:
+            image:
+              repository: ghcr.io/home-operations/busybox
+              tag: 1.38.0
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                mkdir -p /data/backups
+                [ -f /data/backups/.immich ] || date +%s%3N > /data/backups/.immich
           wait-for-postgres:
             image:
               repository: ghcr.io/wait4x/wait4x
