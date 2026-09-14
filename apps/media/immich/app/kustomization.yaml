@@ -6,6 +6,7 @@ resources:
   - ./oci-repository.yaml
   - ./immich-server.helm-release.yaml
   - ./immich-ml.helm-release.yaml
+  - ./cache.pvc.yaml
 
 patchesStrategicMerge:
   - ./patches/cnpg.yaml
