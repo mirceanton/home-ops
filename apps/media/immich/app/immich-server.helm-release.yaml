@@ -133,6 +133,11 @@ spec:
         globalMounts:
           - path: /data
 
+      backups:
+        type: emptyDir
+        globalMounts:
+          - path: /data/backups
+
       library:
         type: nfs
         server: nas.stor.h.mirceanton.com
