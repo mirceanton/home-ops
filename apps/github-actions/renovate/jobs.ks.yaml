@@ -21,9 +21,6 @@ spec:
   postBuild:
     substitute:
       APP: renovate
-      DRAGONFLY_CPU_REQUEST: 100m
-      DRAGONFLY_MEMORY_REQUEST: 256Mi
-      DRAGONFLY_MEMORY_LIMIT: 256Mi
 
   dependsOn:
     - name: renovate-operator
