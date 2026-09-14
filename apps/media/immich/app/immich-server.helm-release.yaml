@@ -139,10 +139,21 @@ spec:
             namespace: network-system
 
     persistence:
-      data:
+      local:
         existingClaim: ${APP}
         globalMounts:
-          - path: /data
+          - path: /data/upload
+            subPath: upload
+          - path: /data/profile
+            subPath: profile
+
+      cache:
+        existingClaim: immich-cache
+        globalMounts:
+          - path: /data/thumbs
+            subPath: thumbs
+          - path: /data/encoded-video
+            subPath: encoded-video
 
       backups:
         type: emptyDir
