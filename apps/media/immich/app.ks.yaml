@@ -29,10 +29,6 @@ spec:
       CNPG_CPU_REQUEST: 1000m
       CNPG_MEMORY_REQUEST: 4Gi
       CNPG_MEMORY_LIMIT: 4Gi
-      DRAGONFLY_CPU_REQUEST: 18m
-      DRAGONFLY_MEMORY_REQUEST: 32Mi
-      DRAGONFLY_MEMORY_LIMIT: 64Mi
-      DRAGONFLY_PROACTOR_THREADS: "2"
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://photos.home.mirceanton.com/*", "app.immich:///oauth-callback"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://photos.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://photos.home.mirceanton.com"
