@@ -40,10 +40,10 @@ spec:
 
   resources:
     requests:
-      cpu: ${CNPG_CPU_REQUEST:-100m}
+      cpu: ${CNPG_CPU_REQUEST:-20m}
       memory: ${CNPG_MEMORY_REQUEST:-256Mi}
     limits:
-      memory: ${CNPG_MEMORY_LIMIT:-512Mi}
+      memory: ${CNPG_MEMORY_LIMIT:-2Gi}
 
   postgresql:
     pg_hba:
