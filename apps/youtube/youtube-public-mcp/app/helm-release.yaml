@@ -41,11 +41,6 @@ spec:
                   secretKeyRef:
                     name: youtube-public-mcp-secret
                     key: YOUTUBE_API_KEY
-              MCP_API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: youtube-public-mcp-secret
-                    key: MCP_API_KEY
 
             probes:
               liveness: &probes

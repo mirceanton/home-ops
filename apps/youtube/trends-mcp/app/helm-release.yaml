@@ -79,6 +79,7 @@ spec:
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
+        fsGroup: 101
         fsGroupChangePolicy: OnRootMismatch
 
     service:
