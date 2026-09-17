@@ -1,0 +1,111 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app trends-mcp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: trends-mcp
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      trends-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            # supergateway bridges the HasData Google Trends MCP (an
+            # npm stdio launcher, @hasdata/google-trends-mcp) to
+            # streamable HTTP so it's reachable like the other two
+            # servers. No published container wraps that launcher
+            # directly, so we run supergateway's own published image
+            # and hand it the npx command to spawn.
+            image:
+              repository: docker.io/supercorp/supergateway
+              tag: latest
+
+            # The image's entrypoint IS the supergateway binary — args
+            # go straight to it, no need to re-invoke via npx.
+            args:
+              - "--stdio"
+              - "npx -y @hasdata/google-trends-mcp"
+              - "--port"
+              - "8000"
+              - "--host"
+              - "0.0.0.0"
+
+            env:
+              HASDATA_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: trends-mcp-secret
+                    key: HASDATA_API_KEY
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            # supergateway spawns a child npm process via npx at runtime
+            # (it isn't vendored in the image), so this can't run with a
+            # read-only rootfs — npm needs to write its cache/install.
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: trends-mcp
+        ports:
+          http:
+            port: 8000
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      npm-cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.npm

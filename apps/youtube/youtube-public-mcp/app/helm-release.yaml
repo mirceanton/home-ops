@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app youtube-public-mcp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: youtube-public-mcp
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      youtube-public-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            # NOTE: image/env names inferred from this author's sibling
+            # project (edupage-mcp) which shares the same MCP_TRANSPORT /
+            # MCP_HOST / MCP_PORT / MCP_API_KEY scheme. Verify against
+            # https://github.com/oliverhruby/youtube-mcp README before
+            # the first `flux reconcile` — adjust if it differs.
+            image:
+              repository: ghcr.io/oliverhruby/youtube-mcp
+              tag: latest
+
+            env:
+              MCP_TRANSPORT: streamable-http
+              MCP_HOST: 0.0.0.0
+              MCP_PORT: "8000"
+              YOUTUBE_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: youtube-public-mcp-secret
+                    key: YOUTUBE_API_KEY
+              MCP_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: youtube-public-mcp-secret
+                    key: MCP_API_KEY
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: youtube-public-mcp
+        ports:
+          http:
+            port: 8000
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
