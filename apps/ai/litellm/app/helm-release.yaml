@@ -6,6 +6,14 @@ metadata:
   name: litellm
 spec:
   interval: 10m
+  # Default 5m Helm action timeout is too tight now: the
+  # mcp_semantic_tool_filter embeds every registered MCP tool at startup
+  # before the app opens its port, and the youtube_public/youtube_analytics
+  # servers alone add ~250 tools (680-786 total vs ~539 before), pushing a
+  # cold start past 5 minutes. Observed one upgrade take ~5m13s wall clock
+  # and get marked Failed by Helm's timeout despite the Deployment coming
+  # up healthy moments later.
+  timeout: 10m
   chartRef:
     kind: OCIRepository
     name: litellm
