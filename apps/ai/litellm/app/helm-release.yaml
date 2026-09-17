@@ -69,6 +69,11 @@ spec:
                   secretKeyRef:
                     name: litellm-secret
                     key: AFFINE_MCP_TOKEN
+              YOUTUBE_ANALYTICS_MCP_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: litellm-secret
+                    key: YOUTUBE_ANALYTICS_MCP_TOKEN
               QWEN_KEY:
                 valueFrom:
                   secretKeyRef:

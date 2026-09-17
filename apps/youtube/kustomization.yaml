@@ -6,5 +6,8 @@ namespace: youtube
 
 resources:
   - ./namespace.yaml
+  - ./channel-analytics-mcp
   - ./davinci
   - ./teleprompter
+  - ./trends-mcp
+  - ./youtube-public-mcp

@@ -1,0 +1,112 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app channel-analytics-mcp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: channel-analytics-mcp
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      channel-analytics-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            # Same image as youtube-public-mcp, run as a second instance
+            # so the OAuth-bearing (write-capable at the tool level)
+            # credentials never share a pod with the API-key-only,
+            # inherently-read-only public-data server. Env var names
+            # confirmed by reading src/youtube_mcp/__init__.py directly
+            # (github.com/oliverhruby/youtube-mcp) — no "OAUTH_" infix.
+            image:
+              repository: ghcr.io/oliverhruby/youtube-mcp
+              tag: latest
+
+            env:
+              MCP_TRANSPORT: streamable-http
+              MCP_HOST: 0.0.0.0
+              MCP_PORT: "8000"
+              YOUTUBE_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: channel-analytics-mcp-secret
+                    key: YOUTUBE_CLIENT_ID
+              YOUTUBE_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: channel-analytics-mcp-secret
+                    key: YOUTUBE_CLIENT_SECRET
+              YOUTUBE_REFRESH_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: channel-analytics-mcp-secret
+                    key: YOUTUBE_REFRESH_TOKEN
+              MCP_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: channel-analytics-mcp-secret
+                    key: MCP_API_KEY
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8000
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: channel-analytics-mcp
+        ports:
+          http:
+            port: 8000
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

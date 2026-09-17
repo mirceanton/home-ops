@@ -1,0 +1,120 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app trends-mcp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: trends-mcp
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      trends-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          # There is no local, self-hosted Google Trends MCP worth running
+          # (unofficial scrapers break whenever Google tweaks the internal
+          # endpoints) — every option surveyed, including this one, is a
+          # thin client to a hosted API. @hasdata/google-trends-mcp itself
+          # is literally an mcp-remote stdio bridge to
+          # https://mcp.hasdata.com/api/mcp?apis=google_trends, so running
+          # it in-cluster would just be a redundant second bridge. Instead
+          # this is a plain nginx reverse proxy to that same endpoint,
+          # injecting the x-api-key header server-side (mirrors
+          # apps/ai/github-mcp's nginx pattern) so the HasData key never
+          # has to live in every agent's own MCP client config.
+          app:
+            image:
+              repository: docker.io/nginxinc/nginx-unprivileged
+              tag: 1.31-alpine
+
+            command: ["sh", "/scripts/entrypoint.sh"]
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 8080
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healthz
+                    port: 8080
+                  failureThreshold: 30
+                  periodSeconds: 5
+
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+
+            securityContext:
+              runAsUser: 101
+              runAsGroup: 101
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        controller: trends-mcp
+        ports:
+          http:
+            port: 8080
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+
+      hasdata-key:
+        type: secret
+        name: trends-mcp-secret
+        defaultMode: 0400
+        globalMounts:
+          - path: /run/secrets/trends-mcp
+            readOnly: true
+
+      nginx-conf:
+        type: configMap
+        name: trends-mcp-nginx-config
+        globalMounts:
+          - path: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            readOnly: true
+          - path: /scripts/entrypoint.sh
+            subPath: entrypoint.sh
+            readOnly: true
+
+      nginx-dynamic:
+        type: emptyDir
+        globalMounts:
+          - path: /etc/nginx/dynamic

@@ -123,6 +123,17 @@ mcp_servers:
     url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
     transport: sse
 
+  youtube_public:
+    url: "http://youtube-public-mcp.youtube.svc.cluster.local:8000/mcp"
+
+  youtube_analytics:
+    url: "http://channel-analytics-mcp.youtube.svc.cluster.local:8000/mcp"
+    auth_type: bearer_token
+    auth_value: os.environ/YOUTUBE_ANALYTICS_MCP_TOKEN
+
+  youtube_trends:
+    url: "http://trends-mcp.youtube.svc.cluster.local:8080/mcp"
+
 router_settings:
   model_group_alias:
     affine: qwen3.7-plus
