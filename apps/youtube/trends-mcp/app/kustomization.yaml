@@ -6,3 +6,13 @@ resources:
   - ./external-secret.yaml
   - ./oci-repository.yaml
   - ./helm-release.yaml
+
+configMapGenerator:
+  - name: trends-mcp-nginx-config
+    options:
+      disableNameSuffixHash: true
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
+    files:
+      - nginx.conf=./files/nginx.conf
+      - entrypoint.sh=./files/entrypoint.sh

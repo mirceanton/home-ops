@@ -20,11 +20,14 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            # NOTE: image/env names inferred from this author's sibling
-            # project (edupage-mcp) which shares the same MCP_TRANSPORT /
-            # MCP_HOST / MCP_PORT / MCP_API_KEY scheme. Verify against
-            # https://github.com/oliverhruby/youtube-mcp README before
-            # the first `flux reconcile` — adjust if it differs.
+            # Env var names confirmed by reading
+            # src/youtube_mcp/__init__.py directly (both the README and
+            # the source agree): MCP_TRANSPORT accepts stdio/sse/
+            # streamable-http, defaults for MCP_HOST/MCP_PORT are
+            # 0.0.0.0/8000, and providing only YOUTUBE_API_KEY (no OAuth
+            # vars) means every write-shaped generated tool still exists
+            # but 403s against Google — the key itself is the read-only
+            # boundary here.
             image:
               repository: ghcr.io/oliverhruby/youtube-mcp
               tag: latest

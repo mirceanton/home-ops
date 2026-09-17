@@ -23,12 +23,9 @@ spec:
             # Same image as youtube-public-mcp, run as a second instance
             # so the OAuth-bearing (write-capable at the tool level)
             # credentials never share a pod with the API-key-only,
-            # inherently-read-only public-data server.
-            # NOTE: OAuth env var names are a best guess (mirrors the
-            # CLIENT_ID/CLIENT_SECRET/REFRESH_TOKEN convention used by
-            # comparable projects) — confirm against
-            # https://github.com/oliverhruby/youtube-mcp README and
-            # adjust before first reconcile.
+            # inherently-read-only public-data server. Env var names
+            # confirmed by reading src/youtube_mcp/__init__.py directly
+            # (github.com/oliverhruby/youtube-mcp) — no "OAUTH_" infix.
             image:
               repository: ghcr.io/oliverhruby/youtube-mcp
               tag: latest
@@ -37,21 +34,21 @@ spec:
               MCP_TRANSPORT: streamable-http
               MCP_HOST: 0.0.0.0
               MCP_PORT: "8000"
-              YOUTUBE_OAUTH_CLIENT_ID:
+              YOUTUBE_CLIENT_ID:
                 valueFrom:
                   secretKeyRef:
                     name: channel-analytics-mcp-secret
-                    key: YOUTUBE_OAUTH_CLIENT_ID
-              YOUTUBE_OAUTH_CLIENT_SECRET:
+                    key: YOUTUBE_CLIENT_ID
+              YOUTUBE_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
                     name: channel-analytics-mcp-secret
-                    key: YOUTUBE_OAUTH_CLIENT_SECRET
-              YOUTUBE_OAUTH_REFRESH_TOKEN:
+                    key: YOUTUBE_CLIENT_SECRET
+              YOUTUBE_REFRESH_TOKEN:
                 valueFrom:
                   secretKeyRef:
                     name: channel-analytics-mcp-secret
-                    key: YOUTUBE_OAUTH_REFRESH_TOKEN
+                    key: YOUTUBE_REFRESH_TOKEN
               MCP_API_KEY:
                 valueFrom:
                   secretKeyRef:
