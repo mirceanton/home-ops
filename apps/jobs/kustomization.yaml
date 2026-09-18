@@ -6,5 +6,7 @@ namespace: jobs
 
 resources:
   - ./namespace.yaml
+  - ./argo-workflows
   - ./crd-schema-publisher
   - ./etcd-defrag
+  - ./hello-world
