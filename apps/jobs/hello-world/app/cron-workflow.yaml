@@ -1,0 +1,66 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/argoproj.io/cronworkflow_v1alpha1.json
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: hello-world
+spec:
+  schedule: "0 * * * *" # hourly, on the hour
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+
+  workflowSpec:
+    entrypoint: main
+    podGC: { strategy: OnWorkflowSuccess }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 65534
+      runAsGroup: 65534
+      fsGroup: 65534
+      seccompProfile: { type: RuntimeDefault }
+
+    templates:
+      - name: main
+        dag:
+          tasks:
+            - name: step-a
+              template: echo
+              arguments:
+                parameters:
+                  - { name: message, value: "step-a: this would fetch/list the work to do" }
+
+            - name: step-b
+              template: echo
+              dependencies: [step-a]
+              arguments:
+                parameters:
+                  - { name: message, value: "step-b: parallel branch 1 (e.g. process batch A)" }
+
+            - name: step-c
+              template: echo
+              dependencies: [step-a]
+              arguments:
+                parameters:
+                  - { name: message, value: "step-c: parallel branch 2 (e.g. process batch B)" }
+
+      - name: echo
+        inputs:
+          parameters:
+            - name: message
+        container:
+          image: alpine:3
+          command: ["sh", "-c"]
+          args: ["echo '{{inputs.parameters.message}}'"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
