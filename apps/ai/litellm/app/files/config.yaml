@@ -123,13 +123,26 @@ mcp_servers:
     url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
     transport: sse
 
+  # disallowed_tools drops the interactive OAuth flow tools: both servers
+  # already carry working credentials via env vars (YOUTUBE_API_KEY /
+  # YOUTUBE_CLIENT_ID+SECRET+REFRESH_TOKEN), but auth_status's
+  # session_active field reads as "not authenticated" to an agent even
+  # though the data tools never check it — they read the env vars
+  # directly and just work. Without this, an agent that calls
+  # auth_status first reaches for auth_start and starts an unnecessary
+  # (and non-interactive-session-breaking) OAuth consent flow instead of
+  # just calling get_my_channel/analytics_query/etc. auth_status and
+  # auth_clear stay: harmless, and auth_clear is the escape hatch if a
+  # pending state gets stuck again.
   youtube_public:
     url: "http://youtube-public-mcp.youtube.svc.cluster.local:8000/mcp"
+    disallowed_tools: ["auth_start", "auth_poll", "auth_finish", "auth_refresh"]
 
   youtube_analytics:
     url: "http://channel-analytics-mcp.youtube.svc.cluster.local:8000/mcp"
     auth_type: bearer_token
     auth_value: os.environ/YOUTUBE_ANALYTICS_MCP_TOKEN
+    disallowed_tools: ["auth_start", "auth_poll", "auth_finish", "auth_refresh"]
 
   youtube_trends:
     url: "http://trends-mcp.youtube.svc.cluster.local:8080/mcp"
