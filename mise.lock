@@ -597,44 +597,44 @@ url = "https://github.com/josegonzalez/kubectl-eso/releases/download/v0.5.0/kube
 url_api = "https://api.github.com/repos/josegonzalez/kubectl-eso/releases/assets/427528895"
 
 [[tools."github:mirceanton/kubectl-switch"]]
-version = "2.4.21"
+version = "2.4.32"
 backend = "github:mirceanton/kubectl-switch"
 
 [tools."github:mirceanton/kubectl-switch"."platforms.linux-arm64"]
-checksum = "sha256:ce05a75f77b0cf5ab3b7fe287243eaf4c6ef2e09eb6c9208d1225c146a436ac5"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189142"
+checksum = "sha256:e3cd0f8023f9aea5489486c72f6de9a664679536b74d2231e074925ab69d805f"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531783983"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/kubectl-switch"."platforms.linux-arm64-musl"]
-checksum = "sha256:ce05a75f77b0cf5ab3b7fe287243eaf4c6ef2e09eb6c9208d1225c146a436ac5"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189142"
+checksum = "sha256:e3cd0f8023f9aea5489486c72f6de9a664679536b74d2231e074925ab69d805f"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531783983"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/kubectl-switch"."platforms.linux-x64"]
-checksum = "sha256:042e833edc497f7736f6dc59800a5031a3d5c95e2c31243d4cb105fe048be56f"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189137"
+checksum = "sha256:df535453d3611467e35f76ce95bfa6a38c7ef5a62f33d97acac314590e16782d"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531783982"
 provenance = "github-attestations"
 provenance_verified = true
 
 [tools."github:mirceanton/kubectl-switch"."platforms.linux-x64-musl"]
-checksum = "sha256:042e833edc497f7736f6dc59800a5031a3d5c95e2c31243d4cb105fe048be56f"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189137"
+checksum = "sha256:df535453d3611467e35f76ce95bfa6a38c7ef5a62f33d97acac314590e16782d"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531783982"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/kubectl-switch"."platforms.macos-arm64"]
-checksum = "sha256:8d7c170dbb75f7a455bbaa8de216c67d3c2ba6d7132ac6740af1b03e30935c70"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189141"
+checksum = "sha256:ea330ef9bc4e705871bfc39682181f0c261b3434ff205830f011562be6d35a0f"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531784002"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/kubectl-switch"."platforms.macos-x64"]
-checksum = "sha256:9c552664bef5d4e68aaefde6a341f88a70d3e72283d64661f81de024b9c3d431"
-url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.21/kubectl-switch_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/446189149"
+checksum = "sha256:8b361cab4a61bc8c8f181cf98938159a70711043981634377d7296cee39cd639"
+url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.32/kubectl-switch_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/531783981"
 provenance = "github-attestations"
 
 [[tools."github:mirceanton/talswitcher"]]
