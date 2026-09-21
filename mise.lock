@@ -750,7 +750,7 @@ checksum = "sha256:c8af870b5b3e9789a6cbdb30270e7c212e12d76a7afa7fc7f21b6b21cc22a
 url = "https://nodejs.org/dist/v26.9.0/node-v26.9.0-win-x64.zip"
 
 [[tools."npm:prettier"]]
-version = "3.8.4"
+version = "3.9.8"
 backend = "npm:prettier"
 
 [[tools.op]]
