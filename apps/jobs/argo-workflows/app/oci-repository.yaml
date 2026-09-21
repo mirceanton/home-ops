@@ -8,7 +8,7 @@ spec:
   interval: 15m
   url: oci://ghcr.io/argoproj/argo-helm/argo-workflows
   ref:
-    tag: 2.0.7
+    tag: 2.0.8
 
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
