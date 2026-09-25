@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.networking.k8s.io/httproute_v1.json
+# Named ${APP} so the oidc component's SecurityPolicy (Keycloak SSO at the gateway) attaches to it -
+# Kestra OSS has no OIDC of its own, only basic auth behind this.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kestra
+spec:
+  hostnames: ["kestra.home.mirceanton.com"]
+  parentRefs:
+    - name: envoy-internal
+      namespace: network-system
+  rules:
+    - backendRefs:
+        - name: kestra
+          namespace: jobs
+          port: 8080

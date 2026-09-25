@@ -10,3 +10,4 @@ resources:
   - ./crd-schema-publisher
   - ./etcd-defrag
   - ./hello-world
+  - ./kestra

@@ -1,0 +1,29 @@
+---
+# Lets Kestra's io.kestra.plugin.kubernetes.core.PodCreate tasks run job pods in this namespace
+# using the in-cluster ServiceAccount token (the Kubernetes *task runner* is EE-only).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kestra-pod-runner
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods/exec"] # inputFiles/outputFiles transfer via the init/sidecar containers
+    verbs: ["create", "get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kestra-pod-runner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kestra-pod-runner
+subjects:
+  - kind: ServiceAccount
+    name: kestra

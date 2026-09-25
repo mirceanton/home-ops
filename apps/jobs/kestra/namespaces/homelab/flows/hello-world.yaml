@@ -1,0 +1,93 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Kestra-side counterpart of the Argo `hello-world` CronWorkflow: a small fan-out DAG, scheduled
+# hourly, whose steps run as regular pods in the `jobs` namespace. The `message` input shows up as
+# a form field when triggering an ad-hoc execution from the UI.
+#
+# Kestra 2.0 OSS has no pluginDefaults/Policies, so pod settings are repeated inline per task.
+id: hello-world
+namespace: homelab
+description: Scheduled + ad-hoc fan-out example running steps as Kubernetes pods
+
+inputs:
+  - id: message
+    type: STRING
+    defaults: hello from Kestra
+
+tasks:
+  - id: step-a
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    containerDefaultSpec:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+      resources:
+        requests: { cpu: 10m, memory: 32Mi }
+        limits: { memory: 64Mi }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: main
+          image: alpine:3
+          command: ["sh", "-c", "echo 'step-a: {{ inputs.message }}'"]
+
+  - id: fan-out
+    type: io.kestra.plugin.core.flow.Parallel
+    tasks:
+      - id: step-b
+        type: io.kestra.plugin.kubernetes.core.PodCreate
+        namespace: jobs
+        containerDefaultSpec:
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { memory: 64Mi }
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile: { type: RuntimeDefault }
+          restartPolicy: Never
+          containers:
+            - name: main
+              image: alpine:3
+              command: ["sh", "-c", "echo 'step-b: parallel branch 1'"]
+
+      - id: step-c
+        type: io.kestra.plugin.kubernetes.core.PodCreate
+        namespace: jobs
+        containerDefaultSpec:
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { memory: 64Mi }
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile: { type: RuntimeDefault }
+          restartPolicy: Never
+          containers:
+            - name: main
+              image: alpine:3
+              command: ["sh", "-c", "echo 'step-c: parallel branch 2'"]
+
+triggers:
+  - id: hourly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"

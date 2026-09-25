@@ -1,0 +1,142 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kestra
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kestra
+      version: 2.0.3
+      sourceRef:
+        kind: HelmRepository
+        name: kestra
+
+  values:
+    fullnameOverride: kestra
+
+    image:
+      repository: kestra/kestra
+      tag: v2.0.3 # full image - bundles all plugins (git, kubernetes, ...); `-slim` would auto-install
+
+    # SA token is needed by PodCreate tasks (in-cluster config) - see rbac.yaml
+    serviceAccount:
+      create: true
+      name: kestra
+      automount: true
+
+    # =============================================================================================
+    # Deployment - single standalone pod (webserver + scheduler + executor + worker + controller)
+    # =============================================================================================
+    deployments:
+      standalone:
+        enabled: true
+        annotations:
+          reloader.stakater.com/auto: "true"
+        # Bootstrap the Flux-owned Git sync flow; everything else comes from Git via that flow
+        extraArgs: ["--flow-path=/app/flows"]
+        dind:
+          enabled: false
+
+    # No Docker-in-Docker (privileged sidecar). Job containers run as real Kubernetes pods via
+    # io.kestra.plugin.kubernetes.core.PodCreate instead.
+    dind:
+      enabled: false
+
+    common:
+      strategy: { type: Recreate } # RWO storage PVC
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1Gi
+        limits:
+          memory: 2Gi
+
+      podSecurityContext:
+        runAsNonRoot: true
+        runAsUser: 1000 # `kestra` user baked into the image
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+
+      extraEnv:
+        - name: DATASOURCES_POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: kestra-postgres-app
+              key: username
+        - name: DATASOURCES_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kestra-postgres-app
+              key: password
+
+      # KESTRA_SERVER_BASIC_AUTH_{USERNAME,PASSWORD}
+      extraEnvFrom:
+        - secretRef:
+            name: kestra-secret
+
+      extraVolumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: kestra # volsync component
+        - name: tmp
+          emptyDir: {}
+        - name: bootstrap-flows
+          configMap:
+            name: kestra-bootstrap-flows
+
+      extraVolumeMounts:
+        - name: storage
+          mountPath: /app/storage
+        - name: tmp
+          mountPath: /tmp # task working dirs + plugin scratch space
+        - name: bootstrap-flows
+          mountPath: /app/flows
+          readOnly: true
+
+    # =============================================================================================
+    # Kestra application.yml
+    # =============================================================================================
+    configurations:
+      application:
+        datasources:
+          postgres:
+            url: jdbc:postgresql://kestra-postgres-rw:5432/kestra
+            driverClassName: org.postgresql.Driver
+            # username/password injected via DATASOURCES_POSTGRES_* env vars
+
+        kestra:
+          url: https://kestra.home.mirceanton.com/
+          repository:
+            type: postgres
+          queue:
+            type: postgres
+          storage:
+            type: local
+            local:
+              base-path: /app/storage
+
+          tasks:
+            sdk:
+              authentication:
+                # SDK-based tasks (git NamespaceSync) call the API from the worker thread; in
+                # standalone mode that is this same pod. Credentials are derived from basic-auth.
+                url: http://localhost:8080
+
+          anonymous-usage-report:
+            enabled: false
+          ui-anonymous-usage-report:
+            enabled: false
+
+    service:
+      type: ClusterIP

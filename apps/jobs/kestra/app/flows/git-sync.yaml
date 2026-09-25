@@ -1,0 +1,31 @@
+# Flux-owned bootstrap flow, loaded at startup via `kestra server standalone --flow-path`.
+#
+# Makes Git authoritative over the `homelab` namespace tree: flows (and namespace files) under
+# apps/jobs/kestra/namespaces/<namespace>/{flows,files}/ are applied into Kestra, and anything
+# created or edited in the UI that is not in Git is reverted/deleted on the next run.
+id: git-sync
+namespace: system
+description: Reconcile the `homelab.*` Kestra namespaces from the home-ops Git repository
+
+concurrency:
+  limit: 1
+  behavior: CANCEL
+
+tasks:
+  - id: namespace-sync
+    type: io.kestra.plugin.git.NamespaceSync
+    url: https://github.com/mirceanton/home-ops
+    branch: main
+    gitDirectory: apps/jobs/kestra/namespaces
+    namespace: homelab
+    includeChildNamespaces: true # homelab.maintenance, homelab.backups, homelab.ml, ...
+    sourceOfTruth: GIT
+    whenMissingInSource: DELETE
+    protectedNamespaces:
+      - system
+    onInvalidSyntax: FAIL
+
+triggers:
+  - id: every-5-minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/5 * * * *"

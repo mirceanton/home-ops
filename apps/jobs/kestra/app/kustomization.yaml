@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./helm-repository.yaml
+  - ./external-secret.yaml
+  - ./rbac.yaml
+  - ./helm-release.yaml
+  - ./http-route.yaml
+
+# Bootstrap flows loaded by `kestra server standalone --flow-path` at startup. Only the Git sync
+# flow lives here (Flux-owned); every other flow is owned by Git via NamespaceSync.
+configMapGenerator:
+  - name: kestra-bootstrap-flows
+    files:
+      - git-sync.yaml=./flows/git-sync.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # Kestra's Pebble `{{ }}` / `${}`-looking content must reach the pod untouched
+    kustomize.toolkit.fluxcd.io/substitute: disabled
