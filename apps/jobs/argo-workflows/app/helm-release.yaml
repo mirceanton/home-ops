@@ -47,6 +47,19 @@ spec:
         serviceMonitor:
           enabled: true
 
+      # Run every workflow as the chart-managed SA below unless it sets its own
+      workflowDefaults:
+        spec:
+          serviceAccountName: argo-workflow
+
+    # =============================================================================================
+    # Component - Workflow (SA + Role the step pods run as, to write their task results)
+    # =============================================================================================
+    workflow:
+      serviceAccount:
+        create: true
+        name: argo-workflow
+
     # =============================================================================================
     # Component - Server (UI)
     # =============================================================================================
