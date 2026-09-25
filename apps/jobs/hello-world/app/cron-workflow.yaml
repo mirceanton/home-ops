@@ -5,7 +5,7 @@ kind: CronWorkflow
 metadata:
   name: hello-world
 spec:
-  schedule: "0 * * * *" # hourly, on the hour
+  schedules: ["0 * * * *"] # hourly, on the hour
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 300
   successfulJobsHistoryLimit: 3
@@ -15,7 +15,7 @@ spec:
     entrypoint: main
     podGC: { strategy: OnWorkflowSuccess }
 
-    podSecurityContext:
+    securityContext:
       runAsNonRoot: true
       runAsUser: 65534
       runAsGroup: 65534
