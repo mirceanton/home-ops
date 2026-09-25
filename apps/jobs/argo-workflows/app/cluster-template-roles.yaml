@@ -1,0 +1,21 @@
+---
+# The chart skips these ClusterRoles when singleNamespace=true but still creates the
+# ClusterRoleBindings pointing at them, so the UI's Cluster Workflow Templates tab 403s.
+# Rules mirror the chart's own templates (server/controller *-cluster-roles.yaml).
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-workflows-server-cluster-template
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["clusterworkflowtemplates"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argo-workflows-workflow-controller-cluster-template
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["clusterworkflowtemplates", "clusterworkflowtemplates/finalizers"]
+    verbs: ["get", "list", "watch"]
