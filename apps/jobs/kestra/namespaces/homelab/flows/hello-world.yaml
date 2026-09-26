@@ -1,6 +1,6 @@
 # Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
 #
-# Kestra-side counterpart of the Argo `hello-world` CronWorkflow: a small fan-out DAG, scheduled
+# Example flow (ported from the retired Argo `hello-world` CronWorkflow): a small fan-out DAG, scheduled
 # hourly, whose steps run as regular pods in the `jobs` namespace. The `message` input shows up as
 # a form field when triggering an ad-hoc execution from the UI.
 #
