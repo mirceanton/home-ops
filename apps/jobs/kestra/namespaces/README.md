@@ -17,6 +17,9 @@ namespaces/
     └── flows/<flow-id>.yaml   # flow `namespace:` must be `homelab.maintenance`
 ```
 
+- **New namespace?** Also add it to the `values` list in `git-sync.yaml` (Flux restarts Kestra to
+  load it). Namespaces are synced one by one as roots, because NamespaceSync can't create child
+  namespaces in OSS.
 - Change flows via PR/commit here. UI edits in `homelab.*` are overwritten (or the flow deleted)
   on the next sync, every 5 minutes.
 - Kestra 2.0 removed `pluginDefaults`; repeat task settings inline.

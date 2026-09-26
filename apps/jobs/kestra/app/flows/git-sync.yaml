@@ -1,29 +1,40 @@
 # Flux-owned bootstrap flow, loaded at startup via `kestra server standalone --flow-path`.
 #
-# Makes Git authoritative over the `homelab` namespace tree: flows (and namespace files) under
+# Makes Git authoritative over the listed namespaces: flows (and namespace files) under
 # apps/jobs/kestra/namespaces/<namespace>/{flows,files}/ are applied into Kestra, and anything
 # created or edited in the UI that is not in Git is reverted/deleted on the next run.
+#
+# Each namespace is synced as its own root instead of `namespace: homelab` +
+# `includeChildNamespaces: true`: in OSS a namespace only exists once it holds a flow, and
+# NamespaceSync tries to create missing *child* namespaces through an EE-only API (404), so new
+# child namespaces were skipped. Add a namespace here when creating its folder.
 id: git-sync
 namespace: system
 description: Reconcile the `homelab.*` Kestra namespaces from the home-ops Git repository
 
-concurrency:
-  limit: 1
-  behavior: CANCEL
+# No flow-level `concurrency` limit: Loop runs each iteration as a sub-execution of this same flow,
+# so a limit of 1 cancels its own iterations. A GIT -> Kestra sync is idempotent and takes seconds.
 
 tasks:
-  - id: namespace-sync
-    type: io.kestra.plugin.git.NamespaceSync
-    url: https://github.com/mirceanton/home-ops
-    branch: claude/adoring-clarke-6y57oz # TODO: switch back to main before merging
-    gitDirectory: apps/jobs/kestra/namespaces
-    namespace: homelab
-    includeChildNamespaces: true # homelab.maintenance, homelab.backups, homelab.ml, ...
-    sourceOfTruth: GIT
-    whenMissingInSource: DELETE
-    protectedNamespaces:
-      - system
-    onInvalidSyntax: FAIL
+  - id: namespaces
+    type: io.kestra.plugin.core.flow.Loop
+    concurrencyLimit: 1
+    transmitFailed: true # a failed namespace sync fails the whole run
+    values:
+      - homelab
+      - homelab.maintenance
+    tasks:
+      - id: namespace-sync
+        type: io.kestra.plugin.git.NamespaceSync
+        url: https://github.com/mirceanton/home-ops
+        branch: claude/adoring-clarke-6y57oz # TODO: switch back to main before merging
+        gitDirectory: apps/jobs/kestra/namespaces
+        namespace: "{{ item.value }}"
+        sourceOfTruth: GIT
+        whenMissingInSource: DELETE
+        protectedNamespaces:
+          - system
+        onInvalidSyntax: FAIL
 
 triggers:
   - id: every-5-minutes
