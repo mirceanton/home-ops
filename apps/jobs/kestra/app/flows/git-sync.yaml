@@ -15,7 +15,7 @@ tasks:
   - id: namespace-sync
     type: io.kestra.plugin.git.NamespaceSync
     url: https://github.com/mirceanton/home-ops
-    branch: main
+    branch: claude/adoring-clarke-6y57oz # TODO: switch back to main before merging
     gitDirectory: apps/jobs/kestra/namespaces
     namespace: homelab
     includeChildNamespaces: true # homelab.maintenance, homelab.backups, homelab.ml, ...
