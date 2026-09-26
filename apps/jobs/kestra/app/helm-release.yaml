@@ -133,6 +133,8 @@ spec:
                 # standalone mode that is this same pod. Credentials are derived from basic-auth.
                 url: http://localhost:8080
 
+          tutorial-flows:
+            enabled: false # don't seed the "Getting Started" blueprints into a `tutorial` namespace
           anonymous-usage-report:
             enabled: false
           ui-anonymous-usage-report:
