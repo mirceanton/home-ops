@@ -1,0 +1,134 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Defragments the etcd database on a control-plane node via the Talos API, with an etcd status
+# check before (fails fast on an unhealthy member) and after (shows the reclaimed DB size).
+# Replaces the old app-template `etcd-defrag` CronJob.
+#
+# Kestra 2.0 OSS has no pluginDefaults, so the pod settings are repeated inline per task.
+id: etcd-defrag
+namespace: homelab.maintenance
+description: Defragment etcd on a Talos control-plane node
+
+inputs:
+  - id: node
+    type: STRING
+    displayName: Control-plane node IP
+    defaults: 10.0.0.15
+
+concurrency:
+  limit: 1
+  behavior: QUEUE
+
+tasks:
+  - id: pre-status
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT5S
+    metadata:
+      labels: { app.kubernetes.io/name: etcd-defrag, app.kubernetes.io/managed-by: kestra }
+    containerDefaultSpec:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+      resources:
+        requests: { cpu: 25m, memory: 64Mi }
+        limits: { memory: 128Mi }
+    spec:
+      automountServiceAccountToken: false # talks to the Talos API only, never the Kubernetes API
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: talosctl
+          image: ghcr.io/siderolabs/talosctl:v1.14.1
+          args:
+            - --talosconfig=/var/run/secrets/talos.dev/config
+            - "--nodes={{ inputs.node }}"
+            - etcd
+            - status
+          volumeMounts:
+            - { name: talos, mountPath: /var/run/secrets/talos.dev, readOnly: true }
+      volumes:
+        - name: talos
+          secret: { secretName: kestra-talos } # apps/jobs/kestra/app/talos-service-account.yaml
+
+  - id: defrag
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT5S
+    metadata:
+      labels: { app.kubernetes.io/name: etcd-defrag, app.kubernetes.io/managed-by: kestra }
+    containerDefaultSpec:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+      resources:
+        requests: { cpu: 25m, memory: 64Mi }
+        limits: { memory: 128Mi }
+    spec:
+      automountServiceAccountToken: false # talks to the Talos API only, never the Kubernetes API
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: talosctl
+          image: ghcr.io/siderolabs/talosctl:v1.14.1
+          args:
+            - --talosconfig=/var/run/secrets/talos.dev/config
+            - "--nodes={{ inputs.node }}"
+            - etcd
+            - defrag
+          volumeMounts:
+            - { name: talos, mountPath: /var/run/secrets/talos.dev, readOnly: true }
+      volumes:
+        - name: talos
+          secret: { secretName: kestra-talos } # apps/jobs/kestra/app/talos-service-account.yaml
+
+  - id: post-status
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT5S
+    metadata:
+      labels: { app.kubernetes.io/name: etcd-defrag, app.kubernetes.io/managed-by: kestra }
+    containerDefaultSpec:
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities: { drop: ["ALL"] }
+      resources:
+        requests: { cpu: 25m, memory: 64Mi }
+        limits: { memory: 128Mi }
+    spec:
+      automountServiceAccountToken: false # talks to the Talos API only, never the Kubernetes API
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: talosctl
+          image: ghcr.io/siderolabs/talosctl:v1.14.1
+          args:
+            - --talosconfig=/var/run/secrets/talos.dev/config
+            - "--nodes={{ inputs.node }}"
+            - etcd
+            - status
+          volumeMounts:
+            - { name: talos, mountPath: /var/run/secrets/talos.dev, readOnly: true }
+      volumes:
+        - name: talos
+          secret: { secretName: kestra-talos } # apps/jobs/kestra/app/talos-service-account.yaml
+
+triggers:
+  - id: daily
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "10 5 * * *" # daily at 05:10 UTC

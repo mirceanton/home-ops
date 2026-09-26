@@ -6,6 +6,7 @@ resources:
   - ./helm-repository.yaml
   - ./external-secret.yaml
   - ./rbac.yaml
+  - ./talos-service-account.yaml
   - ./helm-release.yaml
   - ./http-route.yaml
 
