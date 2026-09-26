@@ -16,3 +16,31 @@ spec:
         - name: kestra
           namespace: jobs
           port: 8080
+      # Single sign-on: Keycloak (SecurityPolicy) is the only login. Once past it, the gateway
+      # authenticates to Kestra on the user's behalf, and tells the UI it is already logged in.
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: gateway.envoyproxy.io
+            kind: HTTPRouteFilter
+            name: kestra-basic-auth
+        # The UI only checks for this JS-readable cookie to skip its login page; the API itself is
+        # authorized by the injected header. Not a secret.
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            add:
+              - name: Set-Cookie
+                value: kestraBasicAuthenticated=true; Path=/; Secure; SameSite=Lax
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/httproutefilter_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: kestra-basic-auth
+spec:
+  credentialInjection:
+    # Authorization: Basic <base64(user:pass)>, overwriting anything the client sent
+    overwrite: true
+    credential:
+      valueRef:
+        name: kestra-gateway-auth # external-secret.yaml
