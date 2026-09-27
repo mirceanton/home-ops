@@ -1,3 +1,4 @@
+---
 model_list:
   # -------------------------------- QWEN EMBEDDING --------------------------------
   - model_name: qwen3-embedding-0.6b
@@ -12,7 +13,7 @@ model_list:
   - model_name: qwen-image-3.0-pro
     litellm_params:
       model: qwencloud/qwen-image-3.0-pro
-      api_base: *qwenURL
+      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
       api_key: os.environ/QWEN_KEY
 
   - model_name: qwen-image-3.0
@@ -45,7 +46,7 @@ model_list:
   - model_name: qwen3.6-flash
     litellm_params:
       model: qwencloud/qwen3.6-flash
-      api_base: &qwenURL https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+      api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
   # ----------------------------------- GLM -----------------------------------
