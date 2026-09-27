@@ -38,7 +38,7 @@ spec:
           app:
             image:
               repository: fireflyiii/core
-              tag: version-6.7.4
+              tag: version-6.7.5
 
             envFrom:
               - secretRef: { name: firefly-keys }
