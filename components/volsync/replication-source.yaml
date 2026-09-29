@@ -6,8 +6,11 @@ metadata:
   name: "${APP}"
 spec:
   sourcePVC: "${VOLSYNC_PVC:=${APP}}"
+  # Backups are orchestrated by Kestra (homelab.backups/volsync-backup-all), which sets
+  # `trigger.manual` - that takes precedence over the schedule, and Flux never owns the field so it
+  # is not reset. The schedule only has to be valid and never fire (Feb 31).
   trigger:
-    schedule: "0 4,16 * * *" # 4AM & 4PM
+    schedule: "0 0 31 2 *"
 
   restic:
     copyMethod: "${VOLSYNC_COPYMETHOD:=Snapshot}"

@@ -5,7 +5,6 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
-  - ./mutating-admission-policy.yaml
 
   - ./prometheus-rule.yaml
   - ./grafana-dashboard.yaml

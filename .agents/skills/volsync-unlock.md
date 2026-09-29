@@ -51,13 +51,14 @@ To just look without fixing anything:
 
 ```bash
 kubectl get pods -A | grep volsync-src   # Error / CrashLoopBackOff / stuck Init
-kubectl get replicationsource -A         # compare LAST SYNC vs NEXT SYNC — stale LAST SYNC is the tell
+kubectl get replicationsource -A         # a LAST SYNC older than the last Kestra backup round is the tell
 ```
 
 ## Step 2: Unlock
 
-`task volsync:unlock` unlocks every locked app it finds automatically. To do
-one app by hand (e.g. to control blast radius):
+`task volsync:unlock` unlocks every locked app it finds automatically. For one
+app, run the `homelab.backups/volsync-unlock` flow in Kestra (pick the
+`namespace/app` target) — it unlocks and deletes the stuck Job. By hand:
 
 ```bash
 APP=<app>; NS=<namespace>
@@ -91,12 +92,12 @@ until the current pod (check `kubectl get pods`) has reached `Completed`.
 
 ## Common Pitfalls
 
-- The VolSync `jitter` init container sleeping for up to 300s (`sleep $(shuf -i 0-300 -n 1)`)
-  on a fresh pod is normal — a randomized start delay to avoid a thundering
-  herd against the apiserver — not a symptom of anything broken. Don't
-  intervene while a pod sits in `Init:0/1` unless it's been stuck well past 5
-  minutes.
-- Don't delete the PVC/snapshot or touch `spec.trigger` — the fix is entirely
+- Backups are no longer self-scheduled by the `ReplicationSource`s (their cron
+  never fires); Kestra's `homelab.backups/volsync-backup-all` triggers them via
+  `spec.trigger.manual` at 04:00/16:00, 5 at a time. A failed round shows up as
+  a failed Kestra execution, with the mover logs in the per-source
+  `volsync-backup` subflow.
+- Don't delete the PVC/snapshot or edit `spec.trigger` by hand — the fix is entirely
   at the restic-repo level; nothing in the `ReplicationSource` CR itself is
   wrong.
 - If `restic unlock` fails with an auth/network error rather than
