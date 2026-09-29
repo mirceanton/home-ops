@@ -22,7 +22,6 @@ tasks:
     transmitFailed: true # a failed namespace sync fails the whole run
     values:
       - homelab
-      - homelab.maintenance
       - homelab.backups
       - homelab.etcd
       - homelab.zfs
