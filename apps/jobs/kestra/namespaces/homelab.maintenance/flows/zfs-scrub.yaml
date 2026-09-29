@@ -1,0 +1,76 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Scrubs a ZFS pool on a Talos node. The scrubber image downloads the ZFS userland matching the
+# node's Talos ZFS extension, so the Talos version is read from the node first
+# (`nodeInfo.osImage`, e.g. "Talos (v1.13.7)") instead of being hardcoded and drifting.
+# Replaces the `data-pool-zfs-scrubber` CronJob in storage-system.
+id: zfs-scrub
+namespace: homelab.maintenance
+description: Scrub a ZFS pool on a Talos node
+
+inputs:
+  - id: pool
+    type: STRING
+    displayName: ZFS pool
+    defaults: data-pool
+  - id: node
+    type: STRING
+    displayName: Kubernetes node name
+    defaults: home-ops
+
+concurrency:
+  limit: 1
+  behavior: QUEUE
+
+tasks:
+  - id: node_info
+    type: io.kestra.plugin.kubernetes.kubectl.Get
+    apiVersion: v1
+    resourceType: nodes
+    resourcesNames: ["{{ inputs.node }}"]
+    fetchType: FETCH_ONE
+
+  - id: check_talos
+    type: io.kestra.plugin.core.execution.Fail
+    condition: '{{ not (outputs.node_info.statusItem.nodeInfo.osImage contains "Talos (v") }}'
+    errorMessage: "Node {{ inputs.node }} does not report a Talos version: {{ outputs.node_info.statusItem.nodeInfo.osImage }}"
+
+  - id: talos_version
+    type: io.kestra.plugin.core.output.OutputValues
+    values:
+      version: "{{ outputs.node_info.statusItem.nodeInfo.osImage | replace({'Talos (': '', ')': ''}) }}"
+
+  - id: scrub
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT5S
+    waitRunning: PT6H # blocks until the scrub completes (~2 min for data-pool today)
+    metadata:
+      labels: { app.kubernetes.io/name: zfs-scrub, app.kubernetes.io/managed-by: kestra }
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector: { kubernetes.io/hostname: "{{ inputs.node }}" }
+      restartPolicy: Never
+      containers:
+        - name: zfs-scrubber
+          image: ghcr.io/heavybullets8/zfs-scrubber:1.1.2@sha256:d142396cbf0926b84a586666b777e357c622c7780bcf1444af4384bf3f14411b
+          env:
+            - { name: ACTION, value: scrub }
+            - { name: ZFS_POOL, value: "{{ inputs.pool }}" }
+            - { name: TALOS_VERSION, value: "{{ outputs.talos_version.values.version }}" }
+            - { name: PUSHOVER_NOTIFICATION, value: "false" }
+          securityContext:
+            privileged: true # needs the host's /dev/zfs control device
+          resources:
+            requests: { cpu: 50m, memory: 128Mi }
+            limits: { memory: 1Gi }
+          volumeMounts:
+            - { name: dev-zfs, mountPath: /dev/zfs }
+      volumes:
+        - name: dev-zfs
+          hostPath: { path: /dev/zfs }
+
+triggers:
+  - id: weekly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 3 * * 0" # Sundays at 03:00 UTC, as the old CronJob

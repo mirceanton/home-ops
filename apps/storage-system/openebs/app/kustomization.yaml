@@ -8,7 +8,5 @@ resources:
   - ./helm-release.yaml
   - ./oci-repository.yaml
 
-  - ./zfs-scrub.cronjob.yaml
-
   - ./snapshot-class.yaml
   - ./storage-class.yaml

@@ -30,3 +30,27 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kestra
+---
+# Read-only node access, e.g. for flows that derive the Talos version from `nodeInfo.osImage`
+# with io.kestra.plugin.kubernetes.kubectl.Get.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kestra-node-reader
+rules:
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kestra-node-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kestra-node-reader
+subjects:
+  - kind: ServiceAccount
+    name: kestra
+    namespace: jobs
