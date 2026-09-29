@@ -1,0 +1,54 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Lists every imported ZFS pool on every node as `node/pool`, from OpenEBS ZFS-LocalPV's per-node
+# ZFSNode objects, into the `zfs_targets` KV entry - the list that feeds the zfs-scrub dropdown and
+# the zfs-scrub-all round (which also runs this first). A kubectl pod renders the pairs because
+# kubectl.Get doesn't return ZFSNode's top-level `pools` field.
+id: zfs-discover
+namespace: homelab.maintenance
+description: Refresh the list of node/pool ZFS pairs (KV zfs_targets)
+
+tasks:
+  - id: list
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT2S
+    metadata:
+      labels: { app.kubernetes.io/name: zfs-discover, app.kubernetes.io/managed-by: kestra }
+    spec:
+      serviceAccountName: kestra-zfs-discover # apps/jobs/kestra/app/zfs-discover-rbac.yaml
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: kubectl
+          image: registry.k8s.io/kubectl:v1.36.3
+          # Prints `::{"outputs":{"targets":["node/pool",...]}}::`, which Kestra turns into outputs.
+          # `raw` keeps Kestra from rendering the Go template's own {{ }}.
+          args:
+            - get
+            - zfsnodes.zfs.openebs.io
+            - --all-namespaces
+            - '{% raw %}-o=go-template=::{"outputs":{"targets":[{{- $first := true -}}{{- range .items -}}{{- $node := .metadata.name -}}{{- range .pools -}}{{- if not $first -}},{{- end -}}"{{ $node }}/{{ .name }}"{{- $first = false -}}{{- end -}}{{- end -}}]}}::{% endraw %}'
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { memory: 128Mi }
+
+  - id: save
+    type: io.kestra.plugin.core.kv.Set
+    key: zfs_targets
+    kvType: JSON
+    value: "{{ outputs.list.vars.targets | toJson }}"
+
+triggers:
+  - id: hourly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"

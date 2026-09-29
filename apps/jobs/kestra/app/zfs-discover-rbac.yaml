@@ -1,0 +1,29 @@
+---
+# For homelab.maintenance/zfs-discover: its kubectl pod reads OpenEBS ZFSNodes (one per node, listing
+# the imported pools) - `pools` is a top-level field that Kestra's kubectl.Get doesn't return.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kestra-zfs-discover
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kestra-zfs-discover
+rules:
+  - apiGroups: ["zfs.openebs.io"]
+    resources: ["zfsnodes"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kestra-zfs-discover
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kestra-zfs-discover
+subjects:
+  - kind: ServiceAccount
+    name: kestra-zfs-discover
+    namespace: jobs

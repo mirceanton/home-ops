@@ -9,6 +9,7 @@ resources:
   - ./talos-service-account.yaml
   - ./crd-schema-publisher.yaml
   - ./volsync-rbac.yaml
+  - ./zfs-discover-rbac.yaml
   - ./helm-release.yaml
   - ./http-route.yaml
 

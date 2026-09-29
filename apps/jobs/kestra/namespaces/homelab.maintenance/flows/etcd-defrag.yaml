@@ -2,7 +2,7 @@
 #
 # Defragments the etcd database on a control-plane node via the Talos API, with an etcd status
 # check before (fails fast on an unhealthy member) and after (shows the reclaimed DB size).
-# Replaces the old app-template `etcd-defrag` CronJob.
+# Run for all control-plane nodes, one at a time, by etcd-defrag-all.
 #
 # Kestra 2.0 OSS has no pluginDefaults, so the pod settings are repeated inline per task.
 id: etcd-defrag
@@ -11,15 +11,35 @@ description: Defragment etcd on a Talos control-plane node
 
 inputs:
   - id: node
-    type: STRING
-    displayName: Control-plane node IP
-    defaults: 10.0.0.15
+    type: SELECT
+    displayName: Control-plane node
+    expression: "{{ kv('etcd_nodes', errorOnMissing=false) ?? [] }}" # refreshed by etcd-discover
+    allowCustomValue: true
 
 concurrency:
   limit: 1
   behavior: QUEUE
 
 tasks:
+  # Resolve the node's InternalIP for talosctl --nodes (and make sure it is a control-plane node)
+  - id: nodes
+    type: io.kestra.plugin.kubernetes.kubectl.Get
+    namespace: ""
+    apiVersion: v1
+    resourceType: nodes
+    fetchType: FETCH
+
+  - id: node_ip
+    type: io.kestra.plugin.core.output.OutputValues
+    values:
+      ip: >-
+        {% for m in outputs.nodes.metadataItems %}{% if m.name == inputs.node and (m.labels['node-role.kubernetes.io/control-plane'] ?? 'NO') != 'NO' %}{% for a in outputs.nodes.statusItems[loop.index].status.addresses %}{% if a.type == 'InternalIP' %}{{ a.address }}{% endif %}{% endfor %}{% endif %}{% endfor %}
+
+  - id: check_node
+    type: io.kestra.plugin.core.execution.Fail
+    condition: "{{ (outputs.node_ip.values.ip ?? '') is empty }}"
+    errorMessage: "'{{ inputs.node }}' is not a control-plane node with an InternalIP"
+
   - id: pre-status
     type: io.kestra.plugin.kubernetes.core.PodCreate
     namespace: jobs
@@ -47,7 +67,7 @@ tasks:
           image: ghcr.io/siderolabs/talosctl:v1.14.1
           args:
             - --talosconfig=/var/run/secrets/talos.dev/config
-            - "--nodes={{ inputs.node }}"
+            - "--nodes={{ outputs.node_ip.values.ip }}"
             - etcd
             - status
           volumeMounts:
@@ -83,7 +103,7 @@ tasks:
           image: ghcr.io/siderolabs/talosctl:v1.14.1
           args:
             - --talosconfig=/var/run/secrets/talos.dev/config
-            - "--nodes={{ inputs.node }}"
+            - "--nodes={{ outputs.node_ip.values.ip }}"
             - etcd
             - defrag
           volumeMounts:
@@ -119,7 +139,7 @@ tasks:
           image: ghcr.io/siderolabs/talosctl:v1.14.1
           args:
             - --talosconfig=/var/run/secrets/talos.dev/config
-            - "--nodes={{ inputs.node }}"
+            - "--nodes={{ outputs.node_ip.values.ip }}"
             - etcd
             - status
           volumeMounts:
@@ -128,7 +148,3 @@ tasks:
         - name: talos
           secret: { secretName: kestra-talos } # apps/jobs/kestra/app/talos-service-account.yaml
 
-triggers:
-  - id: daily
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "10 5 * * *" # daily at 05:10 UTC

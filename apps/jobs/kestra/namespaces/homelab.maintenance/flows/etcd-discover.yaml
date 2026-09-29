@@ -1,0 +1,32 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Lists the control-plane nodes and stores their names in the `etcd_nodes` KV entry - the list that
+# feeds the etcd-defrag node dropdown and the etcd-defrag-all round (which also runs this first).
+id: etcd-discover
+namespace: homelab.maintenance
+description: Refresh the list of control-plane nodes (KV etcd_nodes)
+
+tasks:
+  - id: nodes
+    type: io.kestra.plugin.kubernetes.kubectl.Get
+    namespace: "" # nodes are cluster-scoped; kubectl.Get can't fetch them by name, only list
+    apiVersion: v1
+    resourceType: nodes
+    fetchType: FETCH
+
+  - id: control_planes
+    type: io.kestra.plugin.core.output.OutputValues
+    values:
+      list: >-
+        {{ outputs.nodes.metadataItems | jq('[.[] | select(.labels["node-role.kubernetes.io/control-plane"] != null) | .name]') | first | toJson }}
+
+  - id: save
+    type: io.kestra.plugin.core.kv.Set
+    key: etcd_nodes
+    kvType: JSON
+    value: "{{ outputs.control_planes.values.list }}"
+
+triggers:
+  - id: hourly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"

@@ -1,0 +1,37 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Refreshes the node/pool list (zfs-discover subflow -> KV `zfs_targets`) and scrubs every pool
+# through the zfs-scrub subflow, one at a time.
+#
+# No flow-level `concurrency` limit: Loop runs each iteration as a sub-execution of this same flow.
+id: zfs-scrub-all
+namespace: homelab.maintenance
+description: Scrub every ZFS pool on every node, one at a time
+
+tasks:
+  - id: discover
+    type: io.kestra.plugin.core.flow.Subflow
+    namespace: homelab.maintenance
+    flowId: zfs-discover
+    wait: true
+    transmitFailed: true
+
+  - id: scrubs
+    type: io.kestra.plugin.core.flow.Loop
+    values: "{{ kv('zfs_targets') | toJson }}"
+    concurrencyLimit: 1 # one scrub at a time
+    transmitFailed: true
+    tasks:
+      - id: scrub
+        type: io.kestra.plugin.core.flow.Subflow
+        namespace: homelab.maintenance
+        flowId: zfs-scrub
+        inputs:
+          target: "{{ item.value }}"
+        wait: true
+        transmitFailed: true
+
+triggers:
+  - id: weekly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 3 * * 0" # Sundays at 03:00 UTC

@@ -1,0 +1,38 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Refreshes the control-plane list (etcd-discover subflow -> KV `etcd_nodes`) and defragments etcd
+# on each node through the etcd-defrag subflow, strictly one member at a time so quorum is never at
+# risk.
+#
+# No flow-level `concurrency` limit: Loop runs each iteration as a sub-execution of this same flow.
+id: etcd-defrag-all
+namespace: homelab.maintenance
+description: Defragment etcd on every control-plane node, one at a time
+
+tasks:
+  - id: discover
+    type: io.kestra.plugin.core.flow.Subflow
+    namespace: homelab.maintenance
+    flowId: etcd-discover
+    wait: true
+    transmitFailed: true
+
+  - id: defrags
+    type: io.kestra.plugin.core.flow.Loop
+    values: "{{ kv('etcd_nodes') | toJson }}"
+    concurrencyLimit: 1 # one etcd member at a time
+    transmitFailed: true
+    tasks:
+      - id: defrag
+        type: io.kestra.plugin.core.flow.Subflow
+        namespace: homelab.maintenance
+        flowId: etcd-defrag
+        inputs:
+          node: "{{ item.value }}"
+        wait: true
+        transmitFailed: true
+
+triggers:
+  - id: daily
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "10 5 * * *" # daily at 05:10 UTC

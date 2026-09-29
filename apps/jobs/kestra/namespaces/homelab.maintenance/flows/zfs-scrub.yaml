@@ -1,26 +1,27 @@
 # Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
 #
-# Scrubs one ZFS pool on one Talos node; each pool gets its own schedule below. The scrubber image
-# downloads the ZFS userland matching the node's Talos ZFS extension, so the Talos version is read
-# from the node (`nodeInfo.osImage`, e.g. "Talos (v1.13.7)") instead of being hardcoded and
-# drifting. Replaces the `data-pool-zfs-scrubber` CronJob in storage-system.
+# Scrubs one ZFS pool on one Talos node (run for every pool, one at a time, by zfs-scrub-all). The
+# scrubber image downloads the ZFS userland matching the node's Talos ZFS extension, so the Talos
+# version is read from the node (`nodeInfo.osImage`, e.g. "Talos (v1.13.7)") instead of being
+# hardcoded and drifting. Replaces the `data-pool-zfs-scrubber` CronJob in storage-system.
 id: zfs-scrub
 namespace: homelab.maintenance
 description: Scrub a ZFS pool on a Talos node
 
 inputs:
-  - id: node
-    type: STRING
-    displayName: Kubernetes node name
-    defaults: home-ops
-  - id: pool
-    type: STRING
-    displayName: ZFS pool
-    defaults: data-pool
+  - id: target
+    type: SELECT
+    displayName: ZFS pool (node/pool)
+    expression: "{{ kv('zfs_targets', errorOnMissing=false) ?? [] }}" # refreshed by zfs-discover
+    allowCustomValue: true
 
 concurrency:
   limit: 1 # one scrub at a time; overlapping runs wait
   behavior: QUEUE
+
+variables:
+  node: "{{ inputs.target | split('/') | first }}"
+  pool: "{{ inputs.target | split('/') | last }}"
 
 tasks:
   # kubectl.Get can't fetch a cluster-scoped object by name (it always sends a namespace), so list
@@ -35,20 +36,20 @@ tasks:
   - id: node_os
     type: io.kestra.plugin.core.output.OutputValues
     values:
-      osImage: "{% for m in outputs.nodes.metadataItems %}{% if m.name == inputs.node %}{{ outputs.nodes.statusItems[loop.index].status.nodeInfo.osImage }}{% endif %}{% endfor %}"
-      talosVersion: "{% for m in outputs.nodes.metadataItems %}{% if m.name == inputs.node %}{{ outputs.nodes.statusItems[loop.index].status.nodeInfo.osImage | replace({'Talos (': '', ')': ''}) }}{% endif %}{% endfor %}"
+      osImage: "{% for m in outputs.nodes.metadataItems %}{% if m.name == render(vars.node) %}{{ outputs.nodes.statusItems[loop.index].status.nodeInfo.osImage }}{% endif %}{% endfor %}"
+      talosVersion: "{% for m in outputs.nodes.metadataItems %}{% if m.name == render(vars.node) %}{{ outputs.nodes.statusItems[loop.index].status.nodeInfo.osImage | replace({'Talos (': '', ')': ''}) }}{% endif %}{% endfor %}"
       # Talos labels nodes with their system extensions, e.g. extensions.talos.dev/zfs=2.4.3-v1.13.7
-      zfsExtension: "{% for m in outputs.nodes.metadataItems %}{% if m.name == inputs.node %}{{ m.labels['extensions.talos.dev/zfs'] ?? '' }}{% endif %}{% endfor %}"
+      zfsExtension: "{% for m in outputs.nodes.metadataItems %}{% if m.name == render(vars.node) %}{{ m.labels['extensions.talos.dev/zfs'] ?? '' }}{% endif %}{% endfor %}"
 
   - id: check_talos
     type: io.kestra.plugin.core.execution.Fail
     condition: '{{ not ((outputs.node_os.values.osImage ?? "") contains "Talos (v") }}'
-    errorMessage: "Node '{{ inputs.node }}' not found or not running Talos (OS: '{{ outputs.node_os.values.osImage ?? '' }}')"
+    errorMessage: "Node '{{ render(vars.node) }}' not found or not running Talos (OS: '{{ outputs.node_os.values.osImage ?? '' }}')"
 
   - id: check_zfs
     type: io.kestra.plugin.core.execution.Fail
     condition: "{{ (outputs.node_os.values.zfsExtension ?? '') is empty }}"
-    errorMessage: "Node '{{ inputs.node }}' has no Talos ZFS system extension"
+    errorMessage: "Node '{{ render(vars.node) }}' has no Talos ZFS system extension"
 
   - id: scrub
     type: io.kestra.plugin.kubernetes.core.PodCreate
@@ -59,14 +60,14 @@ tasks:
       labels: { app.kubernetes.io/name: zfs-scrub, app.kubernetes.io/managed-by: kestra }
     spec:
       automountServiceAccountToken: false
-      nodeSelector: { kubernetes.io/hostname: "{{ inputs.node }}" }
+      nodeSelector: { kubernetes.io/hostname: "{{ render(vars.node) }}" }
       restartPolicy: Never
       containers:
         - name: zfs-scrubber
           image: ghcr.io/heavybullets8/zfs-scrubber:1.1.2@sha256:d142396cbf0926b84a586666b777e357c622c7780bcf1444af4384bf3f14411b
           env:
             - { name: ACTION, value: scrub }
-            - { name: ZFS_POOL, value: "{{ inputs.pool }}" }
+            - { name: ZFS_POOL, value: "{{ render(vars.pool) }}" }
             - { name: TALOS_VERSION, value: "{{ outputs.node_os.values.talosVersion }}" }
             - { name: PUSHOVER_NOTIFICATION, value: "false" }
           securityContext:
@@ -79,18 +80,3 @@ tasks:
       volumes:
         - name: dev-zfs
           hostPath: { path: /dev/zfs, type: CharDevice }
-
-triggers:
-  - id: data-pool
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 3 * * 0" # Sundays at 03:00 UTC
-    inputs:
-      node: home-ops
-      pool: data-pool
-
-  - id: cache-pool
-    type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 4 * * 0" # Sundays at 04:00 UTC
-    inputs:
-      node: home-ops
-      pool: cache-pool
