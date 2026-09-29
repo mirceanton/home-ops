@@ -1,9 +1,8 @@
 # Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
 #
-# Discovers every VolSync ReplicationSource in the cluster and backs them up through the
-# volsync-backup subflow, 5 at a time. This replaces the per-source 04:00/16:00
-# schedules (and the jitter MutatingAdmissionPolicy that spread them out). Also refreshes the
-# `volsync_targets` KV entry that feeds the target dropdown of the other volsync-* flows.
+# Refreshes the ReplicationSource list (volsync-discover subflow -> KV `volsync_targets`) and backs
+# every one of them up through the volsync-backup subflow, 5 at a time. This replaces the
+# per-source 04:00/16:00 schedules (and the jitter MutatingAdmissionPolicy that spread them out).
 #
 # No flow-level `concurrency` limit: Loop runs each iteration as a sub-execution of this same flow.
 id: volsync-backup-all
@@ -11,28 +10,16 @@ namespace: homelab.backups
 description: Back up every VolSync ReplicationSource with bounded parallelism
 
 tasks:
-  - id: sources
-    type: io.kestra.plugin.kubernetes.kubectl.Get
-    namespace: "" # all namespaces
-    apiGroup: volsync.backube
-    apiVersion: v1alpha1
-    resourceType: replicationsources
-    fetchType: FETCH
-
-  - id: targets
-    type: io.kestra.plugin.core.output.OutputValues
-    values:
-      list: '[{% for m in outputs.sources.metadataItems %}"{{ m.namespace }}/{{ m.name }}"{% if not loop.last %},{% endif %}{% endfor %}]'
-
-  - id: save_targets
-    type: io.kestra.plugin.core.kv.Set
-    key: volsync_targets
-    kvType: JSON
-    value: "{{ outputs.targets.values.list }}"
+  - id: discover
+    type: io.kestra.plugin.core.flow.Subflow
+    namespace: homelab.backups
+    flowId: volsync-discover
+    wait: true
+    transmitFailed: true
 
   - id: backups
     type: io.kestra.plugin.core.flow.Loop
-    values: "{{ outputs.targets.values.list }}"
+    values: "{{ kv('volsync_targets') | toJson }}"
     concurrencyLimit: 5 # backups at once; must be a literal (not templatable), so change it here
     transmitFailed: true # keep going, but fail the round if any backup failed
     tasks:

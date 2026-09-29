@@ -1,0 +1,36 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Lists every VolSync ReplicationSource in the cluster and stores them as `namespace/name` in the
+# `volsync_targets` KV entry - the single list that feeds the target dropdowns of the volsync-*
+# flows and the rounds of volsync-backup-all (which also runs this first, as a subflow).
+#
+# No `concurrency` limit on purpose: it's idempotent, and cancelling it would fail the backup round
+# that calls it.
+id: volsync-discover
+namespace: homelab.backups
+description: Refresh the list of VolSync ReplicationSources (KV volsync_targets)
+
+tasks:
+  - id: sources
+    type: io.kestra.plugin.kubernetes.kubectl.Get
+    namespace: "" # all namespaces
+    apiGroup: volsync.backube
+    apiVersion: v1alpha1
+    resourceType: replicationsources
+    fetchType: FETCH
+
+  - id: targets
+    type: io.kestra.plugin.core.output.OutputValues
+    values:
+      list: '[{% for m in outputs.sources.metadataItems %}"{{ m.namespace }}/{{ m.name }}"{% if not loop.last %},{% endif %}{% endfor %}]'
+
+  - id: save_targets
+    type: io.kestra.plugin.core.kv.Set
+    key: volsync_targets
+    kvType: JSON
+    value: "{{ outputs.targets.values.list }}"
+
+triggers:
+  - id: hourly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"
