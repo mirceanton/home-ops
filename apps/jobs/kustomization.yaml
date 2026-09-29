@@ -6,5 +6,4 @@ namespace: jobs
 
 resources:
   - ./namespace.yaml
-  - ./crd-schema-publisher
   - ./kestra

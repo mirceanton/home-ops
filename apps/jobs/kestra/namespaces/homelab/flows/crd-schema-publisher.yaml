@@ -1,0 +1,62 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Extracts the JSON schemas of every CRD in the cluster and deploys them to the `k8s-schemas`
+# Cloudflare Pages project (https://k8s-schemas.mirceanton.com), used by the
+# `yaml-language-server: $schema=` headers across this repo. Replaces the app-template CronJob.
+#
+# Pod dependencies (ServiceAccount with CRD read, Cloudflare credentials) live in
+# apps/jobs/kestra/app/crd-schema-publisher.yaml.
+id: crd-schema-publisher
+namespace: homelab
+description: Publish the cluster's CRD JSON schemas to Cloudflare Pages
+
+concurrency:
+  limit: 1
+  behavior: CANCEL # hourly; if a run is still going, skip the new one
+
+tasks:
+  - id: publish
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: jobs
+    waitForLogInterval: PT5S
+    retry:
+      type: constant
+      interval: PT1M
+      maxAttempts: 3
+    metadata:
+      labels: { app.kubernetes.io/name: crd-schema-publisher, app.kubernetes.io/managed-by: kestra }
+    spec:
+      serviceAccountName: kestra-crd-schema-publisher
+      automountServiceAccountToken: true # lists CRDs via the Kubernetes API
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: publisher
+          image: ghcr.io/sholdee/crd-schema-publisher:v2026.815.170632
+          env:
+            - { name: CF_PAGES_PROJECT, value: k8s-schemas }
+            - { name: OUTPUT_DIR, value: /output }
+          envFrom:
+            - secretRef: { name: kestra-crd-schema-publisher }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 50m, memory: 64Mi }
+            limits: { memory: 1Gi }
+          volumeMounts:
+            - { name: output, mountPath: /output }
+      volumes:
+        - name: output
+          emptyDir: {}
+
+triggers:
+  - id: hourly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"
