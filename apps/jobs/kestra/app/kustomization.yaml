@@ -10,6 +10,7 @@ resources:
   - ./crd-schema-publisher.yaml
   - ./volsync-rbac.yaml
   - ./zfs-discover-rbac.yaml
+  - ./terragrunt.yaml
   - ./helm-release.yaml
   - ./http-route.yaml
 

@@ -1,0 +1,23 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Scheduled Terragrunt drift detection for mirceanton/truenas-terraform, through the reusable
+# terragrunt-drift subflow (replaces the repo's GitHub Actions terragrunt-drift.yaml schedule).
+id: truenas-drift
+namespace: homelab.infrastructure
+description: Terragrunt drift detection for mirceanton/truenas-terraform
+
+tasks:
+  - id: drift
+    type: io.kestra.plugin.core.flow.Subflow
+    namespace: homelab.infrastructure
+    flowId: terragrunt-drift
+    inputs:
+      repository: https://github.com/mirceanton/truenas-terraform
+      branch: main
+    wait: true
+    transmitFailed: true
+
+triggers:
+  - id: every-2-hours
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "30 */2 * * *"

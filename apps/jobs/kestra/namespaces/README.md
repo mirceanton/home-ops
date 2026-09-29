@@ -15,6 +15,7 @@ namespaces/
 │   └── files/...              # namespace files (scripts, SQL, ...)
 ├── homelab.backups/          # VolSync backups, unlock, snapshots
 ├── homelab.etcd/             # etcd defrag
+├── homelab.infrastructure/   # Terragrunt drift detection
 └── homelab.zfs/              # ZFS scrubs
     └── flows/<flow-id>.yaml   # flow `namespace:` must be `homelab.zfs`
 ```

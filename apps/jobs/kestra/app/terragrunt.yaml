@@ -1,0 +1,82 @@
+---
+# Credentials for the homelab.infrastructure/terragrunt-drift flow's job pods.
+#
+# 1Password Connect: a token scoped to the vaults the Terraform repos' .env.1pass files and
+# 1password modules use (the cluster's ESO token can't read all of them).
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name kestra-terragrunt-op
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+  target:
+    name: *name
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        OP_CONNECT_HOST: http://onepassword.security-system.svc.cluster.local
+        OP_CONNECT_TOKEN: "{{ .token }}"
+  data:
+    - secretKey: token
+      remoteRef:
+        key: Kestra - Terraform Connect Token
+        property: credential
+---
+# GitHub: short-lived installation tokens for the Mr Borboto GitHub App (same app/PEM as
+# apps/ai/litellm), used to open/close the drift issues. Tokens last 1h; refreshed every 30m.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name kestra-github-app-pem
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: *name
+  data:
+    - secretKey: private_key_pem
+      remoteRef:
+        key: Renovate Operator - GitHub App PEM
+        property: key
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/generators.external-secrets.io/githubaccesstoken_v1alpha1.json
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: GithubAccessToken
+metadata:
+  name: kestra-github-token
+spec:
+  appID: "900136"
+  installID: "53131225"
+  auth:
+    privateKey:
+      secretRef:
+        name: kestra-github-app-pem
+        key: private_key_pem
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name kestra-github-token
+spec:
+  refreshInterval: 30m
+  target:
+    name: *name
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        GITHUB_TOKEN: "{{ .token }}"
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GithubAccessToken
+          name: kestra-github-token

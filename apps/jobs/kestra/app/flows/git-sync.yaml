@@ -25,6 +25,7 @@ tasks:
       - homelab.backups
       - homelab.etcd
       - homelab.zfs
+      - homelab.infrastructure
     tasks:
       - id: namespace-sync
         type: io.kestra.plugin.git.NamespaceSync
