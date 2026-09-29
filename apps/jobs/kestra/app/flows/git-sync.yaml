@@ -23,6 +23,7 @@ tasks:
     values:
       - homelab
       - homelab.maintenance
+      - homelab.backups
     tasks:
       - id: namespace-sync
         type: io.kestra.plugin.git.NamespaceSync

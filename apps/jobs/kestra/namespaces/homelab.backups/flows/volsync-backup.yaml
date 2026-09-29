@@ -1,0 +1,54 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Backs up one VolSync-protected PVC: sets a unique `spec.trigger.manual` on its ReplicationSource
+# (manual takes precedence over the component's never-firing schedule, and Flux never owns that
+# field) and waits for VolSync to report the sync. Called per source by volsync-backup-all.
+id: volsync-backup
+namespace: homelab.backups
+description: Back up one VolSync ReplicationSource
+
+inputs:
+  - id: target
+    type: SELECT
+    displayName: ReplicationSource (namespace/name)
+    # Refreshed by every volsync-backup-all run
+    expression: "{{ kv('volsync_targets', errorOnMissing=false) ?? [] }}"
+    allowCustomValue: true
+
+tasks:
+  - id: trigger
+    type: io.kestra.plugin.kubernetes.kubectl.Patch
+    namespace: "{{ inputs.target | split('/') | first }}"
+    apiGroup: volsync.backube
+    apiVersion: v1alpha1
+    resourceType: replicationsources
+    resourceName: "{{ inputs.target | split('/') | last }}"
+    patchStrategy: JSON_MERGE
+    patch: '{"spec":{"trigger":{"manual":"kestra-{{ execution.id }}"}}}'
+
+  - id: wait
+    type: io.kestra.plugin.core.flow.WaitFor
+    condition: "{{ (outputs.status.statusItem.status.lastManualSync ?? '') == ('kestra-' ~ execution.id) }}"
+    checkFrequency:
+      interval: PT15S
+      maxDuration: PT2H
+    failOnMaxReached: true
+    tasks:
+      - id: status
+        type: io.kestra.plugin.kubernetes.kubectl.Get
+        namespace: "{{ inputs.target | split('/') | first }}"
+        apiGroup: volsync.backube
+        apiVersion: v1alpha1
+        resourceType: replicationsources
+        resourcesNames: ["{{ inputs.target | split('/') | last }}"]
+        fetchType: FETCH_ONE
+
+  # The restic mover runs in VolSync's own Job, so surface its log tail here
+  - id: mover_logs
+    type: io.kestra.plugin.core.log.Log
+    message: "{{ outputs.status.statusItem.status.latestMoverStatus.logs ?? '(no mover logs)' }}"
+
+  - id: check_result
+    type: io.kestra.plugin.core.execution.Fail
+    condition: "{{ (outputs.status.statusItem.status.latestMoverStatus.result ?? '') != 'Successful' }}"
+    errorMessage: "Backup of {{ inputs.target }} failed: {{ outputs.status.statusItem.status.latestMoverStatus.result ?? 'unknown' }} (see mover_logs)"

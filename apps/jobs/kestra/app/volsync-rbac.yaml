@@ -1,0 +1,36 @@
+---
+# For the homelab.backups/volsync-* flows: trigger/inspect ReplicationSources cluster-wide, and run
+# restic pods (unlock, snapshots) in each app's namespace next to its `<app>-volsync-secret`.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kestra-volsync
+rules:
+  - apiGroups: ["volsync.backube"]
+    resources: ["replicationsources"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"] # unlock deletes the stuck volsync-src-<app> Job to force a fresh one
+    verbs: ["get", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kestra-volsync
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kestra-volsync
+subjects:
+  - kind: ServiceAccount
+    name: kestra
+    namespace: jobs

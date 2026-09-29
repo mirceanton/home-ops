@@ -8,6 +8,7 @@ resources:
   - ./rbac.yaml
   - ./talos-service-account.yaml
   - ./crd-schema-publisher.yaml
+  - ./volsync-rbac.yaml
   - ./helm-release.yaml
   - ./http-route.yaml
 

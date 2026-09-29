@@ -1,0 +1,66 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Clears a stale restic lock on one VolSync repository (see .agents/skills/volsync-unlock.md): runs
+# `restic unlock --remove-all` next to the app's `<name>-volsync-secret`, then deletes the stuck
+# volsync-src-<name> Job, if any, so VolSync starts a fresh one. `--remove-all` is safe because each
+# repo is written only by its own ReplicationSource.
+id: volsync-unlock
+namespace: homelab.backups
+description: Remove a stale restic lock from a VolSync repository
+
+inputs:
+  - id: target
+    type: SELECT
+    displayName: ReplicationSource (namespace/name)
+    expression: "{{ kv('volsync_targets', errorOnMissing=false) ?? [] }}"
+    allowCustomValue: true
+
+tasks:
+  - id: unlock
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: "{{ inputs.target | split('/') | first }}"
+    waitForLogInterval: PT5S
+    metadata:
+      labels: { app.kubernetes.io/name: volsync-unlock, app.kubernetes.io/managed-by: kestra }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: restic
+          image: quay.io/backube/volsync:0.16.0 # same restic as the VolSync movers
+          command: ["restic", "unlock", "--remove-all", "--no-cache"]
+          envFrom:
+            - secretRef: { name: "{{ inputs.target | split('/') | last }}-volsync-secret" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 10m, memory: 64Mi }
+            limits: { memory: 256Mi }
+
+  - id: stuck_job
+    type: io.kestra.plugin.kubernetes.kubectl.Get
+    namespace: "{{ inputs.target | split('/') | first }}"
+    apiGroup: batch
+    apiVersion: v1
+    resourceType: jobs
+    resourcesNames: ["volsync-src-{{ inputs.target | split('/') | last }}"]
+    fetchType: FETCH_ONE
+
+  - id: has_stuck_job
+    type: io.kestra.plugin.core.flow.If
+    condition: "{{ outputs.stuck_job.metadataItem is defined and outputs.stuck_job.metadataItem is not null }}"
+    then:
+      - id: delete_stuck_job
+        type: io.kestra.plugin.kubernetes.kubectl.Delete
+        namespace: "{{ inputs.target | split('/') | first }}"
+        apiGroup: batch
+        apiVersion: v1
+        resourceType: jobs
+        resourcesNames: ["volsync-src-{{ inputs.target | split('/') | last }}"]

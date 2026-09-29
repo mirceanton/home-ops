@@ -1,0 +1,43 @@
+# Git-owned flow, synced into Kestra by the system.git-sync flow. Edit here, not in the Kestra UI.
+#
+# Lists the restic snapshots in one VolSync repository, running next to the app's
+# `<name>-volsync-secret`.
+id: volsync-snapshots
+namespace: homelab.backups
+description: List the restic snapshots of a VolSync repository
+
+inputs:
+  - id: target
+    type: SELECT
+    displayName: ReplicationSource (namespace/name)
+    expression: "{{ kv('volsync_targets', errorOnMissing=false) ?? [] }}"
+    allowCustomValue: true
+
+tasks:
+  - id: snapshots
+    type: io.kestra.plugin.kubernetes.core.PodCreate
+    namespace: "{{ inputs.target | split('/') | first }}"
+    waitForLogInterval: PT5S
+    metadata:
+      labels: { app.kubernetes.io/name: volsync-snapshots, app.kubernetes.io/managed-by: kestra }
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+      restartPolicy: Never
+      containers:
+        - name: restic
+          image: quay.io/backube/volsync:0.16.0 # same restic as the VolSync movers
+          command: ["restic", "snapshots", "--no-cache"]
+          envFrom:
+            - secretRef: { name: "{{ inputs.target | split('/') | last }}-volsync-secret" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          resources:
+            requests: { cpu: 10m, memory: 64Mi }
+            limits: { memory: 256Mi }
