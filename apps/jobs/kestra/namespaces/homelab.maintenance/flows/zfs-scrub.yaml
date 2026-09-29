@@ -23,22 +23,24 @@ concurrency:
   behavior: QUEUE
 
 tasks:
-  - id: node_info
+  # kubectl.Get can't fetch a cluster-scoped object by name (it always sends a namespace), so list
+  # the nodes and pick ours by name. Each statusItems entry is wrapped as `{status: ...}`.
+  - id: nodes
     type: io.kestra.plugin.kubernetes.kubectl.Get
+    namespace: ""
     apiVersion: v1
     resourceType: nodes
-    resourcesNames: ["{{ inputs.node }}"]
-    fetchType: FETCH_ONE
+    fetchType: FETCH
+
+  - id: node_os
+    type: io.kestra.plugin.core.output.OutputValues
+    values:
+      osImage: "{% for m in outputs.nodes.metadataItems %}{% if m.name == inputs.node %}{{ outputs.nodes.statusItems[loop.index].status.nodeInfo.osImage }}{% endif %}{% endfor %}"
 
   - id: check_talos
     type: io.kestra.plugin.core.execution.Fail
-    condition: '{{ not (outputs.node_info.statusItem.nodeInfo.osImage contains "Talos (v") }}'
-    errorMessage: "Node {{ inputs.node }} does not report a Talos version: {{ outputs.node_info.statusItem.nodeInfo.osImage }}"
-
-  - id: talos_version
-    type: io.kestra.plugin.core.output.OutputValues
-    values:
-      version: "{{ outputs.node_info.statusItem.nodeInfo.osImage | replace({'Talos (': '', ')': ''}) }}"
+    condition: '{{ not ((outputs.node_os.values.osImage ?? "") contains "Talos (v") }}'
+    errorMessage: "Node '{{ inputs.node }}' not found or not running Talos (osImage: '{{ outputs.node_os.values.osImage ?? '' }}')"
 
   - id: scrub
     type: io.kestra.plugin.kubernetes.core.PodCreate
@@ -57,7 +59,7 @@ tasks:
           env:
             - { name: ACTION, value: scrub }
             - { name: ZFS_POOL, value: "{{ inputs.pool }}" }
-            - { name: TALOS_VERSION, value: "{{ outputs.talos_version.values.version }}" }
+            - { name: TALOS_VERSION, value: "{{ outputs.node_os.values.osImage | replace({'Talos (': '', ')': ''}) }}" }
             - { name: PUSHOVER_NOTIFICATION, value: "false" }
           securityContext:
             privileged: true # needs the host's /dev/zfs control device
