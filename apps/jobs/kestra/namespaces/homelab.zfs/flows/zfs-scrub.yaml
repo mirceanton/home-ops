@@ -5,7 +5,7 @@
 # version is read from the node (`nodeInfo.osImage`, e.g. "Talos (v1.13.7)") instead of being
 # hardcoded and drifting. Replaces the `data-pool-zfs-scrubber` CronJob in storage-system.
 id: zfs-scrub
-namespace: homelab.maintenance
+namespace: homelab.zfs
 description: Scrub a ZFS pool on a Talos node
 
 inputs:

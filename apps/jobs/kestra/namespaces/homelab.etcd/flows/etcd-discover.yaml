@@ -3,7 +3,7 @@
 # Lists the control-plane nodes and stores their names in the `etcd_nodes` KV entry - the list that
 # feeds the etcd-defrag node dropdown and the etcd-defrag-all round (which also runs this first).
 id: etcd-discover
-namespace: homelab.maintenance
+namespace: homelab.etcd
 description: Refresh the list of control-plane nodes (KV etcd_nodes)
 
 tasks:

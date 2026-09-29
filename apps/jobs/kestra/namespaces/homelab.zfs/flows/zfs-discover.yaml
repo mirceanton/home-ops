@@ -5,7 +5,7 @@
 # the zfs-scrub-all round (which also runs this first). A kubectl pod renders the pairs because
 # kubectl.Get doesn't return ZFSNode's top-level `pools` field.
 id: zfs-discover
-namespace: homelab.maintenance
+namespace: homelab.zfs
 description: Refresh the list of node/pool ZFS pairs (KV zfs_targets)
 
 tasks:

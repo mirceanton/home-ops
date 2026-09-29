@@ -13,8 +13,10 @@ namespaces/
 ├── homelab/
 │   ├── flows/<flow-id>.yaml   # flow `namespace:` must be `homelab`
 │   └── files/...              # namespace files (scripts, SQL, ...)
-└── homelab.maintenance/
-    └── flows/<flow-id>.yaml   # flow `namespace:` must be `homelab.maintenance`
+├── homelab.backups/          # VolSync backups, unlock, snapshots
+├── homelab.etcd/             # etcd defrag
+└── homelab.zfs/              # ZFS scrubs
+    └── flows/<flow-id>.yaml   # flow `namespace:` must be `homelab.zfs`
 ```
 
 - **New namespace?** Also add it to the `values` list in `git-sync.yaml` (Flux restarts Kestra to

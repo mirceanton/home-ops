@@ -5,13 +5,13 @@
 #
 # No flow-level `concurrency` limit: Loop runs each iteration as a sub-execution of this same flow.
 id: zfs-scrub-all
-namespace: homelab.maintenance
+namespace: homelab.zfs
 description: Scrub every ZFS pool on every node, one at a time
 
 tasks:
   - id: discover
     type: io.kestra.plugin.core.flow.Subflow
-    namespace: homelab.maintenance
+    namespace: homelab.zfs
     flowId: zfs-discover
     wait: true
     transmitFailed: true
@@ -24,7 +24,7 @@ tasks:
     tasks:
       - id: scrub
         type: io.kestra.plugin.core.flow.Subflow
-        namespace: homelab.maintenance
+        namespace: homelab.zfs
         flowId: zfs-scrub
         inputs:
           target: "{{ item.value }}"

@@ -6,7 +6,7 @@
 #
 # Kestra 2.0 OSS has no pluginDefaults, so the pod settings are repeated inline per task.
 id: etcd-defrag
-namespace: homelab.maintenance
+namespace: homelab.etcd
 description: Defragment etcd on a Talos control-plane node
 
 inputs:
