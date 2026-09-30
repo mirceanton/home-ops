@@ -10,8 +10,6 @@ spec:
   targetNamespace: youtube
 
   path: ./apps/youtube/hermes-postgres/app
-  components:
-    - ../../../../components/cnpg/
   sourceRef:
     kind: GitRepository
     name: flux-system
