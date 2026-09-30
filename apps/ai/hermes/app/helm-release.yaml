@@ -181,3 +181,10 @@ spec:
         path: /mnt/tank/Media/Books
         globalMounts:
           - path: /Volumes/Media/Books
+
+      projects-mirceanton:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Projects/mirceanton
+        globalMounts:
+          - path: /Volumes/Projects/mirceanton
