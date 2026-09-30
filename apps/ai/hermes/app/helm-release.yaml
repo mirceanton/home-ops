@@ -156,3 +156,28 @@ spec:
             subPath: config.yaml
           - path: /tmp/.env
             subPath: env
+
+      media-music:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Music
+        globalMounts:
+          - path: /Volumes/Media/Music
+      media-movies:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Movies
+        globalMounts:
+          - path: /Volumes/Media/Movies
+      media-tvshows:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/TV_Shows
+        globalMounts:
+          - path: /Volumes/Media/TV_Shows
+      media-books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        globalMounts:
+          - path: /Volumes/Media/Books
