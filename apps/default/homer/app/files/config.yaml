@@ -101,6 +101,12 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/affine.webp"
 
+      - name: "Miniflux"
+        subtitle: "RSS Reader"
+        url: "https://rss.home.mirceanton.com"
+        target: "_blank"
+        logo: "assets/icons/webp/miniflux.webp"
+
   - name: "Maker"
     icon: "fas fa-cube"
     items:
