@@ -1,4 +1,3 @@
----
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -8,6 +7,7 @@ resources:
   - ./namespace.yaml
   - ./channel-analytics-mcp
   - ./davinci
+  - ./hermes-postgres
   - ./teleprompter
   - ./trends-mcp
   - ./youtube-public-mcp
