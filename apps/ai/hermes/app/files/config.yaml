@@ -40,8 +40,8 @@ mcp_servers:
     url: "http://flux-mcp.flux-system.svc.cluster.local:9090/mcp"
 
   grafana:
-    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse"
-    transport: sse
+    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/mcp"
+    transport: streamable-http
 
   home_assistant:
     url: "http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp"
