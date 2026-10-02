@@ -20,17 +20,9 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            # Env var names confirmed by reading
-            # src/youtube_mcp/__init__.py directly (both the README and
-            # the source agree): MCP_TRANSPORT accepts stdio/sse/
-            # streamable-http, defaults for MCP_HOST/MCP_PORT are
-            # 0.0.0.0/8000, and providing only YOUTUBE_API_KEY (no OAuth
-            # vars) means every write-shaped generated tool still exists
-            # but 403s against Google — the key itself is the read-only
-            # boundary here.
             image:
               repository: ghcr.io/oliverhruby/youtube-mcp
-              tag: latest
+              tag: v0.1.0
 
             env:
               MCP_TRANSPORT: streamable-http

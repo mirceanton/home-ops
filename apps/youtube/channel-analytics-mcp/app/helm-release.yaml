@@ -20,15 +20,9 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            # Same image as youtube-public-mcp, run as a second instance
-            # so the OAuth-bearing (write-capable at the tool level)
-            # credentials never share a pod with the API-key-only,
-            # inherently-read-only public-data server. Env var names
-            # confirmed by reading src/youtube_mcp/__init__.py directly
-            # (github.com/oliverhruby/youtube-mcp) — no "OAUTH_" infix.
             image:
               repository: ghcr.io/oliverhruby/youtube-mcp
-              tag: latest
+              tag: v0.1.0
 
             env:
               MCP_TRANSPORT: streamable-http
