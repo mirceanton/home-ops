@@ -1,0 +1,58 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen3.8-27b
+spec:
+  # IQ2_S: 7.4GiB in VRAM (the 0.4GiB token embedding stays on the CPU).
+  # IQ2_XXS (6.77GiB file) would fit 64K context in the same budget, at lower quality.
+  source: https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/main/Qwen3.8-27B-UD-IQ2_S.gguf
+  format: gguf
+  quantization: UD-IQ2_S
+  hardware:
+    accelerator: cuda
+    gpu:
+      enabled: true
+      count: 1
+      vendor: nvidia
+      layers: -1
+
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen3.8-27b
+  labels:
+    krr/ignore: "true"
+spec:
+  modelRef: qwen3.8-27b
+  runtimeClassName: nvidia
+  image: ghcr.io/ggml-org/llama.cpp:server-cuda
+  replicas: 1
+  priority: normal
+  parallelSlots: 1 # single concurrent session
+
+  # Sized to use nearly all of the 4070's 12GiB. Measured at 32K: 10.1GiB used (incl. ~0.6GiB
+  # held by Jellyfin/Immich/Sunshine), 1.77GiB free. Each extra token costs 34KiB of KV at
+  # q8_0, so 72K leaves ~0.4GiB. The pod will fail to load if those neighbours are holding
+  # more VRAM when it (re)starts. Past this, cacheTypeK/V q4_0 (18KiB/token) reaches ~128K.
+  flashAttention: true
+  jinja: true
+  contextSize: 73728
+  batchSize: 2048
+  uBatchSize: 512 # smaller compute buffer; prompt processing barely changes
+  cacheTypeK: q8_0 # KV is 64KiB/token at f16 (16 full-attention layers x 4 KV heads); q8_0 is 34KiB
+  cacheTypeV: q8_0
+  extraArgs:
+    - "--cache-ram"
+    - "0"
+
+  resources:
+    cpu: 2000m
+    memory: 4Gi # weights live in VRAM; host RAM is only the mmap + runtime
+    memoryLimit: 8Gi
+    gpu: 1
+
+  endpoint:
+    port: 8080
+    type: ClusterIP

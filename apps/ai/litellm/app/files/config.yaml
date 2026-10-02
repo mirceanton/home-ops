@@ -8,6 +8,11 @@ model_list:
       api_key: "N/A"
     model_info:
       mode: embedding
+  - model_name: qwen3.8-27B-2bit
+    litellm_params:
+      model: openai/qwen3.8-27B
+      api_base: http://qwen3-8-27b:8080/v1
+      api_key: "N/A"
 
   # -------------------------------- QWEN IMAGE --------------------------------
   - model_name: qwen-image-3.0-pro

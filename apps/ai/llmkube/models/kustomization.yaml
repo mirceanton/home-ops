@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./servicemonitor.yaml
   - ./qwen3-embedding-0.6b.yaml
+  - ./qwen3-8-27b.yaml
