@@ -8,6 +8,7 @@ model_list:
       api_key: "N/A"
     model_info:
       mode: embedding
+
   - model_name: qwen3.8-27B-2bit
     litellm_params:
       model: openai/qwen3.8-27B
@@ -34,6 +35,12 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
+  - model_name: qwen3.8-flash
+    litellm_params:
+      model: qwencloud/qwen3.8-flash
+      api_base: *qwenURL
+      api_key: os.environ/QWEN_KEY
+
   # ----------------------------------- QWEN 3.7 -----------------------------------
   - model_name: qwen3.7-plus
     litellm_params:
@@ -41,18 +48,6 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
-  - model_name: qwen3.7-max
-    litellm_params:
-      model: qwencloud/qwen3.7-max
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
-  # ----------------------------------- QWEN 3.6 -----------------------------------
-  - model_name: qwen3.6-flash
-    litellm_params:
-      model: qwencloud/qwen3.6-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
 
   # ----------------------------------- GLM -----------------------------------
   - model_name: glm-5.2
@@ -68,95 +63,6 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
-  - model_name: deepseek-v4-flash
-    litellm_params:
-      model: qwencloud/deepseek-v4-flash
-      api_base: *qwenURL
-      api_key: os.environ/QWEN_KEY
-
-mcp_servers:
-  github:
-    url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
-
-  firefly:
-    url: "http://firefly-mcp.finance.svc.cluster.local:3000"
-    auth_type: bearer_token
-    auth_value: os.environ/FIREFLY_MCP_TOKEN
-
-  affine:
-    url: "http://affine-mcp.productivity.svc.cluster.local:3000/mcp"
-    auth_type: bearer_token
-    auth_value: os.environ/AFFINE_MCP_TOKEN
-
-  kubesearch:
-    url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
-
-  flux:
-    url: "http://flux-mcp.flux-system.svc.cluster.local:9090/mcp"
-
-  grafana:
-    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse"
-    transport: sse
-
-  home_assistant:
-    url: "http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp"
-
-  navidrome:
-    url: "http://navidrome-mcp.media.svc.cluster.local:3000/mcp"
-
-  streamarr:
-    url: "http://streamarr.downloads.svc.cluster.local:8080/mcp"
-
-  stockii:
-    url: "http://stockii.bomkii.svc.cluster.local:8080/mcp/sse"
-    transport: sse
-
-  # disallowed_tools drops the interactive OAuth flow tools: both servers
-  # already carry working credentials via env vars (YOUTUBE_API_KEY /
-  # YOUTUBE_CLIENT_ID+SECRET+REFRESH_TOKEN), but auth_status's
-  # session_active field reads as "not authenticated" to an agent even
-  # though the data tools never check it — they read the env vars
-  # directly and just work. Without this, an agent that calls
-  # auth_status first reaches for auth_start and starts an unnecessary
-  # (and non-interactive-session-breaking) OAuth consent flow instead of
-  # just calling get_my_channel/analytics_query/etc. auth_status and
-  # auth_clear stay: harmless, and auth_clear is the escape hatch if a
-  # pending state gets stuck again.
-  youtube_public:
-    url: "http://youtube-public-mcp.youtube.svc.cluster.local:8000/mcp"
-    disallowed_tools: ["auth_start", "auth_poll", "auth_finish", "auth_refresh"]
-
-  youtube_analytics:
-    url: "http://channel-analytics-mcp.youtube.svc.cluster.local:8000/mcp"
-    auth_type: bearer_token
-    auth_value: os.environ/YOUTUBE_ANALYTICS_MCP_TOKEN
-    disallowed_tools: ["auth_start", "auth_poll", "auth_finish", "auth_refresh"]
-
-  youtube_trends:
-    url: "http://trends-mcp.youtube.svc.cluster.local:8080/mcp"
-
-router_settings:
-  model_group_alias:
-    affine: qwen3.7-plus
-    hermes: qwen3.8-max
-    karakeep: qwen3.6-flash
-    karakeep-embeddings: qwen3-embedding-0.6b
-
-    # Affine's built-in AI features hardcode these exact model names per
-    # action (chat, embeddings, etc.) client-side and request them literally
-    # against whatever provider is configured, regardless of the "affine"
-    # alias above. Alias them to real models so those requests resolve.
-    gemini-2.5-flash: qwen3.7-plus
-    gemini-embedding-001: qwen3-embedding-0.6b
-    claude-sonnet-4: qwen3.7-plus
-    text-embedding-3-large: qwen3-embedding-0.6b
-
-    # Explicit "openai"-typed copilot profile (config.json copilot.providers.profiles)
-    # uses these well-known names so Affine's native model catalog recognizes
-    # them without needing the gemini detour above.
-    gpt-4o: qwen3.7-plus
-    gpt-4o-mini: qwen3.7-plus
-    text-embedding-3-small: qwen3-embedding-0.6b
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -175,11 +81,3 @@ litellm_settings:
   retry_after: 5
   set_verbose: false
 
-  mcp_semantic_tool_filter:
-    enabled: true
-    embedding_model: "qwen3-embedding-0.6b"
-    top_k: 10
-    # Relevant and irrelevant tools both score ~0.7-0.9 with this model, so no
-    # threshold cleanly separates them; rely on top_k and keep this at 0 so a
-    # genuinely-relevant tool is never dropped by score.
-    similarity_threshold: 0.0
