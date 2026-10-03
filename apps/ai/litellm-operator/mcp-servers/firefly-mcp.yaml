@@ -4,6 +4,7 @@ kind: LiteLLMMCPServer
 metadata:
   name: firefly-mcp
 spec:
+  alias: firefly_mcp
   url: http://firefly-mcp.finance.svc.cluster.local:3000
   transport: sse
   authType: bearer_token
