@@ -4,6 +4,7 @@ kind: LiteLLMMCPServer
 metadata:
   name: affine-mcp
 spec:
+  alias: affine_mcp
   url: http://affine-mcp.productivity.svc.cluster.local:3000
   transport: http
   authType: bearer_token
