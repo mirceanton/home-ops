@@ -37,8 +37,6 @@ spec:
         requests:
           storage: "${DRAGONFLY_MEMORY_LIMIT:=512Mi}"
 
-  networkPolicyEnabled: false
-
   resources:
     requests:
       cpu: ${DRAGONFLY_CPU_REQUEST:=20m}
