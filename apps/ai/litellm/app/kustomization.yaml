@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
-  - ./github-access-token.yaml
   - ./grafana-dashboard.yaml
   - ./litellm-chatgpt-tokens.pvc.yaml
   - ./litellm-proxy.yaml

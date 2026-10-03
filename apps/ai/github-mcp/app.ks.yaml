@@ -24,5 +24,3 @@ spec:
   dependsOn:
     - name: 1password-connect
       namespace: security-system
-    - name: litellm
-      namespace: ai
