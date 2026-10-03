@@ -1,0 +1,13 @@
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: channel-analytics-mcp
+spec:
+  url: http://channel-analytics-mcp.youtube.svc.cluster.local:8000
+  transport: http
+  authType: bearer_token
+  authTokenRef:
+    name: litellm-secret
+    key: YOUTUBE_ANALYTICS_MCP_TOKEN
+  proxyRef: main
