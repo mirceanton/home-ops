@@ -10,3 +10,7 @@ resources:
   - ./qwen3.7-plus.yaml
   - ./glm-5.2.yaml
   - ./deepseek-v4-pro.yaml
+
+  - ./gpt6-sol.yaml
+  - ./gpt6-luna.yaml
+  - ./gpt5.6-terra.yaml

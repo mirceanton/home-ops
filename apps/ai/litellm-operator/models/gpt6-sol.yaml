@@ -1,0 +1,12 @@
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: gpt-6-sol
+spec:
+  proxyRef: litellm
+  modelName: gpt-6-sol
+  params:
+    model: chatgpt/gpt-6-sol
+  info:
+    mode: responses
