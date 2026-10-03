@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: litellm-operator
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: litellm-operator
+
+  values:
+    controller:
+      leaderElection:
+        enabled: true
+
+    webhook:
+      enabled: true
+
+    llmkube:
+      autoRegister: true
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 128Mi

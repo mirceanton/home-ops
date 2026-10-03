@@ -12,4 +12,5 @@ resources:
   - ./hermes
   - ./kubesearch-mcp
   - ./litellm
+  - ./litellm-operator
   - ./llmkube
