@@ -10,57 +10,34 @@ providers:
 gateway:
   api_server:
     enabled: true
-    # Defaults to 127.0.0.1 - binds loopback-only and is unreachable from
-    # hermano (a separate pod) without this.
     host: "0.0.0.0"
     port: 8642
     key: "{{ .API_SERVER_KEY }}"
 
 mcp_servers:
   github:
-    url: "http://litellm.ai.svc.cluster.local:4000/github/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
   firefly:
-    url: "http://litellm.ai.svc.cluster.local:4000/firefly/mcp"
+    url: "http://firefly-mcp.finance.svc.cluster.local:3000"
     headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+      Authorization: "Bearer {{ .FIREFLY_MCP_TOKEN }}"
   affine:
-    url: "http://litellm.ai.svc.cluster.local:4000/affine/mcp"
+    url: "http://affine-mcp.productivity.svc.cluster.local:3000/mcp"
     headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+      Authorization: "Bearer {{ .AFFINE_MCP_TOKEN }}"
   kubesearch:
-    url: "http://litellm.ai.svc.cluster.local:4000/kubesearch/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
   flux:
-    url: "http://litellm.ai.svc.cluster.local:4000/flux/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://flux-mcp.flux-system.svc.cluster.local:9090/mcp"
   grafana:
-    url: "http://litellm.ai.svc.cluster.local:4000/grafana/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse"
+    transport: sse
   home_assistant:
-    url: "http://litellm.ai.svc.cluster.local:4000/home_assistant/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp"
   navidrome:
-    url: "http://litellm.ai.svc.cluster.local:4000/navidrome/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
-
+    url: "http://navidrome-mcp.media.svc.cluster.local:3000/mcp"
   streamarr:
-    url: "http://litellm.ai.svc.cluster.local:4000/streamarr/mcp"
-    headers:
-      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+    url: "http://streamarr.downloads.svc.cluster.local:8080/mcp"
 
 toolsets:
   - hermes-cli
@@ -111,9 +88,6 @@ discord:
 group_sessions_per_user: false
 
 dashboard:
-  # Envoy Gateway's forwarded headers through envoy-internal aren't
-  # guaranteed to yield the right scheme for redirect_uri reconstruction,
-  # so declare it explicitly rather than rely on X-Forwarded-Proto guessing.
   public_url: https://hermes.home.mirceanton.com
   oauth:
     provider: self-hosted
