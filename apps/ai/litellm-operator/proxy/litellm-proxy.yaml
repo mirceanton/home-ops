@@ -55,6 +55,11 @@ spec:
         secretKeyRef:
           name: litellm-secret
           key: salt-key
+
+    - name: CHATGPT_TOKEN_DIR
+      value: /app/chatgpt_tokens
+
+    # Keycloak OIDC
     - name: GENERIC_CLIENT_ID
       valueFrom:
         secretKeyRef:
@@ -79,12 +84,18 @@ spec:
       value: mirk
 
   envFrom:
-    - secretRef:
-        name: litellm-secret
-    - secretRef:
-        name: litellm-oidc-secret
-    - secretRef:
-        name: litellm-postgres-app
+    - secretRef: {name: litellm-secret}
+    - secretRef: {name: litellm-oidc-secret}
+    - secretRef: {name: litellm-postgres-app}
+
+  volumes:
+    - name: chatgpt-tokens
+      persistentVolumeClaim:
+        claimName: litellm-chatgpt-tokens
+
+  volumeMounts:
+    - name: chatgpt-tokens
+      mountPath: /app/chatgpt_token
 
   resources:
     requests:
