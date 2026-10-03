@@ -6,15 +6,8 @@ resources:
   - ./external-secret.yaml
   - ./github-access-token.yaml
   - ./grafana-dashboard.yaml
-  - ./helm-release.yaml
-  - ./oci-repository.yaml
 
 configMapGenerator:
-  - name: litellm-config
-    options:
-      disableNameSuffixHash: true
-    files:
-      - config.yaml=./files/config.yaml
   - name: litellm-dashboard
     options:
       disableNameSuffixHash: true
