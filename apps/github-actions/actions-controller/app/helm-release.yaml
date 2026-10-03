@@ -7,6 +7,14 @@ metadata:
   name: actions-runner-controller
 spec:
   interval: 10m
+
+  # Helm does not upgrade CRDs by default. Keep the ARC API schema in lockstep
+  # with the controller chart so runner scale-set upgrades can add new fields.
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+
   chartRef:
     kind: OCIRepository
     name: gha-runner-scale-set-controller
