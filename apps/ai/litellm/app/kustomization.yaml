@@ -4,13 +4,5 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
-  - ./grafana-dashboard.yaml
   - ./litellm-chatgpt-tokens.pvc.yaml
   - ./litellm-proxy.yaml
-
-configMapGenerator:
-  - name: litellm-dashboard
-    options:
-      disableNameSuffixHash: true
-    files:
-      - dashboard.json
