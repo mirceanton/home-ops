@@ -1,0 +1,125 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmproxy_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMProxy
+metadata:
+  name: main
+spec:
+  applyMode: file
+  apiAccess:
+    masterKeyRef:
+      name: litellm-secret
+      key: master-key
+  image: ghcr.io/berriai/litellm:v1.103.2
+  replicas: 1
+
+  generalSettings:
+    master_key: os.environ/LITELLM_MASTER_KEY
+    database_url: os.environ/DATABASE_URL
+    proxy_base_url: https://llm.home.mirceanton.com
+    store_model_in_db: true
+    store_prompts_in_spend_logs: true
+    health_check_endpoint: /
+    require_auth_for_metrics_endpoint: false
+    prometheus_adapter: true
+
+  routerSettings:
+    num_retries: 2
+    request_timeout: 600
+    drop_params: true
+
+  callbacks:
+    success:
+      - prometheus
+    failure:
+      - prometheus
+
+  env:
+    - name: LITELLM_MODE
+      value: PRODUCTION
+    - name: LITELLM_LOG
+      value: INFO
+    - name: LITELLM_LOCAL_MODEL_COST_MAP
+      value: "False"
+    - name: STORE_MODEL_IN_DB
+      value: "True"
+    - name: PROXY_BASE_URL
+      value: https://llm.home.mirceanton.com
+    - name: LITELLM_MASTER_KEY
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: master-key
+    - name: LITELLM_SALT_KEY
+      valueFrom:
+        secretKeyRef:
+          name: litellm-secret
+          key: salt-key
+    - name: GENERIC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: litellm-oidc-secret
+          key: client-id
+    - name: GENERIC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: litellm-oidc-secret
+          key: client-secret
+    - name: GENERIC_AUTHORIZATION_ENDPOINT
+      value: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
+    - name: GENERIC_TOKEN_ENDPOINT
+      value: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token
+    - name: GENERIC_USERINFO_ENDPOINT
+      value: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/userinfo
+    - name: GENERIC_SCOPE
+      value: openid profile email
+    - name: AUTO_REDIRECT_UI_LOGIN_TO_SSO
+      value: "true"
+    - name: PROXY_ADMIN_ID
+      value: mirk
+
+  envFrom:
+    - secretRef:
+        name: litellm-secret
+    - secretRef:
+        name: litellm-oidc-secret
+    - secretRef:
+        name: litellm-postgres-app
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 1126Mi
+    limits:
+      memory: 2Gi
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 4000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 4000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+
+  route:
+    hostnames:
+      - llm.home.mirceanton.com
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: envoy-internal
+        namespace: network-system
