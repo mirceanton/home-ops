@@ -24,7 +24,7 @@ uv = "latest"
 helmfile = "latest"
 
 # Talos Stuff
-"aqua:talosctl" = "1.14.1"
+"aqua:talosctl" = "1.14.2"
 "aqua:talhelper" = "3.1.17"
 "github:mirceanton/talswitcher" = "latest"
 
