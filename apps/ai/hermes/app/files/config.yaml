@@ -1,11 +1,11 @@
 model:
   default: qwen3.8-flash
-  provider: qwen-direct
+  provider: litellm
 
 providers:
-  qwen-direct:
-    base_url: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
-    api_key: "{{ .QWEN_KEY }}"
+  litellm:
+    base_url: http://litellm.ai.svc.cluster.local:4000/v1
+    api_key: "${LITELLM_API_KEY}"
 
 gateway:
   api_server:
@@ -18,36 +18,49 @@ gateway:
 
 mcp_servers:
   github:
-    url: "http://github-mcp.ai.svc.cluster.local:8080/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/github/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   firefly:
-    url: "http://firefly-mcp.finance.svc.cluster.local:3000"
+    url: "http://litellm.ai.svc.cluster.local:4000/firefly/mcp"
     headers:
-      Authorization: "Bearer {{ .FIREFLY_MCP_TOKEN }}"
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   affine:
-    url: "http://affine-mcp.productivity.svc.cluster.local:3000/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/affine/mcp"
     headers:
-      Authorization: "Bearer {{ .AFFINE_MCP_TOKEN }}"
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   kubesearch:
-    url: "http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/kubesearch/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   flux:
-    url: "http://flux-mcp.flux-system.svc.cluster.local:9090/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/flux/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   grafana:
-    url: "http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse"
-    transport: sse
+    url: "http://litellm.ai.svc.cluster.local:4000/grafana/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   home_assistant:
-    url: "http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/home_assistant/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   navidrome:
-    url: "http://navidrome-mcp.media.svc.cluster.local:3000/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/navidrome/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
   streamarr:
-    url: "http://streamarr.downloads.svc.cluster.local:8080/mcp"
+    url: "http://litellm.ai.svc.cluster.local:4000/streamarr/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
 toolsets:
   - hermes-cli
