@@ -86,22 +86,52 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/browserless/chrome
-              tag: latest
-            args: ["google-chrome-stable", "--no-sandbox", "--headless=new", "--disable-gpu", "--disable-dev-shm-usage", "--remote-debugging-port=9222", "--remote-debugging-address=0.0.0.0"]
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
+              repository: ghcr.io/zenika/alpine-chrome
+              tag: "124"
+            command:
+              - chromium-browser
+            args:
+              - --headless
+              - --no-sandbox
+              - --disable-gpu
+              - --disable-dev-shm-usage
+              - --remote-debugging-address=0.0.0.0
+              - --remote-debugging-port=9222
+              - --hide-scrollbars
             resources:
               requests:
                 cpu: 10m
                 memory: 256Mi
               limits:
-                memory: 512Mi
+                memory: 1Gi
             securityContext:
               allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+
+      meilisearch:
+        containers:
+          app:
+            image:
+              repository: docker.io/getmeili/meilisearch
+              tag: v1.54.3
+            args: ["/bin/meilisearch"]
+            env:
+              MEILI_NO_ANALYTICS: true
+              MEILI_MASTER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-secret
+                    key: MEILI_MASTER_KEY
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
               capabilities:
                 drop: ["ALL"]
 
@@ -109,8 +139,30 @@ spec:
       app:
         controller: karakeep
         ports:
-          http:
-            port: 3000
+          http: { port: 3000 }
+      chrome:
+        controller: chrome
+        ports:
+          http: { port: 9222 }
+      meilisearch:
+        controller: meilisearch
+        ports:
+          http: { port: 7700 }
+
+    serviceMonitor:
+      app:
+        serviceName: karakeep
+        selector:
+          matchLabels:
+            app.kubernetes.io/service: karakeep-app
+        endpoints:
+          - port: http
+            path: /api/metrics
+            interval: 30s
+            authorization:
+              credentials:
+                name: karakeep-secret
+                key: PROMETHEUS_AUTH_TOKEN
 
     route:
       home:
@@ -118,14 +170,26 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http
 
     persistence:
       data:
         existingClaim: ${APP}
-        globalMounts:
-          - path: /data
-
+        advancedMounts:
+          karakeep:
+            app: [{ path: /data }]
+      meilisearch-data:
+        type: emptyDir
+        advancedMounts:
+          meilisearch:
+            app: [{ path: /meili_data }]
       tmp:
         type: emptyDir
-        globalMounts:
-          - path: /tmp
+        advancedMounts:
+          karakeep:
+            app: [{ path: /tmp }]
+          meilisearch:
+            app: [{ path: /tmp }]
