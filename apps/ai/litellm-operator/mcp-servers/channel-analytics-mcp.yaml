@@ -11,4 +11,4 @@ spec:
   authTokenRef:
     name: litellm-secret
     key: YOUTUBE_ANALYTICS_MCP_TOKEN
-  proxyRef: main
+  proxyRef: litellm

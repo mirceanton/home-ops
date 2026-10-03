@@ -5,7 +5,7 @@ metadata:
   name: karakeep
   namespace: ai
 spec:
-  proxyRef: main
+  proxyRef: litellm
   secretName: karakeep-litellm-key
   keyAlias: karakeep-llm
   metadata:

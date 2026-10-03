@@ -11,4 +11,4 @@ spec:
   authTokenRef:
     name: litellm-secret
     key: FIREFLY_MCP_TOKEN
-  proxyRef: main
+  proxyRef: litellm

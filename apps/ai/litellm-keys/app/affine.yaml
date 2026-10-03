@@ -5,7 +5,7 @@ metadata:
   name: affine
   namespace: ai
 spec:
-  proxyRef: main
+  proxyRef: litellm
   secretName: affine-litellm-key
   keyAlias: affine-copilot
   metadata:
