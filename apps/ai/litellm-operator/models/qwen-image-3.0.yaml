@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: qwen-image-3.0
+spec:
+  modelName: qwen-image-3.0
+  params:
+    model: qwencloud/qwen-image-3.0
+    apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+    apiKeyRef:
+      name: litellm-secret
+      key: QWEN_KEY
