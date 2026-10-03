@@ -6,3 +6,4 @@ kind: Kustomization
 resources:
   - ./truenas.yaml
   - ./raspberry-pi.yaml
+  - ./telegraf-ha-plugs.yaml

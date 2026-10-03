@@ -1,0 +1,87 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: telegraf
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: telegraf
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      telegraf:
+        containers:
+          telegraf:
+            image:
+              repository: docker.io/library/telegraf
+              tag: 1.32.3
+            envFrom:
+              - secretRef: { name: telegraf-mqtt-auth }
+            env:
+              TZ: Europe/Bucharest
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      metrics:
+        controller: telegraf
+        ports:
+          http:
+            port: 9273
+
+    configMaps:
+      config:
+        data:
+          telegraf.conf: |-
+            [agent]
+              interval = "60s"
+              round_interval = true
+              flush_interval = "15s"
+
+            [[inputs.mqtt_consumer]]
+              servers = ["tcp://mosquitto.home-automation.svc.cluster.local:1883"]
+              topics = ["zigbee2mqtt/+"]
+              username = "${MQTT_USERNAME}"
+              password = "${MQTT_PASSWORD}"
+              data_format = "json"
+              metric_version = 2
+              name_override = "home_plug"
+              fieldpass = ["power", "energy", "voltage", "current"]
+              [[inputs.mqtt_consumer.topic_parsing]]
+                topic = "zigbee2mqtt/+"
+                tags = "_/plug"
+
+            [[outputs.prometheus_client]]
+              listen = ":9273"
+              metric_version = 2
+
+    persistence:
+      config-file:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /etc/telegraf/telegraf.conf
+            subPath: telegraf.conf

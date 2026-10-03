@@ -8,4 +8,5 @@ resources:
   - ./namespace.yaml
   - ./home-assistant
   - ./mosquitto
+  - ./telegraf
   - ./zigbee2mqtt
