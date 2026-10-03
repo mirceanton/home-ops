@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: github-mcp
+spec:
+  alias: github
+  url: http://github-mcp.ai.svc.cluster.local:8080/mcp
+  transport: http
+  proxyRef: main

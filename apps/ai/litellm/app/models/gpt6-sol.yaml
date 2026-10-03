@@ -2,12 +2,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: gpt-5-6-terra
-  namespace: ai
+  name: gpt-6-sol
 spec:
-  proxyRef: litellm
-  modelName: gpt-5.6-terra
+  proxyRef: main
+  modelName: gpt-6-sol
   params:
-    model: chatgpt/gpt-5.6-terra
+    model: chatgpt/gpt-6-sol
   info:
     mode: responses

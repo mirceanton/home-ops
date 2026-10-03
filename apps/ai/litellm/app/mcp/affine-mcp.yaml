@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: affine-mcp
+spec:
+  alias: affine
+  url: http://affine-mcp.productivity.svc.cluster.local:3000/mcp
+  transport: http
+  authType: bearer_token
+  authTokenRef:
+    name: litellm-secret
+    key: AFFINE_MCP_TOKEN
+  proxyRef: main

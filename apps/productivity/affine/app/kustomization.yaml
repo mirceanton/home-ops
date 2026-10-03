@@ -6,8 +6,6 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
-  - ./secret-store.yaml
-  - ./external-secret-litellm.yaml
 
 patchesStrategicMerge:
   - ./patches/cnpg.yaml

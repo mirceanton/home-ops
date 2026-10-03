@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: litellm-mcp-servers
+  name: litellm-models
 spec:
   interval: 10m
   prune: true
@@ -11,7 +11,7 @@ spec:
   timeout: 5m
   targetNamespace: ai
 
-  path: ./apps/ai/litellm-operator/mcp-servers
+  path: ./apps/ai/litellm/app/models
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -19,4 +19,6 @@ spec:
 
   dependsOn:
     - name: litellm-operator
+      namespace: ai
+    - name: litellm
       namespace: ai

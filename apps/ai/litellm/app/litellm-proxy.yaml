@@ -3,7 +3,7 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMProxy
 metadata:
-  name: litellm
+  name: main
 spec:
   image: ghcr.io/berriai/litellm:v1.103.2
   replicas: 1
@@ -84,9 +84,9 @@ spec:
       value: mirk
 
   envFrom:
-    - secretRef: {name: litellm-secret}
-    - secretRef: {name: litellm-oidc-secret}
-    - secretRef: {name: litellm-postgres-app}
+    - secretRef: { name: litellm-secret }
+    - secretRef: { name: litellm-oidc-secret }
+    - secretRef: { name: litellm-postgres-app }
 
   volumes:
     - name: chatgpt-tokens
@@ -95,7 +95,7 @@ spec:
 
   volumeMounts:
     - name: chatgpt-tokens
-      mountPath: /app/chatgpt_token
+      mountPath: /app/chatgpt_tokens
 
   resources:
     requests:

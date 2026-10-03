@@ -6,6 +6,8 @@ resources:
   - ./external-secret.yaml
   - ./github-access-token.yaml
   - ./grafana-dashboard.yaml
+  - ./litellm-chatgpt-tokens.pvc.yaml
+  - ./litellm-proxy.yaml
 
 configMapGenerator:
   - name: litellm-dashboard
