@@ -5,7 +5,7 @@ metadata:
   name: gpt-5-6-terra
   namespace: ai
 spec:
-  proxyRef: main
+  proxyRef: litellm
   modelName: gpt-5.6-terra
   params:
     model: chatgpt/gpt-5.6-terra

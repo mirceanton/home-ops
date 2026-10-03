@@ -8,4 +8,4 @@ spec:
   alias: kubesearch
   url: http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp
   transport: http
-  proxyRef: main
+  proxyRef: litellm

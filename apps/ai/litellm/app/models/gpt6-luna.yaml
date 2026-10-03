@@ -4,7 +4,7 @@ metadata:
   name: gpt-6-luna
   namespace: ai
 spec:
-  proxyRef: main
+  proxyRef: litellm
   modelName: gpt-6-luna
   params:
     model: chatgpt/gpt-6-luna

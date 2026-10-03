@@ -8,4 +8,4 @@ spec:
   alias: grafana
   url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
   transport: sse
-  proxyRef: main
+  proxyRef: litellm

@@ -8,4 +8,4 @@ spec:
   alias: streamarr
   url: http://streamarr.downloads.svc.cluster.local:8080/mcp
   transport: http
-  proxyRef: main
+  proxyRef: litellm
