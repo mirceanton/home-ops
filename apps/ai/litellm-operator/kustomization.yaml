@@ -6,3 +6,4 @@ resources:
   - ./app.ks.yaml
   - ./mcp-servers.ks.yaml
   - ./models.ks.yaml
+  - ./proxy.ks.yaml
