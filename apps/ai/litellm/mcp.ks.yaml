@@ -11,7 +11,7 @@ spec:
   timeout: 5m
   targetNamespace: ai
 
-  path: ./apps/ai/litellm-operator/mcp-servers
+  path: ./apps/ai/litellm/app/mcp
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -19,4 +19,6 @@ spec:
 
   dependsOn:
     - name: litellm-operator
+      namespace: ai
+    - name: litellm
       namespace: ai

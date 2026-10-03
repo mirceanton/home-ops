@@ -28,6 +28,8 @@ spec:
       KEYCLOAK_CLIENT_HOME_URL: "https://llm.home.mirceanton.com"
 
   dependsOn:
+    - name: litellm-operator
+      namespace: ai
     - name: 1password-connect
       namespace: security-system
     - name: cloudnative-pg-operator

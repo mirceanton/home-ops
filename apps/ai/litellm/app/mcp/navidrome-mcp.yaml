@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: navidrome-mcp
+spec:
+  alias: navidrome
+  url: http://navidrome-mcp.media.svc.cluster.local:3000/mcp
+  transport: http
+  proxyRef: litellm

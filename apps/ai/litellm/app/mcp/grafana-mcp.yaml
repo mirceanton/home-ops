@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: grafana-mcp
+spec:
+  alias: grafana
+  url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
+  transport: sse
+  proxyRef: litellm
