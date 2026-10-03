@@ -32,6 +32,11 @@ spec:
               # LLM auto-tagging/summarization, routed through the LiteLLM gateway.
               # No vision model is deployed, so OCR_USE_LLM stays off (Tesseract handles OCR).
               OPENAI_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-litellm-secret
+                    key: OPENAI_API_KEY
               INFERENCE_TEXT_MODEL: karakeep
               EMBEDDING_TEXT_MODEL: karakeep-embeddings
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
