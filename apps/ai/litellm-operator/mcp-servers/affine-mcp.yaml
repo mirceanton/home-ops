@@ -1,0 +1,13 @@
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: affine-mcp
+spec:
+  url: http://affine-mcp.productivity.svc.cluster.local:3000
+  transport: http
+  authType: bearer_token
+  authTokenRef:
+    name: litellm-secret
+    key: AFFINE_MCP_TOKEN
+  proxyRef: main
