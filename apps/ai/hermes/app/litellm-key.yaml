@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: hermes
+spec:
+  proxyRef: litellm
+  secretName: hermes-litellm-key
+  keyAlias: hermes-agent
+  metadata:
+    app: hermes
+    description: API key for Hermes agent model and MCP access

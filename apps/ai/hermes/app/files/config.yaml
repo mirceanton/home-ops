@@ -5,7 +5,7 @@ model:
 providers:
   litellm:
     base_url: http://litellm.ai.svc.cluster.local:4000/v1
-    api_key: "{{ .LITELLM_MASTER_KEY }}"
+    api_key: "${LITELLM_API_KEY}"
 
 gateway:
   api_server:
@@ -17,10 +17,50 @@ gateway:
     key: "{{ .API_SERVER_KEY }}"
 
 mcp_servers:
-  litellm:
-    url: "http://litellm.ai.svc.cluster.local:4000/mcp"
+  github:
+    url: "http://litellm.ai.svc.cluster.local:4000/github/mcp"
     headers:
-      x-litellm-api-key: "Bearer {{ .LITELLM_MASTER_KEY }}"
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  firefly:
+    url: "http://litellm.ai.svc.cluster.local:4000/firefly/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  affine:
+    url: "http://litellm.ai.svc.cluster.local:4000/affine/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  kubesearch:
+    url: "http://litellm.ai.svc.cluster.local:4000/kubesearch/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  flux:
+    url: "http://litellm.ai.svc.cluster.local:4000/flux/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  grafana:
+    url: "http://litellm.ai.svc.cluster.local:4000/grafana/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  home_assistant:
+    url: "http://litellm.ai.svc.cluster.local:4000/home_assistant/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  navidrome:
+    url: "http://litellm.ai.svc.cluster.local:4000/navidrome/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
+
+  streamarr:
+    url: "http://litellm.ai.svc.cluster.local:4000/streamarr/mcp"
+    headers:
+      x-litellm-api-key: "Bearer ${LITELLM_API_KEY}"
 
 toolsets:
   - hermes-cli

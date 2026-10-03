@@ -71,6 +71,11 @@ spec:
               HERMES_HOME: /opt/data
               HOME: /opt/data
               TZ: Europe/Bucharest
+              LITELLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-litellm-key
+                    key: key
               HERMES_DASHBOARD: "true"
               HERMES_DASHBOARD_OIDC_CLIENT_SECRET:
                 valueFrom:
