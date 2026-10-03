@@ -6,6 +6,8 @@ resources:
   - ./karakeep.helm-release.yaml
   - ./karakeep.oci-repository.yaml
   - ./external-secret.yaml
+  - ./secret-store.yaml
+  - ./external-secret-litellm.yaml
   - ./grafana-dashboard.yaml
 
 configMapGenerator:

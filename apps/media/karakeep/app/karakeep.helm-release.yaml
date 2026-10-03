@@ -32,6 +32,11 @@ spec:
               # LLM auto-tagging/summarization, routed through the LiteLLM gateway.
               # No vision model is deployed, so OCR_USE_LLM stays off (Tesseract handles OCR).
               OPENAI_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: karakeep-litellm-secret
+                    key: OPENAI_API_KEY
               INFERENCE_TEXT_MODEL: karakeep
               EMBEDDING_TEXT_MODEL: karakeep-embeddings
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
@@ -81,52 +86,22 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/zenika/alpine-chrome
-              tag: "124"
-            command:
-              - chromium-browser
-            args:
-              - --headless
-              - --no-sandbox
-              - --disable-gpu
-              - --disable-dev-shm-usage
-              - --remote-debugging-address=0.0.0.0
-              - --remote-debugging-port=9222
-              - --hide-scrollbars
+              repository: docker.io/browserless/chrome
+              tag: latest
+            args: ["google-chrome-stable", "--no-sandbox", "--headless=new", "--disable-gpu", "--disable-dev-shm-usage", "--remote-debugging-port=9222", "--remote-debugging-address=0.0.0.0"]
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             resources:
               requests:
                 cpu: 10m
                 memory: 256Mi
               limits:
-                memory: 1Gi
+                memory: 512Mi
             securityContext:
               allowPrivilegeEscalation: false
-              capabilities:
-                drop: ["ALL"]
-
-      meilisearch:
-        containers:
-          app:
-            image:
-              repository: docker.io/getmeili/meilisearch
-              tag: v1.54.3
-            args: ["/bin/meilisearch"]
-            env:
-              MEILI_NO_ANALYTICS: true
-              MEILI_MASTER_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: karakeep-secret
-                    key: MEILI_MASTER_KEY
-            resources:
-              requests:
-                cpu: 10m
-                memory: 256Mi
-              limits:
-                memory: 2Gi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
               capabilities:
                 drop: ["ALL"]
 
@@ -134,30 +109,8 @@ spec:
       app:
         controller: karakeep
         ports:
-          http: { port: 3000 }
-      chrome:
-        controller: chrome
-        ports:
-          http: { port: 9222 }
-      meilisearch:
-        controller: meilisearch
-        ports:
-          http: { port: 7700 }
-
-    serviceMonitor:
-      app:
-        serviceName: karakeep
-        selector:
-          matchLabels:
-            app.kubernetes.io/service: karakeep-app
-        endpoints:
-          - port: http
-            path: /api/metrics
-            interval: 30s
-            authorization:
-              credentials:
-                name: karakeep-secret
-                key: PROMETHEUS_AUTH_TOKEN
+          http:
+            port: 3000
 
     route:
       home:
@@ -165,26 +118,14 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network-system
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: http
 
     persistence:
       data:
         existingClaim: ${APP}
-        advancedMounts:
-          karakeep:
-            app: [{ path: /data }]
-      meilisearch-data:
-        type: emptyDir
-        advancedMounts:
-          meilisearch:
-            app: [{ path: /meili_data }]
+        globalMounts:
+          - path: /data
+
       tmp:
         type: emptyDir
-        advancedMounts:
-          karakeep:
-            app: [{ path: /tmp }]
-          meilisearch:
-            app: [{ path: /tmp }]
+        globalMounts:
+          - path: /tmp

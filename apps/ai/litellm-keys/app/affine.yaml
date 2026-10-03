@@ -1,0 +1,13 @@
+---
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: affine
+  namespace: ai
+spec:
+  proxyRef: main
+  secretName: affine-litellm-key
+  keyAlias: affine-copilot
+  metadata:
+    app: affine
+    description: API key for Affine copilot feature
