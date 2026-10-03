@@ -48,7 +48,6 @@ model_list:
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
 
-
   # ----------------------------------- GLM -----------------------------------
   - model_name: glm-5.2
     litellm_params:
@@ -62,7 +61,6 @@ model_list:
       model: qwencloud/deepseek-v4-pro
       api_base: *qwenURL
       api_key: os.environ/QWEN_KEY
-
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
@@ -80,4 +78,3 @@ litellm_settings:
   num_retries: 2
   retry_after: 5
   set_verbose: false
-
