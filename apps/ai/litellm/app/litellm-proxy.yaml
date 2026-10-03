@@ -24,6 +24,12 @@ spec:
     require_auth_for_metrics_endpoint: false
     prometheus_adapter: true
 
+  # MCP clients use scoped gateway routes directly, so LiteLLM does not need
+  # to build an embedding index or filter their tool definitions.
+  litellmSettings:
+    mcp_semantic_tool_filter:
+      enabled: false
+
   routerSettings:
     num_retries: 2
     request_timeout: 600
