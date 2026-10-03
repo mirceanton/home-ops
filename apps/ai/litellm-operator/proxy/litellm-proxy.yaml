@@ -5,13 +5,14 @@ kind: LiteLLMProxy
 metadata:
   name: main
 spec:
+  image: ghcr.io/berriai/litellm:v1.103.2
+  replicas: 1
+
   applyMode: file
   apiAccess:
     masterKeyRef:
       name: litellm-secret
       key: master-key
-  image: ghcr.io/berriai/litellm:v1.103.2
-  replicas: 1
 
   generalSettings:
     master_key: os.environ/LITELLM_MASTER_KEY
@@ -29,10 +30,8 @@ spec:
     drop_params: true
 
   callbacks:
-    success:
-      - prometheus
-    failure:
-      - prometheus
+    success: [prometheus]
+    failure: [prometheus]
 
   env:
     - name: LITELLM_MODE
@@ -45,6 +44,7 @@ spec:
       value: "True"
     - name: PROXY_BASE_URL
       value: https://llm.home.mirceanton.com
+
     - name: LITELLM_MASTER_KEY
       valueFrom:
         secretKeyRef:
@@ -96,8 +96,7 @@ spec:
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
-      drop:
-        - ALL
+      drop: [ALL]
 
   livenessProbe:
     httpGet:
@@ -116,8 +115,7 @@ spec:
     failureThreshold: 5
 
   route:
-    hostnames:
-      - llm.home.mirceanton.com
+    hostnames: ["llm.home.mirceanton.com"]
     parentRefs:
       - group: gateway.networking.k8s.io
         kind: Gateway
