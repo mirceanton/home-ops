@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./external-secret.yaml
   - ./litellm-proxy.yaml
+  - ./opencode-key.yaml
   - ./models/
   - ./grafana/
   - ./hotfix-deleteme.yaml

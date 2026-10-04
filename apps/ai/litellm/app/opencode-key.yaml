@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: opencode
+spec:
+  proxyRef: litellm
+
+  secretName: opencode-litellm-key
+  keyAlias: opencode
+  metadata:
+    app: opencode
+    description: API key for OpenCode model access
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/pushsecret_v1alpha1.json
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: opencode-litellm-key
+spec:
+  refreshInterval: 1h
+  deletionPolicy: Delete
+  updatePolicy: Replace
+
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+
+  selector:
+    secret:
+      name: opencode-litellm-key
+
+  data:
+    - match:
+        secretKey: key
+        remoteRef:
+          remoteKey: LiteLLM OpenCode Key
+          property: password
