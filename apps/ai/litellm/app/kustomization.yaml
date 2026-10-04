@@ -4,5 +4,6 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
-  - ./litellm-chatgpt-tokens.pvc.yaml
   - ./litellm-proxy.yaml
+  - ./models/
+  - ./grafana/

@@ -25,3 +25,5 @@ spec:
   dependsOn:
     - name: affine
       namespace: productivity
+    - name: litellm-operator
+      namespace: ai

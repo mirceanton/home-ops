@@ -5,6 +5,3 @@ kind: Kustomization
 resources:
   - ./operator.ks.yaml
   - ./app.ks.yaml
-  - ./grafana.ks.yaml
-  - ./models.ks.yaml
-  - ./mcp.ks.yaml

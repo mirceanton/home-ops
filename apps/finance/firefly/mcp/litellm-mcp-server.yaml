@@ -3,9 +3,16 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: streamarr-mcp
+  name: firefly-mcp
 spec:
-  alias: streamarr
-  url: http://streamarr.downloads.svc.cluster.local:8080/mcp
-  transport: http
   proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: firefly
+  url: http://firefly-mcp.finance.svc.cluster.local:3000
+  transport: sse
+
+  authType: bearer_token
+  authTokenRef:
+    name: firefly-mcp-secret
+    key: FIREFLY_MCP_TOKEN

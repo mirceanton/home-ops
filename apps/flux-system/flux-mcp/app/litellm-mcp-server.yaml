@@ -3,13 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: firefly-mcp
+  name: flux-mcp
 spec:
-  alias: firefly
-  url: http://firefly-mcp.finance.svc.cluster.local:3000
-  transport: sse
-  authType: bearer_token
-  authTokenRef:
-    name: litellm-secret
-    key: FIREFLY_MCP_TOKEN
   proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: flux
+  url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
+  transport: http

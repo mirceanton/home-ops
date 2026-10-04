@@ -30,6 +30,8 @@ spec:
   dependsOn:
     - name: litellm-operator
       namespace: ai
+    - name: grafana-operator
+      namespace: monitoring-system
     - name: 1password-connect
       namespace: security-system
     - name: cloudnative-pg-operator
@@ -38,7 +40,5 @@ spec:
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system
-    - name: llmkube
-      namespace: ai
     - name: keycloak-operator-config
       namespace: security-system

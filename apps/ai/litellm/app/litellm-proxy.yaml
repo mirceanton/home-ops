@@ -12,7 +12,7 @@ spec:
   apiAccess:
     masterKeyRef:
       name: litellm-secret
-      key: master-key
+      key: LITELLM_MASTER_KEY
 
   generalSettings:
     master_key: os.environ/LITELLM_MASTER_KEY
@@ -50,18 +50,6 @@ spec:
       value: "True"
     - name: PROXY_BASE_URL
       value: https://llm.home.mirceanton.com
-
-    - name: LITELLM_MASTER_KEY
-      valueFrom:
-        secretKeyRef:
-          name: litellm-secret
-          key: master-key
-    - name: LITELLM_SALT_KEY
-      valueFrom:
-        secretKeyRef:
-          name: litellm-secret
-          key: salt-key
-
     - name: CHATGPT_TOKEN_DIR
       value: /app/chatgpt_tokens
 

@@ -3,12 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: glm-5.2
+  name: gpt-6-luna
 spec:
-  modelName: glm-5.2
+  proxyRef: litellm
+  modelName: gpt-6-luna
   params:
-    model: qwencloud/glm-5.2
-    apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
-    apiKeyRef:
-      name: litellm-secret
-      key: QWEN_KEY
+    model: chatgpt/gpt-6-luna
+  info:
+    mode: responses
