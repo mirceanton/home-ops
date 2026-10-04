@@ -139,7 +139,7 @@ spec:
               tag: v1.7.3
             env:
               SPARKY_FITNESS_FRONTEND_URL: https://fitness.home.mirceanton.com
-              SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server
+              SPARKY_FITNESS_SERVER_HOST: sparkyfitness-server.fitness.svc.cluster.local
               SPARKY_FITNESS_SERVER_PORT: "3010"
 
             probes:
