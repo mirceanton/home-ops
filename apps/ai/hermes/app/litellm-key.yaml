@@ -20,7 +20,7 @@ spec:
   proxyRef: litellm
   secretName: hermes-litellm-key
   keyAlias: hermes-agent
-  # teamID: hermes
+  teamID: hermes
   metadata:
     app: hermes
     description: API key for Hermes agent model and MCP access
