@@ -7,3 +7,4 @@ resources:
   - ./litellm-proxy.yaml
   - ./models/
   - ./grafana/
+  - ./hotfix-deleteme.yaml

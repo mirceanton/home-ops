@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name affine-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  data:
+    - secretKey: AFFINE_MCP_HTTP_TOKEN
+      remoteRef:
+        key: "Affine MCP"
+        property: token
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name firefly-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  data:
+    - secretKey: FIREFLY_MCP_TOKEN
+      remoteRef:
+        key: "Firefly MCP"
+        property: token
+
