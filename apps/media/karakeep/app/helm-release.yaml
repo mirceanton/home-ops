@@ -35,10 +35,10 @@ spec:
               OPENAI_API_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: karakeep-secret
-                    key: OPENAI_API_KEY
-              INFERENCE_TEXT_MODEL: karakeep
-              EMBEDDING_TEXT_MODEL: karakeep-embeddings
+                    name: karakeep-litellm-key
+                    key: key
+              INFERENCE_TEXT_MODEL: qwen3.8-flash
+              EMBEDDING_TEXT_MODEL: qwen3-embedding-0.6b
               INFERENCE_ENABLE_AUTO_SUMMARIZATION: true
               BROWSER_WEB_URL: http://karakeep-chrome:9222
               CRAWLER_DOWNLOAD_BANNER_IMAGE: true

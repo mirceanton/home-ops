@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: karakeep
+spec:
+  proxyRef: litellm
+  secretName: karakeep-litellm-key
+  keyAlias: karakeep
+  metadata:
+    app: karakeep
+    description: API key for Karakeep model access
