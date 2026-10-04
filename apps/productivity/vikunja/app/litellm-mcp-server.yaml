@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: vikunja-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: vikunja
+  url: http://vikunja.productivity.svc.cluster.local:3456/api/v2/mcp
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: vikunja-mcp-secret
+    key: VIKUNJA_API_TOKEN

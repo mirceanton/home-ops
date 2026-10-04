@@ -42,3 +42,28 @@ spec:
       remoteRef:
         key: "Firefly MCP"
         property: token
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name vikunja-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  data:
+    # Vikunja API token (Settings -> API Tokens) that LiteLLM forwards as the
+    # Authorization bearer header when calling Vikunja's native MCP endpoint.
+    - secretKey: VIKUNJA_API_TOKEN
+      remoteRef:
+        key: "Vikunja MCP"
+        property: token
