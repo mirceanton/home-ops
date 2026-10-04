@@ -70,8 +70,8 @@ spec:
               LITELLM_API_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: affine-secret
-                    key: LITELLM_API_KEY
+                    name: affine-litellm-key
+                    key: key
 
           migrate:
             image:

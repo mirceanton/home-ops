@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: affine
+spec:
+  proxyRef: litellm
+  secretName: affine-litellm-key
+  keyAlias: affine
+  metadata:
+    app: affine
+    description: API key for Affine model access
