@@ -93,7 +93,7 @@ url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/53554193
 provenance = "github-attestations"
 
 [[tools."aqua:cilium/hubble"]]
-version = "1.19.4"
+version = "1.20.2"
 backend = "aqua:cilium/hubble"
 
 [tools."aqua:cilium/hubble"."platforms.linux-arm64"]
