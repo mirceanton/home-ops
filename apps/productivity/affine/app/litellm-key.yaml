@@ -6,6 +6,8 @@ metadata:
   name: affine
 spec:
   proxyRef: litellm
+  proxyNamespace: ai
+
   secretName: affine-litellm-key
   keyAlias: affine
   metadata:
