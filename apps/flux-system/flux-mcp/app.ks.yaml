@@ -22,7 +22,7 @@ spec:
       APP: *app
 
   dependsOn:
-    - name: flux-system
+    - name: flux-instance
       namespace: flux-system
     - name: litellm-operator
       namespace: ai
