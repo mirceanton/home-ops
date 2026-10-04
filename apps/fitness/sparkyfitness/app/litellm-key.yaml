@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: sparkyfitness
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  secretName: sparkyfitness-litellm-key
+  keyAlias: sparkyfitness
+  metadata:
+    app: sparkyfitness
+    description: API key for SparkyFitness model access
+
+---
+# SparkyFitness has no env var for AI provider keys (configured via the UI and
+# stored encrypted in the DB), so push the key to 1Password to copy-paste it.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/pushsecret_v1alpha1.json
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: sparkyfitness-litellm-key
+spec:
+  refreshInterval: 1h
+  deletionPolicy: Delete
+  updatePolicy: Replace
+
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+
+  selector:
+    secret:
+      name: sparkyfitness-litellm-key
+
+  data:
+    - match:
+        secretKey: key
+        remoteRef:
+          remoteKey: LiteLLM SparkyFitness Key
+          property: password

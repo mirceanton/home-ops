@@ -36,6 +36,8 @@ spec:
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system
+    - name: litellm
+      namespace: ai
     - name: volsync
       namespace: storage-system
     - name: keycloak-operator-config
