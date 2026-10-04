@@ -26,3 +26,5 @@ spec:
       namespace: security-system
     - name: home-assistant
       namespace: home-automation
+    - name: litellm-operator
+      namespace: ai

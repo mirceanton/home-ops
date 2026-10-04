@@ -10,5 +10,5 @@ spec:
     model: qwencloud/qwen-image-3.0
     apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
     apiKeyRef:
-      name: litellm-secret
-      key: QWEN_KEY
+      name: qwencloud-token
+      key: QWENCLOUD_API_KEY

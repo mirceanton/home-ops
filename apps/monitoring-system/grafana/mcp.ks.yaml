@@ -24,3 +24,5 @@ spec:
   dependsOn:
     - name: grafana-instance
       namespace: monitoring-system
+    - name: litellm-operator
+      namespace: ai

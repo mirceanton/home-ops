@@ -3,12 +3,12 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: deepseek-v4-pro
+  name: qwen3.8-flash
 spec:
-  modelName: deepseek-v4-pro
+  modelName: qwen3.8-flash
   params:
-    model: qwencloud/deepseek-v4-pro
+    model: qwencloud/qwen3.8-flash
     apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
     apiKeyRef:
-      name: litellm-secret
-      key: QWEN_KEY
+      name: qwencloud-token
+      key: QWENCLOUD_API_KEY

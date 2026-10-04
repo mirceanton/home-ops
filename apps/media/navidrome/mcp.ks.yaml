@@ -29,3 +29,5 @@ spec:
       namespace: security-system
     - name: navidrome
       namespace: media
+    - name: litellm-operator
+      namespace: ai

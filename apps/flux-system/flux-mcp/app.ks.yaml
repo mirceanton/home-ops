@@ -21,4 +21,8 @@ spec:
     substitute:
       APP: *app
 
-  dependsOn: []
+  dependsOn:
+    - name: flux-instance
+      namespace: flux-system
+    - name: litellm-operator
+      namespace: ai

@@ -3,9 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: flux-mcp
+  name: grafana-mcp
 spec:
-  alias: flux
-  url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
-  transport: http
   proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: grafana
+  url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
+  transport: sse

@@ -3,9 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: github-mcp
+  name: kubesearch-mcp
 spec:
-  alias: github
-  url: http://github-mcp.ai.svc.cluster.local:8080/mcp
-  transport: http
   proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: kubesearch
+  url: http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp
+  transport: http

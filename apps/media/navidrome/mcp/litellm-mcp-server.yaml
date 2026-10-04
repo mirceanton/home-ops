@@ -3,9 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: grafana-mcp
+  name: navidrome-mcp
 spec:
-  alias: grafana
-  url: http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
-  transport: sse
   proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: navidrome
+  url: http://navidrome-mcp.media.svc.cluster.local:3000/mcp
+  transport: http

@@ -6,7 +6,7 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./external-secret.yaml
-  - ./github-access-token.yaml
+  - ./litellm-mcp-server.yaml
 
 configMapGenerator:
   - name: github-mcp-nginx-config

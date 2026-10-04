@@ -5,7 +5,9 @@ kind: LiteLLMMCPServer
 metadata:
   name: home-assistant-mcp
 spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
   alias: home_assistant
   url: http://home-assistant-mcp.home-automation.svc.cluster.local:8086/mcp
   transport: http
-  proxyRef: litellm
