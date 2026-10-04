@@ -17,49 +17,8 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        initContainers:
-          fix-run:
-            image:
-              repository: docker.io/library/busybox
-              tag: latest
-            command: ["sh", "-c", "chown 10000:10000 /run && chmod 755 /run"]
-            securityContext:
-              runAsUser: 0
-              runAsGroup: 0
-              runAsNonRoot: false
-
-          init:
-            image:
-              repository: docker.io/mikefarah/yq
-              tag: "4"
-            securityContext:
-              runAsUser: 10000
-              runAsGroup: 10000
-            command:
-              - sh
-              - -c
-              - |
-                set -euo pipefail
-                if [ -f /opt/data/config.yaml ]; then
-                  yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' \
-                    /opt/data/config.yaml /tmp/config.yaml > /tmp/merged.yaml
-                  mv /tmp/merged.yaml /opt/data/config.yaml
-                else
-                  cp /tmp/config.yaml /opt/data/config.yaml
-                fi
-                cp /tmp/.env /opt/data/.env
-
         containers:
           app:
-            # Single container: the image's own s6-rc supervisor starts
-            # both the messaging gateway and (when HERMES_DASHBOARD=true)
-            # the dashboard service internally, based on persisted
-            # profile state on the data volume. Passing CLI args like
-            # "gateway run" here fights that supervisor and crashes with
-            # "gateway is already running under s6". `sleep infinity` is
-            # the wrapper script's documented way to give the container
-            # an inert foreground process while s6 runs the real
-            # services in the background.
             image:
               repository: nousresearch/hermes-agent
               tag: v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
@@ -68,20 +27,64 @@ spec:
             envFrom:
               - secretRef: { name: hermes-secret }
             env:
+              TZ: Europe/Bucharest
               HERMES_HOME: /opt/data
               HOME: /opt/data
-              TZ: Europe/Bucharest
-              LITELLM_API_KEY:
+
+              TERMINAL_ENV: "local"
+
+              HERMES_IGNORE_USER_CONFIG: "1"
+              HERMES_SKIP_CONFIG_MIGRATION: "1"
+              HERMES_INFERENCE_MODEL: qwen3.8-flash
+              HERMES_MAX_ITERATIONS: "90"
+              HERMES_AGENT_TIMEOUT: "1800"
+              HERMES_REDACT_SECRETS: "true"
+
+              # S6 CONFIG
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+
+              # EXTRA TOOLS
+              SEARXNG_URL: http://searxng.ai.svc.cluster.local:8080
+
+              # LITELLM settings
+              OPENAI_BASE_URL: "http://litellm.ai.svc.cluster.local:4000/v1"
+              OPENAI_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: hermes-litellm-key
                     key: key
-              HERMES_DASHBOARD: "true"
+
+              # DASHBOARD settings
+              HERMES_DASHBOARD: "1"
+              HERMES_DASHBOARD_HOST: 0.0.0.0
+              HERMES_DASHBOARD_PORT: &port 9119
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.home.mirceanton.com"
+              HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email"
+              HERMES_DASHBOARD_OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
+              HERMES_DASHBOARD_OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-oidc-secret
+                    key: client-id
               HERMES_DASHBOARD_OIDC_CLIENT_SECRET:
                 valueFrom:
                   secretKeyRef:
                     name: hermes-oidc-secret
                     key: client-secret
+
+              # Discord credentials, allowlist and channel IDs come from envFrom.
+              DISCORD_REQUIRE_MENTION: "true"
+              DISCORD_AUTO_THREAD: "true"
+              DISCORD_REACTIONS: "true"
+              DISCORD_ALLOW_MENTION_EVERYONE: "false"
+              DISCORD_ALLOW_MENTION_ROLES: "false"
+              DISCORD_ALLOW_MENTION_USERS: "true"
+              DISCORD_ALLOW_MENTION_REPLIED_USER: "true"
+
+              # OpenAI-compatible API consumed by Hermano and webhook clients.
+              API_SERVER_ENABLED: "true"
+              API_SERVER_HOST: 0.0.0.0
+              API_SERVER_PORT: "8642"
 
             resources:
               requests:
@@ -151,16 +154,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /run
-
-      config-secret:
-        type: secret
-        name: hermes-secret
-        defaultMode: 0400
-        globalMounts:
-          - path: /tmp/config.yaml
-            subPath: config.yaml
-          - path: /tmp/.env
-            subPath: env
 
       media-music:
         type: nfs
