@@ -8,6 +8,7 @@ resources:
 
   - ./admin # -> local network, admin access
   - ./home # -> local network, client access
+  - ./public # -> DMZ network, public internet access
 
   - ./backend-traffic-policy.yaml
   - ./client-traffic-policy.yaml
