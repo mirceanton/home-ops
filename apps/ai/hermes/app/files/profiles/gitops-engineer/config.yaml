@@ -1,0 +1,89 @@
+---
+_config_version: 46
+
+providers:
+  litellm:
+    name: LiteLLM
+    base_url: http://litellm.ai.svc.cluster.local:4000/v1
+    key_env: LITELLM_API_KEY
+    api_mode: chat_completions
+    discover_models: true
+
+model:
+  default: deepseek-v4.1-flash
+  provider: litellm
+
+mcp_servers:
+  Flux:
+    url: http://litellm.ai.svc.cluster.local:4000/flux/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+  Grafana:
+    url: http://litellm.ai.svc.cluster.local:4000/grafana/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+  Kubesearch:
+    url: http://litellm.ai.svc.cluster.local:4000/kubesearch/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+  GitHub:
+    url: http://litellm.ai.svc.cluster.local:4000/github/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+
+toolsets: [kanban, hermes-cli]
+
+skills:
+  disabled:
+    - airtable
+    - apple-notes
+    - apple-reminders
+    - arxiv
+    - ascii-video
+    - baoyu-infographic
+    - blocked-page-recovery
+    - box
+    - claude-code
+    - claude-design
+    - codex
+    - competitor-news-monitor
+    - computer-use
+    - design-md
+    - document-to-action-items
+    - docx
+    - dogfood
+    - email-inbox-triage
+    - findmy
+    - gif-search
+    - github
+    - google-workspace
+    - grounded-citations
+    - himalaya
+    - humanizer
+    - imessage
+    - inspecting-hermes-desktop-dom
+    - llm-wiki
+    - manim-video
+    - maps
+    - meeting-action-items
+    - node-inspect-debugger
+    - notion
+    - obsidian
+    - opencode
+    - p5js
+    - pdf
+    - popular-web-designs
+    - powerpoint
+    - product-price-monitor
+    - python-debugpy
+    - requesting-code-review
+    - sdlc-review
+    - simplify-code
+    - songsee
+    - songwriting-and-ai-music
+    - spike
+    - teams-meeting-pipeline
+    - weekly-review-planning
+    - xlsx
+    - xurl
+    - youtube-content

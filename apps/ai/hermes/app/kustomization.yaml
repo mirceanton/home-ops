@@ -7,3 +7,19 @@ resources:
   - ./litellm-key.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
+
+configMapGenerator:
+  - name: hermes-config
+    files:
+      - config.yaml=./files/config.yaml
+      - profiles.finance-bro.config.yaml=./files/profiles/finance-bro/config.yaml
+      - profiles.gitops-engineer.config.yaml=./files/profiles/gitops-engineer/config.yaml
+      - profiles.home-assistant-helper.config.yaml=./files/profiles/home-assistant-helper/config.yaml
+      - profiles.media-managearr.config.yaml=./files/profiles/media-managearr/config.yaml
+      - profiles.music-curator.config.yaml=./files/profiles/music-curator/config.yaml
+      - profiles.youtube-assistant.config.yaml=./files/profiles/youtube-assistant/config.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

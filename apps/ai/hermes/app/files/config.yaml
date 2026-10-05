@@ -1,0 +1,145 @@
+---
+_config_version: 46
+
+timezone: Europe/Bucharest
+
+providers:
+  litellm:
+    name: LiteLLM
+    base_url: http://litellm.ai.svc.cluster.local:4000/v1
+    key_env: LITELLM_API_KEY
+    api_mode: chat_completions
+    discover_models: true
+
+model:
+  default: qwen3.8-27b
+  provider: litellm
+
+fallback_providers:
+  - provider: litellm
+    model: qwen3.8-flash
+
+terminal:
+  backend: local
+  cwd: /opt/data/workspace
+  timeout: 180
+  persistent_shell: true
+
+compression:
+  enabled: true
+  threshold: 0.50
+  target_ratio: 0.20
+  protect_last_n: 20
+
+agent:
+  max_turns: 60
+  gateway_timeout: 1800
+  restart_drain_timeout: 60
+  api_max_retries: 2
+  reasoning_effort: medium
+  disabled_toolsets:
+    - a2a
+    - browser
+    - computer_use
+    - desktop_ui
+    - feishu_doc
+    - feishu_drive
+    - homeassistant
+    - image_gen
+    - spotify
+    - video
+    - video_gen
+    - x_search
+    - yuanbao
+
+streaming:
+  enabled: true
+
+delegation:
+  max_iterations: 100
+  roles:
+    reviewer:
+      provider: litellm
+      model: qwen3.8-flash
+      max_concurrent_children: 2
+
+security: { redact_secrets: true }
+privacy: { redact_pii: true }
+
+toolsets: [kanban, hermes-cli]
+
+platform_toolsets:
+  cli:
+    - clarify
+    - code_execution
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - vision
+    - web
+
+  discord:
+    - clarify
+    - code_execution
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - vision
+    - web
+
+auxiliary:
+  compression:
+    provider: main
+    model: qwen3.8-flash
+  curator:
+    provider: main
+    model: qwen3.7-plus
+    reasoning_effort: high
+  kanban_decomposer:
+    provider: main
+    model: qwen3.8-max
+    reasoning_effort: high
+  profile_describer:
+    provider: main
+    model: qwen3.8-flash
+  skills_hub:
+    provider: main
+    model: deepseek-v4.1-flash
+  mcp:
+    provider: main
+    model: qwen3.7-plus
+  title_generation:
+    provider: main
+    model: qwen3.8-flash
+
+gateway:
+  # Profile gateways run as their own supervised services, one process
+  # per profile. In-process multiplexing would route turns through
+  # per-profile secret scopes whose fail-closed lookups cannot see the
+  # container env credentials injected by the HelmRelease.
+  multiplex_profiles: true
+
+mcp_servers: {}
+
+browser: { cloud_provider: local }
+computer_use: { backend: cua }
+
+telemetry:
+  shared_metrics:
+    enabled: false

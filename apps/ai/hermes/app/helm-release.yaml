@@ -17,6 +17,54 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          # Seeds the git-owned configs (hermes-config ConfigMap) into the data
+          # volume before hermes boots. Overwrites on every start so git stays
+          # the source of truth. No dollar-brace literals in the script on
+          # purpose: Flux postBuild substitution would try to expand them.
+          seed-config:
+            image:
+              repository: ghcr.io/home-operations/busybox
+              tag: 1.38.0@sha256:7e2c04dd50ede647bf4a7a4c8dbd629dd4971cd139b9b88fb22bfc3c7a6c13df
+            env:
+              LITELLM_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-litellm-key
+                    key: key
+            command:
+              - /bin/sh
+              - -c
+              - |
+                set -eu
+                cp /seed/config.yaml /opt/data/config.yaml
+                if grep -q '^LITELLM_API_KEY=' /opt/data/.env 2>/dev/null; then
+                  sed -i "s|^LITELLM_API_KEY=.*|LITELLM_API_KEY=$LITELLM_API_KEY|" /opt/data/.env
+                else
+                  printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY" >> /opt/data/.env
+                fi
+                chmod 600 /opt/data/.env
+                for f in /seed/profiles.*.config.yaml; do
+                  name=$(basename "$f" .config.yaml | sed 's/^profiles\.//')
+                  mkdir -p "/opt/data/profiles/$name"
+                  cp "$f" "/opt/data/profiles/$name/config.yaml"
+                  printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY" > "/opt/data/profiles/$name/.env"
+                  chmod 600 "/opt/data/profiles/$name/.env"
+                  echo "seeded profile: $name"
+                done
+                mkdir -p /opt/data/.local/bin
+                ln -sfn /opt/mise/mise /opt/data/.local/bin/mise
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
         containers:
           app:
             image:
@@ -28,27 +76,14 @@ spec:
               - secretRef: { name: hermes-secret }
             env:
               TZ: Europe/Bucharest
-              HERMES_HOME: /opt/data
               HOME: /opt/data
-
-              TERMINAL_ENV: "local"
-
-              HERMES_IGNORE_USER_CONFIG: "1"
-              HERMES_SKIP_CONFIG_MIGRATION: "1"
-              HERMES_INFERENCE_MODEL: qwen3.8-flash
-              HERMES_MAX_ITERATIONS: "90"
-              HERMES_AGENT_TIMEOUT: "1800"
-              HERMES_REDACT_SECRETS: "true"
-
-              # S6 CONFIG
+              HERMES_HOME: /opt/data
+              PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
 
-              # EXTRA TOOLS
-              SEARXNG_URL: http://searxng.ai.svc.cluster.local:8080
-
-              # LITELLM settings
-              OPENAI_BASE_URL: "http://litellm.ai.svc.cluster.local:4000/v1"
-              OPENAI_API_KEY:
+              # LiteLLM
+              LITELLM_BASE_URL: "http://litellm.ai.svc.cluster.local:4000/v1"
+              LITELLM_API_KEY:
                 valueFrom:
                   secretKeyRef:
                     name: hermes-litellm-key
@@ -92,6 +127,7 @@ spec:
                 memory: 1Gi
               limits:
                 memory: 8Gi
+
             ports:
               - containerPort: &dashboard_port 9119
                 name: dashboard
@@ -142,8 +178,38 @@ spec:
     persistence:
       data:
         existingClaim: hermes
-        globalMounts:
-          - path: /opt/data
+        advancedMounts:
+          hermes:
+            app:
+              - path: /opt/data
+            seed-config:
+              - path: /opt/data
+
+      config:
+        type: configMap
+        name: hermes-config
+        advancedMounts:
+          hermes:
+            seed-config:
+              - path: /seed
+
+      # mise binary from the official (scratch) image, mounted as an OCI image
+      # volume (only directory subpaths are supported). seed-config symlinks it
+      # into /opt/data/.local/bin, which is already on the image's PATH. Tools
+      # it installs land in $HOME/.local/share/mise on the PVC.
+      mise:
+        type: image
+        image: ghcr.io/jdx/mise:2026.8.3
+        advancedMounts:
+          hermes:
+            app:
+              - path: /opt/mise
+                subPath: usr/local/bin
+                readOnly: true
+            seed-config:
+              - path: /opt/mise
+                subPath: usr/local/bin
+                readOnly: true
 
       tmp:
         type: emptyDir
