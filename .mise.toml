@@ -13,7 +13,6 @@ uv = "latest"
 "github:cloudnative-pg/cloudnative-pg" = "latest"
 "aqua:kustomize" = "latest"
 "aqua:derailed/k9s" = "latest"
-"aqua:cilium/hubble" = "latest"
 
 # Flux Tools
 "aqua:fluxcd/flux2" = "2.9.6"
