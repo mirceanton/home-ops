@@ -3,6 +3,20 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
+  name: gpt-6-sol
+spec:
+  proxyRef: litellm
+  modelName: gpt-6-sol
+  params:
+    model: chatgpt/gpt-6-sol
+  info:
+    mode: responses
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
   name: gpt-6-luna
 spec:
   proxyRef: litellm

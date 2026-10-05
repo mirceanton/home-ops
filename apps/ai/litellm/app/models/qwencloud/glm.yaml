@@ -3,11 +3,11 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: qwen-image-3.0-pro
+  name: glm-5.3
 spec:
-  modelName: qwen-image-3.0-pro
+  modelName: glm-5.3
   params:
-    model: qwencloud/qwen-image-3.0-pro
+    model: qwencloud/glm-5.3
     apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
     apiKeyRef:
       name: qwencloud-token
@@ -18,11 +18,11 @@ spec:
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: qwen-image-3.0
+  name: glm-5.2
 spec:
-  modelName: qwen-image-3.0
+  modelName: glm-5.2
   params:
-    model: qwencloud/qwen-image-3.0
+    model: qwencloud/glm-5.2
     apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
     apiKeyRef:
       name: qwencloud-token

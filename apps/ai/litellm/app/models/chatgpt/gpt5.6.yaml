@@ -3,7 +3,7 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
-  name: gpt-5-6-terra
+  name: gpt-5.6-terra
 spec:
   proxyRef: litellm
   modelName: gpt-5.6-terra

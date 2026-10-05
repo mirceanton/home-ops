@@ -3,6 +3,21 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMModel
 metadata:
+  name: qwen3.8-max
+spec:
+  modelName: qwen3.8-max
+  params:
+    model: qwencloud/qwen3.8-max
+    apiBase: https://token-plan.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1
+    apiKeyRef:
+      name: qwencloud-token
+      key: QWENCLOUD_API_KEY
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
   name: qwen3.8-flash
 spec:
   modelName: qwen3.8-flash

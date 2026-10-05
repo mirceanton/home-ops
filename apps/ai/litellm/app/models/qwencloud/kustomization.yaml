@@ -6,13 +6,10 @@ resources:
   - ./qwencloud-token.external-secret.yaml
 
   # Models
-  - ./deepseek-v4-pro.yaml
-
-  - ./glm-5.2.yaml
-
-  - ./qwen-image-3.0-pro.yaml
+  - ./deepseek.yaml
+  - ./glm.yaml
+  - ./qwen-audio-tts.yaml
   - ./qwen-image-3.0.yaml
-
-  - ./qwen3.8-max.yaml
-  - ./qwen3.8-flash.yaml
-  - ./qwen3.7-plus.yaml
+  - ./qwen3.7.yaml
+  - ./qwen3.8.yaml
+  - ./wan-2.7.yaml
