@@ -26,6 +26,9 @@ helmfile = "latest"
 "aqua:talosctl" = "1.14.2"
 "aqua:talhelper" = "3.1.17"
 "github:mirceanton/talswitcher" = "latest"
+# Used by talos/zimaboard/ (talstomize config). Only pre-releases exist so far,
+# so this is pinned to an exact tag - releases/latest does not resolve.
+"github:mirceanton/talstomize" = "v0.1.0-rc.2"
 
 # Misc Tools
 task = "latest"

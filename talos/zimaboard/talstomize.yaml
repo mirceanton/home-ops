@@ -1,0 +1,106 @@
+---
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+# Talstomize-managed machine configuration for the ZimaBoard single-node
+# "public" cluster (DMZ VLAN 666, 10.0.20.0/24).
+#
+# This is a SEPARATE cluster from the talhelper-managed `talos/talconfig.yaml`
+# at the repository root (cluster `home-ops`): different cluster name, own
+# secrets bundle, own node. The root talhelper files are left untouched.
+#
+# Render with:  cd talos/zimaboard && talstomize build .
+# See ./README.md for the workflow, which patches are reused vs added, the
+# placeholders that still need a human decision and the DMZ-specific caveats.
+
+clusterName: zimaboard
+
+# TODO(zimaboard): placeholder. The node takes its address from the DMZ DHCP
+# pool (10.0.20.195-10.0.20.249 in mikrotik-terraform) and 10.0.20.250 is
+# reserved for the `envoy-public` LoadBalancer IP, so this must be set to
+# whatever address the node really gets - ideally a static DHCP reservation,
+# like the `home-ops` node's 10.0.0.15.
+controlPlaneEndpoint: https://10.0.20.195:6443
+
+# Fresh `talosctl gen secrets` bundle for THIS cluster, sops-encrypted with the
+# repository's age recipient (see ./README.md - never point this at
+# ../talsecret.sops.yaml, that is the home-ops cluster's key material).
+secrets: ./talsecret.sops.yaml
+
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.37.1
+
+# Certificate SANs. The node's own `ip` below is NOT added to these
+# automatically (verified in the rendered config), so it is listed here
+# explicitly together with the KubePrism loopback, like the home-ops
+# talconfig does for its own node.
+additionalSubjectAltNames:
+  - 10.0.20.195 # TODO(zimaboard): keep in sync with nodes.zimaboard.ip
+  - zimaboard.dmz.h.mirceanton.com # TODO(zimaboard): needs a named DHCP lease
+  - 127.0.0.1 # KubePrism
+
+# talstomize computes no smart default for the installer image - with no
+# `installer` block at all, `machine.install.image` is left empty - so either
+# `installer.image` or `installer.schematic` must be set.
+# TODO(zimaboard): the extension list is a placeholder. A node that only runs
+# the stateless public workloads needs none of them; in that case replace the
+# whole block with `image: ghcr.io/siderolabs/installer:v1.13.10`, which also
+# avoids the factory.talos.dev lookup `build` otherwise needs.
+installer:
+  # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
+  talosVersion: v1.13.10
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/zfs
+
+nodes:
+  zimaboard:
+    # TODO(zimaboard): placeholder - must match the address above. Used both as
+    # a certificate SAN and as the `talosctl` target by apply/diff.
+    ip: 10.0.20.195
+    kind: controlplane
+    patches:
+      # ZimaBoard-specific equivalents of shared/old-format files.
+      - ./patches/zimaboard-network.yaml
+      - ./patches/install-disk.yaml
+      - ./patches/node-labels.yaml
+      # Enable together with the PCIe Optane SSD - device name is a guess, see
+      # the file header:
+      # - ./patches/etcd-optane-disk.yaml
+
+# Applied to every node, regardless of role.
+patches:
+  # Single node: workloads have to be schedulable on the controlplane.
+  - ./patches/allow-scheduling-on-controlplanes.yaml
+  # Cilium is installed by the bootstrap helmfile, not by Talos.
+  - ./patches/cni-none.yaml
+  # Trimmed variant of ../patches/sysctls.yaml, which is tuned for the home-ops
+  # GPU/Sunshine node.
+  - ./patches/zimaboard-sysctls.yaml
+
+  # --- Reused verbatim from the shared patches -----------------------------
+  - ../patches/cluster-discovery.yaml
+  - ../patches/kubelet-tuning.yaml
+  - ../patches/disable-search-domain.yaml
+  - ../patches/host-dns.yaml
+  - ../patches/kubeprism.yaml
+  - ../patches/disable-kube-proxy.yaml
+  - ../patches/talos-api-access.yaml
+  # NOTE: ../patches/registry-mirrors.yaml is deliberately NOT reused here: it
+  # pins every mirror at registry.nas.svc.h.mirceanton.com (Services VLAN,
+  # unreachable from the DMZ) with skipFallback: true, so every image pull
+  # would fail instead of falling back to the upstream registries.
+
+# Applied to every controlplane node, before that node's own patches.
+controlplanePatches:
+  # --- Reused verbatim from the shared patches -----------------------------
+  - ../patches/etcd-tuning.yaml
+  - ../patches/mutating-admission.yaml
+  # Adapted from ../patches/admission-control.yaml (that one carries
+  # talhelper-only escaping) - see the file header.
+  - ./patches/admission-control.yaml
+
+workerPatches: []

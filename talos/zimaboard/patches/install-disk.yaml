@@ -1,0 +1,17 @@
+---
+# TODO(zimaboard): placeholder - confirm the device before applying.
+# Talos installs onto the internal eMMC on this board (`/dev/mmcblk0`); the
+# board also has dual SATA ports and a PCIe slot for an Optane SSD, which the
+# planned layout uses for etcd (see ./etcd-optane-disk.yaml) and for local
+# PVs respectively.
+#
+# The old talconfig pins a size selector instead (`installDiskSelector`), which
+# this file expresses as `diskSelector` if a path is not wanted:
+#
+#   machine:
+#     install:
+#       diskSelector:
+#         size: "<= 300Gb"
+machine:
+  install:
+    disk: /dev/mmcblk0

@@ -598,6 +598,46 @@ url = "https://github.com/mirceanton/kubectl-switch/releases/download/v2.4.33/ku
 url_api = "https://api.github.com/repos/mirceanton/kubectl-switch/releases/assets/587309366"
 provenance = "github-attestations"
 
+[[tools."github:mirceanton/talstomize"]]
+version = "0.1.0-rc.2"
+backend = "github:mirceanton/talstomize"
+
+[tools."github:mirceanton/talstomize"."platforms.linux-arm64"]
+checksum = "sha256:b83d3960985a98c928c6cbb2cff3fc7991cc1607e681dec1e351c5bf6a67ae1a"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076607"
+provenance = "github-attestations"
+
+[tools."github:mirceanton/talstomize"."platforms.linux-arm64-musl"]
+checksum = "sha256:b83d3960985a98c928c6cbb2cff3fc7991cc1607e681dec1e351c5bf6a67ae1a"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076607"
+provenance = "github-attestations"
+
+[tools."github:mirceanton/talstomize"."platforms.linux-x64"]
+checksum = "sha256:6ba8916f8d24e7fa58b879e51f54fd611410c893f82b77b04623ff76e1186f16"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076604"
+provenance = "github-attestations"
+
+[tools."github:mirceanton/talstomize"."platforms.linux-x64-musl"]
+checksum = "sha256:6ba8916f8d24e7fa58b879e51f54fd611410c893f82b77b04623ff76e1186f16"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076604"
+provenance = "github-attestations"
+
+[tools."github:mirceanton/talstomize"."platforms.macos-arm64"]
+checksum = "sha256:95be94b1d6e61478a717df37b9d6b7554ef856cc8838f0723e383bfb5e883e63"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076623"
+provenance = "github-attestations"
+
+[tools."github:mirceanton/talstomize"."platforms.macos-x64"]
+checksum = "sha256:2245abb1194afcebaa603e50f4cbabdc79dd3bb2084f79bd072735bf5bde5217"
+url = "https://github.com/mirceanton/talstomize/releases/download/v0.1.0-rc.2/talstomize_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/546076606"
+provenance = "github-attestations"
+
 [[tools."github:mirceanton/talswitcher"]]
 version = "2.2.40"
 backend = "github:mirceanton/talswitcher"
@@ -853,49 +893,49 @@ url = "https://github.com/go-task/task/releases/download/v3.54.0/task_windows_am
 url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090005"
 
 [[tools.uv]]
-version = "0.12.23"
+version = "0.12.22"
 backend = "aqua:astral-sh/uv"
 
 [tools.uv."platforms.linux-arm64"]
-checksum = "sha256:b536543cc4d50661986b165c76ee8aa9056e4fa332edcd153ff2e98760f9359b"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232500"
+checksum = "sha256:228bd32c180421a94eef91378a92b2dd63c768bd278430e833250524c4a13382"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418325"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-arm64-musl"]
-checksum = "sha256:b536543cc4d50661986b165c76ee8aa9056e4fa332edcd153ff2e98760f9359b"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232500"
+checksum = "sha256:228bd32c180421a94eef91378a92b2dd63c768bd278430e833250524c4a13382"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418325"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-x64"]
-checksum = "sha256:1cff8783850e794470aadb73f54b749542a511fc57b0ce6468b64bd3852e0ade"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232639"
+checksum = "sha256:a50fd68c653b0cfb1c85e0a7db62cb78cf5c22b6f3dcf3ae173e5f222d084470"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418476"
 provenance = "github-attestations"
 
 [tools.uv."platforms.linux-x64-musl"]
-checksum = "sha256:1cff8783850e794470aadb73f54b749542a511fc57b0ce6468b64bd3852e0ade"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232639"
+checksum = "sha256:a50fd68c653b0cfb1c85e0a7db62cb78cf5c22b6f3dcf3ae173e5f222d084470"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418476"
 provenance = "github-attestations"
 
 [tools.uv."platforms.macos-arm64"]
-checksum = "sha256:50487ae565ccd96e499056b4674d438f4c53170202617b4c759defe0c6a1b544"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232483"
+checksum = "sha256:5d714de09501a59393ceca78f4bc232a50478729640d251907160299b2a93ddd"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418308"
 provenance = "github-attestations"
 
 [tools.uv."platforms.macos-x64"]
-checksum = "sha256:960da44cb4b73685206ddd250b19e0a117fa41095710c1038f081f5cb613efb4"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232607"
+checksum = "sha256:1b8a5b316883df2daf20fb9a446e5b230e01d947d57aba2694977c5ac5a7e98c"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418427"
 provenance = "github-attestations"
 
 [tools.uv."platforms.windows-x64"]
-checksum = "sha256:75d05de6762778c31ee183398de7dd15093fad0ed90b1f236d8205ea5ec00c90"
-url = "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/608232617"
+checksum = "sha256:ea1397797a0ca15f63516dd0f49c2dde9776db9be5861cab152ebe8ad199894d"
+url = "https://github.com/astral-sh/uv/releases/download/0.12.22/uv-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/604418443"
 provenance = "github-attestations"
 
 [[tools.yq]]

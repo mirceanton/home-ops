@@ -1,0 +1,6 @@
+---
+# Single-node cluster: the only node is a controlplane, so workloads must be
+# schedulable on it (the talhelper equivalent of
+# `allowSchedulingOnControlPlanes: true` in ../talconfig.yaml).
+cluster:
+  allowSchedulingOnControlPlanes: true

@@ -1,0 +1,39 @@
+---
+# Trimmed subset of the shared `../patches/sysctls.yaml`: that file carries a
+# lot of Sunshine/gaming/GPU tuning (ptrace_scope, ip_local_reserved_ports
+# 47984-50001, vm.compaction_proactiveness, vfs_cache_pressure, max_map_count)
+# that is meaningless on a ZimaBoard. Kept the generic networking / inotify /
+# namespace tuning that any workload node benefits from.
+machine:
+  sysctls:
+    # Inotify limits - essential for file-watching apps
+    fs.inotify.max_user_instances: "8192"
+    fs.inotify.max_user_watches: "1048576"
+
+    # BBR congestion control
+    net.ipv4.tcp_congestion_control: bbr
+    net.core.somaxconn: "65535"
+    net.core.default_qdisc: fq
+
+    # Socket buffer sizes
+    net.core.rmem_max: "16777216"
+    net.core.wmem_max: "16777216"
+    net.core.rmem_default: "4194304"
+    net.core.wmem_default: "4194304"
+
+    # Allow unprivileged containers to use ping
+    net.ipv4.ping_group_range: 0 2147483647
+
+    # TCP Fast Open / PMTU discovery
+    net.ipv4.tcp_fastopen: "3"
+    net.ipv4.tcp_mtu_probing: "1"
+
+    # TCP buffer sizes (min, default, max)
+    net.ipv4.tcp_rmem: 4096 87380 16777216
+    net.ipv4.tcp_wmem: 4096 65536 16777216
+
+    # Better for bursty traffic patterns
+    net.ipv4.tcp_slow_start_after_idle: "0"
+
+    # User namespaces (Steam / browser sandboxes)
+    user.max_user_namespaces: "15000"

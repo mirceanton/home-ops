@@ -1,0 +1,27 @@
+---
+# Pin the kubelet and etcd to the ZimaBoard's DMZ address, and expose the
+# controller-manager / scheduler metrics for Prometheus.
+#
+# ZimaBoard-local copy of the shared `../patches/network-binding.yaml`: that
+# file is pinned to the 10.0.0.0/24 management subnet, which this node is not
+# on. If the node ever moves to the management VLAN, the shared file can be
+# reused verbatim instead.
+#
+# TODO(zimaboard): the subnet is the DMZ VLAN (10.0.20.0/24, mikrotik VLAN 666),
+# see ./README.md - re-check it if the node is re-homed.
+machine:
+  kubelet:
+    nodeIP:
+      validSubnets: ["10.0.20.0/24"]
+
+cluster:
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+    advertisedSubnets: ["10.0.20.0/24"]
+  controllerManager:
+    extraArgs:
+      bind-address: "0.0.0.0"
+  scheduler:
+    extraArgs:
+      bind-address: "0.0.0.0"
