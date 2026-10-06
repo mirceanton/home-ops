@@ -1,0 +1,43 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+#
+# Zigbee smart-plug dashboard for the telegraf MQTT->Prometheus exporter that
+# scrapes the zigbee2mqtt traffic (job `telegraf-ha-plugs`, target
+# telegraf.home-automation.svc.cluster.local:9273).
+#
+# The JSON is served from the `zigbee-smart-plugs-dashboard` ConfigMap (generated
+# from dashboard.json) and injected by the grafana-operator, which also rewrites
+# the DS_PROMETHEUS input to the `prometheus` GrafanaDatasource.
+#
+# Panels only use metrics confirmed to exist in Prometheus for this exporter:
+#   home_plug_power_watt{plug}, home_plug_energy_kwh{plug},
+#   home_plug_voltage_volt{plug}, home_plug_current_ampere{plug}
+# `plug` is the lower-cased zigbee2mqtt friendly name (priza_a..priza_f, priza_g,
+# priza_i - there is no priza_h). There is currently no state/on-off, linkquality,
+# battery, temperature or per-plug availability metric, so the dashboard derives a
+# power state from home_plug_power_watt and uses scrape/`up` + sample counts as
+# availability proxies; those panels are labelled as such.
+#
+# Caveats surfaced by the panels: home_plug_energy_kwh is a cumulative counter
+# (energy "today" uses increase()), home_plug_voltage_volt mixes mains volts with
+# mV values from a few battery devices, and history only starts when the exporter
+# was deployed. To grow the dashboard, widen the telegraf fieldinclude in
+# apps/home-automation/telegraf/app/files/telegraf.conf.
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: zigbee-smart-plugs
+spec:
+  folderRef: home-automation
+  configMapRef:
+    name: zigbee-smart-plugs-dashboard
+    key: dashboard.json
+
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
