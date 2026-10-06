@@ -17,6 +17,11 @@ spec:
   generalSettings:
     master_key: os.environ/LITELLM_MASTER_KEY
     database_url: os.environ/uri
+    cache: true
+    cache_params:
+      type: redis
+      host: litellm-dragonfly
+      port: 6379
     proxy_base_url: https://llm.home.mirceanton.com
     store_model_in_db: true
     store_prompts_in_spend_logs: true

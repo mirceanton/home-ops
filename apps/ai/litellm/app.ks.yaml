@@ -14,6 +14,7 @@ spec:
   path: ./apps/ai/litellm/app
   components:
     - ../../../../components/cnpg/
+    - ../../../../components/dragonfly/
     - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
@@ -37,6 +38,8 @@ spec:
     - name: cloudnative-pg-operator
       namespace: database-system
     - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: dragonfly-operator
       namespace: database-system
     - name: external-secrets-operator
       namespace: security-system
