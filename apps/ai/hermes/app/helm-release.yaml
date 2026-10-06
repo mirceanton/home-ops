@@ -18,10 +18,7 @@ spec:
           reloader.stakater.com/auto: "true"
 
         initContainers:
-          # Seeds the git-owned configs (hermes-config ConfigMap) into the data
-          # volume before hermes boots. Overwrites on every start so git stays
-          # the source of truth. No dollar-brace literals in the script on
-          # purpose: Flux postBuild substitution would try to expand them.
+          # Seeds the git-owned configs into the data volume before Hermes boots.
           seed-config:
             image:
               repository: ghcr.io/home-operations/busybox
@@ -32,28 +29,7 @@ spec:
                   secretKeyRef:
                     name: hermes-litellm-key
                     key: key
-            command:
-              - /bin/sh
-              - -c
-              - |
-                set -eu
-                cp /seed/config.yaml /opt/data/config.yaml
-                if grep -q '^LITELLM_API_KEY=' /opt/data/.env 2>/dev/null; then
-                  sed -i "s|^LITELLM_API_KEY=.*|LITELLM_API_KEY=$LITELLM_API_KEY|" /opt/data/.env
-                else
-                  printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY" >> /opt/data/.env
-                fi
-                chmod 600 /opt/data/.env
-                for f in /seed/profiles.*.config.yaml; do
-                  name=$(basename "$f" .config.yaml | sed 's/^profiles\.//')
-                  mkdir -p "/opt/data/profiles/$name"
-                  cp "$f" "/opt/data/profiles/$name/config.yaml"
-                  printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY" > "/opt/data/profiles/$name/.env"
-                  chmod 600 "/opt/data/profiles/$name/.env"
-                  echo "seeded profile: $name"
-                done
-                mkdir -p /opt/data/.local/bin
-                ln -sfn /opt/mise/mise /opt/data/.local/bin/mise
+            command: ["/bin/sh", "/scripts/seed.sh"]
             resources:
               requests:
                 cpu: 10m
@@ -192,6 +168,15 @@ spec:
           hermes:
             seed-config:
               - path: /seed
+
+      seed-script:
+        type: configMap
+        name: hermes-seed-script
+        advancedMounts:
+          hermes:
+            seed-config:
+              - path: /scripts
+                readOnly: true
 
       # mise binary from the official (scratch) image, mounted as an OCI image
       # volume (only directory subpaths are supported). seed-config symlinks it

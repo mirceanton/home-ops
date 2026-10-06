@@ -12,12 +12,22 @@ configMapGenerator:
   - name: hermes-config
     files:
       - config.yaml=./files/config.yaml
+      - SOUL.md=./files/SOUL.md
       - profiles.finance-bro.config.yaml=./files/profiles/finance-bro/config.yaml
+      - profiles.finance-bro.SOUL.md=./files/profiles/finance-bro/SOUL.md
       - profiles.gitops-engineer.config.yaml=./files/profiles/gitops-engineer/config.yaml
+      - profiles.gitops-engineer.SOUL.md=./files/profiles/gitops-engineer/SOUL.md
       - profiles.home-assistant-helper.config.yaml=./files/profiles/home-assistant-helper/config.yaml
+      - profiles.home-assistant-helper.SOUL.md=./files/profiles/home-assistant-helper/SOUL.md
       - profiles.media-managearr.config.yaml=./files/profiles/media-managearr/config.yaml
+      - profiles.media-managearr.SOUL.md=./files/profiles/media-managearr/SOUL.md
       - profiles.music-curator.config.yaml=./files/profiles/music-curator/config.yaml
+      - profiles.music-curator.SOUL.md=./files/profiles/music-curator/SOUL.md
       - profiles.youtube-assistant.config.yaml=./files/profiles/youtube-assistant/config.yaml
+      - profiles.youtube-assistant.SOUL.md=./files/profiles/youtube-assistant/SOUL.md
+  - name: hermes-seed-script
+    files:
+      - seed.sh=./scripts/seed.sh
 
 generatorOptions:
   disableNameSuffixHash: true
