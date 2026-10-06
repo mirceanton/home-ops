@@ -25,6 +25,7 @@ for f in /seed/profiles.*.config.yaml; do
   {
     printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY"
     printf 'DISCORD_ALLOWED_USERS=%s\n' "$DISCORD_ALLOWED_USERS"
+    printf 'API_SERVER_KEY=%s\n' "$API_SERVER_KEY"
   } > "/opt/data/profiles/$name/.env"
   chmod 600 "/opt/data/profiles/$name/.env"
   echo "seeded profile: $name"
