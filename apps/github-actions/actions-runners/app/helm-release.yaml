@@ -60,7 +60,7 @@ spec:
             type: RuntimeDefault
         containers:
           - name: runner
-            image: ghcr.io/mirceanton/actions-runner:2.337.0@sha256:3fc7daa8d8d6c4831cd102a2d1738af814854f073025ef442f9f0a444008cad8
+            image: ghcr.io/mirceanton/actions-runner:2.338.0@sha256:cb2ad216f93ddfd2cc67ebbff0543a88a8b9e4a37886f8775906f375b38aa219
             command: ["/home/runner/run.sh"]
             securityContext:
               runAsUser: 1001
