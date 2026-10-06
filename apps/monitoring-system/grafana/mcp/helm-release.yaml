@@ -28,7 +28,7 @@ spec:
             env:
               GRAFANA_URL: http://grafana-service:3000
               GRAFANA_ORG_ID: "1"
-              GRAFANA_AUTH:
+              GRAFANA_SERVICE_ACCOUNT_TOKEN:
                 valueFrom:
                   secretKeyRef:
                     name: grafana-mcp-token
