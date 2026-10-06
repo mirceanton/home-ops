@@ -25,7 +25,7 @@ spec:
           telegraf:
             image:
               repository: docker.io/library/telegraf
-              tag: 1.32.3
+              tag: 1.40.1
             envFrom:
               - secretRef: { name: telegraf-mqtt-auth }
             env:
