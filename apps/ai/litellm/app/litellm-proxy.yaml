@@ -112,7 +112,8 @@ spec:
     httpGet:
       path: /
       port: 4000
-    initialDelaySeconds: 30
+    # MCP discovery and semantic indexing run before LiteLLM opens its HTTP port.
+    initialDelaySeconds: 300
     periodSeconds: 10
     failureThreshold: 5
 
