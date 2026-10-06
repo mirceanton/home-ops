@@ -191,7 +191,7 @@ spec:
       # it installs land in $HOME/.local/share/mise on the PVC.
       mise:
         type: image
-        image: ghcr.io/jdx/mise:2026.8.3
+        image: ghcr.io/jdx/mise:2026.10.3
         advancedMounts:
           hermes:
             app:
