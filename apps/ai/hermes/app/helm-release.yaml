@@ -29,6 +29,11 @@ spec:
                   secretKeyRef:
                     name: hermes-litellm-key
                     key: key
+              API_SERVER_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-secret
+                    key: API_SERVER_KEY
               # Must reach the profile .env files: under multiplex the scoped gate readers
               # fail closed and never fall through to container env (see gateway/platforms/_shared.py).
               DISCORD_ALLOWED_USERS:
