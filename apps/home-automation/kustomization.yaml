@@ -6,6 +6,7 @@ namespace: home-automation
 
 resources:
   - ./namespace.yaml
+  - ./grafana-folder.yaml
   - ./home-assistant
   - ./mosquitto
   - ./telegraf

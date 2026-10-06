@@ -4,6 +4,7 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
+  - ./grafana-dashboard.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
   - ./scrape-config.yaml
@@ -12,6 +13,9 @@ configMapGenerator:
   - name: telegraf-config
     files:
       - telegraf.conf=./files/telegraf.conf
+  - name: zigbee-smart-plugs-dashboard
+    files:
+      - dashboard.json
 
 generatorOptions:
   disableNameSuffixHash: true
