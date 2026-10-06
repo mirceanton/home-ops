@@ -13,3 +13,4 @@ resources:
   - ./kubesearch-mcp
   - ./litellm
   - ./llmkube
+  - ./truenas-mcp
