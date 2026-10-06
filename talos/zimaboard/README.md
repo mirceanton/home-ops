@@ -106,30 +106,31 @@ These come from `../patches/` unchanged, referenced as `../patches/<file>.yaml`
 
 | Shared patch                 | Slot                  | Effect                                       |
 | ---------------------------- | --------------------- | -------------------------------------------- |
-| `cluster-discovery.yaml`     | `patches`             | Kubernetes-registry discovery + node RBAC    |
-| `kubelet-tuning.yaml`        | `patches`             | `maxPods: 200`, `serializeImagePulls: false` |
-| `disable-search-domain.yaml` | `patches`             | `machine.network.disableSearchDomain`        |
 | `host-dns.yaml`              | `patches`             | host DNS, no kube-DNS forwarding             |
 | `kubeprism.yaml`             | `patches`             | KubePrism on 7445                            |
-| `disable-kube-proxy.yaml`    | `patches`             | Cilium replaces kube-proxy                   |
-| `talos-api-access.yaml`      | `patches`             | Talos API access for `os:admin`              |
+| `cluster-discovery.yaml`     | `controlplanePatches` | Kubernetes-registry discovery + node RBAC    |
+| `kubelet-tuning.yaml`        | `controlplanePatches` | `maxPods: 200`, `serializeImagePulls: false` |
 | `etcd-tuning.yaml`           | `controlplanePatches` | etcd backend batch interval                  |
+| `disable-search-domain.yaml` | `controlplanePatches` | `machine.network.disableSearchDomain`        |
 | `mutating-admission.yaml`    | `controlplanePatches` | apiserver feature gates                      |
+| `disable-kube-proxy.yaml`    | `controlplanePatches` | Cilium replaces kube-proxy                   |
+| `talos-api-access.yaml`      | `controlplanePatches` | Talos API access for `os:admin`              |
 
-Patches are placed by role-exclusivity, the same split the
-`test/talstomize-migration` branch uses: only genuinely controlplane-only
-settings (`cluster.etcd`, `cluster.apiServer`) sit in `controlplanePatches`,
-everything a worker would also need sits in `patches`. On this
-controlplane-only cluster the rendered result is the same either way, but it
-stays correct if a worker is ever added.
+The slot split follows the mapping the audit validated for this cluster
+(`test/talstomize-migration` keeps the role-exclusivity split instead, i.e. only
+genuinely controlplane-only settings — `cluster.etcd`, `cluster.apiServer` — in
+`controlplanePatches`). On a controlplane-only node both render identically.
 
 ### Deliberately not reused
 
 - **`registry-mirrors.yaml`** — every mirror points at
   `registry.nas.svc.h.mirceanton.com` (Services VLAN) with `skipFallback: true`.
-  The DMZ is isolated from all other VLANs, so the mirror is unreachable and
-  image pulls would fail _instead of_ falling back to the upstream registries.
-  The node pulls straight from the internet instead.
+  The DMZ zone in `mikrotik-terraform` has exactly two forward rules — DMZ → WAN
+  and WAN → DMZ on `443` — and then falls through to the default deny, so the
+  Services VLAN (and with it the registry) is unreachable and image pulls would
+  fail _instead of_ falling back to the upstream registries. The node pulls
+  straight from the internet instead; add the file back to `patches` if the DMZ
+  ever gets a route to the registry.
 - **`network-binding.yaml`** — pinned to `10.0.0.0/24`; this node is on
   `10.0.20.0/24`. `patches/zimaboard-network.yaml` is the re-pinned copy.
 - **`admission-control.yaml`** — carries talhelper-only escaping (`$$patch:

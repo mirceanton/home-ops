@@ -82,23 +82,28 @@ patches:
   - ./patches/zimaboard-sysctls.yaml
 
   # --- Reused verbatim from the shared patches -----------------------------
-  - ../patches/cluster-discovery.yaml
-  - ../patches/kubelet-tuning.yaml
-  - ../patches/disable-search-domain.yaml
+  # The split follows the audit's validated mapping for this cluster
+  # (`talstomize-migration` instead keeps the role-exclusivity split, i.e.
+  # only genuinely controlplane-only settings in `controlplanePatches`).
+  # On a controlplane-only node both produce the same rendered config.
   - ../patches/host-dns.yaml
   - ../patches/kubeprism.yaml
-  - ../patches/disable-kube-proxy.yaml
-  - ../patches/talos-api-access.yaml
   # NOTE: ../patches/registry-mirrors.yaml is deliberately NOT reused here: it
   # pins every mirror at registry.nas.svc.h.mirceanton.com (Services VLAN,
-  # unreachable from the DMZ) with skipFallback: true, so every image pull
-  # would fail instead of falling back to the upstream registries.
+  # unreachable from the DMZ - the firewall's DMZ zone only allows DMZ->WAN and
+  # WAN->DMZ:443, then default-deny) with skipFallback: true, so every image
+  # pull would fail instead of falling back to the upstream registries.
 
 # Applied to every controlplane node, before that node's own patches.
 controlplanePatches:
   # --- Reused verbatim from the shared patches -----------------------------
+  - ../patches/cluster-discovery.yaml
+  - ../patches/kubelet-tuning.yaml
   - ../patches/etcd-tuning.yaml
+  - ../patches/disable-search-domain.yaml
   - ../patches/mutating-admission.yaml
+  - ../patches/disable-kube-proxy.yaml
+  - ../patches/talos-api-access.yaml
   # Adapted from ../patches/admission-control.yaml (that one carries
   # talhelper-only escaping) - see the file header.
   - ./patches/admission-control.yaml
