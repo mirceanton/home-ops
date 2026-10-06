@@ -1,0 +1,15 @@
+---
+# Node labels for the ZimaBoard node.
+#
+# `k8s.mirceanton.com/default-node` is REQUIRED as long as
+# ./admission-control.yaml installs the cluster-wide PodNodeSelector default:
+# every pod without its own nodeSelector gets `default-node=true` injected, so
+# without this label on the (only) node nothing would ever schedule. Only drop
+# it together with that PodNodeSelector entry.
+#
+# TODO(zimaboard): `default-node` matches the home-ops convention - reconsider
+# whether a single-node public cluster wants that selector at all.
+machine:
+  nodeLabels:
+    k8s.mirceanton.com/zimaboard: "true"
+    k8s.mirceanton.com/default-node: "true"

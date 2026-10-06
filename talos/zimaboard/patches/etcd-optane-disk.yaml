@@ -1,0 +1,13 @@
+---
+# NOT enabled by default - enable it in ./talstomize.yaml once the PCIe Optane
+# SSD is physically installed and this device name is confirmed.
+#
+# The planned ZimaBoard layout puts Talos on the eMMC (see ./install-disk.yaml)
+# and the PCIe Optane SSD on /var/lib/etcd, mirroring how the home-ops node
+# dedicates `/dev/nvme0n1` to etcd. `machine.disks[].device` must name a device
+# that exists, otherwise the apply fails, so this stays opt-in.
+machine:
+  disks:
+    - device: /dev/nvme0n1
+      partitions:
+        - mountpoint: /var/lib/etcd

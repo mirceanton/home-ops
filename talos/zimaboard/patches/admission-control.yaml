@@ -1,0 +1,21 @@
+---
+# Adapted from the shared `../patches/admission-control.yaml`, which cannot be
+# reused as-is for two reasons:
+#
+#   1. it deletes the default PodSecurity admission plugin with talhelper's
+#      escaped `$$patch: delete`, which talosctl/talstomize reject while
+#      decoding;
+#   2. the delete target does not exist in a `talosctl gen config` base at all
+#      (PodSecurity lives in a separate KubeAdmissionControlConfig document),
+#      so even a single-`$` delete fails with `lookup failed`.
+#
+# What is left is the append the shared file was really there for: a
+# cluster-wide default node selector. See ./node-labels.yaml - the node must
+# carry the matching label.
+cluster:
+  apiServer:
+    admissionControl:
+      - name: PodNodeSelector
+        configuration:
+          podNodeSelectorPluginConfig:
+            clusterDefaultNodeSelector: "k8s.mirceanton.com/default-node=true"

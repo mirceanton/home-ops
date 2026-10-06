@@ -6,6 +6,9 @@ talsecret.yaml
 talenv.yaml
 clusterconfig/
 
+# Talstomize rendered output (talos/zimaboard)
+_out/
+
 # Ignore Unencrypted Kubernetes Secrets
 *.secret.yaml
 bak/
