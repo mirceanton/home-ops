@@ -35,3 +35,6 @@ spec:
       namespace: storage-system
     - name: keda
       namespace: kube-system
+    #? navidrome-mcp is a LiteLLMMCPServer now: its CRD must exist first.
+    - name: litellm-operator
+      namespace: ai

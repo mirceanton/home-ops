@@ -9,5 +9,41 @@ spec:
   proxyNamespace: ai
 
   alias: kubesearch
-  url: http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp
   transport: http
+
+  workload:
+    image: ghcr.io/perfectra1n/kubesearch-mcp:1.1.0
+    port: 3000
+    path: /mcp
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 1Gi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+
+    automountServiceAccountToken: false
+
+    volumes:
+      - name: data
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: data
+        mountPath: /data
+      - name: tmp
+        mountPath: /tmp

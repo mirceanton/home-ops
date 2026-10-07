@@ -3,31 +3,27 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: youtube-public-mcp
+  name: firefly-mcp
 spec:
   proxyRef: litellm
   proxyNamespace: ai
 
-  alias: youtube_public
-  transport: http
+  alias: firefly
+  transport: sse
+
+  authType: bearer_token
+  authTokenRef:
+    name: firefly-mcp-secret
+    key: FIREFLY_MCP_TOKEN
 
   workload:
-    image: ghcr.io/oliverhruby/youtube-mcp:v0.1.0
-    port: 8000
-    path: /mcp
+    image: ghcr.io/daften/fireflyiii-mcp:0.5.2
+    port: 3000
+    path: "/"
 
     env:
-      - name: MCP_TRANSPORT
-        value: streamable-http
-      - name: MCP_HOST
-        value: 0.0.0.0
-      - name: MCP_PORT
-        value: "8000"
-      - name: YOUTUBE_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: youtube-public-mcp-secret
-            key: YOUTUBE_API_KEY
+      - name: FIREFLY_URL
+        value: http://firefly:8080
 
     resources:
       requests:
@@ -43,9 +39,9 @@ spec:
 
     podSecurityContext:
       runAsNonRoot: true
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
       fsGroupChangePolicy: OnRootMismatch
 
     automountServiceAccountToken: false

@@ -5,4 +5,3 @@ kind: Kustomization
 resources:
   - ./operator.ks.yaml
   - ./instance.ks.yaml
-  - ./mcp.ks.yaml

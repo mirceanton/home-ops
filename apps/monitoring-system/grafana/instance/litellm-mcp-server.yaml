@@ -3,36 +3,36 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: youtube-public-mcp
+  name: grafana-mcp
 spec:
   proxyRef: litellm
   proxyNamespace: ai
 
-  alias: youtube_public
-  transport: http
+  alias: grafana
+  transport: sse
 
   workload:
-    image: ghcr.io/oliverhruby/youtube-mcp:v0.1.0
+    image: grafana/mcp-grafana:2.0.1
     port: 8000
-    path: /mcp
+    path: /sse
+    args:
+      - --allowed-hosts=localhost:8000,127.0.0.1:8000,grafana-mcp.monitoring-system.svc.cluster.local:8000,grafana-mcp.monitoring-system:8000,grafana-mcp:8000
 
     env:
-      - name: MCP_TRANSPORT
-        value: streamable-http
-      - name: MCP_HOST
-        value: 0.0.0.0
-      - name: MCP_PORT
-        value: "8000"
-      - name: YOUTUBE_API_KEY
+      - name: GRAFANA_URL
+        value: http://grafana-service:3000
+      - name: GRAFANA_ORG_ID
+        value: "1"
+      - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
         valueFrom:
           secretKeyRef:
-            name: youtube-public-mcp-secret
-            key: YOUTUBE_API_KEY
+            name: grafana-mcp-token
+            key: token
 
     resources:
       requests:
-        cpu: 10m
-        memory: 64Mi
+        cpu: 50m
+        memory: 128Mi
       limits:
         memory: 256Mi
 
@@ -45,8 +45,7 @@ spec:
       runAsNonRoot: true
       runAsUser: 1000
       runAsGroup: 1000
-      fsGroup: 1000
-      fsGroupChangePolicy: OnRootMismatch
+      seccompProfile: { type: RuntimeDefault }
 
     automountServiceAccountToken: false
 

@@ -3,58 +3,60 @@
 apiVersion: litellm.home-operations.com/v1alpha1
 kind: LiteLLMMCPServer
 metadata:
-  name: channel-analytics-mcp
+  name: affine-mcp
 spec:
   proxyRef: litellm
   proxyNamespace: ai
 
-  alias: youtube_analytics
+  alias: affine
   transport: http
 
   authType: bearer_token
   authTokenRef:
-    name: channel-analytics-mcp-secret
-    key: MCP_API_KEY
+    name: affine-mcp-secret
+    key: AFFINE_MCP_HTTP_TOKEN
 
   workload:
-    image: ghcr.io/oliverhruby/youtube-mcp:v0.1.0
-    port: 8000
+    image: ghcr.io/dawncr0w/affine-mcp-server:3.9.0
+    port: 3000
     path: /mcp
 
     env:
       - name: MCP_TRANSPORT
-        value: streamable-http
-      - name: MCP_HOST
+        value: http
+      - name: PORT
+        value: "3000"
+      - name: AFFINE_MCP_HTTP_HOST
         value: 0.0.0.0
-      - name: MCP_PORT
-        value: "8000"
-      - name: YOUTUBE_CLIENT_ID
+      - name: AFFINE_MCP_AUTH_MODE
+        value: bearer
+      - name: AFFINE_BASE_URL
+        value: http://affine.productivity.svc.cluster.local:3010
+      #? Cluster-internal traffic only, never leaves the pod network.
+      - name: AFFINE_ALLOW_INSECURE_HTTP
+        value: "true"
+      - name: AFFINE_MCP_HTTP_TOKEN
         valueFrom:
           secretKeyRef:
-            name: channel-analytics-mcp-secret
-            key: YOUTUBE_CLIENT_ID
-      - name: YOUTUBE_CLIENT_SECRET
+            name: affine-mcp-secret
+            key: AFFINE_MCP_HTTP_TOKEN
+      - name: AFFINE_EMAIL
         valueFrom:
           secretKeyRef:
-            name: channel-analytics-mcp-secret
-            key: YOUTUBE_CLIENT_SECRET
-      - name: YOUTUBE_REFRESH_TOKEN
+            name: affine-mcp-secret
+            key: AFFINE_EMAIL
+      - name: AFFINE_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: channel-analytics-mcp-secret
-            key: YOUTUBE_REFRESH_TOKEN
-      - name: MCP_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: channel-analytics-mcp-secret
-            key: MCP_API_KEY
+            name: affine-mcp-secret
+            key: AFFINE_PASSWORD
 
     resources:
       requests:
         cpu: 10m
         memory: 64Mi
       limits:
-        memory: 256Mi
+        memory: 512Mi
 
     securityContext:
       allowPrivilegeEscalation: false
@@ -63,9 +65,9 @@ spec:
 
     podSecurityContext:
       runAsNonRoot: true
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
       fsGroupChangePolicy: OnRootMismatch
 
     automountServiceAccountToken: false
