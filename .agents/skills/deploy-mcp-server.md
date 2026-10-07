@@ -178,6 +178,95 @@ Anything the CR cannot express has to be moved into the image, into `command` /
 `args`, or dropped deliberately — write a comment in the CR when it is dropped,
 the way `truenas-mcp` documents its `TRUENAS_MCP_*` env.
 
+## Worked example: `grafana-mcp`
+
+`grafana-mcp` is the hardest of the current servers (SSE transport, an argument
+that embeds the service host, a Secret-backed env var, a liveness probe to
+drop), so it is worth reading before migrating the simpler ones.
+
+Before — the MCP server is an app of its own, rendered by its own Flux
+Kustomization:
+
+```
+apps/monitoring-system/grafana/
+├── kustomization.yaml     # lists ./mcp.ks.yaml
+├── mcp.ks.yaml            # Flux Kustomization, path ./apps/monitoring-system/grafana/mcp
+└── mcp/
+    ├── helm-release.yaml  # app-template: image, args, env (one from secretKeyRef), liveness probe, tmp emptyDir
+    ├── oci-repository.yaml
+    ├── service-account.yaml     # GrafanaServiceAccount "mcp" → Secret grafana-mcp-token
+    └── litellm-mcp-server.yaml  # spec.url → http://grafana-mcp.monitoring-system.svc.cluster.local:8000/sse
+```
+
+After — one CR in the directory that deploys Grafana, next to the two Kubernetes
+objects the server needs:
+
+```
+apps/monitoring-system/grafana/
+├── kustomization.yaml     # ./instance.ks.yaml + ./operator.ks.yaml, no ./mcp.ks.yaml
+└── instance/              # deploys Grafana itself
+    ├── kustomization.yaml # + ./litellm-mcp-server.yaml + ./service-account.yaml
+    ├── service-account.yaml
+    └── litellm-mcp-server.yaml
+```
+
+```yaml
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+  alias: grafana
+  transport: sse
+
+  workload:
+    image: grafana/mcp-grafana:2.0.1
+    port: 8000
+    path: /sse
+    args: ["--allowed-hosts=localhost:8000,127.0.0.1:8000,grafana-mcp.monitoring-system:8000"]
+
+    env:
+      - name: GRAFANA_URL
+        value: http://grafana-service:3000
+      - name: GRAFANA_ORG_ID
+        value: "1"
+      - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: grafana-mcp-token
+            key: token
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+
+    securityContext: ... # copied from the HelmRelease
+    podSecurityContext: ... # copied from defaultPodOptions
+
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp
+```
+
+What changed, and why:
+
+- The derived URL equals the old `spec.url` (`port: 8000` + `path: /sse`), so the
+  gateway config and the `--allowed-hosts` value (which names the Service host,
+  unchanged because the CR keeps the name `grafana-mcp`) stay valid.
+- The `liveness` probe is **dropped**: the CRD has no `probes` field, and the
+  probe it replaces only proved the container was up, which the Deployment
+  reports by itself. Verification step 6 is what actually proves `/sse` answers.
+- The reloader annotation is dropped; the `helm-release.yaml` and
+  `oci-repository.yaml` disappear with it.
+- `service-account.yaml` stays: the `GrafanaServiceAccount` still mints the
+  `grafana-mcp-token` Secret the workload reads. The pod itself does not need
+  the ServiceAccount, so the template's
+  `automountServiceAccountToken: false` is right here.
+
 ## Migration procedure for one app
 
 1. Read the app's `mcp/helm-release.yaml` (every value), its
