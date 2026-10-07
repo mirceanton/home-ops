@@ -12,9 +12,6 @@ spec:
   transport: http
 
   authType: bearer_token
-  authTokenRef:
-    name: github-mcp-secret
-    key: token
 
   workload:
     image: ghcr.io/github/github-mcp-server:v2.0.1@sha256:03f565ea952662cd14a8a0373d910aeced3aff7197ab6afef786755db8d25994
