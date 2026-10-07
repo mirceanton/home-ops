@@ -7,8 +7,6 @@ resources:
   - ./helm-release.yaml
   - ./external-secret.yaml
   - ./litellm-key.yaml
-  - ./litellm-mcp-server.yaml
-  - ./mcp-external-secret.yaml
 
 patchesStrategicMerge:
   - ./patches/cnpg.yaml

@@ -27,6 +27,3 @@ spec:
       namespace: security-system
     - name: 1password-connect
       namespace: security-system
-    #? channel-analytics-mcp is a LiteLLMMCPServer now: its CRD must exist first.
-    - name: litellm-operator
-      namespace: ai

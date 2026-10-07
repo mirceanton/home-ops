@@ -21,7 +21,7 @@ spec:
   postBuild:
     substitute:
       #? this Kustomization is named "grafana-instance" (to disambiguate from
-      #? the operator Kustomization below it), but the Keycloak client
+      #? the operator/mcp Kustomizations below it), but the Keycloak client
       #? itself should be identified as plain "grafana"
       APP: grafana
       #? Grafana lives on the "admin" subdomain, not "<app>.home.mirceanton.com"
@@ -38,6 +38,3 @@ spec:
       namespace: storage-system
     - name: keycloak-operator-config
       namespace: security-system
-    #? grafana-mcp is a LiteLLMMCPServer now: its CRD must exist first.
-    - name: litellm-operator
-      namespace: ai

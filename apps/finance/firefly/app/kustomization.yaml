@@ -7,5 +7,3 @@ resources:
   - ./helm-release.yaml
   - ./external-secret.yaml
   - ./oidc.yaml
-  - ./litellm-mcp-server.yaml
-  - ./mcp-external-secret.yaml

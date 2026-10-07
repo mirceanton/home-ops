@@ -12,7 +12,8 @@ spec:
   targetNamespace: ai
 
   path: ./apps/ai/kubesearch-mcp/app
-  components: []
+  components:
+    - ../../../../components/volsync/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -21,6 +22,9 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      VOLSYNC_CAPACITY: 256Mi
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
 
   decryption: { provider: sops }
   dependsOn:
@@ -28,6 +32,7 @@ spec:
       namespace: security-system
     - name: 1password-connect
       namespace: security-system
-    #? kubesearch-mcp is a LiteLLMMCPServer now: its CRD must exist first.
-    - name: litellm-operator
-      namespace: ai
+    - name: openebs
+      namespace: storage-system
+    - name: volsync
+      namespace: storage-system

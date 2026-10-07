@@ -9,41 +9,5 @@ spec:
   proxyNamespace: ai
 
   alias: github
+  url: http://github-mcp.ai.svc.cluster.local:8080/mcp
   transport: http
-
-  authType: bearer_token
-  authTokenRef:
-    name: github-mcp-secret
-    key: token
-
-  workload:
-    image: ghcr.io/github/github-mcp-server:v2.0.1@sha256:03f565ea952662cd14a8a0373d910aeced3aff7197ab6afef786755db8d25994
-    args: ["http"]
-    port: 8082
-    path: /mcp
-
-    resources:
-      requests:
-        cpu: 10m
-        memory: 64Mi
-      limits:
-        memory: 256Mi
-
-    automountServiceAccountToken: false
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities: { drop: ["ALL"] }
-    podSecurityContext:
-      runAsNonRoot: true
-      runAsUser: 65532
-      runAsGroup: 65532
-      fsGroup: 65532
-      fsGroupChangePolicy: OnRootMismatch
-
-    volumes:
-      - name: tmp
-        emptyDir: {}
-    volumeMounts:
-      - name: tmp
-        mountPath: /tmp

@@ -37,6 +37,3 @@ spec:
       namespace: storage-system
     - name: keycloak-operator-config
       namespace: security-system
-    #? home-assistant-mcp is a LiteLLMMCPServer now: its CRD must exist first.
-    - name: litellm-operator
-      namespace: ai

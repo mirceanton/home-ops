@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: home-assistant-mcp
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: home-assistant-mcp
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      home-assistant-mcp:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/homeassistant-ai/ha-mcp
+              tag: 8.6.0@sha256:7426fb169440aff789e4ee942012b03317ba0b68e1d463efa19c37088dddd8bc
+            args: ["ha-mcp-web"]
+            env:
+              TZ: Europe/Bucharest
+              MCP_PORT: "8086"
+              MCP_SECRET_PATH: /mcp
+              HOMEASSISTANT_URL: http://home-assistant.home-automation.svc.cluster.local:8123
+              HOMEASSISTANT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: home-assistant-mcp-secret
+                    key: HOMEASSISTANT_TOKEN
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 100Mi
+              limits:
+                memory: 512Mi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile: { type: RuntimeDefault }
+
+    service:
+      app:
+        controller: home-assistant-mcp
+        ports:
+          http:
+            port: 8086
+
+    persistence:
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
