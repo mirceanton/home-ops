@@ -9,5 +9,53 @@ spec:
   proxyNamespace: ai
 
   alias: flux
-  url: http://flux-mcp.flux-system.svc.cluster.local:9090/mcp
   transport: http
+
+  # Migrated from the flux-operator-mcp HelmRelease (the chart's Deployment,
+  # Service, ServiceAccount and ClusterRoleBinding are all named after the
+  # release, so the release is deleted in the same commit — the operator's
+  # generated Service would otherwise fight the chart's). The chart ran the
+  # server as a cluster-admin cluster reader; service-account.yaml and
+  # cluster-role-binding.yaml in this directory carry that identity over.
+  #
+  # The CRD has no probes field, so the chart's tcpSocket liveness/readiness
+  # probes are dropped deliberately; the derived URL is identical to the old
+  # spec.url.
+  workload:
+    image: ghcr.io/controlplaneio-fluxcd/flux-operator-mcp:v0.61.0
+    args: ["serve", "--transport=http", "--port=9090", "--read-only=false"]
+    port: 9090
+    path: /mcp
+
+    env:
+      - name: RUNTIME_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      seccompProfile: { type: RuntimeDefault }
+      capabilities: { drop: ["ALL"] }
+
+    # This one *does* talk to the Kubernetes API, so the token stays mounted and
+    # the pod runs as the flux-mcp ServiceAccount shipped next to this file.
+    serviceAccountName: flux-mcp
+    automountServiceAccountToken: true
+
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp

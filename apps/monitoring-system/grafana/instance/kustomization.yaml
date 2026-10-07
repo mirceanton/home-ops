@@ -7,3 +7,5 @@ resources:
   - ./data-sources.yaml
   - ./grafana.yaml
   - ./service-monitor.yaml
+  - ./litellm-mcp-server.yaml
+  - ./service-account.yaml

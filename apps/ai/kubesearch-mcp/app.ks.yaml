@@ -36,3 +36,6 @@ spec:
       namespace: storage-system
     - name: volsync
       namespace: storage-system
+    #? kubesearch-mcp is a LiteLLMMCPServer now: its CRD must exist first.
+    - name: litellm-operator
+      namespace: ai

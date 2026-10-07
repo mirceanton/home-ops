@@ -1,0 +1,84 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: affine-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: affine
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: affine-mcp-secret
+    key: AFFINE_MCP_HTTP_TOKEN
+
+  # Migrated from the app-template HelmRelease: the operator now runs this
+  # workload. The CRD has no probes field, so the old liveness/readiness/startup
+  # probes are dropped deliberately; nothing else about the runtime changed and
+  # the derived URL is identical to the one the Helm-created Service served.
+  workload:
+    image: ghcr.io/dawncr0w/affine-mcp-server:3.9.0
+    port: 3000
+    path: /mcp
+
+    env:
+      - name: MCP_TRANSPORT
+        value: http
+      - name: PORT
+        value: "3000"
+      - name: AFFINE_MCP_HTTP_HOST
+        value: 0.0.0.0
+      - name: AFFINE_MCP_AUTH_MODE
+        value: bearer
+      - name: AFFINE_BASE_URL
+        value: http://affine.productivity.svc.cluster.local:3010
+      # Cluster-internal traffic only, never leaves the pod network.
+      - name: AFFINE_ALLOW_INSECURE_HTTP
+        value: "true"
+      - name: AFFINE_MCP_HTTP_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: affine-mcp-secret
+            key: AFFINE_MCP_HTTP_TOKEN
+      - name: AFFINE_EMAIL
+        valueFrom:
+          secretKeyRef:
+            name: affine-mcp-secret
+            key: AFFINE_EMAIL
+      - name: AFFINE_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: affine-mcp-secret
+            key: AFFINE_PASSWORD
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      fsGroupChangePolicy: OnRootMismatch
+
+    automountServiceAccountToken: false
+
+    volumes:
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: tmp
+        mountPath: /tmp

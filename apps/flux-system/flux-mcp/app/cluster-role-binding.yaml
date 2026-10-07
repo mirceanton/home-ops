@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/rbac.authorization.k8s.io/clusterrolebinding_v1.json
+#? Carried over verbatim from the flux-operator-mcp HelmRelease, which owned this
+#? binding until the MCP server moved to spec.workload: the MCP server reads the
+#? whole cluster through the Kubernetes API. Tightening this below cluster-admin
+#? (the chart supports readonly: true) is separate follow-up work.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-mcp
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: flux-mcp
+    namespace: flux-system

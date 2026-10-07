@@ -6,3 +6,5 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./cache.pvc.yaml
+  - ./litellm-mcp-server.yaml
+  - ./mcp-external-secret.yaml
