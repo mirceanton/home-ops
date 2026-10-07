@@ -9,10 +9,10 @@ into the proxy's `mcp_servers` map and rolls the proxy when it changes.
 
 There are two shapes:
 
-| Shape           | Who runs the server                                                                                          | What to use it for                                                                                                                     |
-| --------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `spec.workload` | the operator: it creates a `Deployment` + `Service` named after the CR and derives the URL from that Service | **the default** — every MCP server this repo deploys itself                                                                            |
-| `spec.url`      | somebody else (the app itself, a third party)                                                                | an endpoint the app already serves (vikunja's own API, streamarr), a server its own Helm release runs (`flux-mcp`), or a remote server |
+| Shape           | Who runs the server                                                                                          | What to use it for                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `spec.workload` | the operator: it creates a `Deployment` + `Service` named after the CR and derives the URL from that Service | **the default** — every MCP server this repo deploys itself                          |
+| `spec.url`      | somebody else (the app itself, a third party)                                                                | an endpoint the app already serves (vikunja's own API, streamarr) or a remote server |
 
 `spec.url` and `spec.workload` are mutually exclusive; a validating webhook
 rejects a CR that sets both or neither.
@@ -54,8 +54,8 @@ changes. Do not create a second Flux Kustomization for one CR — a new
 removes.
 
 **MCP server that has no host app** (`github-mcp`, `kubesearch-mcp`,
-`truenas-mcp`, the youtube ones): keep it as its own app directory, but drop
-the parts the CR replaces:
+`truenas-mcp`, `flux-mcp`, the youtube ones): keep it as its own app directory,
+but drop the parts the CR replaces:
 
 ```
 apps/<namespace>/<mcp-name>/
@@ -74,12 +74,6 @@ apps/<namespace>/<mcp-name>/
 MCP workload: the `volsync` component and the PVC it creates stay (mount the
 claim from `spec.workload.volumes`), and a `configMapGenerator` + `files/`
 directory stays if the server reads a config file.
-
-`flux-mcp` is the standing exception: it keeps its `flux-operator-mcp`
-`helm-release.yaml` + `oci-repository.yaml` and a plain `spec.url` CR
-(`apps/flux-system/flux-mcp/app/`). The chart owns the `ServiceAccount` and the
-`ClusterRoleBinding` the server needs, and the workload is infrastructure-bound
-rather than a front-end for one app, so embedding it in the CR buys nothing.
 
 One app directory may hold several CRs (one per MCP server). Every CR must be in
 the same namespace as the Secret its `authTokenRef` and `env` point at, so
@@ -362,29 +356,3 @@ Revert the PR and reconcile the app's Kustomization: the CR disappears, the
 operator's Deployment and Service are garbage-collected with it, and the
 `HelmRelease` comes back in the same commit. The `alias` never changed, so the
 gateway config is restored to its previous entry.
-
-### Rolling back the fleet-wide migration (2026-10-07, merge commit `ab6462e6`)
-
-That commit moved 10 servers (9 HelmReleases deleted + `truenas-mcp`, which was
-already a workload) onto `spec.workload`. To restore the previous Helm-based
-deployment:
-
-1. `git revert ab6462e6` on `main` (it is a single-parent squash commit) and let
-   Flux apply it — `flux reconcile kustomization flux-system -n flux-system
---with-source` if you do not want to wait for the 5-minute poll.
-2. Each migrated CR reverts to `spec.url` in the same commit, so the operator
-   garbage-collects the Deployment and Service it owns, while the `HelmRelease`s,
-   `OCIRepository`s, `mcp/` directories and `mcp.ks.yaml` Kustomizations return
-   in that same commit and Helm reinstalls the old Deployments/Services (same
-   names, new UIDs — consumers use DNS, so nothing else changes).
-3. The five host-app CRs (`firefly-mcp`, `home-assistant-mcp`, `navidrome-mcp`,
-   `grafana-mcp`, `affine-mcp`) change owning Kustomization again
-   (`<app>-mcp` → `<app>`), so expect a short delete + create gap per alias; if
-   one stays missing, `flux reconcile kustomization <app> -n <ns> --with-source`.
-4. No alias, Secret, URL or consumer changes are involved. `flux-mcp` (still its
-   own Helm release) and the orphaned `youtube-workspace` MCP (no Git source at
-   all) were never migrated, so the revert does not touch them.
-
-Verify the same way as a migration: the 13 `mcp_servers` entries in
-`ConfigMap/ai/litellm-config`, then a real `initialize` + `tools/list` through
-the gateway for each alias (§Verification step 6).
