@@ -27,6 +27,7 @@
 ## Skills
 
 - **Deploy a new app**: `.agents/skills/deploy-app.md` — adds a new application to the cluster using the bjw-s-labs app-template chart.
+- **Deploy an MCP server**: `.agents/skills/deploy-mcp-server.md` — registers an MCP server as a `LiteLLMMCPServer` with the workload embedded via `spec.workload`, next to the Helm release of the app it fronts (template: `.agents/skills/assets/litellm-mcp-server.template.yaml`).
 - **Unlock a stuck VolSync backup**: `.agents/skills/volsync-unlock.md` — clears a stale restic repo lock (usually from apiserver flakiness killing the mover pod mid-`forget`) that otherwise loops backup Jobs forever.
 
 ## Critical Operational Notes
