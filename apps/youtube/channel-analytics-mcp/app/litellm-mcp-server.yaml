@@ -16,10 +16,6 @@ spec:
     name: channel-analytics-mcp-secret
     key: MCP_API_KEY
 
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old tcpSocket liveness,
-  # readiness and startup probes are dropped deliberately; the derived URL is
-  # identical to the old spec.url.
   workload:
     image: ghcr.io/oliverhruby/youtube-mcp:v0.1.0
     port: 8000

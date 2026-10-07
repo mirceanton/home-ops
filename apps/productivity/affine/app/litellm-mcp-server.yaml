@@ -16,10 +16,6 @@ spec:
     name: affine-mcp-secret
     key: AFFINE_MCP_HTTP_TOKEN
 
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old liveness/readiness/startup
-  # probes are dropped deliberately; nothing else about the runtime changed and
-  # the derived URL is identical to the one the Helm-created Service served.
   workload:
     image: ghcr.io/dawncr0w/affine-mcp-server:3.9.0
     port: 3000
@@ -36,7 +32,7 @@ spec:
         value: bearer
       - name: AFFINE_BASE_URL
         value: http://affine.productivity.svc.cluster.local:3010
-      # Cluster-internal traffic only, never leaves the pod network.
+      #? Cluster-internal traffic only, never leaves the pod network.
       - name: AFFINE_ALLOW_INSECURE_HTTP
         value: "true"
       - name: AFFINE_MCP_HTTP_TOKEN

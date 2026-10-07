@@ -16,21 +16,12 @@ spec:
     name: firefly-mcp-secret
     key: FIREFLY_MCP_TOKEN
 
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old liveness/readiness/startup
-  # probes are dropped deliberately.
   workload:
     image: ghcr.io/daften/fireflyiii-mcp:0.5.2
     port: 3000
-    # The old spec.url carried no path at all (the server speaks SSE from the
-    # root), and the CRD always appends a path to the derived URL. `path: "/"`
-    # reproduces `http://firefly-mcp.finance.svc.cluster.local:3000/`, which is
-    # the same request the old `...:3000` produced.
     path: "/"
 
     env:
-      # PAT-only HTTP mode: the token is forwarded by litellm as a Bearer
-      # header (see the authTokenRef of this CR), not configured here.
       - name: FIREFLY_URL
         value: http://firefly:8080
 

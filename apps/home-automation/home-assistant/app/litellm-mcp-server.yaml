@@ -11,15 +11,7 @@ spec:
   alias: home_assistant
   transport: http
 
-  # The server authenticates to Home Assistant with its own long-lived token
-  # (HOMEASSISTANT_TOKEN below), so the gateway does not authenticate to it.
-  #
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old liveness/readiness probes
-  # are dropped deliberately; nothing else about the runtime changed and the
-  # derived URL is identical to the one the Helm-created Service served.
   workload:
-    # Digest pinned as in the old HelmRelease.
     image: ghcr.io/homeassistant-ai/ha-mcp:8.6.0@sha256:7426fb169440aff789e4ee942012b03317ba0b68e1d463efa19c37088dddd8bc
     args: ["ha-mcp-web"]
     port: 8086
@@ -61,8 +53,6 @@ spec:
 
     automountServiceAccountToken: false
 
-    # app-template always mounted an emptyDir at /tmp; the operator creates no
-    # volume of its own, so declare it explicitly (root filesystem is read-only).
     volumes:
       - name: tmp
         emptyDir: {}

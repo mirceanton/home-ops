@@ -11,10 +11,6 @@ spec:
   alias: navidrome
   transport: http
 
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old /healthz liveness and
-  # readiness probes are dropped deliberately; nothing else about the runtime
-  # changed and the derived URL is identical to the old spec.url.
   workload:
     image: ghcr.io/blakeem/navidrome-mcp:2.3.0
     port: 3000
@@ -43,8 +39,6 @@ spec:
 
     automountServiceAccountToken: false
 
-    # settings.json (navidrome url + credentials) comes from this Secret, which
-    # is templated by the ExternalSecret of the same name in this directory.
     volumes:
       - name: config
         secret:

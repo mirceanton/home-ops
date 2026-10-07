@@ -11,17 +11,10 @@ spec:
   alias: grafana
   transport: sse
 
-  # Migrated from the app-template HelmRelease: the operator now runs this
-  # workload. The CRD has no probes field, so the old liveness probe (a /healthz
-  # httpGet that also sent `Host: localhost:8000`) is dropped deliberately; the
-  # derived URL is identical to the old spec.url.
   workload:
     image: grafana/mcp-grafana:2.0.1
     port: 8000
     path: /sse
-    # The service host and port in this allow-list are unchanged, so the list
-    # stays valid: the operator's Service is still called grafana-mcp and still
-    # listens on 8000.
     args:
       - --allowed-hosts=localhost:8000,127.0.0.1:8000,grafana-mcp.monitoring-system.svc.cluster.local:8000,grafana-mcp.monitoring-system:8000,grafana-mcp:8000
 
@@ -54,8 +47,6 @@ spec:
       runAsGroup: 1000
       seccompProfile: { type: RuntimeDefault }
 
-    # Grafana's API is reached with the token above, not with the pod's
-    # ServiceAccount (service-account.yaml only mints that token).
     automountServiceAccountToken: false
 
     volumes:
