@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: channel-analytics-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: youtube_analytics
+  url: http://channel-analytics-mcp.youtube.svc.cluster.local:8000/mcp
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: channel-analytics-mcp-secret
+    key: MCP_API_KEY

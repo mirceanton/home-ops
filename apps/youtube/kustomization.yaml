@@ -6,7 +6,10 @@ namespace: youtube
 
 resources:
   - ./namespace.yaml
-  - ./channel-analytics-mcp
   - ./davinci
+  # Standalone MCP servers whose manifests live under apps/ai/litellm/app/mcp/.
+  # Their Flux Kustomizations stay in this namespace tree so the Kustomization
+  # object keeps its identity (namespace == targetNamespace) and Flux does not
+  # prune the live workloads on the move.
+  - ./mcp
   - ./teleprompter
-  - ./youtube-public-mcp

@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: kubesearch-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: kubesearch
+  url: http://kubesearch-mcp.ai.svc.cluster.local:3000/mcp
+  transport: http

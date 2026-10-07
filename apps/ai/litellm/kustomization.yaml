@@ -5,3 +5,7 @@ kind: Kustomization
 resources:
   - ./operator.ks.yaml
   - ./app.ks.yaml
+  # Standalone MCP servers (no in-cluster app to attach them to) live under
+  # app/mcp/<name>/ and keep their own Flux Kustomization here so that the
+  # target namespace, dependency order and VolSync component stay explicit.
+  - ./mcp
