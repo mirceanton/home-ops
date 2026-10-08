@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: ghcr.io/github/github-mcp-server
-              tag: v2.0.1@sha256:03f565ea952662cd14a8a0373d910aeced3aff7197ab6afef786755db8d25994
+              tag: v2.0.2@sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796
             args: ["http"]
 
             probes:
