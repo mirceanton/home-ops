@@ -1,13 +1,23 @@
 ---
-# NOT enabled by default - enable it in ./talstomize.yaml once the PCIe Optane
-# SSD is physically installed and this device name is confirmed.
+# Dedicate the PCIe Optane (16 GiB class) to /var/lib/etcd, mirroring how the
+# home-ops node dedicates its own NVMe to etcd.
 #
-# The planned ZimaBoard layout puts Talos on the eMMC (see ./install-disk.yaml)
-# and the PCIe Optane SSD on /var/lib/etcd, mirroring how the home-ops node
-# dedicates `/dev/nvme0n1` to etcd. `machine.disks[].device` must name a device
-# that exists, otherwise the apply fails, so this stays opt-in.
+# The device is pinned by its stable `/dev/disk/by-id/` path rather than the
+# kernel name, so adding another NVMe later cannot silently move etcd onto a
+# different disk. Verified on the live board: the Optane is an
+# INTEL MEMPEK1J016GAD, serial PHBT83610QPV016N, EUI `5cd2e46433b80100`,
+# 14 GB usable and **empty** (no partitions, no filesystem) - nothing on it to
+# back up. If the by-id path ever fails to resolve, fall back to the verified
+# kernel name `/dev/nvme0n1`.
+#
+# `machine.disks[].partitions` REPARTITIONS the disk and destroys anything on
+# it, so this patch has to be part of the config BEFORE the first
+# `talosctl bootstrap`: moving etcd to another disk afterwards means
+# re-bootstrapping the single-member etcd. Single-node etcd has quorum 1, so
+# the Optane is also a single point of failure worth an explicit
+# `talosctl etcd snapshot` habit.
 machine:
   disks:
-    - device: /dev/nvme0n1
+    - device: /dev/disk/by-id/nvme-eui.5cd2e46433b80100
       partitions:
         - mountpoint: /var/lib/etcd

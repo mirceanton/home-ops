@@ -28,6 +28,9 @@ helmfile = "latest"
 "github:mirceanton/talswitcher" = "latest"
 # Used by talos/zimaboard/ (talstomize config). Only pre-releases exist so far,
 # so this is pinned to an exact tag - releases/latest does not resolve.
+# NOTE: talos/zimaboard/ needs the `contractVersion` support merged in
+# mirceanton/talstomize#22, so this pin must be bumped to the next release
+# (the tag workflow runs daily) before that directory can be rendered.
 "github:mirceanton/talstomize" = "v0.1.0-rc.2"
 
 # Misc Tools

@@ -3,24 +3,32 @@ apiVersion: config.talstomize.dev/v1alpha1
 kind: Talstomize
 
 # Talstomize-managed machine configuration for the ZimaBoard single-node
-# "public" cluster (DMZ VLAN 666, 10.0.20.0/24).
+# "lab" cluster: the board currently deployed in the test lab, on the
+# **Services VLAN 1010 (`10.0.10.0/24`)**, rendered with talstomize.
+#
+# The eventual public placement (DMZ VLAN 666, `10.0.20.0/24`) is only
+# documented in ./README.md - the DMZ VLAN, its firewall rules and the WAN:443
+# port-forward exist only on the *unmerged* `mikrotik-terraform` branch
+# `feat/dmz-vlan-port-forward`, so nothing here is pinned to `10.0.20.x`.
 #
 # This is a SEPARATE cluster from the talhelper-managed `talos/talconfig.yaml`
 # at the repository root (cluster `home-ops`): different cluster name, own
 # secrets bundle, own node. The root talhelper files are left untouched.
 #
 # Render with:  cd talos/zimaboard && talstomize build .
-# See ./README.md for the workflow, which patches are reused vs added, the
-# placeholders that still need a human decision and the DMZ-specific caveats.
+# See ./README.md for the workflow, which patches are reused vs added and the
+# open items that still need a decision.
 
 clusterName: zimaboard
 
-# TODO(zimaboard): placeholder. The node takes its address from the DMZ DHCP
-# pool (10.0.20.195-10.0.20.249 in mikrotik-terraform) and 10.0.20.250 is
-# reserved for the `envoy-public` LoadBalancer IP, so this must be set to
-# whatever address the node really gets - ideally a static DHCP reservation,
-# like the `home-ops` node's 10.0.0.15.
-controlPlaneEndpoint: https://10.0.20.195:6443
+# The node is a single 802.3ad `bond0` over both NICs (see
+# ./patches/zimaboard-bond.yaml) and takes its address from the Services DHCP
+# pool (`10.0.10.195-10.0.10.199`) through the static lease
+# `10.0.10.195 = zimaboard` in `mikrotik-terraform` (`dhcp/services`), so both
+# the address and the `zimaboard.svc.h.mirceanton.com` A record that comes with
+# it are stable. `10.0.10.196` (the second NIC's own lease before bonding) is
+# released - a bond carries exactly one address.
+controlPlaneEndpoint: https://10.0.10.195:6443
 
 # Fresh `talosctl gen secrets` bundle for THIS cluster, sops-encrypted with the
 # repository's age recipient (see ./README.md - never point this at
@@ -30,52 +38,59 @@ secrets: ./talsecret.sops.yaml
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
 kubernetesVersion: v1.37.1
 
+# The config-shape ("version contract") is pinned independently of the
+# installer version. The node runs Talos v1.14.2, but every patch in this
+# directory - and the shared `../patches/*` it reuses - is classic
+# `v1alpha1`-shaped, the shape Talos <= v1.13 emits. Left unset, the renderer
+# follows `installer.talosVersion` (or its own machinery) and emits the v1.14
+# multi-document base on top of those patches, which Talos rejects with 14
+# `.machine.kubelet ... is already set in v1alpha1 config`-style errors. A
+# classic-shaped config is still read fine by a v1.14 node (verified with
+# `talosctl v1.14.2 validate`), so pinning the contract to 1.13 keeps the whole
+# `../patches` tree valid while the node runs 1.14.2.
+contractVersion: v1.13.10
+
 # Certificate SANs. The node's own `ip` below is NOT added to these
 # automatically (verified in the rendered config), so it is listed here
 # explicitly together with the KubePrism loopback, like the home-ops
 # talconfig does for its own node.
 additionalSubjectAltNames:
-  - 10.0.20.195 # TODO(zimaboard): keep in sync with nodes.zimaboard.ip
-  - zimaboard.dmz.h.mirceanton.com # TODO(zimaboard): needs a named DHCP lease
+  - 10.0.10.195 # keep in sync with nodes.zimaboard.ip
+  - zimaboard.svc.h.mirceanton.com # from the `zimaboard` static lease in dhcp/services
   - 127.0.0.1 # KubePrism
 
-# talstomize computes no smart default for the installer image - with no
-# `installer` block at all, `machine.install.image` is left empty - so either
-# `installer.image` or `installer.schematic` must be set.
-# TODO(zimaboard): the extension list is a placeholder. A node that only runs
-# the stateless public workloads needs none of them; in that case replace the
-# whole block with `image: ghcr.io/siderolabs/installer:v1.13.10`, which also
-# avoids the factory.talos.dev lookup `build` otherwise needs.
+# The node boots the *vanilla* metal ISO v1.14.2 with no system extensions, and
+# Talos installs using the installer image referenced here, which must match
+# that ISO's schematic. The `factory.talos.dev` schematic this directory used
+# to declare would both mismatch the vanilla ISO and need internet access,
+# which the Services VLAN does not have (see `../patches/registry-mirrors.yaml`,
+# reused below) - so pin the plain vanilla installer instead. Bump this
+# together with the ISO if the node is ever re-flashed.
 installer:
   # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-  talosVersion: v1.13.10
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/iscsi-tools
-          - siderolabs/zfs
+  image: ghcr.io/siderolabs/installer:v1.14.2
 
 nodes:
   zimaboard:
-    # TODO(zimaboard): placeholder - must match the address above. Used both as
-    # a certificate SAN and as the `talosctl` target by apply/diff.
-    ip: 10.0.20.195
+    # Must match the endpoint above: used both as a certificate SAN and as the
+    # `talosctl` target by apply/diff.
+    ip: 10.0.10.195
     kind: controlplane
     patches:
       # ZimaBoard-specific equivalents of shared/old-format files.
+      - ./patches/zimaboard-bond.yaml
       - ./patches/zimaboard-network.yaml
       - ./patches/install-disk.yaml
       - ./patches/node-labels.yaml
-      # Enable together with the PCIe Optane SSD - device name is a guess, see
-      # the file header:
-      # - ./patches/etcd-optane-disk.yaml
+      # The 16 Gi Optane in the PCIe slot, dedicated to /var/lib/etcd. Must be
+      # in the config before the first `talosctl bootstrap`.
+      - ./patches/etcd-optane-disk.yaml
 
 # Applied to every node, regardless of role.
 patches:
   # Single node: workloads have to be schedulable on the controlplane.
   - ./patches/allow-scheduling-on-controlplanes.yaml
-  # Cilium is installed by the bootstrap helmfile, not by Talos.
+  # Cilium is installed by the cluster's own bootstrap path, not by Talos.
   - ./patches/cni-none.yaml
   # Trimmed variant of ../patches/sysctls.yaml, which is tuned for the home-ops
   # GPU/Sunshine node.
@@ -88,11 +103,13 @@ patches:
   # On a controlplane-only node both produce the same rendered config.
   - ../patches/host-dns.yaml
   - ../patches/kubeprism.yaml
-  # NOTE: ../patches/registry-mirrors.yaml is deliberately NOT reused here: it
-  # pins every mirror at registry.nas.svc.h.mirceanton.com (Services VLAN,
-  # unreachable from the DMZ - the firewall's DMZ zone only allows DMZ->WAN and
-  # WAN->DMZ:443, then default-deny) with skipFallback: true, so every image
-  # pull would fail instead of falling back to the upstream registries.
+  # The Services VLAN has no route to the internet (there is no Services->WAN
+  # firewall rule), so the installer image, the CNI and every workload image can
+  # only come from the NAS pull-through registry on the same VLAN
+  # (`registry.nas.svc.h.mirceanton.com`, 10.0.10.245). Needs
+  # `registry_username`/`registry_password` in the environment (or a gitignored
+  # .env): the build fails without them.
+  - ../patches/registry-mirrors.yaml
 
 # Applied to every controlplane node, before that node's own patches.
 controlplanePatches:
@@ -103,7 +120,10 @@ controlplanePatches:
   - ../patches/disable-search-domain.yaml
   - ../patches/mutating-admission.yaml
   - ../patches/disable-kube-proxy.yaml
-  - ../patches/talos-api-access.yaml
+  # NOTE: ../patches/talos-api-access.yaml is deliberately NOT reused - it
+  # grants Talos API access from the `jobs`/`github-actions` namespaces, which
+  # only exist on the home-ops cluster. Nothing on this node needs it; add a
+  # local copy (listing the namespaces this cluster really has) if that changes.
   # Adapted from ../patches/admission-control.yaml (that one carries
   # talhelper-only escaping) - see the file header.
   - ./patches/admission-control.yaml
