@@ -1,8 +1,14 @@
 # talos/zimaboard — ZimaBoard single-node cluster (Talstomize)
 
-Machine configuration for the **ZimaBoard "public" cluster**: a single-node,
-controlplane-only Talos cluster that lives in the **DMZ VLAN 666
-(`10.0.20.0/24`)** and fronts the public services (`mirceanton.com`).
+Machine configuration for the **ZimaBoard cluster**: a single-node,
+controlplane-only Talos cluster running on the board in the test lab, on the
+**Services VLAN 1010 (`10.0.10.0/24`, `svc.h.mirceanton.com`)**.
+
+The eventual public placement — **DMZ VLAN 666 (`10.0.20.0/24`)** fronting the
+public services (`mirceanton.com`) — is _not_ implemented here: the DMZ VLAN,
+its firewall rules and the `WAN:443` port-forward exist only on the unmerged
+`mikrotik-terraform` branch `feat/dmz-vlan-port-forward`. Everything below
+describes the lab target.
 
 This directory is rendered by [talstomize](https://github.com/mirceanton/talstomize)
 and is **completely separate** from the talhelper-managed configuration one
@@ -16,14 +22,14 @@ level up:
 | Secrets        | `talsecret.sops.yaml` | `talsecret.sops.yaml` (own bundle)            |
 | Shared patches | `patches/`            | reused read-only via `../patches/<name>.yaml` |
 
-Nothing outside this directory had to change to add the cluster, and the
-talhelper files are untouched (`git status -- talos` shows no changes to them).
+Nothing outside this directory has to change for the cluster, and the talhelper
+files are untouched (`git status -- talos` shows no changes to them).
 
-> **This is not apply-ready yet.** Two things have to be decided first: the
-> placeholder values in "Placeholders that need a decision", and the Talos
-> version / patch-shape question in "Blocker: Talos version vs patch shape" —
-> which as rendered today makes the config unusable by any node. Both are
-> documented with their evidence below.
+> **Still not apply-ready.** The config below is complete and validates clean,
+> but applying it depends on two things _outside_ the repo: the CRS326 LAG over
+> `ether11`+`ether12` (mikrotik-terraform PR #160, open, needs a maintenance
+> window) and the `zimaboard` static DHCP lease that comes with it. See
+> "Open items" before running `talstomize apply`.
 
 ## Layout
 
@@ -35,12 +41,13 @@ talos/zimaboard/
 └── patches/              # ZimaBoard-only patches (new files)
     ├── allow-scheduling-on-controlplanes.yaml
     ├── cni-none.yaml
+    ├── zimaboard-bond.yaml      # 802.3ad bond0 over both NICs
     ├── zimaboard-network.yaml
     ├── zimaboard-sysctls.yaml
     ├── install-disk.yaml
     ├── node-labels.yaml
     ├── admission-control.yaml
-    └── etcd-optane-disk.yaml   # opt-in, not referenced yet
+    └── etcd-optane-disk.yaml    # PCIe Optane -> /var/lib/etcd
 ```
 
 `_out/` (talstomize's default output directory: `<node>.yaml` + `talosconfig`)
@@ -49,8 +56,7 @@ is gitignored.
 ## Usage
 
 The tool is pinned in the repository's `.mise.toml`
-(`github:mirceanton/talstomize` → `v0.1.0-rc.2`, with the matching `mise.lock`
-entry), so:
+(`github:mirceanton/talstomize`, with the matching `mise.lock` entry), so:
 
 ```shell
 mise exec -- talstomize --help
@@ -67,6 +73,7 @@ cd talos/zimaboard
 export registry_username=... registry_password=...
 
 mise exec -- talstomize build .                    # -> ./_out/zimaboard.yaml + ./_out/talosconfig
+mise exec -- talosctl validate --mode metal -c _out/zimaboard.yaml   # schema check on the render
 mise exec -- talstomize diff -f .                  # needs the age key + a reachable node
 mise exec -- talstomize apply -f . -- --insecure   # first apply, maintenance mode
 ```
@@ -76,28 +83,57 @@ Notes:
 - `talstomize` shells out to `sops` to decrypt `talsecret.sops.yaml` (it must be
   on `PATH`, and `SOPS_AGE_KEY_FILE` must point at the age key) and to `talosctl`
   for `apply`/`diff`. Under mise both come from the repo's `.mise.toml`.
-- `build` resolves `installer.schematic` against `factory.talos.dev`, so it needs
-  network access. Setting `installer.image` instead avoids that.
+- The installer image is a literal `installer.image`, so `build` needs **no**
+  `factory.talos.dev` lookup. It does not need internet access for that reason,
+  but the `../patches/registry-mirrors.yaml` env vars below do have to be set.
 - The shared `../patches/registry-mirrors.yaml` needs `registry_username` and
   `registry_password` in the environment; the build fails if they are unset.
-  That file is **not** used here (see below), but keep the habit for the
-  home-ops cluster.
+  That file **is** used here (see below).
+- `talstomize build`/`talstomize diff` need a talstomize that understands
+  `contractVersion` (see "Talos version and config shape"). The pinned release
+  may predate that; check `talstomize version` against the repo pin.
 
-## Secrets
+## Target facts (verified on the live board)
 
-`talsecret.sops.yaml` is a **fresh bundle for this cluster** — `talosctl gen
-secrets` output encrypted with the repository's age recipient, exactly like the
-home-ops one. It must never be replaced by `../talsecret.sops.yaml`: that is the
-home-ops cluster's key material.
+| Item           | Value                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| Board          | IceWhale ZimaBoard2, Intel N150, 16 GB RAM, BIOS 5.27                                                         |
+| Talos          | vanilla metal ISO **v1.14.2**, maintenance mode, **no system extensions**                                     |
+| NICs           | `enp1s0` `00:e0:4c:69:db:df` + `enp2s0` `00:e0:4c:69:db:e0` (both Intel I226-V, 1 Gbps)                       |
+| Addressing     | bonded `bond0`, DHCP, static lease `10.0.10.195` = `zimaboard` in `dhcp/services`                             |
+| Install disk   | `/dev/mmcblk0` (eMMC, 62 GB) — currently holds a stock CasaOS install (destructive)                           |
+| etcd disk      | `/dev/nvme0n1` (Optane, INTEL MEMPEK1J016GAD, EUI `5cd2e46433b80100`), 14 GB, empty                           |
+| Network egress | **none** from the Services VLAN (no Services→WAN firewall rule) — images come from the NAS                    |
+| Access         | Talos API over TCP 50000 on `10.0.10.195` (`--insecure` while in maintenance mode); no BMC, JetKVM unverified |
 
-To rotate/regenerate:
+## Networking
 
-```shell
-cd talos/zimaboard
-talosctl gen secrets -o talsecret.yaml
-sops --encrypt talsecret.yaml > talsecret.sops.yaml   # .sops.yaml rule matches by path
-rm talsecret.yaml
-```
+Both NICs are enslaved into one **802.3ad (LACP)** `bond0`
+(`patches/zimaboard-bond.yaml`), `enp1s0` first so the bond takes its MAC and
+matches the static DHCP lease:
+
+- Switch side: a LAG over `ether11`+`ether12`, untagged Services/PVID 1010
+  (mikrotik-terraform `switch-crs326`, PR #160). The module cannot set
+  `lacp-rate=1sec`, so the node's `lacpRate: fast` is never matched —
+  aggregation still forms, failover detection is slower.
+- **Ordering:** apply the node config over the _current_ access ports first,
+  and have the switch LAG merged/pushed _after_. An 802.3ad bond carries no
+  traffic until the switch side is a LAG, and once those ports are LAG members
+  a maintenance-mode ISO is unreachable (no out-of-band access on this board).
+- **Fallback** if no switch LAG can be created: `mode: active-backup` (link
+  failover, no aggregation, works on two separate access ports) and drop
+  `lacpRate`/`xmitHashPolicy`, or leave the NICs unbonded. Either way the "LACP
+  group" requirement is not met until the LAG exists.
+- **`10.0.10.195` / `10.0.10.196`:** these were the two NICs' individual DHCP
+  leases. After bonding there is exactly **one** interface and its address is
+  `.195` (the static lease); **`.196` is released**. Both were inside the live
+  pool `10.0.10.195-10.0.10.199` with no reservation before this change, which
+  is why the `zimaboard` static lease is part of the switch-side PR.
+- `zimaboard.svc.h.mirceanton.com` is published from that static lease
+  (`match_subdomain`) and is a certificate SAN, together with `10.0.10.195` and
+  `127.0.0.1` (KubePrism). The node IP is _not_ added to the SANs
+  automatically, and `nodes.zimaboard.ip`, `controlPlaneEndpoint` and the SANs
+  must stay in sync.
 
 ## Reused patches
 
@@ -108,13 +144,13 @@ These come from `../patches/` unchanged, referenced as `../patches/<file>.yaml`
 | ---------------------------- | --------------------- | -------------------------------------------- |
 | `host-dns.yaml`              | `patches`             | host DNS, no kube-DNS forwarding             |
 | `kubeprism.yaml`             | `patches`             | KubePrism on 7445                            |
+| `registry-mirrors.yaml`      | `patches`             | pull every image from the NAS registry       |
 | `cluster-discovery.yaml`     | `controlplanePatches` | Kubernetes-registry discovery + node RBAC    |
 | `kubelet-tuning.yaml`        | `controlplanePatches` | `maxPods: 200`, `serializeImagePulls: false` |
 | `etcd-tuning.yaml`           | `controlplanePatches` | etcd backend batch interval                  |
 | `disable-search-domain.yaml` | `controlplanePatches` | `machine.network.disableSearchDomain`        |
 | `mutating-admission.yaml`    | `controlplanePatches` | apiserver feature gates                      |
 | `disable-kube-proxy.yaml`    | `controlplanePatches` | Cilium replaces kube-proxy                   |
-| `talos-api-access.yaml`      | `controlplanePatches` | Talos API access for `os:admin`              |
 
 The slot split follows the mapping the audit validated for this cluster
 (`test/talstomize-migration` keeps the role-exclusivity split instead, i.e. only
@@ -123,148 +159,99 @@ genuinely controlplane-only settings — `cluster.etcd`, `cluster.apiServer` —
 
 ### Deliberately not reused
 
-- **`registry-mirrors.yaml`** — every mirror points at
-  `registry.nas.svc.h.mirceanton.com` (Services VLAN) with `skipFallback: true`.
-  The DMZ zone in `mikrotik-terraform` has exactly two forward rules — DMZ → WAN
-  and WAN → DMZ on `443` — and then falls through to the default deny, so the
-  Services VLAN (and with it the registry) is unreachable and image pulls would
-  fail _instead of_ falling back to the upstream registries. The node pulls
-  straight from the internet instead; add the file back to `patches` if the DMZ
-  ever gets a route to the registry.
-- **`network-binding.yaml`** — pinned to `10.0.0.0/24`; this node is on
-  `10.0.20.0/24`. `patches/zimaboard-network.yaml` is the re-pinned copy.
+- **`talos-api-access.yaml`** — grants Talos API access from the
+  `jobs`/`github-actions` namespaces, which only exist on the home-ops cluster.
+  Nothing on this node needs it; add a local copy (listing namespaces this
+  cluster really has) if that changes.
 - **`admission-control.yaml`** — carries talhelper-only escaping (`$$patch:
 delete`) that talosctl-style patch decoding rejects, and its delete target
   does not exist in a `talosctl gen config` base. `patches/admission-control.yaml`
   keeps only the `PodNodeSelector` append.
+- **`network-binding.yaml`** — pinned to `10.0.0.0/24`; this node is on
+  `10.0.10.0/24`. `patches/zimaboard-network.yaml` is the re-pinned copy.
 - **`sysctls.yaml`** — renders fine, but is tuned for the home-ops
   Gaming/Sunshine node. `patches/zimaboard-sysctls.yaml` is the trimmed variant.
 - **`nvidia.yaml` / `uinput.yaml` / `zfs.yaml`** — kernel-module patches for the
-  home-ops node; only relevant if the matching Image Factory extensions are
-  installed here.
+  home-ops node; the ZimaBoard ISO carries no matching extensions.
+
+### `registry-mirrors.yaml` — required, not optional
+
+The node has **no internet egress** (the Services VLAN has no `Services→WAN`
+firewall rule; verified live: NTS to `time.cloudflare.com:4460` times out). The
+NAS pull-through registry `registry.nas.svc.h.mirceanton.com` (10.0.10.245) is
+on the same VLAN, so every mirror in that patch is both reachable and the only
+way the installer/CNI/workload images can be pulled. It needs
+`registry_username`/`registry_password` in the environment (or a gitignored
+`.env`), and every mirror is `skipFallback: true`, so a NAS outage fails pulls
+hard instead of silently falling back upstream.
 
 ## Added patches
 
 - `allow-scheduling-on-controlplanes.yaml` — the single controlplane node has to
   run workloads.
-- `cni-none.yaml` — Cilium comes from the bootstrap helmfile.
+- `cni-none.yaml` — Cilium comes from the cluster's own bootstrap path (Talos
+  installs no CNI and kube-proxy is disabled; the node stays `NotReady` with
+  pending CoreDNS pods until Cilium is up — that is expected, not a failure).
+- `zimaboard-bond.yaml` — 802.3ad `bond0` over `enp1s0`+`enp2s0`, DHCP.
 - `zimaboard-network.yaml` — kubelet/etcd subnet binding + control-plane metrics
   bind addresses (the re-pinned `network-binding.yaml`).
 - `zimaboard-sysctls.yaml` — trimmed sysctls.
-- `install-disk.yaml` — install target (eMMC).
+- `install-disk.yaml` — install target: the eMMC, with `wipe: true` (the disk
+  still carries the stock CasaOS install — installing Talos destroys it).
 - `node-labels.yaml` — node labels, including the `default-node` label the
   cluster-wide PodNodeSelector depends on.
 - `admission-control.yaml` — adapted `PodNodeSelector` append.
-- `etcd-optane-disk.yaml` — **opt-in, not referenced yet**: partitions the PCIe
-  Optane SSD for `/var/lib/etcd`, mirroring the home-ops node. Enable it in
-  `talstomize.yaml` once the disk is installed and the device name confirmed.
+- `etcd-optane-disk.yaml` — partitions the PCIe Optane for `/var/lib/etcd`,
+  pinned by its stable `/dev/disk/by-id/nvme-eui.5cd2e46433b80100` path. It must
+  be in the config _before_ the first `talosctl bootstrap`; moving etcd later
+  means re-bootstrapping the single-member etcd. Single-node etcd has quorum 1 —
+  worth a `talosctl etcd snapshot` habit.
 
-## Placeholders that need a decision
+## Talos version and config shape
 
-Every value below renders as-is but must be confirmed before the config is
-applied to real hardware:
+The node runs **Talos v1.14.2** (the vanilla metal ISO it boots, no extensions),
+and the installer image is pinned to the matching vanilla
+`ghcr.io/siderolabs/installer:v1.14.2`.
 
-| Value                | Currently                        | Evidence / what to decide                                                                                                                                                                                                                               |
-| -------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Subnet               | `10.0.20.0/24`                   | DMZ VLAN 666 in `mikrotik-terraform` (`dhcp/dmz`, `globals.hcl`)                                                                                                                                                                                        |
-| Node IP / endpoint   | `10.0.20.195`                    | Node takes a DMZ **DHCP** address (pool `.195-.249`). Reserve a static lease — like `home-ops` at `10.0.0.15` — and keep `nodes.zimaboard.ip`, `controlPlaneEndpoint` and the SANs in sync. `.250` is the `envoy-public` LoadBalancer IP, not the node. |
-| FQDN                 | `zimaboard.dmz.h.mirceanton.com` | DOMAIN of the DMZ DHCP server. Needs a named lease/DNS record to resolve.                                                                                                                                                                               |
-| Install disk         | `/dev/mmcblk0`                   | eMMC. The board also has dual SATA + a PCIe slot; the planned layout keeps Talos on the eMMC and uses those for etcd/PVs.                                                                                                                               |
-| Extensions           | `iscsi-tools`, `zfs`             | ZimaBoard's own driver set; drop the block for a plain `installer.image` if no extension is needed.                                                                                                                                                     |
-| `default-node` label | enabled                          | Required while `patches/admission-control.yaml` sets the cluster-wide selector — without it nothing schedules. Drop both together if the selector is not wanted here.                                                                                   |
-| `maxPods`            | `200`                            | Inherited from the shared `kubelet-tuning.yaml`; 110 is the kubelet default and might suit this board better.                                                                                                                                           |
-| Extra NICs / VLANs   | none                             | The node DHCPs onto its NIC, so the DMZ port must be an untagged access port. A bond/VLAN setup would need a `machine.network.interfaces` patch (talstomize has no `networkInterfaces` field).                                                          |
-| Talos version        | `v1.13.10`                       | `installer.talosVersion` only tags the installer image — it does **not** change the config schema the generator emits. See the blocker below.                                                                                                           |
+Every patch in this directory — and the shared `../patches/*` it reuses — is
+classic `v1alpha1`-shaped, the shape Talos ≤ v1.13 emits. Talos ≥ v1.14 _reads_
+that shape fine but rejects a config that carries both shapes at once, and a
+renderer that follows the installer version emits the v1.14 multi-document base
+(`KubeletConfig`, `KubePrismConfig`, …) on top of those patches — 14
+`talosctl validate` errors such as `.machine.kubelet ... is already set in
+v1alpha1 config`. That was the original blocker; it is resolved by pinning the
+config shape independently:
 
-## Blocker: Talos version vs patch shape
-
-Reproduced while adding this directory (talstomize `0.1.0-rc.2`, talosctl
-`v1.14.2` and `v1.13.10`):
-
-1. The released talstomize binary is built against Talos machinery **v1.14.0**
-   (its build metadata names `github.com/siderolabs/talos/pkg/machinery
-v1.14.0`), so the base config it generates has the **v1.14 shape**: the
-   Kubernetes settings live in documents of their own (`KubeletConfig`,
-   `KubeNetworkConfig`, `KubeFlannelCNIConfig`, `KubeProxyConfig`,
-   `KubePrismConfig`, `KubeAPIServerConfig`, `KubeAdmissionControlConfig`, ...).
-2. The shared `../patches/*` files — like the whole talhelper configuration they
-   belong to — are **v1alpha1-field shaped**, which is what Talos **≤ v1.13**
-   expects. Talos **≥ v1.14 rejects a config that carries both shapes** for the
-   same setting.
-3. Both halves of that mismatch show up on the rendered `_out/zimaboard.yaml`:
-
-```text
-talosctl v1.14.2 validate --mode metal -> 14 errors occurred:
-  * discovery service is already configured in .cluster.discovery of the v1alpha1 config
-  * .machine.network.disableSearchDomain is already set in v1alpha1 config
-  * .cluster.allowSchedulingOnControlPlanes is already set in v1alpha1 config
-  * kubelet config is already set in v1alpha1 config (.machine.kubelet)
-  * cluster network config is already set in the v1alpha1 config ... use only the new KubeNetworkConfig document
-  * KubePrism config in v1alpha1 config (.machine.features.kubePrism) can't be used with KubePrismConfig document
-  * admission control plugin config is already set in v1alpha1 config (x3)
-  * kube-apiserver / kube-controller-manager / kube-scheduler config is already set in v1alpha1 config
-  * cluster proxy config in v1alpha1 config (.machine.cluster.proxy) can't be used with KubeProxyConfig document
-  * cluster network config in v1alpha1 config (.machine.cluster.network) can't be used with KubeFlannelCNIConfig document
-
-talosctl v1.13.10 validate --mode metal -> error decoding document
-  v1alpha1/DiscoveryServiceConfig/default: "DiscoveryServiceConfig" "v1alpha1": not registered
+```yaml
+contractVersion: v1.13.10 # classic shape, keeps ../patches/* valid
+installer:
+  image: ghcr.io/siderolabs/installer:v1.14.2 # the version the node runs
 ```
 
-As rendered today the config is refused by a v1.14 node and cannot even be
-decoded by a v1.13 node. Two ways out, and the choice is a human decision:
+`contractVersion` defaults to `installer.talosVersion` (and, when that is unset,
+to the renderer's own machinery), which is exactly why it has to be set
+explicitly here: a 1.14.2 node reads a 1.13-shaped config, but the repo's patch
+tree cannot be handed the 1.14 shape.
 
-1. **Stay on Talos v1.13.x** (consistent with the home-ops cluster) and render
-   with a talstomize built against machinery v1.13.10 — which is what
-   `test/talstomize-migration` does (a local build against v1.13.8). The
-   `../patches/*` references in this directory then work unchanged and nothing
-   else here needs to change.
-2. **Move this node to Talos ≥ v1.14** and restate the patches in document form.
-   Upstream's v1.14 patch examples for the settings involved:
+## Open items
 
-   ```yaml
-   apiVersion: v1alpha1
-   kind: KubeFlannelCNIConfig # replaces cluster.network.cni.name: none
-   $patch: delete
-   ---
-   apiVersion: v1alpha1
-   kind: KubeProxyConfig # replaces cluster.proxy.disabled
-   enabled: false
-   ---
-   apiVersion: v1alpha1
-   kind: KubeNodeConfig # replaces machine.kubelet.nodeIP
-   nodeIP:
-     validSubnets:
-       - 10.0.20.0/24
-   ---
-   apiVersion: v1alpha1
-   kind: KubeletConfig # replaces machine.kubelet.extraConfig
-   extraConfig:
-     maxPods: 200
-   ---
-   apiVersion: v1alpha1
-   kind: KubeNetworkConfig # replaces cluster.network / cluster.discovery
-   dnsDomain: cluster.local
-   ```
-
-   plus the matching documents for the remaining entries in the error list
-   (`KubePrismConfig`, `KubeAPIServerConfig`, `KubeControllerManagerConfig`,
-   `KubeSchedulerConfig`, `KubeAdmissionControlConfig`, discovery) and
-   `installer.talosVersion` bumped to the same v1.14.x.
-
-Until one of those is chosen: **do not `talstomize apply` this directory**, and
-do not build an ISO from the rendered config either.
+| Item                    | State / what is left                                                                                                                                                                                                              |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Switch LAG              | `ether11`+`ether12` LAG (`bond5`) + the `10.0.10.195` static lease for `zimaboard` live in `mikrotik-terraform` PR #160 — open, needs a window.                                                                                   |
+| No out-of-band access   | No BMC; the rack JetKVM's attachment to this board is unverified — a bad network config needs physical intervention.                                                                                                              |
+| Node clock              | The board's RTC is ~2 h ahead and NTP cannot sync without egress, so `talosctl` TLS verification fails (hence `--insecure`). Fix the RTC or point `machine.time.servers` at a local source before relying on TLS after bootstrap. |
+| eMMC contents           | The stock CasaOS install is destroyed by the install (`wipe: true`). Confirm nothing on it matters.                                                                                                                               |
+| `default-node` selector | Kept for consistency with home-ops; on a single-node cluster it only adds a way to make nothing schedule. Drop it and the label together if unwanted.                                                                             |
+| `maxPods: 200`          | Inherited from the shared `kubelet-tuning.yaml`; 110 is the kubelet default and may suit this board better.                                                                                                                       |
+| Cilium bootstrap        | `cni: none` + disabled kube-proxy need a bootstrap path for this cluster (kube-proxy replacement); `bootstrap/` in this repo targets home-ops.                                                                                    |
+| Public (DMZ) placement  | Not implemented: needs the `feat/dmz-vlan-port-forward` branch merged (VLAN 666, firewall, `WAN:443` → `10.0.20.250`) and this directory re-pinned to `10.0.20.0/24`.                                                             |
 
 ## Validation
 
-What was actually run while adding this directory:
-
-| Check                                                                           | Result                                                                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `talstomize build .` on a copy of these files, shared patches included          | renders `_out/zimaboard.yaml` + `_out/talosconfig`; schematic resolves to `factory.talos.dev/metal-installer/98c912e2…:v1.13.10`                                                                                                                                                       |
-| sops round trip through talstomize's own decrypt path (disposable test age key) | decrypts and renders — the bundle format and the `secrets:` wiring are correct                                                                                                                                                                                                         |
-| Rendered config spot checks                                                     | `cni.name: none`, `allowSchedulingOnControlPlanes: true`, `kubelet.nodeIP.validSubnets`, `install.disk` + factory image, `sysctls`, `nodeLabels` (incl. `default-node`), `etcd.advertisedSubnets`, PodNodeSelector append, `hostname: zimaboard`, `endpoint: https://10.0.20.195:6443` |
-| `talosctl validate --mode metal` (v1.14.2 and v1.13.10)                         | **fails** — see "Blocker" above                                                                                                                                                                                                                                                        |
-| `mise exec -- task lint:check` (prettier + actionlint, the repo's CI job)       | passes                                                                                                                                                                                                                                                                                 |
+| Check                                                                      | Result                                                                                                                                                                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `talstomize build .` (+`talosctl validate --mode metal`, talosctl v1.14.2) | **valid for metal mode** — render carries `endpoint: https://10.0.10.195:6443`, SANs `.195`/FQDN/`127.0.0.1`, `interfaces: [bond0, 802.3ad, dhcp]`, `disks: /dev/disk/by-id/nvme-eui.… → /var/lib/etcd`, `wipe: true`, `cni.name: none`, `allowSchedulingOnControlPlanes: true`, `hostname: zimaboard`, kubelet `nodeIP.validSubnets: 10.0.10.0/24`, etcd `advertisedSubnets: 10.0.10.0/24` |
+| `mise exec -- task lint:check` (prettier + actionlint, the repo's CI job)  | passes                                                                                                                                                                                                                                                                                                                                                                                      |
 
 ## Related work
 
@@ -273,7 +260,11 @@ What was actually run while adding this directory:
   built against a Talos-version-matched machinery. This directory keeps the same
   role-split and patch conventions but leaves the current `talos/patches/` tree
   in place, per the task that added it.
-- `mirceanton/home-ops` PR #1221 (public `envoy-public` Gateway on the DMZ) and
-  PR #1222 (blog/links workloads) are the cluster-side counterparts;
-  `mirceanton/mikrotik-terraform` PR #158 created the DMZ VLAN and the single
-  WAN `443` port-forward to `10.0.20.250`.
+- `mirceanton/talstomize` PR #22 — the `contractVersion` support this directory
+  relies on.
+- `mirceanton/mikrotik-terraform` PR #160 — the CRS326 LAG + `zimaboard` DHCP
+  lease. (PR #158, the DMZ VLAN/port-forward, belongs to the unmerged public
+  placement.)
+- `mirceanton/home-ops` PR #1221 (public `envoy-public` Gateway) and PR #1222
+  (blog/links workloads) are the cluster-side counterparts of that public
+  placement.
