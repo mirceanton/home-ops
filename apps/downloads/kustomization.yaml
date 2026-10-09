@@ -7,8 +7,8 @@ namespace: downloads
 resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
+
   - ./bazarr
-  - ./bookshelf
   - ./flaresolverr
   - ./lidarr
   - ./prowlarr
