@@ -6,3 +6,5 @@ resources:
   - ./kubesearch-mcp.yaml
   - ./truenas-mcp.yaml
   - ./github-mcp.yaml
+  - ./youtube-public-mcp.yaml
+  - ./channel-analytics-mcp.yaml
