@@ -63,7 +63,7 @@ spec:
                 cpu: 39m
                 memory: 397Mi
               limits:
-                memory: 4Gi
+                memory: 8Gi
                 nvidia.com/gpu: 1
 
             probes:
