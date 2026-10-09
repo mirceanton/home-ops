@@ -10,6 +10,5 @@ resources:
   - ./github-mcp
   - ./hermano
   - ./hermes
-  - ./kubesearch-mcp
   - ./litellm
   - ./llmkube
