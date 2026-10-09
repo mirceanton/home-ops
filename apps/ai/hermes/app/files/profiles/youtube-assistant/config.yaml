@@ -22,6 +22,10 @@ mcp_servers:
     url: http://litellm.ai.svc.cluster.local:4000/youtube_analytics/mcp/
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
+  YouTube Workspace:
+    url: http://litellm.ai.svc.cluster.local:4000/youtube_workspace/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
   Vikunja:
     url: http://litellm.ai.svc.cluster.local:4000/vikunja/mcp/
     headers:
