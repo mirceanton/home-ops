@@ -8,7 +8,7 @@ spec:
   image: ghcr.io/berriai/litellm:v1.104.2
   replicas: 1
 
-  applyMode: file
+  applyMode: api
   apiAccess:
     masterKeyRef:
       name: litellm-secret
@@ -114,7 +114,6 @@ spec:
     httpGet:
       path: /
       port: 4000
-    # MCP discovery and semantic indexing run before LiteLLM opens its HTTP port.
     initialDelaySeconds: 300
     periodSeconds: 10
     failureThreshold: 5
