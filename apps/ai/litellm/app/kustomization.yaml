@@ -9,3 +9,4 @@ resources:
   - ./grafana/
   - ./models/
   - ./keys/
+  - ./mcps/
