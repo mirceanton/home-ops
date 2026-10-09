@@ -1,39 +1,39 @@
----
-# 802.3ad (LACP) bond over the ZimaBoard's two NICs.
+# Bond over the ZimaBoard's two NICs - `active-backup` for now, 802.3ad (LACP)
+# once the switch side exists.
 #
-# Both NICs - `enp1s0` (00:e0:4c:69:db:df) and `enp2s0` (00:e0:4c:69:db:e0),
-# confirmed on the live board - are enslaved into one LAG on the CRS326 (a bond
-# over `ether11` + `ether12`, untagged Services/PVID 1010), declared as `bond5`
-# in `mikrotik-terraform` (`switch-crs326`).
+# The two NICs - `enp1s0` (00:e0:4c:69:db:df) and `enp2s0` (00:e0:4c:69:db:e0),
+# confirmed on the live board - are both plain untagged Services ports on the
+# CRS326 today. LACP is deliberately deferred: the matching `bond5` LAG over
+# `ether11`+`ether12` only exists in the unmerged `mikrotik-terraform` PR #160,
+# and an 802.3ad bond carries **no traffic at all** without a LACP partner on
+# the other end - which would take this board off the network permanently, since
+# it has no verified out-of-band access.
 #
-# The node keeps DHCP and gets its address from the Services pool through the
-# static lease `10.0.10.195 = zimaboard`, which also publishes
-# `zimaboard.svc.h.mirceanton.com` (`match_subdomain`). With a bond exactly one
-# address survives: `enp2s0`'s old `10.0.10.196` lease is released.
+# `active-backup` needs nothing on the switch side: the ports stay plain access
+# ports, only the active slave carries traffic (no aggregation, no LACP), and
+# the second NIC is a live standby for link failover. Going to 802.3ad later is
+# a one-field flip (`mode`) plus `lacpRate`/`xmitHashPolicy`; do it in that
+# order - node config over the current access ports FIRST, switch LAG SECOND.
+# Never the reverse: once the switch ports are LAG members a maintenance-mode
+# ISO becomes unreachable and push an updated config first.
 #
-# `enp1s0` is enslaved FIRST on purpose: Linux gives a bond the MAC of its
-# first slave, and that is the MAC the static DHCP lease above is keyed on
-# (00:e0:4c:69:db:df). Keep this order - or list `enp1s0` first if this is ever
-# rewritten with `deviceSelectors`.
+# The node keeps DHCP and takes `10.0.10.195` from the Services pool
+# (`10.0.10.195-199`) through the `zimaboard` static lease in
+# `mikrotik-terraform` (`dhcp/services`), which also publishes
+# `zimaboard.svc.h.mirceanton.com`. With a bond exactly one address survives:
+# `enp2s0`'s old `10.0.10.196` lease is released.
 #
-# ORDER MATTERS: an 802.3ad bond carries no traffic until the switch side is a
-# matching LAG, and once the switch ports are LAG members a maintenance-mode
-# ISO becomes unreachable (the board has no verified out-of-band access). Apply
-# this config over the current access ports FIRST, then put the switch ports
-# into the LAG. If the switch LAG cannot be created, replace `mode: 802.3ad`
-# with `mode: active-backup` (link failover, no aggregation, works on two
-# separate access ports) and drop `lacpRate`/`xmitHashPolicy`.
+# `enp1s0` is enslaved FIRST on purpose: Linux gives a bond the MAC of its first
+# slave, and that is the MAC the address is keyed on (00:e0:4c:69:db:df - the
+# MAC that already holds `10.0.10.195` in the live DHCP lease, and the MAC the
+# `zimaboard` static lease in the switch PR will pin). Keep this order - or list
+# `enp1s0` first if this is ever rewritten with `deviceSelectors`.
 machine:
   network:
     interfaces:
       - interface: bond0
         bond:
-          mode: 802.3ad
-          # The CRS326 LAG cannot set `lacp-rate=1sec`, so the switch never
-          # matches this - aggregation still forms, failover detection is just
-          # slower (same situation as the CRS317 bonds).
-          lacpRate: fast
-          xmitHashPolicy: layer3+4 # matches the CRS326 LAG transmit_hash_policy
+          mode: active-backup
           miimon: 100
           updelay: 200
           downdelay: 200
