@@ -1,0 +1,157 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: mikrotik-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: mikrotik
+  transport: http
+
+  workload:
+    image: ghcr.io/jeff-nasseri/mikrotik-mcp:v0.24.0
+    port: 8000
+    path: /mcp
+
+    env:
+      - name: MIKROTIK_MCP__TRANSPORT
+        value: streamable-http
+      - name: MIKROTIK_MCP__HOST
+        value: 0.0.0.0
+      - name: MIKROTIK_MCP__PORT
+        value: "8000"
+      # Defense in depth: only clients inside the cluster pod network may call the endpoint.
+      - name: MIKROTIK_MCP__ALLOWED_IPS
+        value: 10.244.0.0/24
+      # Expose only the tools that do not modify RouterOS or its file store.
+      - name: MIKROTIK_READ_ONLY
+        value: "true"
+      # Redact recognised credentials and private key material from tool output.
+      - name: MIKROTIK_SENSITIVE_HIDING
+        value: "true"
+      # The inventory is mounted as a Secret file so no credential ever lands in the pod spec.
+      - name: MIKROTIK_INVENTORY_FILE
+        value: /config/inventory.yml
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      capabilities: { drop: ["ALL"] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+      seccompProfile:
+        type: RuntimeDefault
+
+    volumes:
+      - name: config
+        secret: { secretName: mikrotik-mcp-secret }
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: config
+        mountPath: /config
+        readOnly: true
+      - name: tmp
+        mountPath: /tmp
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name mikrotik-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        inventory.yml: |
+          # Fleet inventory for the MikroTik MCP, rendered from the read-only
+          # RouterOS accounts (1Password vault mikrotik-users, items "<DEVICE> - mcp-readonly").
+          # Every interpolated value is quoted: the generated passwords contain YAML metacharacters.
+          - title: RB5009
+            host: 10.0.0.1
+            username: {{ .rb5009_username | quote }}
+            password: {{ .rb5009_password | quote }}
+          - title: CRS317
+            host: 10.0.0.2
+            username: {{ .crs317_username | quote }}
+            password: {{ .crs317_password | quote }}
+          - title: CRS326
+            host: 10.0.0.3
+            username: {{ .crs326_username | quote }}
+            password: {{ .crs326_password | quote }}
+          - title: HEX
+            host: 10.0.0.4
+            username: {{ .hex_username | quote }}
+            password: {{ .hex_password | quote }}
+          - title: CAPXL
+            host: 10.0.0.5
+            username: {{ .capxl_username | quote }}
+            password: {{ .capxl_password | quote }}
+
+  data:
+    - secretKey: rb5009_username
+      remoteRef:
+        key: RB5009 - mcp-readonly
+        property: username
+    - secretKey: rb5009_password
+      remoteRef:
+        key: RB5009 - mcp-readonly
+        property: password
+    - secretKey: crs317_username
+      remoteRef:
+        key: CRS317 - mcp-readonly
+        property: username
+    - secretKey: crs317_password
+      remoteRef:
+        key: CRS317 - mcp-readonly
+        property: password
+    - secretKey: crs326_username
+      remoteRef:
+        key: CRS326 - mcp-readonly
+        property: username
+    - secretKey: crs326_password
+      remoteRef:
+        key: CRS326 - mcp-readonly
+        property: password
+    - secretKey: hex_username
+      remoteRef:
+        key: HEX - mcp-readonly
+        property: username
+    - secretKey: hex_password
+      remoteRef:
+        key: HEX - mcp-readonly
+        property: password
+    - secretKey: capxl_username
+      remoteRef:
+        key: CAPXL - mcp-readonly
+        property: username
+    - secretKey: capxl_password
+      remoteRef:
+        key: CAPXL - mcp-readonly
+        property: password
