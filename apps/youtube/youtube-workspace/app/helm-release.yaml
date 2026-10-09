@@ -31,7 +31,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/youtube-workspace
-              tag: v0.3.0
+              tag: v0.3.1
 
             env:
               # The CNPG app role owns the database, which is what the app needs: it runs its own
