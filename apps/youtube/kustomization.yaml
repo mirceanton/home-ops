@@ -10,3 +10,4 @@ resources:
   - ./davinci
   - ./teleprompter
   - ./youtube-public-mcp
+  - ./youtube-workspace
