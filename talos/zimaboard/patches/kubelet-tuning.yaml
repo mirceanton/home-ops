@@ -1,3 +1,4 @@
+---
 # Kubelet performance tuning:
 # - maxPods: Increase from default 110 to 200 for higher pod density
 # - serializeImagePulls: Disable to pull images in parallel

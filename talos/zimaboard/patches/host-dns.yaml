@@ -1,3 +1,4 @@
+---
 # Host DNS configuration:
 # - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
 #   preventing potential DNS loops and maintaining isolation

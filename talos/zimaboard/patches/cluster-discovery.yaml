@@ -1,3 +1,4 @@
+---
 # Cluster discovery using Kubernetes registry.
 # Requires additional RBAC permissions for nodes to list/watch each other.
 cluster:
