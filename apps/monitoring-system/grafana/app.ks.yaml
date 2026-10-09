@@ -3,15 +3,16 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app grafana-mcp
+  name: &app grafana
 spec:
   interval: 10m
   prune: true
   wait: true
-  timeout: 5m
   targetNamespace: monitoring-system
 
-  path: ./apps/monitoring-system/grafana/mcp
+  path: ./apps/monitoring-system/grafana/app
+  components:
+    - ../../../../components/keycloak-client/
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -22,7 +23,11 @@ spec:
       APP: *app
 
   dependsOn:
-    - name: grafana-instance
-      namespace: monitoring-system
-    - name: litellm-operator
-      namespace: ai
+    #? wait for the 1password-connect secret store to be ready
+    - name: 1password-connect
+      namespace: security-system
+    - name: grafana-operator
+    - name: openebs
+      namespace: storage-system
+    - name: keycloak-operator-config
+      namespace: security-system
