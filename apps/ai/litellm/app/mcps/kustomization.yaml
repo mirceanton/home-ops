@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./kubesearch-mcp.yaml
   - ./truenas-mcp.yaml
+  - ./github-mcp.yaml

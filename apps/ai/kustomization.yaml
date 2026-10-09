@@ -7,7 +7,6 @@ resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
 
-  - ./github-mcp
   - ./hermano
   - ./hermes
   - ./litellm
