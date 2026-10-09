@@ -17,10 +17,12 @@
 
 ## Repository Structure
 
-- `apps/`: FluxCD resources (organized by domain, typically with `kustomization.yaml` and an `app/` sub-directory).
-- `bootstrap/`: Cluster bootstrapping (Helmfile).
-- `components/`: Reusable Kustomize components.
-- `talos/`: Talos Linux cluster configuration.
+The repo is laid out to hold multiple clusters. `home` is currently the only one.
+
+- `kubernetes/clusters/<cluster>/apps/`: FluxCD resources for that cluster (organized by domain, typically with `kustomization.yaml` and an `app/` sub-directory). This is the cluster's Flux sync path.
+- `kubernetes/clusters/<cluster>/bootstrap/`: Cluster bootstrapping (Helmfile).
+- `kubernetes/components/`: Reusable Kustomize components, shared across clusters.
+- `talos/`: Talos Linux cluster configuration (`home` only, for now).
 - `.scripts/`: Operational scripts (SOPS, VolSync).
 - `.agents/skills/`: Step-by-step skills for common tasks. Read the relevant skill before starting.
 

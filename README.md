@@ -19,40 +19,44 @@ This repo holds everything running on my homelab Kubernetes cluster:
 - **OS & node config**: [Talos Linux](https://www.talos.dev/) machine
   configuration, patches, and system extensions (`talos/`).
 - **Cluster bootstrap**: the minimal, one-time `helmfile` bootstrap that
-  gets Flux running (`bootstrap/`).
+  gets Flux running (`kubernetes/clusters/<cluster>/bootstrap/`).
 - **Platform components**: CNI, ingress, DNS, TLS, secrets, storage,
-  databases, and observability (`apps/*-system/`).
+  databases, and observability (`kubernetes/clusters/<cluster>/apps/*-system/`).
 - **Application workloads**: everything from AI/LLM tooling to media,
-  home automation, games, and productivity apps (`apps/<domain>/`).
+  home automation, games, and productivity apps
+  (`kubernetes/clusters/<cluster>/apps/<domain>/`).
 - **Reusable building blocks**: Kustomize components for common patterns
   like Postgres, Redis-compatible caches, backups, and OIDC clients
-  (`components/`).
+  (`kubernetes/components/`).
 
 ## 📁 Repository Structure
 
 ```text
 home-ops/
-├── talos/               # Talos machine config (talconfig.yaml + patches/)
-├── bootstrap/           # One-shot Helmfile: Cilium + Flux operator/instance, CRDs
-├── apps/
-│   ├── flux-system/     # Flux itself, Headlamp (cluster UI), MCP servers
-│   ├── kube-system/     # Cilium, KEDA, metrics-server, device plugins, Reloader
-│   ├── network-system/  # Envoy Gateway, cert-manager, external-dns
-│   ├── security-system/ # External Secrets Operator, 1Password Connect, Keycloak
-│   ├── storage-system/  # OpenEBS, democratic-csi, VolSync, snapshot-controller
-│   ├── database-system/ # CloudNativePG (Postgres), Dragonfly (Redis-compatible)
-│   ├── monitoring-system/ # kube-prometheus-stack, Grafana, exporters
-│   └── <domain>/        # Application workloads: ai, media, downloads, games,
-│                         # home-automation, productivity, finance, tools, …
-├── components/           # Reusable Kustomize components (cnpg, dragonfly,
-│                         # volsync, keycloak-client, oidc, nfs-scaler)
+├── talos/                # Talos machine config (talconfig.yaml + patches/)
+├── kubernetes/
+│   ├── clusters/
+│   │   └── home/             # One directory per cluster
+│   │       ├── bootstrap/    # One-shot Helmfile: Cilium + Flux operator/instance, CRDs
+│   │       └── apps/         # Flux entry point for this cluster
+│   │           ├── flux-system/       # Flux itself, Headlamp (cluster UI), MCP servers
+│   │           ├── kube-system/       # Cilium, KEDA, metrics-server, device plugins, Reloader
+│   │           ├── network-system/    # Envoy Gateway, cert-manager, external-dns
+│   │           ├── security-system/   # External Secrets Operator, 1Password Connect, Keycloak
+│   │           ├── storage-system/    # OpenEBS, democratic-csi, VolSync, snapshot-controller
+│   │           ├── database-system/   # CloudNativePG (Postgres), Dragonfly (Redis-compatible)
+│   │           ├── monitoring-system/ # kube-prometheus-stack, Grafana, exporters
+│   │           └── <domain>/          # Application workloads: ai, media, downloads, games,
+│   │                                  # home-automation, productivity, finance, tools, …
+│   └── components/       # Reusable Kustomize components shared across clusters
+│                         # (cnpg, dragonfly, volsync, keycloak-client, oidc, nfs-scaler)
 ├── .taskfiles/            # Task definitions (cluster, lint, sops, volsync)
 ├── .scripts/              # Operational scripts (SOPS, VolSync backup/restore)
 ├── .renovate/             # Renovate config (grouping, automerge, versioning)
 └── .agents/skills/         # Runbooks for common operational tasks
 ```
 
-Each app follows the same pattern: an `app.ks.yaml` (Flux `Kustomization`, declaring `dependsOn` and any shared `components/`) pointing at an `app/` directory containing the `HelmRelease`/manifests and a `kustomization.yaml`.
+Each app follows the same pattern: an `app.ks.yaml` (Flux `Kustomization`, declaring `dependsOn` and any shared `kubernetes/components/`) pointing at an `app/` directory containing the `HelmRelease`/manifests and a `kustomization.yaml`.
 
 ## 🛠 Core Tools
 
@@ -63,7 +67,7 @@ Each app follows the same pattern: an `app.ks.yaml` (Flux `Kustomization`, decla
 | **GitOps engine**      | [Flux](https://fluxcd.io/) (via [flux-operator](https://github.com/controlplaneio-fluxcd/flux-operator))                       | Continuously reconciles the cluster against this repo                            |
 | **Bootstrap**          | [Helmfile](https://helmfile.readthedocs.io/)                                                                                   | One-shot install of Cilium + Flux to break the chicken-and-egg bootstrap problem |
 | **Package manager**    | [Helm](https://helm.sh/) (via Flux `HelmRelease`)                                                                              | Templating & lifecycle for every platform/app chart                              |
-| **Manifest layering**  | [Kustomize](https://kustomize.io/)                                                                                             | Composes/patches manifests per app, reused via shared `components/`              |
+| **Manifest layering**  | [Kustomize](https://kustomize.io/)                                                                                             | Composes/patches manifests per app, reused via shared `kubernetes/components/`   |
 | **Secrets at rest**    | [SOPS](https://github.com/getsops/sops) + [age](https://github.com/FiloSottile/age)                                            | Encrypts secrets committed to git; decrypted in-cluster by Flux                  |
 | **Secrets at runtime** | [External Secrets Operator](https://external-secrets.io/) + [1Password Connect](https://developer.1password.com/docs/connect/) | Syncs live secrets from 1Password into the cluster                               |
 | **Tool versioning**    | [mise](https://mise.jdx.dev/)                                                                                                  | Pins every CLI (`kubectl`, `flux`, `helm`, `talosctl`, `sops`, …)                |
@@ -154,7 +158,7 @@ flowchart LR
     GH -->|"push to main"| Lint["Lint CI\n(task lint:check)"]
 
     GH -->|"poll every 5m"| SC["source-controller\n(GitRepository)"]
-    SC --> KC["kustomize-controller\n(builds apps/ recursively)"]
+    SC --> KC["kustomize-controller\n(builds kubernetes/clusters/home/apps/ recursively)"]
 
     KC -->|"decrypt with age key"| SOPS[("SOPS-encrypted\nSecret manifests")]
     KC -->|"apply Kustomizations\nin dependsOn order"| HC["helm-controller\n(reconciles HelmReleases)"]
@@ -173,13 +177,13 @@ The **Bootstrap** process (only needed once, or after a full rebuild) breaks two
 
 ```mermaid
 flowchart LR
-    Talos["Talos Linux\nboots bare node"] --> HF["helmfile sync\n(bootstrap/helmfile.yaml)"]
+    Talos["Talos Linux\nboots bare node"] --> HF["helmfile sync\n(kubernetes/clusters/home/bootstrap/helmfile.yaml)"]
     HF --> Cilium["Cilium\n(CNI)"]
     Cilium --> FO["flux-operator"]
     FO --> FI["flux-instance\n(source/kustomize/helm-controller)"]
     FI -->|"takes over from here"| GitOps["Continuous GitOps loop\n(see diagram above)"]
 
-    CRDs["helmfile sync\n(bootstrap/crds/helmfile.yaml)"] -.->|"pre-installs CRDs for\nenvoy-gateway, keda,\ngrafana-operator, kube-prometheus-stack"| GitOps
+    CRDs["helmfile sync\n(kubernetes/clusters/home/bootstrap/crds/helmfile.yaml)"] -.->|"pre-installs CRDs for\nenvoy-gateway, keda,\ngrafana-operator, kube-prometheus-stack"| GitOps
 ```
 
 ## ⭐ Stargazers
