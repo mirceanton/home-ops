@@ -23,6 +23,9 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      # Keycloak 25+ puts `sub` into access tokens through the `basic` scope, and the app refuses a
+      # token without one. The component's default list leaves `basic` out.
+      KEYCLOAK_CLIENT_DEFAULT_SCOPES: '["basic", "profile", "email", "roles", "web-origins", "acr", "groups"]'
 
   decryption: { provider: sops }
   dependsOn:
