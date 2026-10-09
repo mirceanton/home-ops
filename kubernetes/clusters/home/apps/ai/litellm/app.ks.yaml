@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app litellm
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: ai
+
+  path: ./kubernetes/clusters/home/apps/ai/litellm/app
+  components:
+    - ../../../../../../components/cnpg/
+    - ../../../../../../components/dragonfly/
+    - ../../../../../../components/keycloak-client/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://llm.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://llm.home.mirceanton.com"]'
+      KEYCLOAK_CLIENT_HOME_URL: "https://llm.home.mirceanton.com"
+
+  dependsOn:
+    - name: litellm-operator
+      namespace: ai
+    - name: grafana-operator
+      namespace: monitoring-system
+    - name: 1password-connect
+      namespace: security-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: dragonfly-operator
+      namespace: database-system
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: keycloak-operator-config
+      namespace: security-system
