@@ -4,6 +4,4 @@ kind: Kustomization
 
 resources:
   - ./external-secret.yaml
-  - ./helm-release.yaml
-  - ./oci-repository.yaml
-  - ./litellm-mcp-server.yaml
+  - ./mcp-server.yaml
