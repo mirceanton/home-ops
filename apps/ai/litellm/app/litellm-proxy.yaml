@@ -17,11 +17,6 @@ spec:
   generalSettings:
     master_key: os.environ/LITELLM_MASTER_KEY
     database_url: os.environ/uri
-    cache: true
-    cache_params:
-      type: redis
-      host: litellm-dragonfly
-      port: 6379
     proxy_base_url: https://llm.home.mirceanton.com
     store_model_in_db: true
     store_prompts_in_spend_logs: true
@@ -32,10 +27,17 @@ spec:
   # MCP clients use scoped gateway routes directly, so LiteLLM does not need
   # to build an embedding index or filter their tool definitions.
   litellmSettings:
+    cache: true
+    cache_params:
+      type: redis
+      host: litellm-dragonfly
+      port: 6379
     mcp_semantic_tool_filter:
       enabled: false
 
   routerSettings:
+    redis_host: litellm-dragonfly
+    redis_port: 6379
     num_retries: 2
     request_timeout: 600
     drop_params: true
