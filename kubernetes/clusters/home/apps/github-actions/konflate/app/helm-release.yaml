@@ -20,6 +20,17 @@ spec:
       prComments: true
       publicUrl: https://konflate.home.mirceanton.com
 
+    # The chart's default memory limit is 1Gi (it drives GOMEMLIMIT = 90%); a
+    # large diff render can spike past it and the kernel OOM-kills the container
+    # before the GC reclaims. 2Gi gives the render pipeline headroom; keep the
+    # requests small so the pod stays Burstable.
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        memory: 2Gi
+
     secret:
       existingSecret: konflate-secret
 
