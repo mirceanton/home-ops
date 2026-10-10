@@ -1,0 +1,101 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: github-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: github
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: github-mcp-secret
+    key: token
+
+  workload:
+    image: ghcr.io/github/github-mcp-server:v2.0.2@sha256:ffced0d76e77428532a2ced185516992d77fd146d69eec2f244e6237d1a97796
+    args: ["http"]
+    port: 8082
+    path: /mcp
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      fsGroup: 65532
+      fsGroupChangePolicy: OnRootMismatch
+      seccompProfile:
+        type: RuntimeDefault
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name mr-borboto-pem
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: *name
+  data:
+    - secretKey: private_key_pem
+      remoteRef:
+        key: Renovate Operator - GitHub App PEM
+        property: key
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/generators.external-secrets.io/githubaccesstoken_v1alpha1.json
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: GithubAccessToken
+metadata:
+  name: mr-borboto-auth-token
+spec:
+  appID: "900136"
+  installID: "53131225"
+  auth:
+    privateKey:
+      secretRef:
+        name: mr-borboto-pem
+        key: private_key_pem
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name github-mcp-secret
+spec:
+  refreshInterval: 55m
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GithubAccessToken
+          name: mr-borboto-auth-token

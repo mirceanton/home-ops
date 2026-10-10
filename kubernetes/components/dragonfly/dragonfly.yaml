@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/dragonflydb.io/dragonfly_v1alpha1.json
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: "${APP}-dragonfly"
+spec:
+  image: ghcr.io/dragonflydb/dragonfly:v2.0.2@sha256:061f00b201b58e12f974e4e96c761a881ee1c05e9d8ee967466a604b7299753b
+  replicas: 1
+
+  env:
+    - name: MAX_MEMORY
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: 1Mi
+
+  args:
+    - "--bind=::"
+    - "--admin_bind=::"
+    - --maxmemory=$(MAX_MEMORY)Mi
+    - --dbnum=${DRAGONFLY_DBNUM:=1}
+    - --dbfilename=dump
+    - --proactor_threads=${DRAGONFLY_PROACTOR_THREADS:=1}
+    - --cluster_mode=${DRAGONFLY_CLUSTER_MODE:=emulated}
+    - --lock_on_hashtags
+    - --version_check=false
+    - --default_lua_flags=allow-undeclared-keys
+
+  snapshot:
+    cron: "0 */2 * * *"
+    dir: /dragonfly/snapshots
+    persistentVolumeClaimSpec:
+      accessModes: [ReadWriteOnce]
+      storageClassName: ${DRAGONFLY_SNAPSHOT_STORAGE_CLASS:=openebs-zfs-cache}
+      resources:
+        requests:
+          storage: "${DRAGONFLY_MEMORY_LIMIT:=512Mi}"
+
+  resources:
+    requests:
+      cpu: ${DRAGONFLY_CPU_REQUEST:=20m}
+      memory: ${DRAGONFLY_MEMORY_REQUEST:=64Mi}
+    limits:
+      memory: ${DRAGONFLY_MEMORY_LIMIT:=512Mi}

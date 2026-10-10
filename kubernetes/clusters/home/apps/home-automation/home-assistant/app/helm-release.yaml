@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: home-assistant
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: home-assistant
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      home-assistant:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          home-assistant:
+            image:
+              repository: ghcr.io/home-operations/home-assistant
+              tag: 2026.10.0@sha256:5d3bdf34773c59d33b868930ba021dd741f26a7c2bc9989eba3b25de16d7cd04
+            envFrom: []
+            env:
+              TZ: Europe/Bucharest
+              HASS_HTTP_TRUSTED_PROXY_1: 10.244.0.0/16 # Pod network CIDR
+              HASS_HTTP_USE_X_FORWARDED_FOR: "true"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      app:
+        ports:
+          http:
+            appProtocol: kubernetes.io/ws
+            port: 8123
+
+    route:
+      home:
+        hostnames:
+          - homeassistant.home.mirceanton.com
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      config:
+        existingClaim: home-assistant
+        globalMounts:
+          - path: /config
+      config-cache:
+        existingClaim: home-assistant-cache
+        globalMounts:
+          - path: /config/.venv
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

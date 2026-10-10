@@ -1,0 +1,41 @@
+---
+# The app expects `ytw_` followed by exactly 43 characters of [A-Za-z0-9_-]. Letters and digits
+# only (symbols: 0) are a subset of that, 43 of them are ~256 bits of entropy.
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: Password
+metadata:
+  name: youtube-workspace-mcp-token
+spec:
+  length: 43
+  digits: 10
+  symbols: 0
+  noUpper: false
+  allowRepeat: true
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name youtube-workspace-mcp-token
+spec:
+  # Rotation: the generator produces a new password on every refresh. The app sees the new
+  # Secret (reloader restarts it), reconciles MCP_BOOTSTRAP_TOKEN on boot ("env wins": the old
+  # token is revoked, the new one created) and the litellm operator pushes the new value to
+  # LiteLLM. Expect a few seconds of 401s from LiteLLM while those two catch up.
+  refreshInterval: 24h
+
+  target:
+    name: *name
+    creationPolicy: Owner
+    template:
+      engineVersion: v2
+      data:
+        MCP_BOOTSTRAP_TOKEN: "ytw_{{ .password }}"
+
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: Password
+          name: youtube-workspace-mcp-token

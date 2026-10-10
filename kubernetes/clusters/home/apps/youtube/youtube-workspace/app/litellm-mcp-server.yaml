@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: youtube-workspace
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: youtube_workspace
+  url: http://youtube-workspace.youtube.svc.cluster.local:3000/mcp
+  transport: http
+
+  # Same Secret the app seeds its MCP token from. The operator watches it, so a rotation
+  # (see mcp-token.yaml) reaches LiteLLM without touching this resource.
+  authType: bearer_token
+  authTokenRef:
+    name: youtube-workspace-mcp-token
+    key: MCP_BOOTSTRAP_TOKEN

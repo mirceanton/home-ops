@@ -12,15 +12,15 @@ This skill guides you through adding a new application deployment to the cluster
 
 Before creating any files, ask the user for:
 
-| Question                    | Notes                                                                                                                                                                                                |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Container image**         | Full image reference, e.g. `ghcr.io/foo/bar:1.2.3`. Check existing apps for the tag format (plain semver vs digest).                                                                                 |
-| **Namespace**               | Must be one of the existing namespace directories under `apps/`. If a new namespace is needed, that is a separate task — first create the namespace dir, `namespace.yaml`, and `kustomization.yaml`. |
-| **App name**                | Kebab-case slug, used as the directory name and Kubernetes resource name.                                                                                                                            |
-| **Exposed port**            | The port the container listens on.                                                                                                                                                                   |
-| **HTTP route needed?**      | `envoy-internal` for LAN-only, `envoy-tailscale` for Tailscale, both if required.                                                                                                                    |
-| **Persistent data needed?** | If yes, ask capacity (e.g. `5Gi`). Stateful apps use volsync; ephemeral scratch space uses `emptyDir`.                                                                                               |
-| **Secrets needed?**         | If yes, ask which 1Password item to pull from (ClusterSecretStore `onepassword`).                                                                                                                    |
+| Question                    | Notes                                                                                                                                                                                                                              |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Container image**         | Full image reference, e.g. `ghcr.io/foo/bar:1.2.3`. Check existing apps for the tag format (plain semver vs digest).                                                                                                               |
+| **Namespace**               | Must be one of the existing namespace directories under `kubernetes/clusters/<cluster>/apps/`. If a new namespace is needed, that is a separate task — first create the namespace dir, `namespace.yaml`, and `kustomization.yaml`. |
+| **App name**                | Kebab-case slug, used as the directory name and Kubernetes resource name.                                                                                                                                                          |
+| **Exposed port**            | The port the container listens on.                                                                                                                                                                                                 |
+| **HTTP route needed?**      | `envoy-internal` for LAN-only, `envoy-tailscale` for Tailscale, both if required.                                                                                                                                                  |
+| **Persistent data needed?** | If yes, ask capacity (e.g. `5Gi`). Stateful apps use volsync; ephemeral scratch space uses `emptyDir`.                                                                                                                             |
+| **Secrets needed?**         | If yes, ask which 1Password item to pull from (ClusterSecretStore `onepassword`).                                                                                                                                                  |
 
 ### Optional: search for prior art
 
@@ -30,10 +30,10 @@ If the kubesearch MCP server is available (tool name `mcp__kubesearch__search` o
 
 ## Step 2: Understand the File Structure
 
-Every app follows this layout:
+Every app follows this layout. `<cluster>` is the target cluster directory under `kubernetes/clusters/` (currently only `home`); Flux `path:` fields are relative to the repo root.
 
 ```bash
-apps/<namespace>/<app-name>/
+kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/
 ├── kustomization.yaml          # top-level: just references ./app.ks.yaml
 ├── app.ks.yaml                 # Flux Kustomization resource
 └── app/
@@ -48,7 +48,7 @@ apps/<namespace>/<app-name>/
 
 ## Step 3: Create the Files
 
-### 3a. `apps/<namespace>/<app-name>/kustomization.yaml`
+### 3a. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/kustomization.yaml`
 
 ```yaml
 ---
@@ -59,7 +59,7 @@ resources:
   - ./app.ks.yaml
 ```
 
-### 3b. `apps/<namespace>/<app-name>/app.ks.yaml`
+### 3b. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app.ks.yaml`
 
 ```yaml
 ---
@@ -75,7 +75,7 @@ spec:
   timeout: 15m
   targetNamespace: <namespace>
 
-  path: ./apps/<namespace>/<app-name>/app
+  path: ./kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -92,12 +92,12 @@ spec:
 
 **When to add `components` and `dependsOn`:**
 
-- **Persistent data with backup** → add `components: [../../../../components/volsync/]` and add `dependsOn` entries for `1password-connect` (security-system), `volsync` (storage-system), and `openebs` (storage-system).
+- **Persistent data with backup** → add `components: [../../../../../../components/volsync/]` and add `dependsOn` entries for `1password-connect` (security-system), `volsync` (storage-system), and `openebs` (storage-system).
 - **Secrets via ExternalSecret** → add `dependsOn` for `external-secrets-operator` (security-system) and `1password-connect` (security-system).
-- **CNPG Postgres** → add `components: [../../../../components/cnpg/]` and relevant deps.
+- **CNPG Postgres** → add `components: [../../../../../../components/cnpg/]` and relevant deps.
 - **If no substitutions** → use `postBuild: substitute: {}`.
 
-### 3c. `apps/<namespace>/<app-name>/app/oci-repository.yaml`
+### 3c. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app/oci-repository.yaml`
 
 Always use app-template unless the upstream chart is required (see Overview).
 
@@ -121,7 +121,7 @@ spec:
 
 If using an official chart that does NOT publish an OCI Artifact, use a `HelmRepository` source instead and reference it accordingly.
 
-### 3d. `apps/<namespace>/<app-name>/app/helm-release.yaml`
+### 3d. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app/helm-release.yaml`
 
 Start from this minimal secure template and expand only as needed:
 
@@ -263,7 +263,7 @@ controllers:
           size: 5Gi
 ```
 
-### 3e. `apps/<namespace>/<app-name>/app/kustomization.yaml`
+### 3e. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app/kustomization.yaml`
 
 List every file in the `app/` directory:
 
@@ -279,7 +279,7 @@ resources:
   # - ./<name>.pvc.yaml
 ```
 
-### 3f. `apps/<namespace>/<app-name>/app/external-secret.yaml` (optional)
+### 3f. `kubernetes/clusters/<cluster>/apps/<namespace>/<app-name>/app/external-secret.yaml` (optional)
 
 Only create this if the app needs secrets from 1Password:
 
@@ -312,7 +312,7 @@ spec:
 
 ## Step 4: Register the App in the Namespace Kustomization
 
-Open `apps/<namespace>/kustomization.yaml` and add the new app directory to the `resources` list (maintain alphabetical order):
+Open `kubernetes/clusters/<cluster>/apps/<namespace>/kustomization.yaml` and add the new app directory to the `resources` list (maintain alphabetical order):
 
 ```yaml
 resources:
