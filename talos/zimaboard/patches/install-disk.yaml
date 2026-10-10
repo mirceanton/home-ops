@@ -1,0 +1,20 @@
+---
+# Talos installs onto the board's internal eMMC (`/dev/mmcblk0`, 62 GB -
+# confirmed on the live board), which is what the single-node layout wants: the
+# Optane stays dedicated to etcd (see ./etcd-optane-disk.yaml).
+#
+# `wipe: true` is deliberate. The eMMC still carries the stock ZimaBoard CasaOS
+# install (p1-p8, including a 49 GB `casaos-data` ext4 partition); Talos has to
+# repartition the disk to install, and inheriting the generator's `wipe: false`
+# against an already-partitioned disk risks a failed or half-written install.
+# Installing Talos here is destructive for that CasaOS install - confirm nothing
+# on it matters before applying.
+#
+# `machine.install` supports a `diskSelector` instead of a literal path
+# (`size`/`name`/`model`/`serial`/...); the path is kept because the live
+# inspection identified this exact device. Make sure any selector added here
+# cannot match the Optane (etcd) disk.
+machine:
+  install:
+    disk: /dev/mmcblk0
+    wipe: true

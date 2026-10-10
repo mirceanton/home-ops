@@ -1,0 +1,138 @@
+---
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+# Talstomize-managed machine configuration for the single-node ZimaBoard
+# "lab" cluster: the board currently deployed in the test lab, on the
+# **Services VLAN 1010 (`10.0.10.0/24`)**, rendered with talstomize.
+#
+# The eventual public placement (DMZ VLAN 666, `10.0.20.0/24`) is only
+# documented in ./README.md - the DMZ VLAN, its firewall rules and the WAN:443
+# port-forward exist only on the *unmerged* `mikrotik-terraform` branch
+# `feat/dmz-vlan-port-forward`, so nothing here is pinned to `10.0.20.x`.
+#
+# This is a SEPARATE cluster from the talhelper-managed `talos/talconfig.yaml`
+# at the repository root (cluster `home-ops`): different cluster name, own
+# secrets bundle, own node. The root talhelper files are left untouched.
+#
+# Render with:  cd talos/zimaboard && talstomize build .
+# See ./README.md for the workflow, the decisions taken and the open items.
+#
+# Every patch is a local file under ./patches/ - nothing is reused from
+# `../patches/` (the home-ops cluster's own tree). That keeps this cluster's
+# render pinned to its own files while the `talos/` tree is being reorganized
+# for multiple clusters and the `home-ops` patches get migrated to the
+# talstomize/1.14 shape.
+
+clusterName: zimaboard
+
+# The node is a single `bond0` over both NICs (see
+# ./patches/zimaboard-bond.yaml) and takes its address from the Services DHCP
+# pool (`10.0.10.195-10.0.10.199`) through the static lease
+# `10.0.10.195 = zimaboard` in `mikrotik-terraform` (`dhcp/services`), so both
+# the address and the `zimaboard.svc.h.mirceanton.com` A record that comes with
+# it are stable. `10.0.10.196` (the second NIC's own lease before bonding) is
+# released - a bond carries exactly one address.
+controlPlaneEndpoint: https://10.0.10.195:6443
+
+# Fresh `talosctl gen secrets` bundle for THIS cluster, sops-encrypted with the
+# repository's age recipient (see ./README.md - never point this at
+# ../talsecret.sops.yaml, that is the home-ops cluster's key material).
+secrets: ./talsecret.sops.yaml
+
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.37.1
+
+# The config-shape ("version contract") is pinned independently of the
+# installer version. The node runs the latest Talos (v1.14.2, matching the
+# vanilla metal ISO it boots), but every patch in this directory is classic
+# `v1alpha1`-shaped, the shape Talos <= v1.13 emits. Left unset, the renderer
+# follows `installer.talosVersion` and emits the v1.14 multi-document base on
+# top of those patches, which Talos rejects with 14
+# `.machine.kubelet ... is already set in v1alpha1 config`-style errors. A
+# classic-shaped config is still read fine by a v1.14 node (verified with
+# `talosctl v1.14.2 validate`), so pinning the contract to 1.13 keeps the whole
+# patch tree valid while the node runs 1.14.2.
+contractVersion: v1.13.10
+
+# Certificate SANs. The node's own `ip` below is NOT added to these
+# automatically (verified in the rendered config), so it is listed here
+# explicitly together with the KubePrism loopback, like the home-ops
+# talconfig does for its own node.
+additionalSubjectAltNames:
+  - 10.0.10.195 # keep in sync with nodes.zimaboard.ip
+  - zimaboard.svc.h.mirceanton.com # from the `zimaboard` static lease in dhcp/services
+  - 127.0.0.1 # KubePrism
+
+# The node boots the *vanilla* metal ISO v1.14.2. Talos stopped publishing the
+# plain installer for 1.14: `ghcr.io/siderolabs/installer` has no v1.14.x tag at
+# all (v1.14.0, v1.14.1 and v1.14.2 all answer 404, v1.13.10 is the last tag on
+# ghcr.io, verified 2026-10-10), so from 1.14 on the installer only exists on the
+# Image Factory as `factory.talos.dev/metal-installer/<schematic>:<tag>`. The
+# empty schematic below is the Image Factory's default = the vanilla ISO's
+# contents, so this is the same vanilla installer, published under the factory
+# host. It is still a literal string (no factory lookup at build time), but the
+# node pulls it *through the NAS* like every other image, which needs a
+# `factory.talos.dev` pull-through repo on the NAS registry - see
+# ./patches/registry-mirrors.yaml and "Open items" in ./README.md. Bump this
+# together with the ISO if the node is ever re-flashed.
+installer:
+  # renovate: depName=factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba datasource=docker
+  image: factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba:v1.14.2
+
+nodes:
+  zimaboard:
+    # Must match the endpoint above: used both as a certificate SAN and as the
+    # `talosctl` target by apply/diff.
+    ip: 10.0.10.195
+    kind: controlplane
+    patches:
+      - ./patches/zimaboard-bond.yaml
+      - ./patches/zimaboard-network.yaml
+      - ./patches/zimaboard-time.yaml
+      - ./patches/install-disk.yaml
+      - ./patches/node-labels.yaml
+      # The 16 Gi Optane in the PCIe slot, dedicated to /var/lib/etcd. Must be
+      # in the config before the first `talosctl bootstrap`.
+      - ./patches/etcd-optane-disk.yaml
+
+# Applied to every node, regardless of role.
+patches:
+  # Single node: workloads have to be schedulable on the controlplane.
+  - ./patches/allow-scheduling-on-controlplanes.yaml
+  # Cilium is installed by the cluster's own bootstrap path, not by Talos.
+  - ./patches/cni-none.yaml
+  # Trimmed variant of the home-ops `sysctls.yaml`, which carries a lot of
+  # Sunshine/gaming/GPU tuning that is meaningless on a ZimaBoard.
+  - ./patches/zimaboard-sysctls.yaml
+
+  # --- Local copies of the generic patches (see the header: nothing is reused
+  # from ../patches/) -------------------------------------------------------
+  - ./patches/host-dns.yaml
+  - ./patches/kubeprism.yaml
+  # The Services VLAN has no route to the internet (there is no Services->WAN
+  # firewall rule), so the installer image, the CNI and every workload image can
+  # only come from the NAS pull-through registry on the same VLAN
+  # (`registry.nas.svc.h.mirceanton.com`, 10.0.10.245). Needs
+  # `registry_username`/`registry_password` in the environment (or a gitignored
+  # .env / `op run --env-file`): the build fails without them, and so does every
+  # image pull on the node.
+  - ./patches/registry-mirrors.yaml
+
+# Applied to every controlplane node, before that node's own patches.
+controlplanePatches:
+  - ./patches/cluster-discovery.yaml
+  - ./patches/kubelet-tuning.yaml
+  - ./patches/etcd-tuning.yaml
+  - ./patches/disable-search-domain.yaml
+  - ./patches/mutating-admission.yaml
+  - ./patches/disable-kube-proxy.yaml
+  # NOTE: the home-ops `talos-api-access.yaml` is deliberately not carried over -
+  # it grants Talos API access from the `jobs`/`github-actions` namespaces, which
+  # only exist on the home-ops cluster. Nothing on this node needs it; add a
+  # local copy (listing the namespaces this cluster really has) if that changes.
+  # Adapted from the home-ops `admission-control.yaml` (that one carries
+  # talhelper-only escaping) - see the file header.
+  - ./patches/admission-control.yaml
+
+workerPatches: []

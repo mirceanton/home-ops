@@ -1,0 +1,5 @@
+---
+cluster:
+  etcd:
+    extraArgs:
+      backend-batch-interval: 250ms

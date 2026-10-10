@@ -1,0 +1,7 @@
+---
+# Cilium is installed by the helmfile bootstrap, not by Talos
+# (the talhelper equivalent of `cniConfig: { name: none }`).
+cluster:
+  network:
+    cni:
+      name: none

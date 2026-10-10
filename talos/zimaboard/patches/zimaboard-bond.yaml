@@ -1,0 +1,41 @@
+# Bond over the ZimaBoard's two NICs - `active-backup` for now, 802.3ad (LACP)
+# once the switch side exists.
+#
+# The two NICs - `enp1s0` (00:e0:4c:69:db:df) and `enp2s0` (00:e0:4c:69:db:e0),
+# confirmed on the live board - are both plain untagged Services ports on the
+# CRS326 today. LACP is deliberately deferred: the matching `bond5` LAG over
+# `ether11`+`ether12` only exists in the unmerged `mikrotik-terraform` PR #160,
+# and an 802.3ad bond carries **no traffic at all** without a LACP partner on
+# the other end - which would take this board off the network permanently, since
+# it has no verified out-of-band access.
+#
+# `active-backup` needs nothing on the switch side: the ports stay plain access
+# ports, only the active slave carries traffic (no aggregation, no LACP), and
+# the second NIC is a live standby for link failover. Going to 802.3ad later is
+# a one-field flip (`mode`) plus `lacpRate`/`xmitHashPolicy`; do it in that
+# order - node config over the current access ports FIRST, switch LAG SECOND.
+# Never the reverse: once the switch ports are LAG members a maintenance-mode
+# ISO becomes unreachable and push an updated config first.
+#
+# The node keeps DHCP and takes `10.0.10.195` from the Services pool
+# (`10.0.10.195-199`) through the `zimaboard` static lease in
+# `mikrotik-terraform` (`dhcp/services`), which also publishes
+# `zimaboard.svc.h.mirceanton.com`. With a bond exactly one address survives:
+# `enp2s0`'s old `10.0.10.196` lease is released.
+#
+# `enp1s0` is enslaved FIRST on purpose: Linux gives a bond the MAC of its first
+# slave, and that is the MAC the address is keyed on (00:e0:4c:69:db:df - the
+# MAC that already holds `10.0.10.195` in the live DHCP lease, and the MAC the
+# `zimaboard` static lease in the switch PR will pin). Keep this order - or list
+# `enp1s0` first if this is ever rewritten with `deviceSelectors`.
+machine:
+  network:
+    interfaces:
+      - interface: bond0
+        bond:
+          mode: active-backup
+          miimon: 100
+          updelay: 200
+          downdelay: 200
+          interfaces: [enp1s0, enp2s0]
+        dhcp: true
