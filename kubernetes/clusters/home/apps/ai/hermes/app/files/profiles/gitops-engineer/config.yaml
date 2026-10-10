@@ -38,6 +38,10 @@ mcp_servers:
     url: http://litellm.ai.svc.cluster.local:4000/truenas/mcp/
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
+  Mikrotik:
+    url: http://litellm.ai.svc.cluster.local:4000/mikrotik/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
 
 toolsets: [kanban, hermes-cli]
 
