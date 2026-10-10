@@ -64,16 +64,21 @@ additionalSubjectAltNames:
   - zimaboard.svc.h.mirceanton.com # from the `zimaboard` static lease in dhcp/services
   - 127.0.0.1 # KubePrism
 
-# The node boots the *vanilla* metal ISO v1.14.2 with no system extensions, and
-# Talos installs using the installer image referenced here, which must match
-# that ISO's schematic. The `factory.talos.dev` schematic this directory used
-# to declare would both mismatch the vanilla ISO and need internet access,
-# which the Services VLAN does not have (see ./patches/registry-mirrors.yaml) -
-# so pin the plain vanilla installer instead. Bump this together with the ISO
-# if the node is ever re-flashed.
+# The node boots the *vanilla* metal ISO v1.14.2. Talos stopped publishing the
+# plain installer for 1.14: `ghcr.io/siderolabs/installer` has no v1.14.x tag at
+# all (v1.14.0, v1.14.1 and v1.14.2 all answer 404, v1.13.10 is the last tag on
+# ghcr.io, verified 2026-10-10), so from 1.14 on the installer only exists on the
+# Image Factory as `factory.talos.dev/metal-installer/<schematic>:<tag>`. The
+# empty schematic below is the Image Factory's default = the vanilla ISO's
+# contents, so this is the same vanilla installer, published under the factory
+# host. It is still a literal string (no factory lookup at build time), but the
+# node pulls it *through the NAS* like every other image, which needs a
+# `factory.talos.dev` pull-through repo on the NAS registry - see
+# ./patches/registry-mirrors.yaml and "Open items" in ./README.md. Bump this
+# together with the ISO if the node is ever re-flashed.
 installer:
-  # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-  image: ghcr.io/siderolabs/installer:v1.14.2
+  # renovate: depName=factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba datasource=docker
+  image: factory.talos.dev/metal-installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba:v1.14.2
 
 nodes:
   zimaboard:
@@ -84,6 +89,7 @@ nodes:
     patches:
       - ./patches/zimaboard-bond.yaml
       - ./patches/zimaboard-network.yaml
+      - ./patches/zimaboard-time.yaml
       - ./patches/install-disk.yaml
       - ./patches/node-labels.yaml
       # The 16 Gi Optane in the PCIe slot, dedicated to /var/lib/etcd. Must be

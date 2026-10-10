@@ -1,0 +1,17 @@
+---
+#! Uses talhelper variables: none
+# The board has no battery-backed clock: it boots with the RTC ~3 h ahead of real
+# UTC (the RTC holds local time), and the Services VLAN has no internet egress, so
+# the node cannot reach `time.cloudflare.com` the way the home-ops nodes do.
+# Point it at the lab's own NTP source instead of the internet.
+#
+# This is the Talos half of a two-sided fix and is inert until the router half
+# lands: the RB5009 has an NTP *server* stanza but it is not enabled, and its
+# input chain has no UDP/123 accept for the Services VLAN - both live in
+# `mikrotik-terraform`, not here. Until then the node keeps the RTC time, which is
+# why every API call against it has to use `--insecure`: certificates it mints
+# from the skew are "not yet valid" for ~3 h.
+machine:
+  time:
+    servers:
+      - 10.0.10.1 # RB5009, the Services VLAN gateway - must be enabled to serve NTP
