@@ -12,7 +12,7 @@ spec:
   transport: sse
 
   workload:
-    image: grafana/mcp-grafana:2.0.1
+    image: grafana/mcp-grafana:2.0.2
     args:
       - --allowed-hosts=localhost:8000,127.0.0.1:8000,grafana-mcp.monitoring-system.svc.cluster.local:8000,grafana-mcp.monitoring-system:8000,grafana-mcp:8000
     port: 8000
