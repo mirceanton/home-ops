@@ -8,3 +8,4 @@ resources:
   - ./github-mcp.yaml
   - ./youtube-public-mcp.yaml
   - ./channel-analytics-mcp.yaml
+  - ./mikrotik-mcp.yaml

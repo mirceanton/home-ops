@@ -122,7 +122,7 @@ spec:
     - name: mikrotik.security
       rules:
         - alert: MikrotikActiveUserSession
-          expr: mktxp_active_users_info{name!~"metrics|external-dns|terraform"}
+          expr: mktxp_active_users_info{name!~"metrics|external-dns|terraform|mcp-readonly"}
           for: 0m
           labels:
             severity: info
