@@ -1,10 +1,10 @@
 ---
-# Identity for the pod launched by dags/crd-schema-publisher.yaml.
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/core/serviceaccount_v1.json
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: dagu-crd-schema-publisher
+
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/rbac.authorization.k8s.io/clusterrole_v1.json
 apiVersion: rbac.authorization.k8s.io/v1
@@ -15,6 +15,7 @@ rules:
   - apiGroups: [apiextensions.k8s.io]
     resources: [customresourcedefinitions]
     verbs: [get, list, watch]
+
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/rbac.authorization.k8s.io/clusterrolebinding_v1.json
 apiVersion: rbac.authorization.k8s.io/v1
@@ -29,29 +30,3 @@ subjects:
   - kind: ServiceAccount
     name: dagu-crd-schema-publisher
     namespace: jobs
----
-# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: dagu-crd-schema-publisher
-spec:
-  refreshInterval: 1h
-
-  secretStoreRef:
-    name: onepassword
-    kind: ClusterSecretStore
-
-  target:
-    name: dagu-crd-schema-publisher
-    creationPolicy: Owner
-
-  data:
-    - secretKey: CLOUDFLARE_API_TOKEN
-      remoteRef:
-        key: CRD Schemas - Cloudflare Token
-        property: password
-    - secretKey: CLOUDFLARE_ACCOUNT_ID
-      remoteRef:
-        key: CRD Schemas - Cloudflare Token
-        property: username

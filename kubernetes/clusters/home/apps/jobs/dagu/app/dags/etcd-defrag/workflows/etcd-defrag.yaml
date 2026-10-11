@@ -1,0 +1,48 @@
+---
+description: Defragment etcd on the control plane node
+group: Home-Ops
+schedule: "10 5 * * *" #? daily at 5:10am
+catchup_window: 1m
+
+steps:
+  - name: pre-status
+    action: k8s.run
+    with: &talosctl
+      image: ghcr.io/siderolabs/talosctl:v1.14.2
+      command: talosctl --nodes=10.0.0.15 etcd status
+      service_account: dagu-etcd-defrag
+      namespace: jobs
+      env:
+        - name: TALOSCONFIG
+          value: /var/run/secrets/talos.dev/config
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+      volumes:
+        - name: talos
+          secret: { secret_name: dagu-etcd-defrag }
+      volume_mounts:
+        - name: talos
+          mount_path: /var/run/secrets/talos.dev
+          read_only: true
+
+      pod_security_context:
+        run_as_non_root: true
+        run_as_user: 65534
+        run_as_group: 65534
+        fs_group: 65534
+        seccomp_profile: { type: RuntimeDefault }
+      security_context:
+        allow_privilege_escalation: false
+        read_only_root_filesystem: true
+        capabilities: { drop: [ALL] }
+
+  - name: defrag
+    depends: pre-status
+    action: k8s.run
+    with:
+      <<: *talosctl
+      command: /talosctl --nodes=10.0.0.15 etcd defrag

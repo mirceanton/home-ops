@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./rbac.yaml
+
+configMapGenerator:
+  - name: dagu-dags-etcd-defrag
+    files:
+      - ./workflows/etcd-defrag.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
