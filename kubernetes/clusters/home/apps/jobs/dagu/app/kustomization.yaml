@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./oci-repository.yaml
+  - ./helm-release.yaml
+  - ./oidc.yaml
+  - ./keycloak-group.yaml
+
+  # One directory per section of the Dagu UI. A section is self-contained: its
+  # DAGs (./dags, each with `group: <Section>`) plus whatever they run as
+  # (ServiceAccounts, RBAC, secrets). To add one:
+  #   1. create ./<section> with a kustomization.yaml that generates a
+  #      `dagu-dags-<section>` ConfigMap (copy ./home-ops)
+  #   2. list it here
+  #   3. add a matching `dags-<section>` entry under persistence in helm-release.yaml
+  # DAG names and file names must be unique across ALL sections: Dagu drops every
+  # DAG involved in a clash and reports it as an error in the UI.
+  - ./home-ops

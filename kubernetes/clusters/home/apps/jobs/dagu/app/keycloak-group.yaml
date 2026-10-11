@@ -1,0 +1,13 @@
+---
+# Membership of this group gates access to the Dagu UI (see oidc.yaml). The
+# operator only creates the group; add users to it in the Keycloak UI.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: dagu
+spec:
+  clusterRealmRef:
+    name: homelab
+  name: dagu
+  definition: {}

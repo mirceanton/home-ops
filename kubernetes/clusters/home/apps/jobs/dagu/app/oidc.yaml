@@ -1,0 +1,91 @@
+---
+# Dagu's own auth is disabled, so this policy is the only thing standing between
+# the network and a UI that can launch pods. It is self-contained (instead of the
+# shared components/oidc) because it adds a group check on top of the login.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/backend_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: dagu-keycloak
+spec:
+  endpoints:
+    - fqdn:
+        hostname: keycloak.nas.svc.h.mirceanton.com
+        port: 443
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.networking.k8s.io/backendtlspolicy_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: dagu-keycloak-tls
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: dagu-keycloak
+  validation:
+    hostname: keycloak.nas.svc.h.mirceanton.com
+    wellKnownCACertificates: System
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: dagu-oidc
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: dagu
+
+  # Stage 1: log in against Keycloak and forward the access token upstream as an
+  # Authorization: Bearer header (forwardIDToken is not used, see the note in
+  # finance/firefly/app/oidc.yaml). The "groups" claim is in the access token via
+  # the default "groups" client scope (security-system/keycloak-operator).
+  oidc:
+    provider:
+      issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+      # Explicit endpoints so the envoy-gateway controller skips its own OIDC
+      # discovery fetch - see components/oidc/security-policy.yaml for why.
+      authorizationEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/auth
+      tokenEndpoint: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/token
+      backendRefs:
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: dagu-keycloak
+          port: 443
+    clientID: dagu
+    clientSecret:
+      name: dagu-oidc-secret
+    redirectURL: "https://dagu.home.mirceanton.com/oauth2/callback"
+    logoutPath: "/oauth2/logout"
+    forwardAccessToken: true
+
+  # Stage 2: verify that access token's signature against Keycloak's JWKS so the
+  # claims below can be trusted.
+  jwt:
+    providers:
+      - name: keycloak
+        issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        remoteJWKS:
+          uri: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/certs
+          backendRefs:
+            - group: gateway.envoyproxy.io
+              kind: Backend
+              name: dagu-keycloak
+              port: 443
+
+  # Stage 3: only members of the "dagu" Keycloak group get through (see
+  # keycloak-group.yaml). Everyone else who can log in gets a 403.
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: dagu-group
+        action: Allow
+        principal:
+          jwt:
+            provider: keycloak
+            claims:
+              - name: groups
+                valueType: StringArray
+                values: ["dagu"]

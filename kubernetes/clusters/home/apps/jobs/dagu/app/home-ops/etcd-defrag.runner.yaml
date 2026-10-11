@@ -1,0 +1,18 @@
+---
+# Identity for the pod launched by dags/etcd-defrag.yaml. talosctl authenticates
+# with the talosconfig from the Talos ServiceAccount below, so the pod needs no
+# Kubernetes permissions at all and doesn't even get an API token.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/core/serviceaccount_v1.json
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dagu-etcd-defrag
+automountServiceAccountToken: false
+---
+# Talos injects a Secret of the same name containing a talosconfig.
+apiVersion: talos.dev/v1alpha1
+kind: ServiceAccount
+metadata:
+  name: dagu-etcd-defrag
+spec:
+  roles: ["os:admin"]
