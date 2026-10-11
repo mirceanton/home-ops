@@ -133,7 +133,31 @@ spec:
             app:
               - path: /tmp
 
-    # The pod's own identity: may only create/watch Jobs in this namespace.
-    # What each Job's pod is allowed to do is decided by the SA the DAG picks
-    # (see runners/).
+    # The pod's own identity: launches k8s.run steps as Jobs in this namespace
+    # and streams their logs, nothing else. What each Job's pod may do is decided
+    # by the SA the DAG picks (see runners/).
+    # NOTE: "create jobs" + "use any SA in this namespace" means anyone who can
+    # trigger a DAG can run a pod as those SAs. Access to the UI is therefore
+    # limited to the "dagu" Keycloak group (see oidc.yaml).
     serviceAccount: { dagu: {} }
+    rbac:
+      roles:
+        dagu:
+          type: Role
+          rules:
+            - apiGroups: [batch]
+              resources: [jobs]
+              verbs: [create, get, list, watch, delete]
+            - apiGroups: [""]
+              resources: [pods]
+              verbs: [get, list, watch]
+            - apiGroups: [""]
+              resources: [pods/log]
+              verbs: [get]
+      bindings:
+        dagu:
+          type: RoleBinding
+          roleRef:
+            identifier: dagu
+          subjects:
+            - identifier: dagu

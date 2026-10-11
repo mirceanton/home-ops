@@ -7,7 +7,6 @@ resources:
   - ./helm-release.yaml
   - ./oidc.yaml
   - ./keycloak-group.yaml
-  - ./rbac.yaml
   - ./runners/etcd-defrag.yaml
   - ./runners/crd-schema-publisher.yaml
 
