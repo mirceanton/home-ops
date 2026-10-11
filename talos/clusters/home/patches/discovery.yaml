@@ -1,0 +1,7 @@
+---
+#? Don't register with the public discovery service (discovery.talos.dev).
+#? The Kubernetes discovery registry is deprecated in Talos 1.14, so cluster discovery is simply off.
+apiVersion: v1alpha1
+kind: DiscoveryServiceConfig
+name: default
+$patch: delete

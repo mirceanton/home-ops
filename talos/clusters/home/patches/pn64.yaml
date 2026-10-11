@@ -1,0 +1,48 @@
+---
+#? Install Talos onto the Samsung SATA SSD. Matched by model rather than /dev/sdX, since the
+#? USB HDDs can shift the sdX ordering.
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.transport == "sata" && disk.model == "SAMSUNG MZ7PD128"
+
+---
+#? Use the Intel Optane M10 for the etcd data volume.
+#? Keeps etcd's fsync-heavy writes off the OS disk. Can only be set at cluster creation time.
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: ETCD
+provisioning:
+  diskSelector:
+    match: disk.transport == "nvme" && disk.model == "INTEL MEMPEK1J016GAD"
+  minSize: 2GiB
+  grow: true
+
+---
+#? Management NIC (enp2s0, I225-V)
+apiVersion: v1alpha1
+kind: LinkConfig
+name: enp2s0
+up: true
+
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: enp2s0
+routeMetric: 1024
+
+---
+#? For a ZFS mirror on the two USB HDDs
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: zfs
+
+---
+#? default-node: matches the PodNodeSelector clusterDefaultNodeSelector (see control-plane.yaml),
+#? so pods in namespaces without their own node-selector can schedule here.
+#? remote-node: selected by the ai and github-actions namespaces.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  k8s.mirceanton.com/default-node: "true"
