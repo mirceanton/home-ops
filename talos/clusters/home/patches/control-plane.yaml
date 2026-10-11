@@ -1,0 +1,72 @@
+---
+#? Bind etcd to the management network subnet and expose its metrics for Prometheus scraping
+cluster:
+  etcd:
+    advertisedSubnets: ["10.0.0.0/24"]
+    extraArgs:
+      backend-batch-interval: 250ms
+      listen-metrics-urls: http://0.0.0.0:2381
+---
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  feature-gates: MutatingAdmissionPolicy=true
+  runtime-config: admissionregistration.k8s.io/v1beta1=true
+resources:
+  requests:
+    cpu: 500m
+    memory: 2Gi
+  limits:
+    memory: 6Gi
+---
+#? Headlamp SSO via Keycloak. Talos 1.14 rejects the --oidc-* flags, so this is the structured
+#? equivalent of the old cluster's flags, including their implicit defaults: usernames are
+#? prefixed with "<issuer>#" (the flag default for a non-email claim), groups are unprefixed
+#? (the k8s-admins / k8s-viewers ClusterRoleBindings rely on that).
+#? `configuration` is replaced wholesale rather than merged, so the Talos default anonymous
+#? access for health endpoints has to be restated here.
+apiVersion: v1alpha1
+kind: KubeAuthenticationConfig
+configuration:
+  anonymous:
+    enabled: true
+    conditions:
+      - path: /livez
+      - path: /readyz
+      - path: /healthz
+  jwt:
+    - issuer:
+        url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        audiences: ["headlamp"]
+      claimMappings:
+        username:
+          claim: preferred_username
+          prefix: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab#"
+        groups:
+          claim: groups
+          prefix: ""
+---
+#? Expose controller-manager and scheduler metrics for Prometheus scraping
+apiVersion: v1alpha1
+kind: KubeControllerManagerConfig
+extraArgs:
+  bind-address: "0.0.0.0"
+---
+apiVersion: v1alpha1
+kind: KubeSchedulerConfig
+extraArgs:
+  bind-address: "0.0.0.0"
+---
+apiVersion: v1alpha1
+kind: KubeAdmissionControlConfig
+name: PodSecurity
+$patch: delete
+---
+#? Pods in namespaces without their own scheduler.alpha.kubernetes.io/node-selector
+#? annotation only land on nodes labelled k8s.mirceanton.com/default-node=true.
+apiVersion: v1alpha1
+kind: KubeAdmissionControlConfig
+name: PodNodeSelector
+configuration:
+  podNodeSelectorPluginConfig:
+    clusterDefaultNodeSelector: "k8s.mirceanton.com/default-node=true"

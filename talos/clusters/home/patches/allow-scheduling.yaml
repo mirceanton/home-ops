@@ -1,0 +1,7 @@
+---
+#? Single-node cluster: allow workloads on the control plane
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+taints:
+  node-role.kubernetes.io/control-plane:
+    $patch: delete

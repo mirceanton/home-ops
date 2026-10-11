@@ -1,0 +1,51 @@
+---
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+clusterName: home
+controlPlaneEndpoint: https://pn64.mgmt.h.mirceanton.com:6443
+secrets: ./talsecret.sops.yaml
+
+# renovate: depName=ghcr.io/siderolabs/installer datasource=docker
+talosVersion: v1.14.2
+
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.37.1
+
+additionalSubjectAltNames:
+  - pn64.mgmt.h.mirceanton.com
+  - 10.0.0.60
+  - 127.0.0.1 # KubePrism
+
+installer:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/i915
+          - siderolabs/iscsi-tools
+          - siderolabs/zfs
+
+nodes:
+  #? ASUS PN64: i7-12700H, 32GiB RAM, 128GB SATA SSD, 16GB Optane M10, 2x 320GB USB HDD, I225-V
+  pn64:
+    ip: 10.0.0.60
+    kind: controlplane
+    patches:
+      - ./patches/pn64.yaml
+
+#! registry-mirrors.yaml needs ${registry_username}/${registry_password}, from talenv.sops.yaml:
+#!   sops exec-env talenv.sops.yaml 'talstomize build .'
+patches:
+  - ./patches/kubelet.yaml
+  - ./patches/resolver.yaml
+  - ./patches/sysctls.yaml
+  - ./patches/discovery.yaml
+  - ./patches/registry-mirrors.yaml
+  - ./patches/cni.yaml
+
+controlplanePatches:
+  - ./patches/allow-scheduling.yaml
+  - ./patches/control-plane.yaml
+  - ./patches/talos-api-access.yaml

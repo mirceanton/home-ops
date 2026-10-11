@@ -1,0 +1,63 @@
+---
+#! Uses ${registry_username} / ${registry_password}, from talenv.sops.yaml (see talstomize.yaml)
+apiVersion: v1alpha1
+kind: RegistryAuthConfig
+name: registry.nas.svc.h.mirceanton.com
+username: ${registry_username}
+password: ${registry_password}
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: docker.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/docker.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: registry-1.docker.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/registry-1.docker.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: ghcr.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/ghcr.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: gcr.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/gcr.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: quay.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/quay.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: registry.k8s.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/registry.k8s.io/
+    overridePath: true
+---
+apiVersion: v1alpha1
+kind: RegistryMirrorConfig
+name: oci.external-secrets.io
+skipFallback: true
+endpoints:
+  - url: https://registry.nas.svc.h.mirceanton.com/v2/oci.external-secrets.io/
+    overridePath: true
