@@ -3,7 +3,7 @@ apiVersion: config.talstomize.dev/v1alpha1
 kind: Talstomize
 
 clusterName: home
-controlPlaneEndpoint: https://pn64.mgmt.h.mirceanton.com:6443
+controlPlaneEndpoint: https://pn64.svc.h.mirceanton.com:6443
 secrets: ./talsecret.sops.yaml
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
@@ -13,8 +13,8 @@ talosVersion: v1.14.2
 kubernetesVersion: v1.37.1
 
 additionalSubjectAltNames:
-  - pn64.mgmt.h.mirceanton.com
-  - 10.0.0.60
+  - pn64.svc.h.mirceanton.com
+  - 10.0.10.10
   - 127.0.0.1 # KubePrism
 
 installer:
@@ -30,7 +30,7 @@ installer:
 nodes:
   #? ASUS PN64: i7-12700H, 32GiB RAM, 128GB SATA SSD, 16GB Optane M10, 2x 320GB USB HDD, I225-V
   pn64:
-    ip: 10.0.0.60
+    ip: 10.0.10.10
     kind: controlplane
     patches:
       - ./patches/pn64.yaml
