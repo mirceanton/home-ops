@@ -14,7 +14,7 @@ kubernetesVersion: v1.37.1
 
 additionalSubjectAltNames:
   - zimaboard.mgmt.h.mirceanton.com
-  - 10.0.0.199
+  - 10.0.0.50
   - 127.0.0.1 # KubePrism
 
 installer:
@@ -29,7 +29,7 @@ installer:
 
 nodes:
   zimaboard:
-    ip: 10.0.0.199
+    ip: 10.0.0.50
     kind: controlplane
     patches:
       - ./patches/zimaboard2.yaml
