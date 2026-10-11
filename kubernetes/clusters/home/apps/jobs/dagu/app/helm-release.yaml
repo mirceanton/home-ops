@@ -129,13 +129,13 @@ spec:
         name: dagu-dags-crd-schemas
         advancedMounts:
           dagu:
-            dags: { path: /dag-config/crd-schemas, readOnly: true }
+            dags: [{ path: /dag-config/crd-schemas, readOnly: true }]
       dags-etcd-defrag:
         type: configMap
         name: dagu-dags-etcd-defrag
         advancedMounts:
           dagu:
-            dags: { path: /dag-config/etcd-defrag, readOnly: true }
+            dags: [{ path: /dag-config/etcd-defrag, readOnly: true }]
 
     serviceAccount: { dagu: {} }
     rbac:

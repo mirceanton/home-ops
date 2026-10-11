@@ -6,7 +6,7 @@ resources:
   - ./rbac.yaml
 
 configMapGenerator:
-  - name: dagu-dags-etcd
+  - name: dagu-dags-etcd-defrag
     files:
       - ./workflows/etcd-defrag.yaml
 
