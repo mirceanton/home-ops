@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: reloader
+spec:
+  url: oci://ghcr.io/stakater/charts/reloader
+  interval: 15m
+  ref: { tag: 2.2.18 }
+
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
