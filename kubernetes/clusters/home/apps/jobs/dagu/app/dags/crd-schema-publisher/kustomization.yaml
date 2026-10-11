@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./external-secret.yaml
+  - ./rbac.yaml
+
+configMapGenerator:
+  - name: dagu-dags-crd-schemas
+    files:
+      - ./workflows/crd-schema-publisher.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

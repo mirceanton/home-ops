@@ -1,6 +1,7 @@
+---
 description: Publish the cluster's CRD JSON schemas to Cloudflare Pages
 group: Home-Ops
-schedule: "0 * * * *" # hourly
+schedule: "0 * * * *" #? hourly
 # Don't replay missed runs (Dagu defaults to a 6h lookback on a fresh state dir).
 catchup_window: 1m
 
@@ -8,38 +9,39 @@ steps:
   - name: publish
     action: k8s.run
     with:
-      namespace: jobs
-      service_account: dagu-crd-schema-publisher
       image: ghcr.io/sholdee/crd-schema-publisher:v2026.1010.191442
-      env:
-        - name: CF_PAGES_PROJECT
-          value: k8s-schemas
-        - name: OUTPUT_DIR
-          value: /output
-      env_from:
-        - secret_ref:
-            name: dagu-crd-schema-publisher
-      volumes:
-        - name: output
-          empty_dir: {}
-      volume_mounts:
-        - name: output
-          mount_path: /output
+      service_account: dagu-crd-schema-publisher
+      namespace: jobs
+
       resources:
         requests:
           cpu: 50m
           memory: 64Mi
         limits:
           memory: 1Gi
+
+      env:
+        - name: CF_PAGES_PROJECT
+          value: k8s-schemas
+        - name: OUTPUT_DIR
+          value: /output
+      env_from:
+        - secret_ref: {name: dagu-crd-schema-publisher}
+
+      volumes:
+        - name: output
+          empty_dir: {}
+      volume_mounts:
+        - name: output
+          mount_path: /output
+
       pod_security_context:
         run_as_non_root: true
         run_as_user: 65534
         run_as_group: 65534
         fs_group: 65534
-        seccomp_profile:
-          type: RuntimeDefault
+        seccomp_profile: {type: RuntimeDefault}
       security_context:
         allow_privilege_escalation: false
         read_only_root_filesystem: true
-        capabilities:
-          drop: [ALL]
+        capabilities: {drop: [ALL]}
