@@ -23,7 +23,7 @@ steps:
           memory: 128Mi
       volumes:
         - name: talos
-          secret: {secret_name: dagu-etcd-defrag}
+          secret: { secret_name: dagu-etcd-defrag }
       volume_mounts:
         - name: talos
           mount_path: /var/run/secrets/talos.dev
@@ -34,11 +34,11 @@ steps:
         run_as_user: 65534
         run_as_group: 65534
         fs_group: 65534
-        seccomp_profile: {type: RuntimeDefault}
+        seccomp_profile: { type: RuntimeDefault }
       security_context:
         allow_privilege_escalation: false
         read_only_root_filesystem: true
-        capabilities: {drop: [ALL]}
+        capabilities: { drop: [ALL] }
 
   - name: defrag
     depends: pre-status
