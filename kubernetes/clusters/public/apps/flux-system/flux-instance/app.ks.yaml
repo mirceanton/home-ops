@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-instance
+spec:
+  interval: 1h
+  prune: false # Never delete this
+  wait: false
+  targetNamespace: flux-system
+
+  path: ./kubernetes/clusters/public/apps/flux-system/flux-instance/app
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute: {}
+
+  dependsOn:
+    - name: flux-operator
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: flux-instance
