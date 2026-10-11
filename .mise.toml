@@ -12,7 +12,7 @@ uv = "latest"
 "github:josegonzalez/kubectl-eso" = "latest"
 "github:cloudnative-pg/cloudnative-pg" = "latest"
 "aqua:kustomize" = "latest"
-"aqua:derailed/k9s" = "latest"
+sofka = "latest"
 
 # Flux Tools
 "aqua:fluxcd/flux2" = "2.9.6"
