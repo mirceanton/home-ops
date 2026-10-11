@@ -50,7 +50,7 @@ services:
 
       - name: "Dagu"
         subtitle: "Workflow Orchestration"
-        url: "https://dagu.home.mirceanton.com"
+        url: "https://jobs.home.mirceanton.com"
         target: "_blank"
         icon: "https://avatars.githubusercontent.com/u/131097250?s=200&v=4"
 

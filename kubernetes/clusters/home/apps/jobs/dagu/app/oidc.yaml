@@ -57,7 +57,7 @@ spec:
     clientID: dagu
     clientSecret:
       name: dagu-oidc-secret
-    redirectURL: "https://dagu.home.mirceanton.com/oauth2/callback"
+    redirectURL: "https://jobs.home.mirceanton.com/oauth2/callback"
     logoutPath: "/oauth2/logout"
     forwardAccessToken: true
 
