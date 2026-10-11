@@ -1,0 +1,16 @@
+---
+# Kubelet performance tuning:
+# - maxPods: Increase from default 110 to 200 for higher pod density
+# - serializeImagePulls: Disable to pull images in parallel
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  maxPods: 200
+  serializeImagePulls: false
+
+---
+#? Bind the kubelet to the DMZ subnet
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets: ["172.16.30.0/24"]
