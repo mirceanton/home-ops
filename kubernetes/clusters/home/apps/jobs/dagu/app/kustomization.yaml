@@ -1,0 +1,27 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./oci-repository.yaml
+  - ./helm-release.yaml
+  - ./oidc.yaml
+  - ./keycloak-group.yaml
+  - ./rbac.yaml
+  - ./runners/etcd-defrag.yaml
+  - ./runners/crd-schema-publisher.yaml
+
+# Every DAG in ./dags ends up in this ConfigMap, which the init container
+# copies into Dagu's DAGs dir. Adding a DAG = drop the file in ./dags and list
+# it here (kustomize can't glob).
+configMapGenerator:
+  - name: dagu-dags
+    files:
+      - ./dags/etcd-defrag.yaml
+      - ./dags/crd-schema-publisher.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # DAGs use ${VAR} syntax of their own; don't let Flux substitute it.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
