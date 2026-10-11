@@ -1,0 +1,33 @@
+---
+#? Install Talos onto the onboard eMMC (mmcblk0boot0/1 are read-only boot areas, so match the main device explicitly)
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.dev_path == "/dev/mmcblk0"
+---
+#? Use the Intel Optane M10 for the etcd data volume.
+#? Keeps etcd's fsync-heavy writes off the eMMC. Can only be set at cluster creation time.
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: ETCD
+provisioning:
+  diskSelector:
+    match: disk.transport == "nvme" && disk.model == "INTEL MEMPEK1J016GAD"
+  minSize: 2GiB
+  grow: true
+---
+#? Management NIC (enp1s0, I226-V #1). enp2s0 is left unconfigured.
+apiVersion: v1alpha1
+kind: LinkConfig
+name: enp1s0
+up: true
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: enp1s0
+routeMetric: 1024
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: zfs

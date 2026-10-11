@@ -5,6 +5,7 @@
 talsecret.yaml
 talenv.yaml
 clusterconfig/
+_out/
 
 # Ignore Unencrypted Kubernetes Secrets
 *.secret.yaml
