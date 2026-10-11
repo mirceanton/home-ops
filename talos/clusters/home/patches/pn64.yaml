@@ -46,3 +46,4 @@ apiVersion: v1alpha1
 kind: KubeNodeConfig
 labels:
   k8s.mirceanton.com/default-node: "true"
+  k8s.mirceanton.com/remote-node: "true"
