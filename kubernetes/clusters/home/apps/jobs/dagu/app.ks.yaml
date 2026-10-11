@@ -23,9 +23,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_PUID: "1000"
-      VOLSYNC_PGID: "1000"
 
   decryption: { provider: sops }
   dependsOn:

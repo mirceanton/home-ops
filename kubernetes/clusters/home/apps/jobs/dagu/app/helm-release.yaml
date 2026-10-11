@@ -104,7 +104,7 @@ spec:
 
     route:
       home:
-        hostnames: ["jobs.home.mirceanton.com"]
+        hostnames: ["dagu.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
