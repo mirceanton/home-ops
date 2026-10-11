@@ -1,4 +1,5 @@
 description: Publish the cluster's CRD JSON schemas to Cloudflare Pages
+group: Home-Ops
 schedule: "0 * * * *" # hourly
 # Don't replay missed runs (Dagu defaults to a 6h lookback on a fresh state dir).
 catchup_window: 1m

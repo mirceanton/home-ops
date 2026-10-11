@@ -31,15 +31,19 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        # Dagu does not hot-reload DAGs and skips symlinked files by default, which
-        # is exactly what a ConfigMap mount is made of. Copy the real files into a
-        # writable dir instead; reloader restarts the pod when the ConfigMap changes.
+        # Dagu does not hot-reload DAGs, skips symlinked files by default (which is
+        # exactly what a ConfigMap mount is made of) and needs to write into its
+        # DAGs dir. Copy the real files into a writable dir instead, one subfolder
+        # per section; reloader restarts the pod when a ConfigMap changes.
         initContainers:
           dags:
             image: &image
               repository: ghcr.io/dagucloud/dagu
               tag: 2.18.2
-            command: [sh, -c, "cp -L /dag-config/*.yaml /dags/"]
+            command:
+              - sh
+              - -c
+              - cd /dag-config && find . -maxdepth 2 -name '*.yaml' -not -path '*/..*' -exec cp -L --parents -t /dags {} +
             resources:
               requests:
                 cpu: 10m
@@ -61,6 +65,8 @@ spec:
             env:
               DAGU_HOME: /var/lib/dagu
               DAGU_DAGS_DIR: /dags
+              # DAGs sit in one subfolder per section (see kustomization.yaml)
+              DAGU_DAG_DISCOVERY_RECURSIVE: "true"
               DAGU_HOST: 0.0.0.0
               DAGU_PORT: "8080"
               DAGU_TZ: Etc/UTC
@@ -112,13 +118,14 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /dags
-      dag-config:
+      # One entry per section, mounted for the init container only
+      dags-home-ops:
         type: configMap
-        name: dagu-dags
+        name: dagu-dags-home-ops
         advancedMounts:
           dagu:
             dags:
-              - path: /dag-config
+              - path: /dag-config/home-ops
                 readOnly: true
       home:
         type: emptyDir
@@ -135,7 +142,7 @@ spec:
 
     # The pod's own identity: launches k8s.run steps as Jobs in this namespace
     # and streams their logs, nothing else. What each Job's pod may do is decided
-    # by the SA the DAG picks (see runners/).
+    # by the SA the DAG picks (see each section's *.runner.yaml).
     # NOTE: "create jobs" + "use any SA in this namespace" means anyone who can
     # trigger a DAG can run a pod as those SAs. Access to the UI is therefore
     # limited to the "dagu" Keycloak group (see oidc.yaml).

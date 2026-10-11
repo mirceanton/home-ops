@@ -1,4 +1,5 @@
 description: Defragment etcd on the control plane node
+group: Home-Ops
 schedule: "10 5 * * *" # daily at 5:10am
 # On a fresh state dir Dagu replays the last 6h of missed runs, which would fire
 # an unscheduled defrag on first deploy. Only replay what was missed in the last minute.

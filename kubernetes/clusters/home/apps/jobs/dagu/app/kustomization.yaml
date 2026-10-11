@@ -7,20 +7,14 @@ resources:
   - ./helm-release.yaml
   - ./oidc.yaml
   - ./keycloak-group.yaml
-  - ./runners/etcd-defrag.yaml
-  - ./runners/crd-schema-publisher.yaml
 
-# Every DAG in ./dags ends up in this ConfigMap, which the init container
-# copies into Dagu's DAGs dir. Adding a DAG = drop the file in ./dags and list
-# it here (kustomize can't glob).
-configMapGenerator:
-  - name: dagu-dags
-    files:
-      - ./dags/etcd-defrag.yaml
-      - ./dags/crd-schema-publisher.yaml
-
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    # DAGs use ${VAR} syntax of their own; don't let Flux substitute it.
-    kustomize.toolkit.fluxcd.io/substitute: disabled
+  # One directory per section of the Dagu UI. A section is self-contained: its
+  # DAGs (./dags, each with `group: <Section>`) plus whatever they run as
+  # (ServiceAccounts, RBAC, secrets). To add one:
+  #   1. create ./<section> with a kustomization.yaml that generates a
+  #      `dagu-dags-<section>` ConfigMap (copy ./home-ops)
+  #   2. list it here
+  #   3. add a matching `dags-<section>` entry under persistence in helm-release.yaml
+  # DAG names and file names must be unique across ALL sections: Dagu drops every
+  # DAG involved in a clash and reports it as an error in the UI.
+  - ./home-ops
