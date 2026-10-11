@@ -1,0 +1,10 @@
+---
+#? No built-in CNI or kube-proxy: Cilium is deployed on top and replaces both.
+#? Without a KubeFlannelCNIConfig document, Talos deploys no CNI.
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+$patch: delete
+---
+apiVersion: v1alpha1
+kind: KubeProxyConfig
+enabled: false

@@ -1,0 +1,30 @@
+---
+#? Install Talos onto the Samsung SATA SSD. Matched by transport + model so the USB install stick
+#? (or any other disk) can never be picked.
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: disk.transport == "sata" && disk.model == "SAMSUNG MZ7PD128"
+---
+#? Use the Intel Optane M10 for the etcd data volume.
+#? Keeps etcd's fsync-heavy writes off the OS disk. Can only be set at cluster creation time.
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: ETCD
+provisioning:
+  diskSelector:
+    match: disk.transport == "nvme" && disk.model == "INTEL MEMPEK1J016GAD"
+  minSize: 2GiB
+  grow: true
+---
+#? Onboard NIC (eno1, I219-V), the only one on the board
+apiVersion: v1alpha1
+kind: LinkConfig
+name: eno1
+up: true
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: eno1
+routeMetric: 1024
