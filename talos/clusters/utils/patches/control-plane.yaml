@@ -1,8 +1,8 @@
 ---
-#? Bind etcd to the management network subnet and expose its metrics for Prometheus scraping
+#? Bind etcd to the utils subnet and expose its metrics for Prometheus scraping
 cluster:
   etcd:
-    advertisedSubnets: ["10.0.0.0/24"]
+    advertisedSubnets: ["10.0.20.0/24"]
     extraArgs:
       backend-batch-interval: 250ms
       listen-metrics-urls: http://0.0.0.0:2381

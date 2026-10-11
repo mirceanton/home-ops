@@ -9,8 +9,8 @@ config:
   serializeImagePulls: false
 
 ---
-#? Bind the kubelet to the management network subnet
+#? Bind the kubelet to the utils subnet
 apiVersion: v1alpha1
 kind: KubeNodeConfig
 nodeIP:
-  validSubnets: ["10.0.0.0/24"]
+  validSubnets: ["10.0.20.0/24"]

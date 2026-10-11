@@ -3,7 +3,7 @@ apiVersion: config.talstomize.dev/v1alpha1
 kind: Talstomize
 
 clusterName: utils
-controlPlaneEndpoint: https://zimaboard.mgmt.h.mirceanton.com:6443
+controlPlaneEndpoint: https://zimaboard.utils.h.mirceanton.com:6443
 secrets: ./talsecret.sops.yaml
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
@@ -13,8 +13,8 @@ talosVersion: v1.14.2
 kubernetesVersion: v1.37.1
 
 additionalSubjectAltNames:
-  - zimaboard.mgmt.h.mirceanton.com
-  - 10.0.0.50
+  - zimaboard.utils.h.mirceanton.com
+  - 10.0.20.10
   - 127.0.0.1 # KubePrism
 
 installer:
@@ -29,7 +29,7 @@ installer:
 
 nodes:
   zimaboard:
-    ip: 10.0.0.50
+    ip: 10.0.20.10
     kind: controlplane
     patches:
       - ./patches/zimaboard2.yaml
