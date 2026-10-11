@@ -1,0 +1,46 @@
+---
+apiVersion: config.talstomize.dev/v1alpha1
+kind: Talstomize
+
+clusterName: utils
+controlPlaneEndpoint: https://zimaboard.mgmt.h.mirceanton.com:6443
+secrets: ./talsecret.sops.yaml
+
+# renovate: depName=ghcr.io/siderolabs/installer datasource=docker
+talosVersion: v1.14.2
+
+# renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
+kubernetesVersion: v1.37.1
+
+additionalSubjectAltNames:
+  - zimaboard.mgmt.h.mirceanton.com
+  - 10.0.0.199
+  - 127.0.0.1 # KubePrism
+
+installer:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/intel-ucode
+          - siderolabs/i915
+          - siderolabs/iscsi-tools
+          - siderolabs/zfs
+
+nodes:
+  zimaboard:
+    ip: 10.0.0.199
+    kind: controlplane
+    patches:
+      - ./patches/zimaboard2.yaml
+
+patches:
+  - ./patches/kubelet.yaml
+  - ./patches/resolver.yaml
+  - ./patches/sysctls.yaml
+  - ./patches/discovery.yaml
+
+controlplanePatches:
+  - ./patches/allow-scheduling.yaml
+  - ./patches/control-plane.yaml
+  - ./patches/talos-api-access.yaml

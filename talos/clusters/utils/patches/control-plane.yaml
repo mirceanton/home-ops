@@ -1,0 +1,30 @@
+---
+#? Bind etcd to the management network subnet and expose its metrics for Prometheus scraping
+cluster:
+  etcd:
+    advertisedSubnets: ["10.0.0.0/24"]
+    extraArgs:
+      backend-batch-interval: 250ms
+      listen-metrics-urls: http://0.0.0.0:2381
+---
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  feature-gates: MutatingAdmissionPolicy=true
+  runtime-config: admissionregistration.k8s.io/v1beta1=true
+---
+#? Expose controller-manager and scheduler metrics for Prometheus scraping
+apiVersion: v1alpha1
+kind: KubeControllerManagerConfig
+extraArgs:
+  bind-address: "0.0.0.0"
+---
+apiVersion: v1alpha1
+kind: KubeSchedulerConfig
+extraArgs:
+  bind-address: "0.0.0.0"
+---
+apiVersion: v1alpha1
+kind: KubeAdmissionControlConfig
+name: PodSecurity
+$patch: delete
