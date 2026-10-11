@@ -27,6 +27,29 @@ apiVersion: v1alpha1
 kind: DHCPv4Config
 name: enp1s0
 routeMetric: 1024
+
+#? LACP bond over both I226-V ports. Disabled until the switch-side LAG is set up.
+#? To enable: uncomment the two documents below, delete the enp1s0 LinkConfig and
+#? DHCPv4Config above, and set hardwareAddr to enp1s0's real MAC so the 10.0.0.50
+#? static lease keeps matching (without it, the bond takes whichever port's MAC
+#? enslaves first, which can change across reboots).
+# ---
+# apiVersion: v1alpha1
+# kind: BondConfig
+# name: bond0
+# links:
+#   - enp1s0
+#   - enp2s0
+# bondMode: 802.3ad
+# lacpRate: fast
+# xmitHashPolicy: layer3+4
+# miimon: 100
+# hardwareAddr: aa:bb:cc:dd:ee:ff # TODO: enp1s0's MAC
+# ---
+# apiVersion: v1alpha1
+# kind: DHCPv4Config
+# name: bond0
+# routeMetric: 1024
 ---
 apiVersion: v1alpha1
 kind: KernelModuleConfig
