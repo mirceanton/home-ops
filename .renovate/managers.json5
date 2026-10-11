@@ -24,13 +24,6 @@
       "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"],
       "matchStrings": ["imageName:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)\\s"],
       "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "description": "Track images in Dagu DAG files - they are plain Dagu YAML without apiVersion/kind, so the built-in kubernetes manager skips them",
-      "managerFilePatterns": ["/(^|/)dags/[^/]+\\.yaml$/"],
-      "matchStrings": ["image:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)"],
-      "datasourceTemplate": "docker"
     }
   ]
 }
