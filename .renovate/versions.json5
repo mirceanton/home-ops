@@ -7,10 +7,9 @@
       "automerge": false
     },
     {
-      "description": "mise uses CalVer but follows semver-ish discipline; allow automerge for non-major bumps",
+      "description": "mise uses CalVer, so update types don't signal risk; trust its releases and automerge all updates",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/jdx/mise"],
-      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "automergeType": "branch"
     },
