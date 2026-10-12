@@ -15,6 +15,12 @@ if grep -q '^DISCORD_ALLOWED_USERS=' /opt/data/.env 2>/dev/null; then
 else
   printf 'DISCORD_ALLOWED_USERS=%s\n' "$DISCORD_ALLOWED_USERS" >> /opt/data/.env
 fi
+# MCP env interpolation (${ANYTYPE_API_KEY} in config.yaml) resolves from the profile's secret scope.
+if grep -q '^ANYTYPE_API_KEY=' /opt/data/.env 2>/dev/null; then
+  sed -i "s|^ANYTYPE_API_KEY=.*|ANYTYPE_API_KEY=$ANYTYPE_API_KEY|" /opt/data/.env
+else
+  printf 'ANYTYPE_API_KEY=%s\n' "$ANYTYPE_API_KEY" >> /opt/data/.env
+fi
 chmod 600 /opt/data/.env
 
 for f in /seed/profiles.*.config.yaml; do
