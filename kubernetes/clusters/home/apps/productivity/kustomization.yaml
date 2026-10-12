@@ -7,5 +7,6 @@ namespace: productivity
 resources:
   - ./namespace.yaml
   - ./affine
+  - ./anytype-headless
   - ./miniflux
   - ./vikunja

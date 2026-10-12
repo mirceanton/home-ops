@@ -1,0 +1,110 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app anytype-headless
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: anytype-headless
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    controllers:
+      anytype-headless:
+        # Single embedded anytype-heart datastore on an RWO volume: never run two.
+        strategy: Recreate
+
+        containers:
+          app:
+            image:
+              repository: ghcr.io/anyproto/anytype-cli
+              tag: v0.4.0
+            # gRPC (31010) and gRPC-Web (31011) stay bound to 127.0.0.1; only the
+            # JSON API listens on the pod IP. The address is remembered in
+            # $HOME/.anytype/config.json for the `kubectl exec` bootstrap commands.
+            args: ["serve", "--listen-address", "0.0.0.0:31012"]
+
+            env:
+              TZ: Europe/Bucharest
+              # Config (~/.anytype) and vault data (~/.config/anytype/data) both live under $HOME.
+              HOME: /data
+              # The JSON API rejects any Host header that is not localhost or an IP literal.
+              ANYTYPE_API_ALLOWED_HOSTS: anytype-headless,anytype-headless.productivity,anytype-headless.productivity.svc,anytype-headless.productivity.svc.cluster.local
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: ["nc", "-z", "127.0.0.1", "31010"]
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              # The JSON API only starts once a bot account is logged in. Until
+              # `anytype auth create` has stored an account key, report ready so the
+              # HelmRelease can install and the bootstrap commands can be run.
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - /bin/sh
+                      - -c
+                      - nc -z 127.0.0.1 31012 || ! grep -qs '"accountKey"' /data/.anytype/config.json
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command: ["nc", "-z", "127.0.0.1", "31010"]
+                  periodSeconds: 5
+                  failureThreshold: 30
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      # The upstream image defaults to root only for docker-compose volume ownership;
+      # the static binary runs as any UID with a writable $HOME.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    service:
+      app:
+        controller: *app
+        ports:
+          http: { port: 31012 }
+
+    persistence:
+      data:
+        existingClaim: ${APP}
+        globalMounts: [{ path: /data }]
+      tmp:
+        type: emptyDir
+        globalMounts: [{ path: /tmp }]
