@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: anytype-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: anytype
+  transport: http
+
+  workload:
+    # anytype-mcp only speaks stdio, so supergateway (mounted from its own image
+    # below) bridges it to streamable HTTP. It runs on this image's Node 24 since
+    # the supergateway image still ships Node 20.
+    image: ghcr.io/anyproto/anytype-mcp:2.0.1
+    command: ["node", "/supergateway/usr/local/lib/node_modules/supergateway/dist/index.js"]
+    args:
+      - --stdio
+      - node /app/bin/cli.mjs
+      - --outputTransport
+      - streamableHttp
+      - --port
+      - "8000"
+      # One child per MCP session; LiteLLM opens a fresh session per operation
+      # and terminates it afterwards, so children do not pile up.
+      - --stateful
+      - --healthEndpoint
+      - /healthz
+    port: 8000
+    path: /mcp
+
+    env:
+      - name: ANYTYPE_API_BASE_URL
+        value: http://anytype-headless:31012
+      - name: OPENAPI_MCP_HEADERS
+        valueFrom:
+          secretKeyRef:
+            name: anytype-mcp-secret
+            key: OPENAPI_MCP_HEADERS
+
+    resources:
+      requests:
+        cpu: 10m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+      seccompProfile:
+        type: RuntimeDefault
+
+    volumes:
+      - name: supergateway
+        image:
+          reference: ghcr.io/supercorp-ai/supergateway:4.1.0
+          pullPolicy: IfNotPresent
+      - name: tmp
+        emptyDir: {}
+    volumeMounts:
+      - name: supergateway
+        mountPath: /supergateway
+        readOnly: true
+      - name: tmp
+        mountPath: /tmp

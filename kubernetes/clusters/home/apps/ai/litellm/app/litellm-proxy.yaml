@@ -53,8 +53,6 @@ spec:
       value: INFO
     - name: LITELLM_LOCAL_MODEL_COST_MAP
       value: "False"
-    - name: LITELLM_ENABLE_MCP_STDIO
-      value: "True"
     - name: STORE_MODEL_IN_DB
       value: "True"
     - name: PROXY_BASE_URL

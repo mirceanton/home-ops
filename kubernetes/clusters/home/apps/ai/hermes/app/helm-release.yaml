@@ -41,11 +41,6 @@ spec:
                   secretKeyRef:
                     name: hermes-secret
                     key: DISCORD_ALLOWED_USERS
-              ANYTYPE_API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: hermes-secret
-                    key: ANYTYPE_API_KEY
             command: ["/bin/sh", "/scripts/seed.sh"]
             resources:
               requests:
