@@ -35,12 +35,6 @@ mcp_servers:
       ANYTYPE_API_BASE_URL: http://anytype-headless.productivity.svc.cluster.local:31012
       OPENAPI_MCP_HEADERS: '{"Authorization":"Bearer ${ANYTYPE_API_KEY}","Anytype-Version":"2025-11-08"}'
 
-  # TODO: Remove me?
-  YouTube Workspace:
-    url: http://litellm.ai.svc.cluster.local:4000/youtube_workspace/mcp/
-    headers:
-      Authorization: Bearer ${LITELLM_API_KEY}
-
 toolsets: [kanban, hermes-cli]
 
 skills:
