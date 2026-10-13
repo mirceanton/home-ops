@@ -5,4 +5,16 @@ kind: Kustomization
 resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
+  - ./external-secret.yaml
   - ./prometheus-rule.yaml
+
+configMapGenerator:
+  - name: subflux-config-template
+    files:
+      - config.yaml=./files/config.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # keep the ${SUBFLUX_*} placeholders for subflux to expand at runtime
+    kustomize.toolkit.fluxcd.io/substitute: disabled

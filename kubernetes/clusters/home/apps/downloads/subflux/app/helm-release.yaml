@@ -16,6 +16,40 @@ spec:
 
     controllers:
       subflux:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          # Deep-merge the git-owned settings over the UI-managed config.yaml
+          # (git wins on the keys it declares; everything else is kept).
+          render-config:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: "4"
+            command:
+              - sh
+              - -c
+              - |
+                set -euo pipefail
+                if [ -s /config/config.yaml ]; then
+                  yq eval-all '(select(fileIndex == 0) * select(fileIndex == 1)) | ... comments = ""' \
+                    /config/config.yaml /config-template/config.yaml > /config/config.yaml.tmp
+                else
+                  cp /config-template/config.yaml /config/config.yaml.tmp
+                fi
+                chmod 600 /config/config.yaml.tmp
+                mv /config/config.yaml.tmp /config/config.yaml
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
         containers:
           app:
             image:
@@ -23,6 +57,9 @@ spec:
               tag: v0.8.0
             env:
               TZ: "Europe/Bucharest"
+            envFrom:
+              - secretRef:
+                  name: subflux-secret
 
             probes:
               liveness: &probes
@@ -87,8 +124,16 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      # Must match the paths Sonarr and Radarr see, so set media_roots to
-      # /data/media in the subflux setup wizard.
+      config-template:
+        type: configMap
+        name: subflux-config-template
+        defaultMode: 0444
+        advancedMounts:
+          subflux:
+            render-config:
+              - path: /config-template/config.yaml
+                subPath: config.yaml
+      # Must match the paths Sonarr and Radarr see (media_roots in files/config.yaml).
       media:
         type: nfs
         server: nas.stor.h.mirceanton.com

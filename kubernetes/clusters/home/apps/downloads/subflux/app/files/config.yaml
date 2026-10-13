@@ -1,0 +1,51 @@
+---
+# Git-owned subflux settings. The render-config init container deep-merges this
+# over /config/config.yaml on every pod start, so these keys always win; any key
+# not listed here stays editable from the web UI. ${SUBFLUX_*} placeholders are
+# expanded by subflux at load time from the pod env (never written to disk).
+# Reference: https://github.com/cplieger/subflux/blob/main/docs/configuration.md
+
+sonarr:
+  enabled: true
+  url: http://sonarr.downloads.svc.cluster.local:8989
+  api_key: "${SUBFLUX_SONARR_API_KEY}"
+  public_url: https://sonarr.home.mirceanton.com
+
+radarr:
+  enabled: true
+  url: http://radarr.downloads.svc.cluster.local:7878
+  api_key: "${SUBFLUX_RADARR_API_KEY}"
+  public_url: https://radarr.home.mirceanton.com
+
+# Same path the arrs mount the media share at.
+media_roots:
+  - /data/media
+
+# Envoy sits in the pod network; trust its X-Forwarded-For.
+trusted_proxies:
+  - 10.244.0.0/16
+
+# English + Romanian sidecars, never in the audio's own language.
+languages:
+  rules:
+    - audio: en
+      subtitles:
+        - code: ro
+    - audio: ro
+      subtitles:
+        - code: en
+  default:
+    - code: en
+    - code: ro
+
+# The no-account providers. Account-based ones are configured from the UI.
+providers:
+  gestdown:
+    enabled: true
+    priority: 4
+  animetosho:
+    enabled: true
+    priority: 8
+  yifysubtitles:
+    enabled: true
+    priority: 9
