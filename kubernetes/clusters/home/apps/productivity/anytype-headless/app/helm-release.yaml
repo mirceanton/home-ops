@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: ghcr.io/anyproto/anytype-cli
-              tag: v0.4.0
+              tag: v0.5.0
             # gRPC (31010) and gRPC-Web (31011) stay bound to 127.0.0.1; only the
             # JSON API listens on the pod IP. The address is remembered in
             # $HOME/.anytype/config.json for the `kubectl exec` bootstrap commands.
