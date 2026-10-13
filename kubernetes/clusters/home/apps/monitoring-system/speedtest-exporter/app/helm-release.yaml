@@ -27,7 +27,7 @@ spec:
           speedtest-exporter:
             image:
               repository: ghcr.io/heathcliff26/speedtest-exporter
-              tag: v1.8.0@sha256:a22167e5973de678d989780351a6d0d5483a4bd43485cd42b0b08dc5c09635d6
+              tag: v1.8.1@sha256:4278754c5755a8301952bc8fccf5eb1f3626916dfaa0e78d561c73eccfe0b739
             env:
               OOKLA_EULA_GDPR: "true"
 
