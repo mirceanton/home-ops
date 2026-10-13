@@ -3,81 +3,81 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: bazarr
+  name: subflux
 spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: bazarr
+    name: subflux
 
   values:
     global:
       createDefaultServiceAccount: false
 
-    defaultPodOptions:
-      automountServiceAccountToken: false
-
     controllers:
-      bazarr:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        pod:
-          securityContext:
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 568
-            runAsNonRoot: true
-            runAsUser: 568
+      subflux:
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/bazarr
-              tag: 1.6.2
+              repository: ghcr.io/cplieger/subflux
+              tag: v0.8.0
+            env:
+              TZ: "Europe/Bucharest"
 
             probes:
-              liveness:
-                enabled: true
-                spec:
-                  periodSeconds: 30
-                  timeoutSeconds: 5
-                  failureThreshold: 5
-              readiness:
+              liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /health
-                    port: &port 6767
-                  periodSeconds: 10
+                    path: /api/health
+                    port: &port 8374
+                  periodSeconds: 30
                   timeoutSeconds: 5
-                  failureThreshold: 5
+                  failureThreshold: 3
+              readiness: *probes
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
-                  periodSeconds: 10
+                  periodSeconds: 5
 
             resources:
               requests:
                 cpu: 20m
-                memory: 256Mi
+                memory: 128Mi
               limits:
                 memory: 2Gi
 
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities:
-                drop: ["ALL"]
+              capabilities: { drop: ["ALL"] }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
 
     service:
       app:
         ports:
           http:
             port: *port
+
+    serviceMonitor:
+      app:
+        endpoints:
+          - port: http
+
     route:
       home:
-        hostnames: ["bazarr.home.mirceanton.com"]
+        hostnames: ["subflux.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
@@ -87,17 +87,16 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
+      # Must match the paths Sonarr and Radarr see, so set media_roots to
+      # /data/media in the subflux setup wizard.
       media:
         type: nfs
         server: nas.stor.h.mirceanton.com
         path: /mnt/tank/Media/
         globalMounts:
           - path: /data/media
-      downloads:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/scratch/Torrent_Downloads
-        globalMounts:
-          - path: /downloads
+      # Admin bootstrap socket, health marker and preview scratch files.
       tmp:
         type: emptyDir
+        globalMounts:
+          - path: /tmp

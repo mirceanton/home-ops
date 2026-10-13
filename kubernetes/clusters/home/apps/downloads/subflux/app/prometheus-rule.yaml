@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: subflux
+spec:
+  groups:
+    # Adapted from upstream: https://github.com/cplieger/subflux/blob/main/alerts/promql.yaml
+    # The target up/absent rules are left out (generic TargetDown covers it and
+    # nfs-scaler scales subflux to 0 when the NAS is down), as is the backup rule
+    # (volsync backs up /config, subflux's own backups stay disabled).
+    - name: subflux.rules
+      rules:
+        - alert: SubfluxScanStalled
+          expr: >-
+            subflux_configured == 1
+            and increase(subflux_scans_total[26h]) == 0
+            and (time() - process_start_time_seconds) > 93600
+          for: 2h
+          labels:
+            severity: warning
+          annotations:
+            summary: "Subflux has not completed a library scan in over a day"
+            description: >-
+              Subflux is configured and has been up for over 26h, but no
+              scheduled scan completed in that window. The scheduler or a scan
+              may be stuck, or Sonarr/Radarr may be unreachable.
+
+        - alert: SubfluxHTTP5xx
+          expr: sum(increase(subflux_http_requests_total{status=~"5.."}[10m])) > 5
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Subflux is returning HTTP 5xx"
+            description: >-
+              Subflux returned more than 5 server errors in 10m. Check upstream
+              connectivity, provider config, and the subflux logs.
+
+        - alert: SubfluxProviderCredentialsRejected
+          expr: >-
+            max by (provider) (subflux_provider_disabled) == 1
+            or max by (provider) (subflux_provider_setting_rejected) == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Subflux provider {{ $labels.provider }} rejected a credential"
+            description: >-
+              {{ $labels.provider }} rejected a credential and subflux stopped
+              using it (the whole provider after three attempts, otherwise only
+              the rejected optional setting). Fix it in the settings dialog.
+
+        - alert: SubfluxMediaUnwritable
+          expr: max by (root) (subflux_media_root_unwritable) == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Subflux cannot write subtitles under {{ $labels.root }}"
+            description: >-
+              A folder under {{ $labels.root }} failed a write and has not
+              accepted one since, so no subtitles are saved there. The share may
+              be read-only, full, or refusing subflux's user.
+
+        - alert: SubfluxMediaUnavailable
+          expr: max by (root) (subflux_media_root_unavailable) == 1
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Subflux cannot read media under {{ $labels.root }}"
+            description: >-
+              A file under {{ $labels.root }} could not be checked, so the NFS
+              share is likely unmounted or hung. New imports there wait until it
+              can be read again.

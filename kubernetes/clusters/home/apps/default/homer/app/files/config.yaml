@@ -161,11 +161,11 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/readarr.webp"
 
-      - name: "Bazarr"
+      - name: "Subflux"
         subtitle: "Subtitles"
-        url: "https://bazarr.home.mirceanton.com"
+        url: "https://subflux.home.mirceanton.com"
         target: "_blank"
-        logo: "assets/icons/webp/bazarr.webp"
+        icon: "fas fa-closed-captioning"
 
       - name: "Streamarr"
         subtitle: "Audio & Subtitle Janitor"
