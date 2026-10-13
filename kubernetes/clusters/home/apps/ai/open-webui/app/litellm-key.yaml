@@ -1,0 +1,28 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmteam_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMTeam
+metadata:
+  name: open-webui
+spec:
+  proxyRef: litellm
+  alias: open-webui
+  models: ["all-proxy-models"]
+  # Open WebUI only reaches the MCP servers wired into its tool server connections, so this
+  # just lets an admin add another LiteLLM MCP from the UI without touching the team.
+  mcpServers: ["all-proxy-mcpservers"]
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: open-webui
+spec:
+  proxyRef: litellm
+  secretName: open-webui-litellm-key
+  keyAlias: open-webui
+  teamID: open-webui
+  metadata:
+    app: open-webui
+    description: API key for Open WebUI model and MCP access

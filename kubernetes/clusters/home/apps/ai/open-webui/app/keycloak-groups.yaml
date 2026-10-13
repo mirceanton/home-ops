@@ -1,0 +1,27 @@
+---
+# Membership of these groups gates access to Open WebUI: its OAuth role management reads the
+# "groups" claim, maps `open-webui-admins` to admin and `open-webui` to user, and refuses
+# anyone in neither (see OAUTH_*_ROLES in helm-release.yaml). The operator only creates the
+# groups; add users to them in the Keycloak UI.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: open-webui
+spec:
+  clusterRealmRef:
+    name: homelab
+  name: open-webui
+  definition: {}
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: open-webui-admins
+spec:
+  clusterRealmRef:
+    name: homelab
+  name: open-webui-admins
+  definition: {}

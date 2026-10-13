@@ -1,0 +1,189 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app open-webui
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: open-webui
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      open-webui:
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          wait-for-postgres:
+            image:
+              repository: ghcr.io/wait4x/wait4x
+              tag: 3.7.2
+            args: ["postgresql", "$(DB_URL)"]
+            env:
+              DB_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-postgres-app
+                    key: uri
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+        containers:
+          app:
+            # The slim image ships without the bundled embedding/whisper models; models,
+            # embeddings and tools all come from LiteLLM instead.
+            image:
+              repository: ghcr.io/open-webui/open-webui
+              tag: v0.12.0-slim
+
+            # The model, tool server and login-form settings only seed Open WebUI's database-backed
+            # config on first boot; after that, Admin Settings is their source of truth. SSO and
+            # role mapping are never persisted, so they always follow this file.
+            env:
+              WEBUI_URL: https://chat.home.mirceanton.com
+              WEBUI_SECRET_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-secret-key
+                    key: password
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-postgres-app
+                    key: uri
+
+              # Models: everything goes through LiteLLM
+              ENABLE_OLLAMA_API: "False"
+              OPENAI_API_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              OPENAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-litellm-key
+                    key: key
+
+              # Tools: MCP servers through the LiteLLM MCP gateway, same as Hermes. Readable by
+              # every user (access_grants); without a grant only admins could use them.
+              TOOL_SERVER_CONNECTIONS:
+                dependsOn: OPENAI_API_KEY
+                value: |-
+                  [
+                    {
+                      "type": "mcp",
+                      "url": "http://litellm.ai.svc.cluster.local:4000/searxng/mcp/",
+                      "path": "",
+                      "auth_type": "bearer",
+                      "key": "$(OPENAI_API_KEY)",
+                      "config": {
+                        "enable": true,
+                        "access_grants": [{ "principal_type": "user", "principal_id": "*", "permission": "read" }]
+                      },
+                      "info": { "id": "searxng", "name": "SearXNG", "description": "Web search through the home SearXNG instance" }
+                    }
+                  ]
+
+              # Keycloak SSO only: no local accounts, no password logins
+              ENABLE_LOGIN_FORM: "False"
+              ENABLE_PASSWORD_AUTH: "False"
+              ENABLE_OAUTH_SIGNUP: "True"
+              OAUTH_PROVIDER_NAME: Keycloak
+              OPENID_PROVIDER_URL: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/.well-known/openid-configuration
+              OPENID_REDIRECT_URI: https://chat.home.mirceanton.com/oauth/oidc/login/callback
+              OAUTH_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-oidc-secret
+                    key: client-id
+              OAUTH_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-oidc-secret
+                    key: client-secret
+
+              # Roles come from Keycloak group membership (see keycloak-groups.yaml)
+              ENABLE_OAUTH_ROLE_MANAGEMENT: "True"
+              OAUTH_ROLES_CLAIM: groups
+              OAUTH_ALLOWED_ROLES: open-webui
+              OAUTH_ADMIN_ROLES: open-webui-admins
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8080
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 60
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 512Mi
+              limits:
+                memory: 2Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: open-webui
+        ports:
+          http:
+            port: *port
+
+    route:
+      home:
+        hostnames: ["chat.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+
+    persistence:
+      # Uploaded files and caches; chats, users and settings live in Postgres
+      data:
+        existingClaim: ${APP}
+        globalMounts:
+          - path: /app/backend/data
+      # Open WebUI copies the frontend's static assets here on every start
+      static:
+        type: emptyDir
+        globalMounts:
+          - path: /app/backend/open_webui/static
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
