@@ -7,10 +7,15 @@ metadata:
 spec:
   proxyRef: litellm
   alias: open-webui
-  models: ["all-proxy-models"]
-  # Open WebUI only reaches the MCP servers wired into its tool server connections, so this
-  # just lets an admin add another LiteLLM MCP from the UI without touching the team.
-  mcpServers: ["all-proxy-mcpservers"]
+  mcpServers: ["searxng"]
+  models:
+    - "qwen3.8-flash"
+    - "qwen3.8-max"
+    - "qwen3.8-27b"
+    - "deepseek-v4-pro"
+    - "gpt-6-luna"
+    - "gpt-5.6-terra"
+    - "gpt-6-sol"
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
