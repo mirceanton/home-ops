@@ -129,10 +129,9 @@ auxiliary:
     model: qwen3.8-flash
 
 gateway:
-  # Profile gateways run as their own supervised services, one process
-  # per profile. In-process multiplexing would route turns through
-  # per-profile secret scopes whose fail-closed lookups cannot see the
-  # container env credentials injected by the HelmRelease.
+  # One multiplexing gateway process serves every profile on the host; each profile's
+  # adapters come up under that profile's own credentials (profiles/<name>/.env), which
+  # the seed-config init container writes from the per-profile keys in hermes-secret.
   multiplex_profiles: true
 
 mcp_servers: {}

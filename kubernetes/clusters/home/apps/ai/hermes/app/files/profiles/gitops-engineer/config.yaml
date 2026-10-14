@@ -45,6 +45,39 @@ mcp_servers:
 
 toolsets: [kanban, hermes-cli]
 
+# A secondary multiplex profile never sees the HelmRelease's DISCORD_* container env
+# (the per-profile secret scope fails closed — gateway/platforms/_shared.py::get_scoped_secret),
+# so Discord behaviour has to be declared here. Applies to this profile's bot only.
+discord:
+  require_mention: true
+  thread_require_mention: true
+  auto_thread: true
+  history_backfill: true
+  reactions: true
+  allow_mentions:
+    everyone: false
+    roles: false
+    users: true
+    replied_user: true
+
+platform_toolsets:
+  discord:
+    - clarify
+    - code_execution
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - vision
+    - web
+
 skills:
   disabled:
     - airtable

@@ -41,6 +41,30 @@ spec:
                   secretKeyRef:
                     name: hermes-secret
                     key: DISCORD_ALLOWED_USERS
+              # One bot token per profile that gets a Discord identity; seed.sh renames
+              # each into that profile's own DISCORD_BOT_TOKEN. Profiles without an entry
+              # here simply keep zero adapters.
+              DISCORD_BOT_TOKEN_GITOPS_ENGINEER:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-secret
+                    key: DISCORD_BOT_TOKEN_GITOPS_ENGINEER
+              DISCORD_BOT_TOKEN_YOUTUBE_ASSISTANT:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-secret
+                    key: DISCORD_BOT_TOKEN_YOUTUBE_ASSISTANT
+              # Per-profile home channels for proactive/cron delivery (optional, same shape).
+              DISCORD_HOME_CHANNEL_GITOPS_ENGINEER:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-secret
+                    key: DISCORD_HOME_CHANNEL_GITOPS_ENGINEER
+              DISCORD_HOME_CHANNEL_YOUTUBE_ASSISTANT:
+                valueFrom:
+                  secretKeyRef:
+                    name: hermes-secret
+                    key: DISCORD_HOME_CHANNEL_YOUTUBE_ASSISTANT
             command: ["/bin/sh", "/scripts/seed.sh"]
             resources:
               requests:

@@ -22,13 +22,22 @@ for f in /seed/profiles.*.config.yaml; do
   mkdir -p "/opt/data/profiles/$name"
   cp "$f" "/opt/data/profiles/$name/config.yaml"
   cp "/seed/profiles.$name.SOUL.md" "/opt/data/profiles/$name/SOUL.md"
+  # Per-profile Discord identity. A secondary profile resolves its credentials from its own
+  # .env through the fail-closed scoped readers (never from container env), so the
+  # profile-prefixed container vars are renamed into the canonical names here. A profile
+  # without a token/env entry gets no DISCORD_BOT_TOKEN line and keeps zero adapters.
+  key=$(printf '%s' "$name" | tr 'a-z-' 'A-Z_')
+  token=$(printenv "DISCORD_BOT_TOKEN_$key" 2>/dev/null || true)
+  home=$(printenv "DISCORD_HOME_CHANNEL_$key" 2>/dev/null || true)
   {
     printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY"
     printf 'DISCORD_ALLOWED_USERS=%s\n' "$DISCORD_ALLOWED_USERS"
     printf 'API_SERVER_KEY=%s\n' "$API_SERVER_KEY"
+    if [ -n "$token" ]; then printf 'DISCORD_BOT_TOKEN=%s\n' "$token"; fi
+    if [ -n "$home" ]; then printf 'DISCORD_HOME_CHANNEL=%s\n' "$home"; fi
   } > "/opt/data/profiles/$name/.env"
   chmod 600 "/opt/data/profiles/$name/.env"
-  echo "seeded profile: $name"
+  echo "seeded profile: $name (discord: ${token:+configured})"
 done
 
 mkdir -p /opt/data/.local/bin
