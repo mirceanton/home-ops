@@ -53,7 +53,7 @@ spec:
             # embeddings and tools all come from LiteLLM instead.
             image:
               repository: ghcr.io/open-webui/open-webui
-              tag: v0.12.0-slim
+              tag: v0.12.1-slim
 
             # The model, tool server and login-form settings only seed Open WebUI's database-backed
             # config on first boot; after that, Admin Settings is their source of truth. SSO and
