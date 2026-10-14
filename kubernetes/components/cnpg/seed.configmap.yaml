@@ -38,7 +38,7 @@ data:
     listen_addresses = ''
     unix_socket_directories = '/tmp'
     wal_level = replica
-    max_wal_senders = 4
+    max_wal_senders = 10
     archive_mode = on
     archive_command = 'barman-cloud-wal-archive --cloud-provider aws-s3 --endpoint-url "$${AWS_ENDPOINT_URL}" "$${BARMAN_DESTINATION}" "$${BARMAN_SERVER}" %p'
     EOF

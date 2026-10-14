@@ -46,6 +46,8 @@ spec:
       memory: ${CNPG_MEMORY_LIMIT:-2Gi}
 
   postgresql:
+    parameters:
+      max_wal_senders: "10"
     pg_hba:
       - host all all ${CNPG_PG_HBA_CIDR:-10.244.0.0/16} scram-sha-256
 
