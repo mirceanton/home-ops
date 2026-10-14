@@ -1,0 +1,98 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app speaches
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: speaches
+
+  values:
+    global:
+      createDefaultServiceAccount: false
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000 # the image's `ubuntu` user
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    controllers:
+      speaches:
+        containers:
+          app:
+            # Upstream only publishes release candidates for 0.9.
+            image:
+              repository: ghcr.io/speaches-ai/speaches
+              tag: 0.9.0-rc.3-cpu
+
+            # STT (faster-whisper) and TTS (Kokoro), both on CPU; clients reach them through LiteLLM.
+            env:
+              PRELOAD_MODELS: '["deepdml/faster-whisper-large-v3-turbo-ct2", "speaches-ai/Kokoro-82M-v1.0-ONNX"]'
+              WHISPER__COMPUTE_TYPE: int8
+              STT_MODEL_TTL: "-1" # keep loaded; reloading the model per request costs several seconds
+              TTS_MODEL_TTL: "-1"
+              ENABLE_UI: "False"
+              # The Xet download backend hung after writing the 1.6GiB Whisper weights and never
+              # finalized the file; plain HTTP downloads don't.
+              HF_HUB_DISABLE_XET: "1"
+              LOG_LEVEL: info
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8000
+                  periodSeconds: 10
+                  timeoutSeconds: 3
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 10
+                  failureThreshold: 90 # first start downloads ~2GiB of models
+
+            resources:
+              requests:
+                cpu: 100m
+                memory: 2Gi
+              limits:
+                memory: 6Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+    service:
+      app:
+        controller: speaches
+        ports:
+          http:
+            port: *port
+
+    persistence:
+      models:
+        existingClaim: speaches-models
+        globalMounts:
+          - path: /home/ubuntu/.cache/huggingface
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

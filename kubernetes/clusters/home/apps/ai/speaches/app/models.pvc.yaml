@@ -1,0 +1,14 @@
+---
+# Hugging Face cache for the downloaded STT/TTS models. Not backed up: everything here is
+# re-downloaded by PRELOAD_MODELS if lost.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: speaches-models
+spec:
+  storageClassName: openebs-zfs-cache
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi

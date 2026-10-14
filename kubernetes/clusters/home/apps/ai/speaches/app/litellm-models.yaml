@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: whisper-large-v3-turbo
+spec:
+  modelName: whisper-large-v3-turbo
+  params:
+    model: openai/deepdml/faster-whisper-large-v3-turbo-ct2
+    apiBase: http://speaches.ai.svc.cluster.local:8000/v1
+    apiKey: sk-speaches-noauth
+  info:
+    mode: audio_transcription
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: kokoro
+spec:
+  modelName: kokoro
+  params:
+    model: openai/speaches-ai/Kokoro-82M-v1.0-ONNX
+    apiBase: http://speaches.ai.svc.cluster.local:8000/v1
+    apiKey: sk-speaches-noauth
+  info:
+    mode: audio_speech
