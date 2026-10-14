@@ -28,6 +28,12 @@ configMapGenerator:
   - name: hermes-seed-script
     files:
       - seed.sh=./scripts/seed.sh
+      - install-hyperframes.sh=./scripts/install-hyperframes.sh
+  # Repo-owned agent skills, keyed "<profile>.<category>.<skill>.SKILL.md";
+  # seed.sh copies each one into that profile's own skills directory.
+  - name: hermes-skills
+    files:
+      - youtube-assistant.creative.hyperframes-graphics.SKILL.md=./files/skills/youtube-assistant/hyperframes-graphics/SKILL.md
 
 generatorOptions:
   disableNameSuffixHash: true

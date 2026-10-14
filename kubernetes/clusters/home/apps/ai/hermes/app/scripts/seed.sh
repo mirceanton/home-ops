@@ -33,3 +33,20 @@ done
 
 mkdir -p /opt/data/.local/bin
 ln -sfn /opt/mise/mise /opt/data/.local/bin/mise
+
+# Repo-owned agent skills. ConfigMap keys are "<profile>.<category>.<skill>.SKILL.md"
+# so a skill is versioned in git and re-seeded on every start. The HyperFrames CLI
+# skills are not seeded here — the hyperframes-setup init container copies them out
+# of the installed npm package, so they always match the installed CLI version.
+for f in /skills-seed/*.SKILL.md; do
+  [ -e "$f" ] || continue
+  key=$(basename "$f" .SKILL.md)
+  profile=${key%%.*}
+  rest=${key#*.}
+  category=${rest%%.*}
+  skill=${rest#*.}
+  dest="/opt/data/profiles/$profile/skills/$category/$skill"
+  mkdir -p "$dest"
+  cp "$f" "$dest/SKILL.md"
+  echo "seeded skill: $profile/$category/$skill"
+done
