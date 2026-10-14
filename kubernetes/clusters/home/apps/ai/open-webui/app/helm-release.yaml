@@ -82,26 +82,6 @@ spec:
                     name: open-webui-litellm-key
                     key: key
 
-              # Tools: MCP servers through the LiteLLM MCP gateway, same as Hermes. Readable by
-              # every user (access_grants); without a grant only admins could use them.
-              TOOL_SERVER_CONNECTIONS:
-                dependsOn: OPENAI_API_KEY
-                value: |-
-                  [
-                    {
-                      "type": "mcp",
-                      "url": "http://litellm.ai.svc.cluster.local:4000/searxng/mcp/",
-                      "path": "",
-                      "auth_type": "bearer",
-                      "key": "$(OPENAI_API_KEY)",
-                      "config": {
-                        "enable": true,
-                        "access_grants": [{ "principal_type": "user", "principal_id": "*", "permission": "read" }]
-                      },
-                      "info": { "id": "searxng", "name": "SearXNG", "description": "Web search through the home SearXNG instance" }
-                    }
-                  ]
-
               # Images, RAG and speech use their own LiteLLM key, so those models stay out of
               # the chat model picker (see litellm-services-key.yaml)
               SERVICES_API_KEY:
