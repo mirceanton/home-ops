@@ -55,10 +55,12 @@ spec:
               repository: ghcr.io/open-webui/open-webui
               tag: v0.12.1-slim
 
-            # The model, tool server and login-form settings only seed Open WebUI's database-backed
-            # config on first boot; after that, Admin Settings is their source of truth. SSO and
-            # role mapping are never persisted, so they always follow this file.
             env:
+              # This file is the source of truth for Admin Settings. With persistence on, env
+              # would only seed the database on first boot and be ignored after that. Changes
+              # made in the UI now last until the next restart.
+              ENABLE_PERSISTENT_CONFIG: "False"
+
               WEBUI_URL: https://chat.home.mirceanton.com
               WEBUI_SECRET_KEY:
                 valueFrom:
@@ -99,6 +101,58 @@ spec:
                       "info": { "id": "searxng", "name": "SearXNG", "description": "Web search through the home SearXNG instance" }
                     }
                   ]
+
+              # Images, RAG and speech use their own LiteLLM key, so those models stay out of
+              # the chat model picker (see litellm-services-key.yaml)
+              SERVICES_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: open-webui-litellm-services-key
+                    key: key
+
+              # Images: Qwen/Wan through LiteLLM. LiteLLM can't do image edits for these models.
+              ENABLE_IMAGE_GENERATION: "True"
+              IMAGE_GENERATION_ENGINE: openai
+              IMAGE_GENERATION_MODEL: wan2.7-image
+              IMAGE_SIZE: 1024x1024
+              IMAGES_OPENAI_API_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              IMAGES_OPENAI_API_KEY:
+                dependsOn: SERVICES_API_KEY
+                value: $(SERVICES_API_KEY)
+
+              # Documents: docling-serve parses them (OCR included); the llmkube embedding and
+              # reranker models (via LiteLLM) index and rank chunks. Reranking only runs with
+              # hybrid search on.
+              CONTENT_EXTRACTION_ENGINE: docling
+              DOCLING_SERVER_URL: http://docling-serve.ai.svc.cluster.local:5001
+              RAG_EMBEDDING_ENGINE: openai
+              RAG_EMBEDDING_MODEL: qwen3-embedding-0.6b
+              RAG_OPENAI_API_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              RAG_OPENAI_API_KEY:
+                dependsOn: SERVICES_API_KEY
+                value: $(SERVICES_API_KEY)
+              ENABLE_RAG_HYBRID_SEARCH: "True"
+              RAG_RERANKING_ENGINE: external
+              RAG_RERANKING_MODEL: qwen3-reranker-0.6b
+              RAG_EXTERNAL_RERANKER_URL: http://litellm.ai.svc.cluster.local:4000/v1/rerank
+              RAG_EXTERNAL_RERANKER_API_KEY:
+                dependsOn: SERVICES_API_KEY
+                value: $(SERVICES_API_KEY)
+
+              # Speech: speaches (faster-whisper + Kokoro) through LiteLLM
+              AUDIO_STT_ENGINE: openai
+              AUDIO_STT_MODEL: whisper-large-v3-turbo
+              AUDIO_STT_OPENAI_API_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              AUDIO_STT_OPENAI_API_KEY:
+                dependsOn: SERVICES_API_KEY
+                value: $(SERVICES_API_KEY)
+              AUDIO_TTS_ENGINE: openai
+              AUDIO_TTS_MODEL: kokoro
+              AUDIO_TTS_VOICE: af_heart
+              AUDIO_TTS_OPENAI_API_BASE_URL: http://litellm.ai.svc.cluster.local:4000/v1
+              AUDIO_TTS_OPENAI_API_KEY:
+                dependsOn: SERVICES_API_KEY
+                value: $(SERVICES_API_KEY)
 
               # Keycloak SSO only: no local accounts, no password logins
               ENABLE_LOGIN_FORM: "False"

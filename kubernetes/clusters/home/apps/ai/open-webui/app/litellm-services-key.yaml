@@ -1,0 +1,35 @@
+---
+# Backing models for Open WebUI's non-chat features (images, RAG, speech). They get
+# their own team so they stay out of the chat model picker, which lists every model the main
+# open-webui key can reach.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmteam_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMTeam
+metadata:
+  name: open-webui-services
+spec:
+  proxyRef: litellm
+  alias: open-webui-services
+  models:
+    - "qwen-image-3.0-pro"
+    - "wan2.7-image"
+    - "wan2.7-image-pro"
+    - "qwen3-embedding-0.6b"
+    - "qwen3-reranker-0.6b"
+    - "whisper-large-v3-turbo"
+    - "kokoro"
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: open-webui-services
+spec:
+  proxyRef: litellm
+  secretName: open-webui-litellm-services-key
+  keyAlias: open-webui-services
+  teamID: open-webui-services
+  metadata:
+    app: open-webui
+    description: API key for Open WebUI image generation, RAG and speech

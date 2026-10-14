@@ -7,4 +7,5 @@ resources:
   - ./helm-release.yaml
   - ./keycloak-groups.yaml
   - ./litellm-key.yaml
+  - ./litellm-services-key.yaml
   - ./secret-key.yaml
