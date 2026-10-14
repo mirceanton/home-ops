@@ -33,6 +33,18 @@
       "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$"
     },
     {
+      "description": "CNPG extension images also publish immutable <version>-<YYYYMMDDhhmm>-<pg>-<distro> tags. Docker versioning folds the timestamp into the tag suffix, which no other tag shares, so pinned timestamped tags never update. Rolling <version>-<pg>-<distro> tags work with the default versioning and aren't matched here",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io/cloudnative-pg//"],
+      "matchCurrentValue": "/^\\d+\\.\\d+\\.\\d+-\\d{12}-\\d+-[a-z]+$/",
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>\\d{12})-(?<compatibility>\\d+-[a-z]+)$"
+    },
+    {
+      "description": "Minecraft server version bumps upgrade the world in place (there's no going back) and can break plugins, so never automerge them",
+      "matchDatasources": ["custom.papermc"],
+      "automerge": false
+    },
+    {
       "description": "ghcr.io/renovatebot/renovate ships new tags daily (sometimes several times a day); limit it to a weekly PR instead of flooding the queue",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],

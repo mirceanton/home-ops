@@ -9,7 +9,7 @@ spec:
     extensions:
       - name: vector
         image:
-          # renovate: suite=trixie-pgdg depName=postgresql-18-pgvector
+          # renovate: datasource=docker
           reference: ghcr.io/cloudnative-pg/pgvector:0.8.1-202602120909-18-trixie
 
 ---

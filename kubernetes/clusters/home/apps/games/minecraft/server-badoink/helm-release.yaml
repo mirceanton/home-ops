@@ -62,7 +62,7 @@ spec:
 
     minecraftServer:
       eula: true
-      # renovate: datasource=custom.minecraft-release
+      # renovate: depName=paper datasource=custom.papermc versioning=loose
       version: 1.21.11
       type: PAPER
       overrideServerProperties: true
