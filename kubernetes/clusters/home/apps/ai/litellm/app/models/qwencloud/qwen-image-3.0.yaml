@@ -12,3 +12,6 @@ spec:
     apiKeyRef:
       name: qwencloud-token
       key: QWENCLOUD_API_KEY
+    # Open WebUI always sends response_format=b64_json, which litellm rejects for this
+    # provider; the response carries both a URL and b64 data anyway.
+    dropParams: true
