@@ -65,6 +65,7 @@ spec:
     volumes:
       - name: supergateway
         image:
+          # renovate: datasource=docker
           reference: ghcr.io/supercorp-ai/supergateway:4.1.0
           pullPolicy: IfNotPresent
       - name: tmp
