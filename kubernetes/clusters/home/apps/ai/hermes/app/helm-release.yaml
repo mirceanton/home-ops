@@ -19,10 +19,11 @@ spec:
 
         initContainers:
           # Seeds the git-owned configs into the data volume before Hermes boots.
+          # flux-cli for `flux envsubst`; it is Alpine underneath, so busybox sh is there too.
           seed-config:
             image:
-              repository: ghcr.io/home-operations/busybox
-              tag: 1.38.0@sha256:7e2c04dd50ede647bf4a7a4c8dbd629dd4971cd139b9b88fb22bfc3c7a6c13df
+              repository: ghcr.io/fluxcd/flux-cli
+              tag: v2.9.6@sha256:b1ac18156f227af9a524b842a96f2c20986c7a779ef721df3ba4e4540f449d76
             # Everything the files/**/.env.template files can reference. The profile .env files are
             # the only place profile gateways look: their scoped secret readers fail closed and never
             # fall through to container env (see gateway/platforms/_shared.py).
