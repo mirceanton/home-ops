@@ -53,11 +53,38 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
 
-        containers:
-          app:
-            image:
+          # Installs the HyperFrames CLI + headless Chrome the youtube-assistant
+          # agent renders thumbnails, stills and animations with, into the data
+          # volume. Shares the app image: it already carries the apt package
+          # lists, dpkg-deb and node (>= 22) the install needs, and this container
+          # has no privileges to install system packages the usual way. Runs once
+          # — the script writes a version marker, later boots only check it.
+          # Deliberately non-fatal: hyperframes is a capability for one profile,
+          # so a registry or apt outage must not keep the gateway from starting.
+          hyperframes-setup:
+            image: &hermes_image
               repository: nousresearch/hermes-agent
               tag: v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
+            env:
+              HOME: /opt/data
+              # The app container overrides PATH; pin the standard image locations
+              # here too so the install does not depend on the image default.
+              PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+            command: ["/bin/sh", "/scripts/install-hyperframes.sh"]
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
+        containers:
+          app:
+            image: *hermes_image
             args: ["sleep", "infinity"]
 
             envFrom:
@@ -103,6 +130,13 @@ spec:
               DISCORD_ALLOW_MENTION_ROLES: "false"
               DISCORD_ALLOW_MENTION_USERS: "true"
               DISCORD_ALLOW_MENTION_REPLIED_USER: "true"
+
+              # HyperFrames (thumbnail / still / animation rendering for the
+              # youtube-assistant profile). The CLI itself is installed into the
+              # data volume by the hyperframes-setup init container; its wrapper
+              # scopes the vendored Chrome libraries and unzip to that process tree.
+              HYPERFRAMES_NO_TELEMETRY: "1"
+              HYPERFRAMES_NO_AUTO_INSTALL: "1"
 
               # OpenAI-compatible API consumed by Hermano and webhook clients.
               API_SERVER_ENABLED: "true"
@@ -172,6 +206,8 @@ spec:
               - path: /opt/data
             seed-config:
               - path: /opt/data
+            hyperframes-setup:
+              - path: /opt/data
 
       config:
         type: configMap
@@ -188,6 +224,19 @@ spec:
           hermes:
             seed-config:
               - path: /scripts
+                readOnly: true
+            hyperframes-setup:
+              - path: /scripts
+                readOnly: true
+
+      # Repo-owned agent skills, copied into each profile's skills dir by seed.sh.
+      skills-seed:
+        type: configMap
+        name: hermes-skills
+        advancedMounts:
+          hermes:
+            seed-config:
+              - path: /skills-seed
                 readOnly: true
 
       # mise binary from the official (scratch) image, mounted as an OCI image
@@ -217,6 +266,16 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /run
+
+      # Chrome crashes or silently falls back without a usable shared-memory
+      # mount; Kubernetes' 64Mi default is below the 256Mi it asks for. Same fix
+      # as modelhub.
+      dshm:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 512Mi
+        globalMounts:
+          - path: /dev/shm
 
       media-music:
         type: nfs
