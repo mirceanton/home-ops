@@ -9,3 +9,4 @@ resources:
   - ./youtube-public-mcp.yaml
   - ./channel-analytics-mcp.yaml
   - ./mikrotik-mcp.yaml
+  - ./searxng-mcp.yaml

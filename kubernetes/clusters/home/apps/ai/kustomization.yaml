@@ -11,3 +11,4 @@ resources:
   - ./hermes
   - ./litellm
   - ./llmkube
+  - ./open-webui

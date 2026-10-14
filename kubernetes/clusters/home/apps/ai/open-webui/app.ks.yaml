@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app open-webui
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 15m
+  targetNamespace: ai
+
+  path: ./kubernetes/clusters/home/apps/ai/open-webui/app
+  components:
+    - ../../../../../../components/cnpg/
+    - ../../../../../../components/volsync/
+    - ../../../../../../components/keycloak-client/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_PUID: "1000"
+      VOLSYNC_PGID: "1000"
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://chat.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://chat.home.mirceanton.com"]'
+      KEYCLOAK_CLIENT_HOME_URL: "https://chat.home.mirceanton.com"
+      # Keycloak 25+ puts `sub` into access tokens through the `basic` scope, and the userinfo
+      # endpoint Open WebUI falls back to rejects a token without one. The component's default
+      # list leaves `basic` out.
+      KEYCLOAK_CLIENT_DEFAULT_SCOPES: '["basic", "profile", "email", "roles", "web-origins", "acr", "groups"]'
+
+  decryption: { provider: sops }
+  dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: volsync
+      namespace: storage-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system
+    - name: litellm
+      namespace: ai
