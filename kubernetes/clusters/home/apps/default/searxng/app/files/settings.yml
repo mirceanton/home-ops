@@ -8,9 +8,23 @@ server:
   public_instance: false
 
 search:
-  autocomplete: duckduckgo
+  autocomplete: bing
   favicon_resolver: duckduckgo
   formats: [html, json]
+
+engines:
+  - name: bing
+    disabled: false
+  - name: brave
+    disabled: true
+  - name: duckduckgo
+    disabled: true
+  - name: karmasearch
+    disabled: true
+  - name: karmasearch videos
+    disabled: true
+  - name: startpage
+    disabled: true
 
 general:
   debug: false
