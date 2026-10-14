@@ -21,6 +21,30 @@ spec:
     name: flux-system
     namespace: flux-system
 
+  # The slim Open WebUI image stores RAG vectors in Postgres via pgvector, which the CNPG
+  # component's minimal image doesn't ship; the standard flavour does. Written as `imageName:`
+  # so Renovate's CNPG matcher keeps it in lockstep with the component.
+  patches:
+    - target:
+        kind: Cluster
+        group: postgresql.cnpg.io
+      patch: |-
+        apiVersion: postgresql.cnpg.io/v1
+        kind: Cluster
+        metadata:
+          name: open-webui-postgres
+        spec:
+          imageName: ghcr.io/cloudnative-pg/postgresql:18.6-standard-trixie
+    - target:
+        kind: Database
+        group: postgresql.cnpg.io
+      patch: |-
+        - op: add
+          path: /spec/extensions
+          value:
+            - name: vector
+              ensure: present
+
   postBuild:
     substitute:
       APP: *app
