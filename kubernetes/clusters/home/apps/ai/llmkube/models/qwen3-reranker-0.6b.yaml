@@ -1,0 +1,69 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: qwen3-reranker-0.6b
+spec:
+  source: https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF/resolve/main/qwen3-reranker-0.6b-q8_0.gguf
+  format: gguf
+  quantization: Q8_0
+  hardware:
+    accelerator: vulkan
+    gpu:
+      enabled: true
+      count: 1
+      vendor: amd
+      runtime: vulkan
+      layers: -1
+      resourceName: devic.es/dri-render
+
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: qwen3-reranker-0.6b
+  labels:
+    krr/ignore: "true"
+spec:
+  modelRef: qwen3-reranker-0.6b
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan
+  mode: rerank # llmkube appends --reranking --embedding --pooling rank
+  replicas: 1
+  priority: batch
+  parallelSlots: 2
+
+  flashAttention: true
+  # Each slot gets contextSize / parallelSlots; a query plus one RAG chunk fits easily in 4K.
+  contextSize: 8192
+  uBatchSize: 2048
+  extraArgs:
+    - "--cache-ram"
+    - "0" # same as the embedding model: the default 8Gi prompt cache exceeds the memory limit
+
+  resources:
+    cpu: 500m
+    memory: 2Gi
+    gpu: 1
+    gpuMemory: 3Gi
+
+  endpoint:
+    port: 8080
+    type: ClusterIP
+
+---
+# Written by hand instead of left to the litellm-operator's LLMKube auto-registration: that
+# always uses the `openai/` provider, which litellm can't route /rerank through. The operator
+# skips same-named models it doesn't own, and this one exists long before the service is Ready.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: qwen3-reranker-0.6b
+spec:
+  modelName: qwen3-reranker-0.6b
+  params:
+    model: hosted_vllm/qwen3-reranker-0.6b # llama.cpp serves the same /rerank API
+    apiBase: http://qwen3-reranker-0-6b.ai.svc.cluster.local:8080
+    apiKey: sk-llmkube-noauth
+  info:
+    mode: rerank
