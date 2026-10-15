@@ -17,12 +17,34 @@
     "managerFilePatterns": ["/helmfile\\.yaml$/"]
   },
 
+  "customDatasources": {
+    // Minecraft versions a PaperMC project (paper, folia, velocity, ...) has builds for, so a
+    // PAPER server never gets bumped to a release Paper can't run yet. Skips -pre/-rc versions.
+    // Usage: `# renovate: depName=paper datasource=custom.papermc versioning=loose`
+    "papermc": {
+      "defaultRegistryUrlTemplate": "https://fill.papermc.io/v3/projects/{{packageName}}/versions",
+      "format": "json",
+      "transformTemplates": [
+        "{ \"releases\": versions[$count(builds) > 0 and $contains(version.id, /^\\d+(\\.\\d+)+$/)].{ \"version\": version.id } }"
+      ]
+    }
+  },
+
   "customManagers": [
     {
       "customType": "regex",
       "description": "Track CNPG Cluster spec.imageName - a non-standard CRD field the built-in kubernetes manager doesn't recognize (it only matches image: inside standard workload container specs)",
       "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"],
       "matchStrings": ["imageName:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)\\s"],
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "Track full image references (<image>:<tag>[@<digest>]) in fields no built-in manager parses, like image volumes and CNPG extensions (image.reference). Opt-in via a `# renovate: datasource=docker` comment on the line above. The shared `# renovate: depName=...` comment can't be used for these, as it captures the whole reference as the version",
+      "managerFilePatterns": ["/\\.yaml(?:\\.j2)?$/"],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=docker\\s*\\n\\s*\\S+:\\s*\"?(?<depName>[^\\s\"@]+):(?<currentValue>[^\\s\"@:]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\"?\\s"
+      ],
       "datasourceTemplate": "docker"
     }
   ]

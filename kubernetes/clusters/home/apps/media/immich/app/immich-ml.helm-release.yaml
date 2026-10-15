@@ -43,7 +43,6 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              # renovate: datasource=github-releases depName=immich-app/immich
               tag: v3.3.3-cuda
             env:
               TZ: "Europe/Bucharest"

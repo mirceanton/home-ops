@@ -33,6 +33,35 @@
       "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)$"
     },
     {
+      "description": "CNPG extension images also publish immutable <version>-<YYYYMMDDhhmm>-<pg>-<distro> tags. Docker versioning folds the timestamp into the tag suffix, which no other tag shares, so pinned timestamped tags never update. Rolling <version>-<pg>-<distro> tags work with the default versioning and aren't matched here",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^ghcr\\.io/cloudnative-pg//"],
+      "matchCurrentValue": "/^\\d+\\.\\d+\\.\\d+-\\d{12}-\\d+-[a-z]+$/",
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>\\d{12})-(?<compatibility>\\d+-[a-z]+)$"
+    },
+    {
+      "description": "vchord-scratch tags are pg<pg-major>-v<semver> (plus per-arch -amd64/-arm64 tags, which this skips)",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/tensorchord/vchord-scratch"],
+      "versioning": "regex:^pg(?<compatibility>\\d+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "description": "Postgres extension images (CNPG spec.postgresql.extensions) can need an `ALTER EXTENSION ... UPDATE` and must stay compatible with the app using them, so open PRs but never automerge them. Add new extension images here",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": [
+        "ghcr.io/cloudnative-pg/pgvector",
+        "ghcr.io/cloudnative-pg/postgis-extension-testing",
+        "ghcr.io/tensorchord/vchord-scratch",
+        "ghcr.io/shusaan/timescaledb-testing"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Minecraft server version bumps upgrade the world in place (there's no going back) and can break plugins, so never automerge them",
+      "matchDatasources": ["custom.papermc"],
+      "automerge": false
+    },
+    {
       "description": "ghcr.io/renovatebot/renovate ships new tags daily (sometimes several times a day); limit it to a weekly PR instead of flooding the queue",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
