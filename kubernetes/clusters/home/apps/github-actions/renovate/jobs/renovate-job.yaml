@@ -76,7 +76,7 @@ spec:
     - name: helm-schema-bin
       image:
         # renovate: datasource=docker
-        reference: ghcr.io/dadav/helm-schema:v0.23.4
+        reference: ghcr.io/dadav/helm-schema:v0.23.5
         pullPolicy: IfNotPresent
 
   extraVolumeMounts:
