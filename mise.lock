@@ -755,7 +755,7 @@ url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellche
 url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056944"
 
 [[tools.sofka]]
-version = "0.31.6"
+version = "0.31.8"
 backend = "aqua:nklmilojevic/sofka"
 
 [tools.sofka."platforms.linux-arm64"]
