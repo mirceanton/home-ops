@@ -53,7 +53,7 @@ spec:
             # embeddings and tools all come from LiteLLM instead.
             image:
               repository: ghcr.io/open-webui/open-webui
-              tag: v0.12.2-slim
+              tag: v0.12.3-slim
 
             env:
               # This file is the source of truth for Admin Settings. With persistence on, env
