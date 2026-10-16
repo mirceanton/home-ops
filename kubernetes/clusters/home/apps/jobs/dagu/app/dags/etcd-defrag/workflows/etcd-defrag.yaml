@@ -8,7 +8,7 @@ steps:
   - name: pre-status
     action: k8s.run
     with: &talosctl
-      image: ghcr.io/siderolabs/talosctl:v1.14.3
+      image: ghcr.io/siderolabs/talosctl:v1.14.4
       command: talosctl --nodes=10.0.0.15 etcd status
       service_account: dagu-etcd-defrag
       namespace: jobs
