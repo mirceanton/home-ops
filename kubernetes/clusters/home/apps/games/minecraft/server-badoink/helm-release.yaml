@@ -63,7 +63,7 @@ spec:
     minecraftServer:
       eula: true
       # renovate: depName=paper datasource=custom.papermc versioning=loose
-      version: 1.21.11
+      version: 26.3
       type: PAPER
       overrideServerProperties: true
       jvmXXOpts: "-XX:MaxRAMPercentage=75"
