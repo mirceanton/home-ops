@@ -18,7 +18,7 @@ spec:
       - name: pgvector
         image:
           # renovate: datasource=docker
-          reference: ghcr.io/cloudnative-pg/pgvector:0.8.1-18-trixie
+          reference: ghcr.io/cloudnative-pg/pgvector:0.8.7-18-trixie
       - name: postgis
         ld_library_path: [system]
         image:

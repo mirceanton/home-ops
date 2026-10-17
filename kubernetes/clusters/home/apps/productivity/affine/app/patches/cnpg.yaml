@@ -10,7 +10,7 @@ spec:
       - name: vector
         image:
           # renovate: datasource=docker
-          reference: ghcr.io/cloudnative-pg/pgvector:0.8.1-202602120909-18-trixie
+          reference: ghcr.io/cloudnative-pg/pgvector:0.8.7-202610110422-18-trixie
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/database_v1.json
