@@ -8,4 +8,3 @@ resources:
   - ./namespace.yaml
   - ./davinci
   - ./teleprompter
-  - ./youtube-workspace
