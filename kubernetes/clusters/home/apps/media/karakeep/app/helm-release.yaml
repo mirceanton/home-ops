@@ -80,7 +80,12 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:
+                # karakeep 0.34.0 ships /run owned by `node`, so s6-overlay's
+                # preinit chowns it back to the container user (root here) and
+                # needs CAP_CHOWN to do it. Dropping ALL capabilities makes that
+                # chown fail and the container exits before any service starts.
                 drop: ["ALL"]
+                add: ["CHOWN"]
 
       chrome:
         containers:
