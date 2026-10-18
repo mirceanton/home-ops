@@ -23,7 +23,7 @@ sofka = "latest"
 helmfile = "latest"
 
 # Talos Stuff
-"aqua:talosctl" = "1.14.2"
+"aqua:talosctl" = "1.14.3"
 "aqua:talhelper" = "3.1.17"
 "github:mirceanton/talstomize" = "0.1.0-rc.2"
 "github:mirceanton/talswitcher" = "latest"
