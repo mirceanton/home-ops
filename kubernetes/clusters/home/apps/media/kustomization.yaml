@@ -8,7 +8,7 @@ resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
   - ./feishin
-  - ./explo-mirk
+  - ./explo
   - ./bookorbit
   - ./immich
   - ./jellyfin
