@@ -24,7 +24,7 @@ spec:
             env:
               ND_DATAFOLDER: /data
               ND_ENABLEDOWNLOADS: "true"
-              ND_ENABLEEXTERNALSERVICES: "false"
+              ND_ENABLEEXTERNALSERVICES: "true"
               ND_ENABLESHARING: "false"
               ND_ENABLESTARRATING: "false"
               ND_LOGLEVEL: info

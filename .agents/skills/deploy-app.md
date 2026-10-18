@@ -18,7 +18,7 @@ Before creating any files, ask the user for:
 | **Namespace**               | Must be one of the existing namespace directories under `kubernetes/clusters/<cluster>/apps/`. If a new namespace is needed, that is a separate task — first create the namespace dir, `namespace.yaml`, and `kustomization.yaml`. |
 | **App name**                | Kebab-case slug, used as the directory name and Kubernetes resource name.                                                                                                                                                          |
 | **Exposed port**            | The port the container listens on.                                                                                                                                                                                                 |
-| **HTTP route needed?**      | `envoy-internal` for LAN-only, `envoy-tailscale` for Tailscale, both if required.                                                                                                                                                  |
+| **HTTP route needed?**      | `envoy-internal` for LAN-only; check current gateways before suggesting other routes.                                                                                                                                              |
 | **Persistent data needed?** | If yes, ask capacity (e.g. `5Gi`). Stateful apps use volsync; ephemeral scratch space uses `emptyDir`.                                                                                                                             |
 | **Secrets needed?**         | If yes, ask which 1Password item to pull from (ClusterSecretStore `onepassword`).                                                                                                                                                  |
 
@@ -239,15 +239,7 @@ env:
 
 **Non-standard UID** — if the upstream image runs as a specific UID (check with `kubectl exec` or image docs), adjust `runAsUser`/`runAsGroup`/`fsGroup` accordingly. Use `568` for apps that follow the home-operations convention.
 
-**Tailscale route** — add a second entry alongside the internal one:
-
-```yaml
-tailscale:
-  hostnames: ["<app-name>.ts.mirceanton.com"]
-  parentRefs:
-    - name: envoy-tailscale
-      namespace: network-system
-```
+**Other HTTP routes** — only add a second route after verifying that gateway still exists in the target cluster.
 
 **StatefulSet with inline VolumeClaimTemplate** — for message brokers, databases, etc. that manage their own storage lifecycle:
 
