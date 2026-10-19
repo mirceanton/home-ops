@@ -13,7 +13,7 @@ model:
   default: qwen3.8-max
   provider: litellm
 
-# This profile owns the "YouTube Assistant" Discord app; 
+# This profile owns the "YouTube Assistant" Discord app;
 discord:
   require_mention: true
   thread_require_mention: true
