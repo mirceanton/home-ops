@@ -147,7 +147,7 @@ spec:
         hostnames: ["hermes.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
-          namespace: network-system
+            namespace: network-system
         rules:
           - backendRefs:
               - identifier: dashboard
