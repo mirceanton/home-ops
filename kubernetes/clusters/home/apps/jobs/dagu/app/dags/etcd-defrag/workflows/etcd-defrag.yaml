@@ -9,7 +9,10 @@ steps:
     action: k8s.run
     with: &talosctl
       image: ghcr.io/siderolabs/talosctl:v1.14.4
-      command: talosctl --nodes=10.0.0.15 etcd status
+      #? The image is FROM scratch: the binary only exists at /talosctl and no PATH
+      #? entry points there, so the leading slash is required (a bare `talosctl`
+      #? fails the container with StartError: executable file not found in $PATH).
+      command: /talosctl --nodes=10.0.0.15 etcd status
       service_account: dagu-etcd-defrag
       namespace: jobs
       env:
