@@ -105,6 +105,23 @@ spec:
 
     web:
       enabled: true
+      # Native OIDC against Keycloak (replaces the gateway-level SecurityPolicy).
+      # Client credentials come from the keycloak-client component's secret.
+      additionalEnv:
+        - name: TEMPORAL_AUTH_ENABLED
+          value: "true"
+        - name: TEMPORAL_AUTH_PROVIDER_URL
+          value: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        - name: TEMPORAL_AUTH_CLIENT_ID
+          valueFrom:
+            secretKeyRef: { name: temporal-oidc-secret, key: client-id }
+        - name: TEMPORAL_AUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef: { name: temporal-oidc-secret, key: client-secret }
+        - name: TEMPORAL_AUTH_CALLBACK_URL
+          value: https://temporal.home.mirceanton.com/auth/sso/callback
+        - name: TEMPORAL_AUTH_SCOPES
+          value: openid,email,profile
       resources:
         requests:
           cpu: 10m
