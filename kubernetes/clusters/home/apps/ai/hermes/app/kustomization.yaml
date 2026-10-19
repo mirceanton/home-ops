@@ -9,25 +9,37 @@ resources:
   - ./oci-repository.yaml
 
 configMapGenerator:
+  - name: hermes-seed-script
+    files: ["seed.sh=./scripts/seed.sh"]
+
   - name: hermes-config
     files:
       - config.yaml=./files/config.yaml
       - SOUL.md=./files/SOUL.md
+
       - profiles.finance-bro.config.yaml=./files/profiles/finance-bro/config.yaml
       - profiles.finance-bro.SOUL.md=./files/profiles/finance-bro/SOUL.md
+      - profiles.finance-bro.env.template=./files/profiles/finance-bro/.env.template
+
       - profiles.gitops-engineer.config.yaml=./files/profiles/gitops-engineer/config.yaml
       - profiles.gitops-engineer.SOUL.md=./files/profiles/gitops-engineer/SOUL.md
+      - profiles.gitops-engineer.env.template=./files/profiles/gitops-engineer/.env.template
+
       - profiles.home-assistant-helper.config.yaml=./files/profiles/home-assistant-helper/config.yaml
       - profiles.home-assistant-helper.SOUL.md=./files/profiles/home-assistant-helper/SOUL.md
+      - profiles.home-assistant-helper.env.template=./files/profiles/home-assistant-helper/.env.template
+
       - profiles.media-managearr.config.yaml=./files/profiles/media-managearr/config.yaml
       - profiles.media-managearr.SOUL.md=./files/profiles/media-managearr/SOUL.md
+      - profiles.media-managearr.env.template=./files/profiles/media-managearr/.env.template
+
       - profiles.music-curator.config.yaml=./files/profiles/music-curator/config.yaml
       - profiles.music-curator.SOUL.md=./files/profiles/music-curator/SOUL.md
+      - profiles.music-curator.env.template=./files/profiles/music-curator/.env.template
+
       - profiles.youtube-assistant.config.yaml=./files/profiles/youtube-assistant/config.yaml
       - profiles.youtube-assistant.SOUL.md=./files/profiles/youtube-assistant/SOUL.md
-  - name: hermes-seed-script
-    files:
-      - seed.sh=./scripts/seed.sh
+      - profiles.youtube-assistant.env.template=./files/profiles/youtube-assistant/.env.template
 
 generatorOptions:
   disableNameSuffixHash: true
