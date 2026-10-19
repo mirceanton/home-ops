@@ -13,7 +13,6 @@ configMapGenerator:
     files:
       - config.yaml=./files/config.yaml
       - SOUL.md=./files/SOUL.md
-      - .env.template=./files/.env.template
       - profiles.finance-bro.config.yaml=./files/profiles/finance-bro/config.yaml
       - profiles.finance-bro.SOUL.md=./files/profiles/finance-bro/SOUL.md
       - profiles.finance-bro.env.template=./files/profiles/finance-bro/.env.template
