@@ -36,3 +36,15 @@ spec:
       fsGroupChangePolicy: OnRootMismatch
       seccompProfile:
         type: RuntimeDefault
+
+    # The server downloads and caches the kubesearch.dev SQLite databases
+    # (~44 MB, refreshed daily) under /data and sandboxes ephemeral git clones
+    # under /data/clones. With a read-only root filesystem and no writable
+    # volume every tool call fails with EROFS, so give /data an emptyDir.
+    volumes:
+      - name: data
+        emptyDir:
+          sizeLimit: 2Gi
+    volumeMounts:
+      - name: data
+        mountPath: /data
