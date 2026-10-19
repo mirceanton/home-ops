@@ -15,7 +15,6 @@ spec:
   components:
     - ../../../../../../components/cnpg/
     - ../../../../../../components/keycloak-client/
-    - ../../../../../../components/oidc/
   sourceRef:
     kind: GitRepository
     name: flux-system
