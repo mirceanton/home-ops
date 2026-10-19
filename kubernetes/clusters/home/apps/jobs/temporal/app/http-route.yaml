@@ -3,7 +3,6 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  # Named ${APP} so the shared components/oidc SecurityPolicy attaches to it.
   name: temporal
 spec:
   hostnames: ["temporal.home.mirceanton.com"]
