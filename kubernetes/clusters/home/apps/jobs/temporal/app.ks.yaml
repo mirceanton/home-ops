@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app temporal
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 20m
+  targetNamespace: jobs
+
+  path: ./kubernetes/clusters/home/apps/jobs/temporal/app
+  components:
+    - ../../../../../../components/cnpg/
+    - ../../../../../../components/keycloak-client/
+    - ../../../../../../components/oidc/
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute:
+      APP: *app
+      CNPG_DATA_STORAGE_SIZE: 8Gi
+
+  decryption: { provider: sops }
+  dependsOn:
+    - name: 1password-connect
+      namespace: security-system
+    - name: openebs
+      namespace: storage-system
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: cloudnative-pg-plugins
+      namespace: database-system
+    - name: keycloak-operator-config
+      namespace: security-system
