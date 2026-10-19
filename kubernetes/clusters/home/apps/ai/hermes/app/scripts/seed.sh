@@ -9,6 +9,12 @@ cp /seed/SOUL.md /opt/data/SOUL.md
 
 touch /opt/data/.env
 sed -i '/^DISCORD_/d; /^LITELLM_/d' /opt/data/.env
+
+# The launch profile's own config declares `providers.litellm.key_env: LITELLM_API_KEY`, and under
+# multiplexing a profile-scoped lookup miss returns "" instead of falling back to os.environ — so
+# without this the aux/vision client resolves no key on every gateway start. Write it from the
+# init container's env, which the HelmRelease already sources from the hermes-litellm-key secret.
+printf 'LITELLM_API_KEY=%s\n' "$LITELLM_API_KEY" >> /opt/data/.env
 chmod 600 /opt/data/.env
 
 
