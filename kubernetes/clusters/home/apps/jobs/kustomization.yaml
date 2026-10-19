@@ -7,3 +7,4 @@ namespace: jobs
 resources:
   - ./namespace.yaml
   - ./dagu
+  - ./temporal
