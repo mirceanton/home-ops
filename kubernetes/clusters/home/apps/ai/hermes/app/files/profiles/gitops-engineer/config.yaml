@@ -13,9 +13,7 @@ model:
   default: deepseek-v4.1-flash
   provider: litellm
 
-# This profile owns the "Mr. Borboto" Discord app; credentials come from its .env
-# (seeded from the Discord App - Mr. Borboto 1Password item). Several bots share
-# the guild, so threads require an explicit mention of THIS bot.
+# This profile owns the "Mr. Borboto" Discord app;
 discord:
   require_mention: true
   thread_require_mention: true

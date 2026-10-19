@@ -13,9 +13,7 @@ model:
   default: qwen3.8-max
   provider: litellm
 
-# This profile owns the "YouTube Assistant" Discord app; credentials come from its
-# .env (seeded from the Discord App - YouTube Assistant 1Password item). Several
-# bots share the guild, so threads require an explicit mention of THIS bot.
+# This profile owns the "YouTube Assistant" Discord app; 
 discord:
   require_mention: true
   thread_require_mention: true
