@@ -29,6 +29,7 @@ spec:
             # fall through to container env (see gateway/platforms/_shared.py).
             envFrom:
               - secretRef: { name: hermes-secret }
+              - secretRef: { name: hermes-discord-secret }
             env:
               LITELLM_API_KEY:
                 valueFrom:
@@ -89,14 +90,9 @@ spec:
                     name: hermes-oidc-secret
                     key: client-secret
 
-              # Discord credentials, allowlist and channel IDs come from envFrom.
-              DISCORD_REQUIRE_MENTION: "true"
-              DISCORD_AUTO_THREAD: "true"
-              DISCORD_REACTIONS: "true"
-              DISCORD_ALLOW_MENTION_EVERYONE: "false"
-              DISCORD_ALLOW_MENTION_ROLES: "false"
-              DISCORD_ALLOW_MENTION_USERS: "true"
-              DISCORD_ALLOW_MENTION_REPLIED_USER: "true"
+              # Discord runs per profile only (see files/profiles/*/.env.template): the default
+              # profile has no bot, and container DISCORD_* env would be read by the default
+              # profile unscoped, so no Discord keys are set here.
 
               # OpenAI-compatible API consumed by Hermano and webhook clients.
               API_SERVER_ENABLED: "true"
@@ -151,7 +147,7 @@ spec:
         hostnames: ["hermes.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
-            namespace: network-system
+          namespace: network-system
         rules:
           - backendRefs:
               - identifier: dashboard
