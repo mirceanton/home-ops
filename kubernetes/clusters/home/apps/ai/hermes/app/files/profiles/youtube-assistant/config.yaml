@@ -1,4 +1,3 @@
----
 _config_version: 46
 
 providers:
@@ -18,6 +17,7 @@ discord:
   require_mention: true
   thread_require_mention: true
   auto_thread: true
+  free_response_auto_thread: true
   reactions: true
   allow_mentions:
     everyone: false
