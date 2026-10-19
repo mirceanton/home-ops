@@ -600,43 +600,43 @@ url_api = "https://api.github.com/repos/mirceanton/talstomize/releases/assets/54
 provenance = "github-attestations"
 
 [[tools."github:mirceanton/talswitcher"]]
-version = "2.2.41"
+version = "2.2.42"
 backend = "github:mirceanton/talswitcher"
 
 [tools."github:mirceanton/talswitcher"."platforms.linux-arm64"]
-checksum = "sha256:cb19995a57e852741d4e7ebe7ec4bc928727320acb41db0ba284c2181f00894e"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267779"
+checksum = "sha256:cc5136ce43d3af290b657afdb856360e92f330a65e46a5a052a955a4005830dd"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718081"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/talswitcher"."platforms.linux-arm64-musl"]
-checksum = "sha256:cb19995a57e852741d4e7ebe7ec4bc928727320acb41db0ba284c2181f00894e"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267779"
+checksum = "sha256:cc5136ce43d3af290b657afdb856360e92f330a65e46a5a052a955a4005830dd"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718081"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/talswitcher"."platforms.linux-x64"]
-checksum = "sha256:eb1154f780b7c7be5f9c1c62d2d82a5613b6627c2b424987d42bea8aca3df684"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267772"
+checksum = "sha256:a2453669a8579587acf3e3113b9eb522bb427e40b201a7c364388c560c4987a5"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718083"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/talswitcher"."platforms.linux-x64-musl"]
-checksum = "sha256:eb1154f780b7c7be5f9c1c62d2d82a5613b6627c2b424987d42bea8aca3df684"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267772"
+checksum = "sha256:a2453669a8579587acf3e3113b9eb522bb427e40b201a7c364388c560c4987a5"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718083"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/talswitcher"."platforms.macos-arm64"]
-checksum = "sha256:ab663efd92a73f9a6a5d14d87a0aa74cee1ce1060d492374d17a8208f3208750"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267777"
+checksum = "sha256:ee286eadb4d562d2ed74f8200e27b233a08686412f8a4088e34efbd81ff13992"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718095"
 provenance = "github-attestations"
 
 [tools."github:mirceanton/talswitcher"."platforms.macos-x64"]
-checksum = "sha256:cc0df44c7fa0121c5de11cf08f00680b9837c778bee91e461e5e8320def70f52"
-url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.41/talswitcher_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/645267781"
+checksum = "sha256:6fc86b93c18abe9b7d77c0f5d281fa9125e1136091c923d8e83bea6fe3b69813"
+url = "https://github.com/mirceanton/talswitcher/releases/download/v2.2.42/talswitcher_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/mirceanton/talswitcher/releases/assets/647718082"
 provenance = "github-attestations"
 
 [[tools.helmfile]]
