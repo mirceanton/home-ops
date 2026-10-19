@@ -136,6 +136,12 @@ spec:
         advancedMounts:
           dagu:
             dags: [{ path: /dag-config/etcd-defrag, readOnly: true }]
+      dags-library-audit:
+        type: configMap
+        name: dagu-dags-library-audit
+        advancedMounts:
+          dagu:
+            dags: [{ path: /dag-config/library-audit, readOnly: true }]
 
     serviceAccount: { dagu: {} }
     rbac:

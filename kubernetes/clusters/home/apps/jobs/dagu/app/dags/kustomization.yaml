@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./crd-schema-publisher
   - ./etcd-defrag
+  - ./library-audit
