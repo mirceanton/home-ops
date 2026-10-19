@@ -1,9 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - ./helm-repository.yaml
-  - ./database-visibility.yaml
-  - ./helm-release.yaml
-  - ./http-route.yaml
