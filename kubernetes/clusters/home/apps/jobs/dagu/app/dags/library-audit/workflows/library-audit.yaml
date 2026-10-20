@@ -1,8 +1,6 @@
 ---
 description: Audits the music library with beets and produces metadata quality reports
 group: Home-Ops
-# No schedule by default — run manually or add a schedule when the audit is stable.
-# schedule: "30 3 * * 0"  # weekly on Sunday at 3:30am
 
 params:
   - name: mode
@@ -17,7 +15,7 @@ steps:
   - name: audit
     action: k8s.run
     with:
-      image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
+      image: ghcr.io/mirceanton/beets:sha-e0987bf65d2ebdab0a37f55756c29a18fda49fca
       command: sh -c 'mkdir -p /data/reports /reports-pvc/reports; cp /reports-pvc/beets.db /data/beets.db 2>/dev/null || true; python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}; cp /data/beets.db /reports-pvc/beets.db; cp -r /data/reports/* /reports-pvc/reports/'
       namespace: jobs
       env:
