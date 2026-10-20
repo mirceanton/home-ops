@@ -142,12 +142,6 @@ spec:
         advancedMounts:
           dagu:
             dags: [{ path: /dag-config/essentia-tagger, readOnly: true }]
-      dags-library-audit:
-        type: configMap
-        name: dagu-dags-library-audit
-        advancedMounts:
-          dagu:
-            dags: [{ path: /dag-config/library-audit, readOnly: true }]
 
     serviceAccount: { dagu: {} }
     rbac:
