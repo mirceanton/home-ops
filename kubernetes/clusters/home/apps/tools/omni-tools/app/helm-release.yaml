@@ -32,7 +32,7 @@ spec:
           app:
             image:
               repository: iib0011/omni-tools
-              tag: 0.6.0
+              tag: 0.7.0
             command: ["nginx"]
             args: ["-g", "daemon off;"]
 
