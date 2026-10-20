@@ -4,6 +4,5 @@ kind: Kustomization
 
 resources:
   - ./crd-schema-publisher
-  - ./etcd-defrag
   - ./essentia-tagger
-  - ./library-audit
+  - ./etcd-defrag
