@@ -9,7 +9,6 @@ configMapGenerator:
   - name: dagu-dags-essentia-tagger
     files:
       - ./workflows/essentia-tagger.yaml
-      - ./workflows/essentia-tagger-force.yaml
   - name: essentia-tagger-wrapper
     files:
       - ./wrapper.sh

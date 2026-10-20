@@ -1,22 +1,17 @@
 ---
 description: |
-  Incrementally analyze the Lidarr-managed music library with Essentia
-  ML models for genre and mood tagging. Processes only files that have
-  not yet been analyzed — keeps state in a PVC-backed tracking file.
+  Analyze the Lidarr-managed music library with Essentia ML models for
+  genre and mood tagging. Processes only files not yet recorded in the
+  PVC-backed tracking file. Check the "Force" box in the UI to clear
+  the tracking file and re-process every file.
 
   ## How it works
 
-  1. Scans the music library at /music (NFS) for all supported audio files
+  1. Scans /music (NFS) for supported audio files
   2. Compares against /var/lib/essentia/processed.txt (PVC)
-  3. Creates a temp directory with symlinks to unprocessed files
+  3. Symlinks unprocessed files into a temp directory
   4. Runs essentia-tagger in directory mode on those files only
   5. Marks successfully processed files in the tracking file
-
-  ## Re-running
-
-  This DAG only processes NEW files. To force a full re-process of the
-  entire library (e.g. after model updates or threshold changes), run
-  the `essentia-tagger-force` DAG instead.
 
   ## Write mode
 
@@ -27,15 +22,21 @@ description: |
 
   ## Performance
 
-  CPU-only, ~5-15 sec/track, 2-3 GB RAM. Daily scans typically process
-  just a handful of new Lidarr additions.
+  CPU-only, ~5-15 sec/track, 2-3 GB RAM. Daily cron typically
+  processes just a handful of new Lidarr additions.
 
 group: Home-Ops
 schedule: "0 3 * * *" #? daily at 3am
 catchup_window: 1m
 
+params:
+  - name: force
+    type: boolean
+    default: false
+    description: Clear tracking file and re-process every file
+
 steps:
-  - name: tag-music-incremental
+  - name: tag-music
     action: k8s.run
     with:
       #? Pin to a specific sha tag after the image is published.
@@ -46,7 +47,7 @@ steps:
 
       env:
         - name: ESSENTIA_FORCE
-          value: "false"
+          value: "${params.force}"
 
       resources:
         requests:
