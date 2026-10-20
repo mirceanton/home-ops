@@ -1,62 +1,52 @@
 ---
 description: |
-  Analyze the Lidarr-managed music library with Essentia ML models for
-  genre and mood tagging. Runs in dry-run mode by default to preview
-  predictions without modifying files.
+  Incrementally analyze the Lidarr-managed music library with Essentia
+  ML models for genre and mood tagging. Processes only files that have
+  not yet been analyzed — keeps state in a PVC-backed tracking file.
 
-  ## Usage
+  ## How it works
 
-  - **Dry-run (default)**: Trigger manually to preview genre/mood predictions.
-    No files are modified — the NFS mount is read-only.
-  - **Write mode**: Edit the DAG in the Dagu UI:
-    1. Remove `--dry-run` from the `command` args
-    2. Set the music volume `read_only: false`
-    3. Add `--overwrite` to replace existing tags (optional)
-    4. Run manually
+  1. Scans the music library at /music (NFS) for all supported audio files
+  2. Compares against /var/lib/essentia/processed.txt (PVC)
+  3. Creates a temp directory with symlinks to unprocessed files
+  4. Runs essentia-tagger in directory mode on those files only
+  5. Marks successfully processed files in the tracking file
 
-  ## Overlapping executions
+  ## Re-running
 
-  Dagu prevents concurrent runs of the same DAG by default. Do not create
-  a copy of this DAG that targets the same music library.
+  This DAG only processes NEW files. To force a full re-process of the
+  entire library (e.g. after model updates or threshold changes), run
+  the `essentia-tagger-force` DAG instead.
 
-  ## Rollback
+  ## Write mode
 
-  Before enabling writes on the full collection, consider:
-  - Run dry-run first and review the log output
-  - Test write mode on a single artist/album subdirectory first
-  - Back up the music library or take a ZFS snapshot on the NAS
+  By default this runs in dry-run mode. To enable actual tag writing:
+  1. Remove `--dry-run` from the command args in the Dagu UI
+  2. Set the music volume `read_only: false`
+  3. Add `--overwrite` to replace existing tags (optional)
 
   ## Performance
 
-  CPU-only processing benchmarks ~5-15 seconds per track, using 2-3 GB RAM.
-  The `--max-duration` flag caps how much audio is analyzed per track
-  (default 300s). For large libraries, schedule overnight.
+  CPU-only, ~5-15 sec/track, 2-3 GB RAM. Daily scans typically process
+  just a handful of new Lidarr additions.
 
 group: Home-Ops
-# No cron schedule — manual trigger only by default.
-# To schedule weekly, uncomment the line below.
-# schedule: "0 3 * * 0"  #? weekly Sunday at 3am
-# catchup_window: 1m
+schedule: "0 3 * * *" #? daily at 3am
+catchup_window: 1m
 
 steps:
-  - name: tag-music
+  - name: tag-music-incremental
     action: k8s.run
     with:
       #? Pin to a specific sha tag after the image is published.
       #? https://github.com/mirceanton/home-ops/issues/632
       image: ghcr.io/mirceanton/essentia-tagger:latest
-      command: >
-        /music
-        --auto
-        --dry-run
-        --genres 3
-        --genre-threshold 15
-        --genre-format parent_child
-        --mood-threshold 0.5
-        --log-dir /var/log/essentia
-        --workers 1
-      service_account: dagu-essentia-tagger
+      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 1
       namespace: jobs
+
+      env:
+        - name: ESSENTIA_FORCE
+          value: "false"
 
       resources:
         requests:
@@ -71,12 +61,23 @@ steps:
           nfs:
             server: nas.stor.h.mirceanton.com
             path: /mnt/tank/Media/Music
+        - name: state
+          persistentVolumeClaim:
+            claimName: essentia-tagger
+        - name: scripts
+          configMap:
+            name: essentia-tagger-wrapper
         - name: logs
-          empty_dir: {}
+          emptyDir: {}
 
       volume_mounts:
         - name: music
           mount_path: /music
+          read_only: true
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
           read_only: true
         - name: logs
           mount_path: /var/log/essentia
