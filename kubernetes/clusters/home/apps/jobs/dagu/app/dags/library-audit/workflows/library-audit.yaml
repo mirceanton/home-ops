@@ -17,14 +17,9 @@ steps:
   - name: audit
     action: k8s.run
     with:
-      image: ghcr.io/mirceanton/beets:date-2026.10.20@sha256:b1e8a5b98618d8c0f1c6f9b1a3d440d5e6d3109d538e8afe6926f60079c96d99
+      image: ghcr.io/mirceanton/beets:latest
+      command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
       namespace: jobs
-      command: |
-        python /app/audit.py /music  \
-          --db /data/beets.db \
-          --config /data/config.yaml \
-          --output /data/reports \
-          ${params.mode}
 
       resources:
         requests:
@@ -41,7 +36,6 @@ steps:
         - name: music
           persistent_volume_claim:
             claim_name: nfs-music
-
       volume_mounts:
         - name: data
           mount_path: /data
