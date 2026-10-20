@@ -10,6 +10,7 @@ spec:
   accessModes:
     - ReadOnlyMany
     - ReadWriteMany
+  storageClassName: openebs-zfs
   nfs:
     server: nas.stor.h.mirceanton.com
     path: /mnt/tank/Media/Music
@@ -26,4 +27,5 @@ spec:
   resources:
     requests:
       storage: 1Mi
+  storageClassName: openebs-zfs
   volumeName: nfs-music
