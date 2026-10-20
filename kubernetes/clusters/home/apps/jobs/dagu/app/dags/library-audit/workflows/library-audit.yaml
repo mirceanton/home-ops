@@ -1,8 +1,6 @@
 ---
 description: Audits the music library with beets and produces metadata quality reports
 group: Home-Ops
-# No schedule by default — run manually or add a schedule when the audit is stable.
-# schedule: "30 3 * * 0"  # weekly on Sunday at 3:30am
 
 params:
   - name: mode
@@ -17,9 +15,32 @@ steps:
   - name: audit
     action: k8s.run
     with:
-      image: ghcr.io/mirceanton/beets:latest
+      image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
       command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
       namespace: jobs
+      env:
+        - name: HOME
+          value: /data
+
+      init_containers:
+        - name: init-data
+          image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /data /data/reports
+              chown -R 1000:1000 /data
+              if [ -f /reports-pvc/beets.db ]; then
+                cp /reports-pvc/beets.db /data/beets.db
+                chown 1000:1000 /data/beets.db
+              fi
+          volume_mounts:
+            - name: data
+              mount_path: /data
+            - name: reports
+              mount_path: /reports-pvc
+              read_only: true
 
       resources:
         requests:
@@ -31,17 +52,22 @@ steps:
 
       volumes:
         - name: data
-          persistent_volume_claim:
-            claim_name: beets-data
+          empty_dir: {}
         - name: music
           persistent_volume_claim:
             claim_name: nfs-music
+        - name: reports
+          persistent_volume_claim:
+            claim_name: beets-data
+
       volume_mounts:
         - name: data
           mount_path: /data
         - name: music
           mount_path: /music
           read_only: true
+        - name: reports
+          mount_path: /data/reports
 
       pod_security_context:
         run_as_non_root: true
