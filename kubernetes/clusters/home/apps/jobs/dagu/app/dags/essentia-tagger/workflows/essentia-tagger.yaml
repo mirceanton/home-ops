@@ -1,0 +1,95 @@
+---
+description: |
+  Analyze the Lidarr-managed music library with Essentia ML models for
+  genre and mood tagging. Runs in dry-run mode by default to preview
+  predictions without modifying files.
+
+  ## Usage
+
+  - **Dry-run (default)**: Trigger manually to preview genre/mood predictions.
+    No files are modified — the NFS mount is read-only.
+  - **Write mode**: Edit the DAG in the Dagu UI:
+    1. Remove `--dry-run` from the `command` args
+    2. Set the music volume `read_only: false`
+    3. Add `--overwrite` to replace existing tags (optional)
+    4. Run manually
+
+  ## Overlapping executions
+
+  Dagu prevents concurrent runs of the same DAG by default. Do not create
+  a copy of this DAG that targets the same music library.
+
+  ## Rollback
+
+  Before enabling writes on the full collection, consider:
+  - Run dry-run first and review the log output
+  - Test write mode on a single artist/album subdirectory first
+  - Back up the music library or take a ZFS snapshot on the NAS
+
+  ## Performance
+
+  CPU-only processing benchmarks ~5-15 seconds per track, using 2-3 GB RAM.
+  The `--max-duration` flag caps how much audio is analyzed per track
+  (default 300s). For large libraries, schedule overnight.
+
+group: Home-Ops
+# No cron schedule — manual trigger only by default.
+# To schedule weekly, uncomment the line below.
+# schedule: "0 3 * * 0"  #? weekly Sunday at 3am
+# catchup_window: 1m
+
+steps:
+  - name: tag-music
+    action: k8s.run
+    with:
+      #? Pin to a specific sha tag after the image is published.
+      #? https://github.com/mirceanton/home-ops/issues/632
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: >
+        /music
+        --auto
+        --dry-run
+        --genres 3
+        --genre-threshold 15
+        --genre-format parent_child
+        --mood-threshold 0.5
+        --log-dir /var/log/essentia
+        --workers 1
+      service_account: dagu-essentia-tagger
+      namespace: jobs
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 4
+          memory: 4Gi
+
+      volumes:
+        - name: music
+          nfs:
+            server: nas.stor.h.mirceanton.com
+            path: /mnt/tank/Media/Music
+        - name: logs
+          empty_dir: {}
+
+      volume_mounts:
+        - name: music
+          mount_path: /music
+          read_only: true
+        - name: logs
+          mount_path: /var/log/essentia
+
+      pod_security_context:
+        run_as_non_root: true
+        #? UID 568 matches the Lidarr container so the pod can write to NFS
+        #? when read_only is disabled and --dry-run is removed.
+        run_as_user: 568
+        run_as_group: 568
+        fs_group: 568
+        seccomp_profile: { type: RuntimeDefault }
+      security_context:
+        allow_privilege_escalation: false
+        read_only_root_filesystem: true
+        capabilities: { drop: [ALL] }
