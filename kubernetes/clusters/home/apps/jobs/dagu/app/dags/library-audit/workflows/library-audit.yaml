@@ -16,31 +16,15 @@ steps:
     action: k8s.run
     with:
       image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
-      command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
+      command: |
+        mkdir -p /data/reports
+        cp /reports-pvc/beets.db /data/beets.db 2>/dev/null || true
+        python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
+        cp /data/beets.db /reports-pvc/beets.db
       namespace: jobs
       env:
         - name: HOME
           value: /data
-
-      init_containers:
-        - name: init-data
-          image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
-          command:
-            - sh
-            - -c
-            - |
-              mkdir -p /data /data/reports
-              chown -R 1000:1000 /data
-              if [ -f /reports-pvc/beets.db ]; then
-                cp /reports-pvc/beets.db /data/beets.db
-                chown 1000:1000 /data/beets.db
-              fi
-          volume_mounts:
-            - name: data
-              mount_path: /data
-            - name: reports
-              mount_path: /reports-pvc
-              read_only: true
 
       resources:
         requests:
@@ -67,7 +51,7 @@ steps:
           mount_path: /music
           read_only: true
         - name: reports
-          mount_path: /data/reports
+          mount_path: /reports-pvc
 
       pod_security_context:
         run_as_non_root: true
