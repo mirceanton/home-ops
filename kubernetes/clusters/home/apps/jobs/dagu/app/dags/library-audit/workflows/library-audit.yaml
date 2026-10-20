@@ -30,16 +30,13 @@ steps:
           memory: 1Gi
 
       volumes:
-        # Beets database, config, and reports — persists across runs
         - name: data
           persistent_volume_claim:
             claim_name: beets-data
-        # Music library — read-only for dry-run.
-        # Change to read_only: false when switching mode to --apply.
         - name: music
-          nfs:
-            server: nas.stor.h.mirceanton.com
-            path: /mnt/tank/Media
+          persistent_volume_claim:
+            claim_name: nfs-music
+
       volume_mounts:
         - name: data
           mount_path: /data

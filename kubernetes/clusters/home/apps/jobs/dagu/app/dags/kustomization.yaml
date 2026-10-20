@@ -6,3 +6,4 @@ resources:
   - ./crd-schema-publisher
   - ./essentia-tagger
   - ./etcd-defrag
+  - ./library-audit
