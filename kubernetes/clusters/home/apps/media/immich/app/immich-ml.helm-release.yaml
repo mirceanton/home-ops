@@ -43,7 +43,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.3.3-cuda
+              tag: v3.3.4-cuda
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
