@@ -1,0 +1,12 @@
+# Git-managed YAML config for the hass-oidc-auth integration (auth_oidc).
+# Seeded to /config/gitops/auth_oidc.yaml and pulled into HA via the
+# "auth_oidc: !include gitops/auth_oidc.yaml" line the seed script maintains
+# in /config/configuration.yaml.
+#
+# Both values resolve through !secret from /config/gitops/secrets.yaml, which
+# the seed-config init container renders at pod start from the
+# Keycloak-operator-managed home-assistant-oidc-secret. Never put secret
+# values in this file - it lives in git.
+client_id: !secret oidc_client_id
+client_secret: !secret oidc_client_secret
+discovery_url: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/.well-known/openid-configuration
