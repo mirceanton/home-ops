@@ -17,20 +17,12 @@ steps:
   - name: audit
     action: k8s.run
     with:
-      image: ghcr.io/mirceanton/beets:latest
-      command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
+      image: ghcr.io/mirceanton/beets:sha-8c66edef58f5d6a8f8eccfa3d80129bb07ef21a0
+      command: sh -c 'mkdir -p /data/reports /reports-pvc/reports; cp /reports-pvc/beets.db /data/beets.db 2>/dev/null || true; python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}; cp /data/beets.db /reports-pvc/beets.db; cp -r /data/reports/* /reports-pvc/reports/'
       namespace: jobs
-
-      #? The pod runs with read_only_root_filesystem, so beets/confuse needs a
-      #? writable HOME (it creates ~/.config on startup) and SQLite needs a
-      #? writable temp dir for the temp B-tree it builds when sorting the
-      #? catalogue. Without them the audit dies with
-      #? `sqlite3.OperationalError: disk I/O error`.
       env:
         - name: HOME
           value: /data
-        - name: TMPDIR
-          value: /tmp
 
       resources:
         requests:
@@ -42,21 +34,22 @@ steps:
 
       volumes:
         - name: data
-          persistent_volume_claim:
-            claim_name: beets-data
+          empty_dir: {}
         - name: music
           persistent_volume_claim:
             claim_name: nfs-music
-        - name: tmp
-          empty_dir: {}
+        - name: reports
+          persistent_volume_claim:
+            claim_name: beets-data
+
       volume_mounts:
         - name: data
           mount_path: /data
         - name: music
           mount_path: /music
           read_only: true
-        - name: tmp
-          mount_path: /tmp
+        - name: reports
+          mount_path: /reports-pvc
 
       pod_security_context:
         run_as_non_root: true
