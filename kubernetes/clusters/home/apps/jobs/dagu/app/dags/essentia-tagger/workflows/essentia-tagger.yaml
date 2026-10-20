@@ -34,22 +34,6 @@ params:
     type: boolean
     default: false
     description: Clear tracking file and re-process every file
-  - name: genres
-    type: integer
-    default: 3
-    description: Maximum number of genres per track
-  - name: genre_threshold
-    type: integer
-    default: 15
-    description: Minimum genre confidence threshold
-  - name: genre_format
-    type: string
-    default: parent_child
-    description: Format for genre tags
-  - name: mood_threshold
-    type: number
-    default: 0.5
-    description: Minimum mood confidence threshold
 
 steps:
   - name: tag-music
@@ -58,16 +42,8 @@ steps:
       #? Pin to a specific sha tag after the image is published.
       #? https://github.com/mirceanton/home-ops/issues/632
       image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
       namespace: jobs
-      command: |
-        /bin/bash /scripts/wrapper.sh \
-          --dry-run \
-          --genres ${params.genres} \
-          --genre-threshold ${params.genre_threshold} \
-          --genre-format ${params.genre_format} \
-          --mood-threshold ${params.mood_threshold} \
-          --log-dir /var/log/essentia \
-          --workers 4
 
       env:
         - name: ESSENTIA_FORCE
