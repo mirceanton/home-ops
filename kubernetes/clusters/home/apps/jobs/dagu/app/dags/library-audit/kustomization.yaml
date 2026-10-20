@@ -4,7 +4,6 @@ kind: Kustomization
 
 resources:
   - ./pvc.yaml
-  - ./service-account.yaml
 
 configMapGenerator:
   - name: dagu-dags-library-audit
