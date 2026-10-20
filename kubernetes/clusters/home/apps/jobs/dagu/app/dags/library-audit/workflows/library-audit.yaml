@@ -21,6 +21,17 @@ steps:
       command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}
       namespace: jobs
 
+      #? The pod runs with read_only_root_filesystem, so beets/confuse needs a
+      #? writable HOME (it creates ~/.config on startup) and SQLite needs a
+      #? writable temp dir for the temp B-tree it builds when sorting the
+      #? catalogue. Without them the audit dies with
+      #? `sqlite3.OperationalError: disk I/O error`.
+      env:
+        - name: HOME
+          value: /data
+        - name: TMPDIR
+          value: /tmp
+
       resources:
         requests:
           cpu: 100m
@@ -36,12 +47,16 @@ steps:
         - name: music
           persistent_volume_claim:
             claim_name: nfs-music
+        - name: tmp
+          empty_dir: {}
       volume_mounts:
         - name: data
           mount_path: /data
         - name: music
           mount_path: /music
           read_only: true
+        - name: tmp
+          mount_path: /tmp
 
       pod_security_context:
         run_as_non_root: true
