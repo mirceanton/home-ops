@@ -136,6 +136,12 @@ spec:
         advancedMounts:
           dagu:
             dags: [{ path: /dag-config/etcd-defrag, readOnly: true }]
+      dags-essentia-tagger:
+        type: configMap
+        name: dagu-dags-essentia-tagger
+        advancedMounts:
+          dagu:
+            dags: [{ path: /dag-config/essentia-tagger, readOnly: true }]
 
     serviceAccount: { dagu: {} }
     rbac:

@@ -1,0 +1,84 @@
+---
+description: |
+  Force a FULL re-process of the entire Lidarr-managed music library
+  with Essentia ML models. Clears the tracking file before running so
+  every audio file is analyzed.
+
+  Use this after:
+  - Updating the Essentia models to a newer version
+  - Changing genre/mood confidence thresholds
+  - Fixing incorrect tags from a previous run
+
+  ## Differences from the incremental DAG
+
+  - Sets ESSENTIA_FORCE=true (clears processed.txt before running)
+  - No cron schedule — manual trigger only
+  - Otherwise identical configuration
+
+  ## Write mode
+
+  By default this runs in dry-run mode. To enable actual tag writing:
+  1. Remove `--dry-run` from the command args in the Dagu UI
+  2. Set the music volume `read_only: false`
+  3. Add `--overwrite` to replace existing tags (optional)
+
+group: Home-Ops
+# Manual trigger only — no schedule
+
+steps:
+  - name: tag-music-force
+    action: k8s.run
+    with:
+      #? Pin to a specific sha tag after the image is published.
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 1
+      namespace: jobs
+
+      env:
+        - name: ESSENTIA_FORCE
+          value: "true"
+
+      resources:
+        requests:
+          cpu: 500m
+          memory: 512Mi
+        limits:
+          cpu: 4
+          memory: 4Gi
+
+      volumes:
+        - name: music
+          nfs:
+            server: nas.stor.h.mirceanton.com
+            path: /mnt/tank/Media/Music
+        - name: state
+          persistentVolumeClaim:
+            claimName: essentia-tagger
+        - name: scripts
+          configMap:
+            name: essentia-tagger-wrapper
+        - name: logs
+          emptyDir: {}
+
+      volume_mounts:
+        - name: music
+          mount_path: /music
+          read_only: true
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+        - name: logs
+          mount_path: /var/log/essentia
+
+      pod_security_context:
+        run_as_non_root: true
+        run_as_user: 568
+        run_as_group: 568
+        fs_group: 568
+        seccomp_profile: { type: RuntimeDefault }
+      security_context:
+        allow_privilege_escalation: false
+        read_only_root_filesystem: true
+        capabilities: { drop: [ALL] }
