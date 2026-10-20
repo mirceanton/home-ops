@@ -1,1 +1,61 @@
-LS0tCmRlc2NyaXB0aW9uOiBBdWRpdHMgdGhlIG11c2ljIGxpYnJhcnkgd2l0aCBiZWV0cyBhbmQgcHJvZHVjZXMgbWV0YWRhdGEgcXVhbGl0eSByZXBvcnRzCmdyb3VwOiBIb21lLU9wcwoKcGFyYW1zOgogIC0gbmFtZTogbW9kZQogICAgdHlwZTogc3RyaW5nCiAgICBkZWZhdWx0OiAiLS1kcnktcnVuIgogICAgZGVzY3JpcHRpb246IEF1ZGl0IG1vZGUg4oCUIGRyeS1ydW4gKHJlcG9ydCBvbmx5KSBvciBhcHBseSAod3JpdGUgdGFncykKICAgIGVudW06CiAgICAgIC0gIi0tZHJ5LXJ1biIKICAgICAgLSAiLS1hcHBseSIKCnN0ZXBzOgogIC0gbmFtZTogYXVkaXQKICAgIGFjdGlvbjogazhzLnJ1bgogICAgd2l0aDoKICAgICAgaW1hZ2U6IGdoY3IuaW8vbWlyY2VhbnRvbi9iZWV0czpzaGEtZTA5ODdiZjY1ZDJlYmRhYjBhMzdmNTU3NTZjMjlhMThmZGE0OWZjYQogICAgICBjb21tYW5kOiBzaCAtYyAnbWtkaXIgLXAgL2RhdGEvcmVwb3J0cyAvcmVwb3J0cy1wdmMvcmVwb3J0czsgY3AgL3JlcG9ydHMtcHZjL2JlZXRzLmRiIC9kYXRhL2JlZXRzLmRiIDI+L2Rldi9udWxsIHx8IHRydWU7IHB5dGhvbiAvYXBwL2F1ZGl0LnB5IC9tdXNpYyAtLWRiIC9kYXRhL2JlZXRzLmRiIC0tY29uZmlnIC9kYXRhL2NvbmZpZy55YW1sIC0tb3V0cHV0IC9kYXRhL3JlcG9ydHMgJHtwYXJhbXMubW9kZX07IGNwIC9kYXRhL2JlZXRzLmRiIC9yZXBvcnRzLXB2Yy9iZWV0cy5kYjsgY3AgLXIgL2RhdGEvcmVwb3J0cy8qIC9yZXBvcnRzLXB2Yy9yZXBvcnRzLycKICAgICAgbmFtZXNwYWNlOiBqb2JzCiAgICAgIGVudjoKICAgICAgICAtIG5hbWU6IEhPTUUKICAgICAgICAgIHZhbHVlOiAvZGF0YQoKICAgICAgcmVzb3VyY2VzOgogICAgICAgIHJlcXVlc3RzOgogICAgICAgICAgY3B1OiAxMDBtCiAgICAgICAgICBtZW1vcnk6IDI1Nk1pCiAgICAgICAgbGltaXRzOgogICAgICAgICAgY3B1OiAxMDAwbQogICAgICAgICAgbWVtb3J5OiAxR2kKCiAgICAgIHZvbHVtZXM6CiAgICAgICAgLSBuYW1lOiBkYXRhCiAgICAgICAgICBlbXB0eV9kaXI6IHt9CiAgICAgICAgLSBuYW1lOiBtdXNpYwogICAgICAgICAgcGVyc2lzdGVudF92b2x1bWVfY2xhaW06CiAgICAgICAgICAgIGNsYWltX25hbWU6IG5mcy1tdXNpYwogICAgICAgIC0gbmFtZTogcmVwb3J0cwogICAgICAgICAgcGVyc2lzdGVudF92b2x1bWVfY2xhaW06CiAgICAgICAgICAgIGNsYWltX25hbWU6IGJlZXRzLWRhdGEKCiAgICAgIHZvbHVtZV9tb3VudHM6CiAgICAgICAgLSBuYW1lOiBkYXRhCiAgICAgICAgICBtb3VudF9wYXRoOiAvZGF0YQogICAgICAgIC0gbmFtZTogbXVzaWMKICAgICAgICAgIG1vdW50X3BhdGg6IC9tdXNpYwogICAgICAgICAgcmVhZF9vbmx5OiB0cnVlCiAgICAgICAgLSBuYW1lOiByZXBvcnRzCiAgICAgICAgICBtb3VudF9wYXRoOiAvcmVwb3J0cy1wdmMKCiAgICAgIHBvZF9zZWN1cml0eV9jb250ZXh0OgogICAgICAgIHJ1bl9hc19ub25fcm9vdDogdHJ1ZQogICAgICAgIHJ1bl9hc191c2VyOiAxMDAwCiAgICAgICAgcnVuX2FzX2dyb3VwOiAxMDAwCiAgICAgICAgZnNfZ3JvdXA6IDEwMDAKICAgICAgICBzZWNjb21wX3Byb2ZpbGU6IHsgdHlwZTogUnVudGltZURlZmF1bHQgfQogICAgICBzZWN1cml0eV9jb250ZXh0OgogICAgICAgIGFsbG93X3ByaXZpbGVnZV9lc2NhbGF0aW9uOiBmYWxzZQogICAgICAgIHJlYWRfb25seV9yb290X2ZpbGVzeXN0ZW06IHRydWUKICAgICAgICBjYXBhYmlsaXRpZXM6IHsgZHJvcDogW0FMTF0gfQo=
+---
+description: Audits the music library with beets and produces metadata quality reports
+group: Home-Ops
+
+params:
+  - name: mode
+    type: string
+    default: "--dry-run"
+    description: Audit mode — dry-run (report only) or apply (write tags)
+    enum:
+      - "--dry-run"
+      - "--apply"
+
+steps:
+  - name: audit
+    action: k8s.run
+    with:
+      image: ghcr.io/mirceanton/beets:sha-e0987bf65d2ebdab0a37f55756c29a18fda49fca
+      command: sh -c 'mkdir -p /data/reports /reports-pvc/reports; cp /reports-pvc/beets.db /data/beets.db 2>/dev/null || true; python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports ${params.mode}; cp /data/beets.db /reports-pvc/beets.db; cp -r /data/reports/* /reports-pvc/reports/'
+      namespace: jobs
+      env:
+        - name: HOME
+          value: /data
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+
+      volumes:
+        - name: data
+          empty_dir: {}
+        - name: music
+          persistent_volume_claim:
+            claim_name: nfs-music
+        - name: reports
+          persistent_volume_claim:
+            claim_name: beets-data
+
+      volume_mounts:
+        - name: data
+          mount_path: /data
+        - name: music
+          mount_path: /music
+          read_only: true
+        - name: reports
+          mount_path: /reports-pvc
+
+      pod_security_context:
+        run_as_non_root: true
+        run_as_user: 1000
+        run_as_group: 1000
+        fs_group: 1000
+        seccomp_profile: { type: RuntimeDefault }
+      security_context:
+        allow_privilege_escalation: false
+        read_only_root_filesystem: true
+        capabilities: { drop: [ALL] }
