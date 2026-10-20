@@ -22,7 +22,7 @@ description: |
 
   ## Performance
 
-  CPU-only, ~8 sec/track with 2 workers, ~2-3 GB RAM. Daily cron
+  CPU-only, ~4 sec/track with 4 workers, ~6 GB RAM. Daily cron
   typically processes just a handful of new Lidarr additions.
 
 group: Home-Ops
@@ -42,7 +42,7 @@ steps:
       #? Pin to a specific sha tag after the image is published.
       #? https://github.com/mirceanton/home-ops/issues/632
       image: ghcr.io/mirceanton/essentia-tagger:latest
-      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 2
+      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
       namespace: jobs
 
       env:
@@ -54,8 +54,8 @@ steps:
           cpu: 500m
           memory: 512Mi
         limits:
-          cpu: "4"
-          memory: 4Gi
+          cpu: "8"
+          memory: 8Gi
 
       volumes:
         - name: music
