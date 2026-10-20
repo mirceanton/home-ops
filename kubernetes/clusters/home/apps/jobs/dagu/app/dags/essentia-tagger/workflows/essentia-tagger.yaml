@@ -7,7 +7,7 @@ description: |
 
   ## How it works
 
-  1. Scans /music (NFS) for supported audio files
+  1. Scans /music (NFS-backed PVC) for supported audio files
   2. Compares against /var/lib/essentia/processed.txt (PVC)
   3. Symlinks unprocessed files into a temp directory
   4. Runs essentia-tagger in directory mode on those files only
@@ -17,7 +17,7 @@ description: |
 
   By default this runs in dry-run mode. To enable actual tag writing:
   1. Remove `--dry-run` from the command args in the Dagu UI
-  2. Set the music volume `read_only: false`
+  2. Set the music volume mount to `read_only: false`
   3. Add `--overwrite` to replace existing tags (optional)
 
   ## Performance
@@ -59,17 +59,16 @@ steps:
 
       volumes:
         - name: music
-          nfs:
-            server: nas.stor.h.mirceanton.com
-            path: /mnt/tank/Media/Music
+          persistent_volume_claim:
+            claim_name: nfs-music
         - name: state
-          persistentVolumeClaim:
-            claimName: essentia-tagger
+          persistent_volume_claim:
+            claim_name: essentia-tagger
         - name: scripts
-          configMap:
+          config_map:
             name: essentia-tagger-wrapper
         - name: logs
-          emptyDir: {}
+          empty_dir: {}
 
       volume_mounts:
         - name: music

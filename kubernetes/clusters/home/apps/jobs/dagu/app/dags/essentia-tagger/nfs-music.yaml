@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/core/persistentvolume_v1.json
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-music
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadOnlyMany
+    - ReadWriteMany
+  nfs:
+    server: nas.stor.h.mirceanton.com
+    path: /mnt/tank/Media/Music
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/core/persistentvolumeclaim_v1.json
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-music
+  namespace: jobs
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Mi
+  volumeName: nfs-music
