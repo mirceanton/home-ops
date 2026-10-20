@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./external-secret.yaml
   - ./mcp-server.yaml
+  - ./mcp-server-native.yaml

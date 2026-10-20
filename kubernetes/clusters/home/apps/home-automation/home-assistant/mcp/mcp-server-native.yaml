@@ -1,0 +1,31 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: home-assistant-native-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  # Home Assistant's own "Model Context Protocol Server" integration, reachable
+  # on the HA HTTP port. Unlike the third-party ha-mcp workload this exposes only
+  # the tools of the configured LLM API (Assist by default) scoped to the
+  # entities exposed to Assist, so it is a control/query surface, not a way to
+  # author automations, scripts, scenes or dashboards.
+  #
+  # Preconditions on the Home Assistant side (config-entry only, no YAML):
+  #   Settings > System > AI > enable MCP (or Settings > Devices & services >
+  #   Add Integration > "Model Context Protocol Server").
+  #   Set "Require an administrator account" to match the token below, and
+  #   enable "Control Home Assistant" if clients should act on the home.
+  # For an admin-free endpoint (Assist API only), use /api/mcp/assist instead.
+  alias: home_assistant_native
+  url: http://home-assistant.home-automation.svc.cluster.local:8123/api/mcp
+  transport: http
+
+  # Long-lived access token of the Home Assistant user the clients act as.
+  authType: bearer_token
+  authTokenRef:
+    name: home-assistant-mcp-secret
+    key: HOMEASSISTANT_TOKEN
