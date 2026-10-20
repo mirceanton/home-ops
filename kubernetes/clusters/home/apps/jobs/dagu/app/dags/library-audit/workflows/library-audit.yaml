@@ -9,7 +9,7 @@ steps:
     action: k8s.run
     with:
       image: ghcr.io/mirceanton/beets:latest
-      command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports
+      command: python /app/audit.py /music --db /data/beets.db --config /data/config.yaml --output /data/reports --dry-run
       service_account: dagu-library-audit
       namespace: jobs
 
