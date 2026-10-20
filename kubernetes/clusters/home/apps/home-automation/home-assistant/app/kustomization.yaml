@@ -6,3 +6,16 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./cache.pvc.yaml
+
+configMapGenerator:
+  - name: home-assistant-seed-script
+    files: ["seed.sh=./scripts/seed.sh"]
+
+  - name: home-assistant-config
+    files:
+      - gitops.auth_oidc.yaml=./files/gitops/auth_oidc.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

@@ -19,6 +19,41 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          # Seeds the git-managed config fragments (files/gitops/*) and a
+          # rendered secrets.yaml into the /config PVC before HA starts. The
+          # PVC's configuration.yaml stays UI-managed; the script only appends
+          # the "auth_oidc: !include gitops/auth_oidc.yaml" line if missing.
+          seed-config:
+            image:
+              repository: ghcr.io/home-operations/busybox
+              tag: 1.38.0
+            env:
+              # OIDC client credentials from the Keycloak-operator-managed
+              # secret (components/keycloak-client), rendered into
+              # /config/gitops/secrets.yaml for HA's !secret mechanism.
+              OIDC_CLIENT_ID:
+                valueFrom:
+                  secretKeyRef:
+                    name: home-assistant-oidc-secret
+                    key: client-id
+              OIDC_CLIENT_SECRET:
+                valueFrom:
+                  secretKeyRef:
+                    name: home-assistant-oidc-secret
+                    key: client-secret
+            command: ["/bin/sh", "/scripts/seed.sh"]
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+
         containers:
           home-assistant:
             image:
@@ -77,3 +112,21 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
+
+      seed-config:
+        type: configMap
+        name: home-assistant-config
+        advancedMounts:
+          home-assistant:
+            seed-config:
+              - path: /seed
+                readOnly: true
+
+      seed-script:
+        type: configMap
+        name: home-assistant-seed-script
+        advancedMounts:
+          home-assistant:
+            seed-config:
+              - path: /scripts
+                readOnly: true
