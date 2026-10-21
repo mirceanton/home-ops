@@ -10,9 +10,13 @@ configMapGenerator:
   - name: dagu-dags-essentia-tagger
     files:
       - ./workflows/essentia-tagger.yaml
-  - name: essentia-tagger-wrapper
+  - name: essentia-tagger-scripts
     files:
-      - ./wrapper.sh
+      - ./scripts/prepare.sh
+      - ./scripts/scan.sh
+      - ./scripts/tag.sh
+      - ./scripts/record.sh
+      - ./scripts/cleanup.sh
 
 generatorOptions:
   disableNameSuffixHash: true
