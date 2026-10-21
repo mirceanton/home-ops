@@ -57,6 +57,12 @@
       "automerge": false
     },
     {
+      "description": "LiteLLM ships behaviour and DB changes in minor releases (v1.107.0 had to be reverted, which forced a manual downgrade to 1.106.2), so open a PR and let a human decide instead of automerging it",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/berriai/litellm"],
+      "automerge": false
+    },
+    {
       "description": "Minecraft server version bumps upgrade the world in place (there's no going back) and can break plugins, so never automerge them",
       "matchDatasources": ["custom.papermc"],
       "automerge": false
