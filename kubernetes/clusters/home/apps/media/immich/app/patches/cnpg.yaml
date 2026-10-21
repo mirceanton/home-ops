@@ -33,7 +33,7 @@ spec:
       - name: timescaledb
         image:
           # renovate: datasource=docker
-          reference: ghcr.io/shusaan/timescaledb-testing:2.23.1-18-trixie@sha256:4709935bed4cce5977bc4b1858a94e2e80f22f0303217163a9e97b8898e33ee2
+          reference: ghcr.io/shusaan/timescaledb-testing:2.24.0-18-trixie@sha256:dae25c2dde06455214ac5553b51d3ef2d48fe84795c2cfa48c51c6e15877044e
 
   managed:
     roles:
