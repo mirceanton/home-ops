@@ -21,6 +21,12 @@ steps:
       env:
         - name: HOME
           value: /data
+        # SQLite needs a writable temp dir for sorting queries; the root
+        # filesystem is read-only, so point it at the emptyDir volume.
+        - name: SQLITE_TMPDIR
+          value: /data
+        - name: TMPDIR
+          value: /data
 
       resources:
         requests:
