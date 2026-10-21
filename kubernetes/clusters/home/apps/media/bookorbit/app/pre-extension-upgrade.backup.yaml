@@ -1,0 +1,10 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: bookorbit-postgres-pre-extension-upgrade-20261021
+spec:
+  cluster:
+    name: bookorbit-postgres
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
