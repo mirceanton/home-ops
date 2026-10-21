@@ -5,20 +5,25 @@ description: |
   PVC-backed tracking file. Check the "Force" box in the UI to clear
   the tracking file and re-process every file.
 
-  ## How it works
+  ## Pipeline
 
-  1. Scans /music (NFS-backed PVC) for supported audio files
-  2. Compares against /var/lib/essentia/processed.txt (PVC)
-  3. Symlinks unprocessed files into a temp directory
-  4. Runs essentia-tagger in directory mode on those files only
-  5. Marks successfully processed files in the tracking file
+  1. `prepare` — ensures the tracking file exists; truncates it when
+     the Force checkbox is set
+  2. `scan` — compares the library against the tracking file and writes
+     the list of unprocessed files to the state PVC
+  3. `tag-music` — symlinks the listed files into a temp dir and runs
+     the essentia-tagger entrypoint over them (exits fast when the list
+     is empty)
+  4. `record` — marks the processed files in the tracking file (only
+     runs after tagging succeeds, so failures are retried next run)
+  5. `cleanup` — removes the staging list; also wired as a failure
+     handler so a crashed run leaves no stale state
 
   ## Write mode
 
-  The `mode` parameter selects between dry-run (analyze only, the default)
-  and apply (write genre/mood tags to the audio files). The music volume is
-  mounted read-write so apply mode can write tags; the pod runs as UID 568
-  (same as Lidarr) so ownership matches on NFS.
+  Uncheck "Dry run" in the UI to write genre/mood tags to the audio
+  files. The music volume is mounted read-write in the tag step; the
+  pods run as UID 568 (same as Lidarr) so ownership matches on NFS.
 
   ## Performance
 
@@ -30,33 +35,119 @@ schedule: "0 3 * * *" #? daily at 3am
 catchup_window: 1m
 
 params:
-  - name: mode
-    type: string
-    default: "--dry-run"
-    description: Tagging mode — dry-run (analyze only) or apply (write tags)
-    enum:
-      - "--dry-run"
-      - "--apply"
+  - name: dry_run
+    type: boolean
+    default: true
+    description: Analyze only — uncheck to write tags to the audio files
   - name: force
     type: boolean
     default: false
     description: Clear tracking file and re-process every file
 
+#? All steps reuse the essentia-tagger image (python:3.10-slim base with
+#? bash/find/grep) because it is already cached on the nodes; the helper
+#? steps are lightweight and only pay for scheduling.
 steps:
-  - name: tag-music
+  - name: prepare
     action: k8s.run
     with:
-      #? Pin to a specific sha tag after the image is published.
-      #? https://github.com/mirceanton/home-ops/issues/632
       image: ghcr.io/mirceanton/essentia-tagger:latest
-      command: /bin/bash /scripts/wrapper.sh --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
+      command: /bin/bash /scripts/prepare.sh
       namespace: jobs
 
       env:
         - name: ESSENTIA_FORCE
           value: "${params.force}"
-        - name: ESSENTIA_MODE
-          value: "${params.mode}"
+
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+      volumes:
+        - name: state
+          persistent_volume_claim:
+            claim_name: essentia-tagger
+        - name: scripts
+          config_map:
+            name: essentia-tagger-scripts
+
+      volume_mounts:
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+
+      pod_security_context: &podSecurityContext
+        run_as_non_root: true
+        #? UID 568 matches the Lidarr container so the pods can write tags
+        #? to the NFS-backed music library and share the state PVC.
+        run_as_user: 568
+        run_as_group: 568
+        fs_group: 568
+        seccomp_profile: { type: RuntimeDefault }
+      security_context: &securityContext
+        allow_privilege_escalation: false
+        read_only_root_filesystem: true
+        capabilities: { drop: [ALL] }
+
+  - name: scan
+    action: k8s.run
+    depends: prepare
+    with:
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/scan.sh
+      namespace: jobs
+
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: "1"
+          memory: 512Mi
+
+      volumes:
+        - name: music
+          persistent_volume_claim:
+            claim_name: nfs-music
+        - name: state
+          persistent_volume_claim:
+            claim_name: essentia-tagger
+        - name: scripts
+          config_map:
+            name: essentia-tagger-scripts
+
+      volume_mounts:
+        - name: music
+          mount_path: /music
+          read_only: true
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+
+      pod_security_context: *podSecurityContext
+      security_context: *securityContext
+
+  - name: tag-music
+    action: k8s.run
+    depends: scan
+    with:
+      #? Pin to a specific sha tag after the image is published.
+      #? https://github.com/mirceanton/home-ops/issues/632
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/tag.sh --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
+      namespace: jobs
+
+      env:
+        - name: ESSENTIA_DRY_RUN
+          value: "${params.dry_run}"
 
       resources:
         requests:
@@ -75,7 +166,7 @@ steps:
             claim_name: essentia-tagger
         - name: scripts
           config_map:
-            name: essentia-tagger-wrapper
+            name: essentia-tagger-scripts
         - name: logs
           empty_dir: {}
         - name: tmp
@@ -84,8 +175,8 @@ steps:
       volume_mounts:
         - name: music
           mount_path: /music
-          #? Read-write so --apply mode can write tags; dry-run mode never
-          #? writes. UID 568 (see pod_security_context) owns the NFS files.
+          #? Read-write so live mode (dry_run unchecked) can write tags;
+          #? dry-run never writes. UID 568 owns the NFS files.
           read_only: false
         - name: state
           mount_path: /var/lib/essentia
@@ -97,15 +188,109 @@ steps:
         - name: tmp
           mount_path: /tmp
 
-      pod_security_context:
-        run_as_non_root: true
-        #? UID 568 matches the Lidarr container so the pod can write tags
-        #? to the NFS-backed music library in apply mode.
-        run_as_user: 568
-        run_as_group: 568
-        fs_group: 568
-        seccomp_profile: { type: RuntimeDefault }
-      security_context:
-        allow_privilege_escalation: false
-        read_only_root_filesystem: true
-        capabilities: { drop: [ALL] }
+      pod_security_context: *podSecurityContext
+      security_context: *securityContext
+
+  - name: record
+    action: k8s.run
+    depends: tag-music
+    with:
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/record.sh
+      namespace: jobs
+
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+      volumes:
+        - name: state
+          persistent_volume_claim:
+            claim_name: essentia-tagger
+        - name: scripts
+          config_map:
+            name: essentia-tagger-scripts
+
+      volume_mounts:
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+
+      pod_security_context: *podSecurityContext
+      security_context: *securityContext
+
+  - name: cleanup
+    action: k8s.run
+    depends: record
+    with:
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/cleanup.sh
+      namespace: jobs
+
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+      volumes:
+        - name: state
+          persistent_volume_claim:
+            claim_name: essentia-tagger
+        - name: scripts
+          config_map:
+            name: essentia-tagger-scripts
+
+      volume_mounts:
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+
+      pod_security_context: *podSecurityContext
+      security_context: *securityContext
+
+  #? Runs whenever any step above fails, so a crashed run never leaves a
+  #? stale staging list behind.
+  - name: cleanup-on-failure
+    action: k8s.run
+    handlerOn: failure
+    with:
+      image: ghcr.io/mirceanton/essentia-tagger:latest
+      command: /bin/bash /scripts/cleanup.sh
+      namespace: jobs
+
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+      volumes:
+        - name: state
+          persistent_volume_claim:
+            claim_name: essentia-tagger
+        - name: scripts
+          config_map:
+            name: essentia-tagger-scripts
+
+      volume_mounts:
+        - name: state
+          mount_path: /var/lib/essentia
+        - name: scripts
+          mount_path: /scripts
+          read_only: true
+
+      pod_security_context: *podSecurityContext
+      security_context: *securityContext
