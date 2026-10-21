@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
-# Step 4 — record: mark every file from the scan step's list as processed
-# in the tracking file. Only runs after the tag step succeeds, so a failed
-# run leaves the files untracked and they get retried next time.
+# Step 4 — record: mark files only after a successful live tag step.
+# Failed or dry runs leave files eligible for a later live run.
 set -euo pipefail
 
 PROCESSED_FILE="/var/lib/essentia/processed.txt"
 LIST_FILE="/var/lib/essentia/staging/to-process.lst"
+
+if [ "${ESSENTIA_DRY_RUN:-true}" != "false" ]; then
+    echo "Dry run complete. Tracking file unchanged so files remain eligible for a live run."
+    exit 0
+fi
 
 if [ ! -s "$LIST_FILE" ]; then
     echo "Nothing was processed. Tracking file unchanged."
