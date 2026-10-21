@@ -15,10 +15,10 @@ description: |
 
   ## Write mode
 
-  By default this runs in dry-run mode. To enable actual tag writing:
-  1. Remove `--dry-run` from the command args in the Dagu UI
-  2. Set the music volume mount to `read_only: false`
-  3. Add `--overwrite` to replace existing tags (optional)
+  The `mode` parameter selects between dry-run (analyze only, the default)
+  and apply (write genre/mood tags to the audio files). The music volume is
+  mounted read-write so apply mode can write tags; the pod runs as UID 568
+  (same as Lidarr) so ownership matches on NFS.
 
   ## Performance
 
@@ -30,6 +30,13 @@ schedule: "0 3 * * *" #? daily at 3am
 catchup_window: 1m
 
 params:
+  - name: mode
+    type: string
+    default: "--dry-run"
+    description: Tagging mode — dry-run (analyze only) or apply (write tags)
+    enum:
+      - "--dry-run"
+      - "--apply"
   - name: force
     type: boolean
     default: false
@@ -42,12 +49,14 @@ steps:
       #? Pin to a specific sha tag after the image is published.
       #? https://github.com/mirceanton/home-ops/issues/632
       image: ghcr.io/mirceanton/essentia-tagger:latest
-      command: /bin/bash /scripts/wrapper.sh --dry-run --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
+      command: /bin/bash /scripts/wrapper.sh --genres 3 --genre-threshold 15 --genre-format parent_child --mood-threshold 0.5 --log-dir /var/log/essentia --workers 4
       namespace: jobs
 
       env:
         - name: ESSENTIA_FORCE
           value: "${params.force}"
+        - name: ESSENTIA_MODE
+          value: "${params.mode}"
 
       resources:
         requests:
@@ -75,7 +84,9 @@ steps:
       volume_mounts:
         - name: music
           mount_path: /music
-          read_only: true
+          #? Read-write so --apply mode can write tags; dry-run mode never
+          #? writes. UID 568 (see pod_security_context) owns the NFS files.
+          read_only: false
         - name: state
           mount_path: /var/lib/essentia
         - name: scripts
@@ -88,8 +99,8 @@ steps:
 
       pod_security_context:
         run_as_non_root: true
-        #? UID 568 matches the Lidarr container so the pod can write to NFS
-        #? when read_only is disabled and --dry-run is removed.
+        #? UID 568 matches the Lidarr container so the pod can write tags
+        #? to the NFS-backed music library in apply mode.
         run_as_user: 568
         run_as_group: 568
         fs_group: 568

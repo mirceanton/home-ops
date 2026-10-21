@@ -1,10 +1,11 @@
 #!/bin/bash
 # Wrapper that processes only audio files not yet recorded in the tracking
 # file. Set ESSENTIA_FORCE=true to clear the tracking file and re-process
-# the entire library.
+# the entire library. ESSENTIA_MODE=--apply writes tags to the files;
+# anything else (default) runs the tagger in dry-run mode.
 #
 # Usage:
-#   /bin/bash /scripts/wrapper.sh [--dry-run] [--genres N] [--overwrite] ...
+#   /bin/bash /scripts/wrapper.sh [--genres N] [--overwrite] ...
 #
 # The MUSIC_DIR is expected at /music (NFS mount).
 # The state file lives at /var/lib/essentia/processed.txt (PVC).
@@ -15,6 +16,17 @@ PROCESSED_FILE="/var/lib/essentia/processed.txt"
 MUSIC_DIR="/music"
 TEMP_DIR="/tmp/to-process"
 LOG_DIR="/var/log/essentia"
+
+# --- resolve run mode --------------------------------------------------
+# The Dagu UI exposes a mode param ("--dry-run" | "--apply"); only --apply
+# enables tag writing, everything else stays dry-run.
+if [ "${ESSENTIA_MODE:---dry-run}" = "--apply" ]; then
+    DRY_RUN_FLAG=""
+    echo "MODE: apply (tags will be written to files)"
+else
+    DRY_RUN_FLAG="--dry-run"
+    echo "MODE: dry-run (analyze only, no tags written)"
+fi
 
 # --- force re-process -------------------------------------------------
 if [ "${ESSENTIA_FORCE:-false}" = "true" ]; then
@@ -59,6 +71,7 @@ python /app/docker-entrypoint.py \
     --model-dir /app/essentia_models \
     "$TEMP_DIR" \
     --auto \
+    ${DRY_RUN_FLAG:+"$DRY_RUN_FLAG"} \
     "$@"
 
 exit_code=$?
