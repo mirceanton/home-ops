@@ -1,52 +1,21 @@
 ---
-description: |
-  Analyze the Lidarr-managed music library with Essentia ML models for
-  genre and mood tagging. Processes only files not yet recorded in the
-  PVC-backed tracking file. Check the "Force" box in the UI to clear
-  the tracking file and re-process every file.
+description: Runs Essentia ML Models to tag the Music Library with mood and genre tags.
 
-  ## Pipeline
-
-  1. `prepare` — ensures the tracking file exists; truncates it when
-     the Force checkbox is set
-  2. `scan` — compares the library against the tracking file and writes
-     the list of unprocessed files to the state PVC
-  3. `tag-music` — symlinks the listed files into a temp dir and runs
-     the essentia-tagger entrypoint over them (exits fast when the list
-     is empty)
-  4. `record` — marks the processed files in the tracking file (only
-     runs after tagging succeeds, so failures are retried next run)
-  5. `cleanup` — removes the staging list; also wired as a failure
-     handler so a crashed run leaves no stale state
-
-  ## Write mode
-
-  Uncheck "Dry run" in the UI to write genre/mood tags to the audio
-  files. The music volume is mounted read-write in the tag step; the
-  pods run as UID 568 (same as Lidarr) so ownership matches on NFS.
-
-  ## Performance
-
-  CPU-only, ~4 sec/track with 4 workers, ~6 GB RAM. Daily cron
-  typically processes just a handful of new Lidarr additions.
-
-group: Home-Ops
+group: Music
 schedule: "0 3 * * *" #? daily at 3am
 catchup_window: 1m
+overlap_policy: skip #? The staging list is shared on one PVC across runs
 
 params:
   - name: dry_run
     type: boolean
-    default: true
+    default: false
     description: Analyze only — uncheck to write tags to the audio files
   - name: force
     type: boolean
     default: false
-    description: Clear tracking file and re-process every file
+    description: Clear tracking file and re-process every file on a live run
 
-#? All steps reuse the essentia-tagger image (python:3.10-slim base with
-#? bash/find/grep) because it is already cached on the nodes; the helper
-#? steps are lightweight and only pay for scheduling.
 steps:
   - name: prepare
     action: k8s.run
@@ -58,6 +27,8 @@ steps:
       env:
         - name: ESSENTIA_FORCE
           value: "${params.force}"
+        - name: ESSENTIA_DRY_RUN
+          value: "${params.dry_run}"
 
       resources:
         requests:
@@ -84,8 +55,6 @@ steps:
 
       pod_security_context: &podSecurityContext
         run_as_non_root: true
-        #? UID 568 matches the Lidarr container so the pods can write tags
-        #? to the NFS-backed music library and share the state PVC.
         run_as_user: 568
         run_as_group: 568
         fs_group: 568
@@ -199,6 +168,10 @@ steps:
       command: /bin/bash /scripts/record.sh
       namespace: jobs
 
+      env:
+        - name: ESSENTIA_DRY_RUN
+          value: "${params.dry_run}"
+
       resources:
         requests:
           cpu: 10m
@@ -259,11 +232,11 @@ steps:
       pod_security_context: *podSecurityContext
       security_context: *securityContext
 
-  #? Runs whenever any step above fails, so a crashed run never leaves a
-  #? stale staging list behind.
-  - name: cleanup-on-failure
+#? Always clean up after the main steps, including failures and aborts.
+handler_on:
+  exit:
+    name: cleanup-on-exit
     action: k8s.run
-    handlerOn: failure
     with:
       image: ghcr.io/mirceanton/essentia-tagger:latest
       command: /bin/bash /scripts/cleanup.sh

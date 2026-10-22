@@ -1,6 +1,10 @@
 ---
 description: Audits the music library with beets and produces metadata quality reports
-group: Home-Ops
+
+group: Music
+schedule: "0 9 * * *" #? daily at 9am
+catchup_window: 1m
+overlap_policy: skip #? The staging list is shared on one PVC across runs
 
 params:
   - name: mode
@@ -21,8 +25,6 @@ steps:
       env:
         - name: HOME
           value: /data
-        # SQLite needs a writable temp dir for sorting queries; the root
-        # filesystem is read-only, so point it at the emptyDir volume.
         - name: SQLITE_TMPDIR
           value: /data
         - name: TMPDIR
