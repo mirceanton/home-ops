@@ -9,7 +9,7 @@ steps:
   - name: publish
     action: k8s.run
     with:
-      image: ghcr.io/sholdee/crd-schema-publisher:v2026.1010.191442
+      image: ghcr.io/sholdee/crd-schema-publisher:v2026.1023.52824
       service_account: dagu-crd-schema-publisher
       namespace: jobs
 
