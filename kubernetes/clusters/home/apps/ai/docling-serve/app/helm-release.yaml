@@ -32,7 +32,7 @@ spec:
             # Layout, table and OCR model weights are baked into the image.
             image:
               repository: ghcr.io/docling-project/docling-serve-cpu
-              tag: v1.38.0
+              tag: v1.38.1
 
             env:
               DOCLING_SERVE_ENABLE_UI: "true"
