@@ -68,6 +68,12 @@
       "automerge": false
     },
     {
+      "description": "git-sync v4.8.0 wedged homer's rollout (automerge deployed the image, then the init container aborted on the root-owned emptyDir /tmp/git: upstream commit 3f5e7bbe dropped the implicit safe.directory=*, so git rev-parse dies with 'dubious ownership' and the Deployment hits ProgressDeadlineExceeded); homer was reverted to v4.7.1 and this version is also not a published upstream release (no tag/release in kubernetes/git-sync), so never automerge git-sync. Revisit once upstream publishes a release AND homer's git-sync args carry --git-config=safe.directory:*",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["registry.k8s.io/git-sync/git-sync"],
+      "automerge": false
+    },
+    {
       "description": "ghcr.io/renovatebot/renovate ships new tags daily (sometimes several times a day); limit it to a weekly PR instead of flooding the queue",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
