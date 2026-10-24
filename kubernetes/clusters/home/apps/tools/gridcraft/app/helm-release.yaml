@@ -20,7 +20,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/gridcraft-web
-              tag: 0.11.1
+              tag: sha-9da82b72e7a437b86c7f236824644beb0fd6a6eb
 
             probes:
               liveness:
