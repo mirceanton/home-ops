@@ -69,9 +69,19 @@ spec:
           - name: envoy-internal
             namespace: network-system
         rules:
+          - name: word-redirect
+            matches:
+              - path: { type: Exact, value: /word }
+            filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /word/
+                  statusCode: 302
           - name: word
             matches:
-              - path: { type: PathPrefix, value: /word }
+              - path: { type: PathPrefix, value: /word/ }
             filters:
               - type: URLRewrite
                 urlRewrite:

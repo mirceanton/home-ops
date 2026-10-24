@@ -69,9 +69,19 @@ spec:
           - name: envoy-internal
             namespace: network-system
         rules:
+          - name: powerpoint-redirect
+            matches:
+              - path: { type: Exact, value: /powerpoint }
+            filters:
+              - type: RequestRedirect
+                requestRedirect:
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /powerpoint/
+                  statusCode: 302
           - name: powerpoint
             matches:
-              - path: { type: PathPrefix, value: /powerpoint }
+              - path: { type: PathPrefix, value: /powerpoint/ }
             filters:
               - type: URLRewrite
                 urlRewrite:
