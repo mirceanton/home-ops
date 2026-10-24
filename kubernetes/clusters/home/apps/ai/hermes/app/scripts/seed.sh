@@ -32,6 +32,9 @@ for f in /seed/profiles.*.config.yaml; do
   cp "$f" "/opt/data/profiles/$name/config.yaml"
 
   echo "Importing SOUL.md..."
+  cp "$f" "/opt/data/profiles/$name/config.yaml"
+
+  echo "Importing SOUL.md..."
   cp "/seed/profiles.$name.SOUL.md" "/opt/data/profiles/$name/SOUL.md"
 
   echo "Seeding .env file..."
@@ -50,3 +53,4 @@ done
 # =================================================================================================
 mkdir -p /opt/data/.local/bin
 ln -sfn /opt/mise/mise /opt/data/.local/bin/mise
+ln -sfn /opt/filmcraft/bin/filmcraft-cli /opt/data/.local/bin/filmcraft-cli
