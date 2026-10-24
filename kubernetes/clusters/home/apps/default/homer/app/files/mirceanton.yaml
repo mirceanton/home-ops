@@ -18,3 +18,9 @@ services:
         url: "https://hermes.home.mirceanton.com"
         target: "_blank"
         logo: "assets/icons/webp/hermes-icon.webp"
+
+      - name: "FigCraft"
+        subtitle: "Interface Designer"
+        url: "https://design.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-pen-ruler"

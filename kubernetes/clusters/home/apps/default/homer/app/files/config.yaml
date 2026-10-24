@@ -116,6 +116,12 @@ services:
         target: "_blank"
         logo: "assets/modelhub.svg"
 
+      - name: "SolidCraft"
+        subtitle: "Parametric 3D CAD"
+        url: "https://cad.home.mirceanton.com"
+        target: "_blank"
+        icon: "fas fa-cubes"
+
   - name: "Downloads"
     icon: "fa-solid fa-skull-crossbones"
     items:
@@ -176,6 +182,24 @@ services:
   - name: "Tools"
     icon: "fas fa-tools"
     items:
+      - name: "WordCraft"
+        subtitle: "Document Editor"
+        url: "https://office.home.mirceanton.com/word"
+        target: "_blank"
+        icon: "fas fa-file-word"
+
+      - name: "GridCraft"
+        subtitle: "Spreadsheet Editor"
+        url: "https://office.home.mirceanton.com/excel"
+        target: "_blank"
+        icon: "fas fa-file-excel"
+
+      - name: "DeckCraft"
+        subtitle: "Presentation Editor"
+        url: "https://office.home.mirceanton.com/powerpoint"
+        target: "_blank"
+        icon: "fas fa-file-powerpoint"
+
       - name: ConvertX
         subtitle: "File Converter"
         url: "https://convert.home.mirceanton.com"
