@@ -32,9 +32,6 @@ for f in /seed/profiles.*.config.yaml; do
   cp "$f" "/opt/data/profiles/$name/config.yaml"
 
   echo "Importing SOUL.md..."
-  cp "$f" "/opt/data/profiles/$name/config.yaml"
-
-  echo "Importing SOUL.md..."
   cp "/seed/profiles.$name.SOUL.md" "/opt/data/profiles/$name/SOUL.md"
 
   echo "Seeding .env file..."
