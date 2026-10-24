@@ -23,8 +23,8 @@ spec:
         containers:
           zfs-exporter:
             image:
-              repository: ghcr.io/mirceanton/zfs-exporter
-              tag: 2.5.1@sha256:fc1b45d89fd7c071f49f9eb11590e684f35642dcfe0ca65590ee93e94c818547
+              repository: ghcr.io/pdf/zfs_exporter
+              tag: v2.5.1@sha256:95289975bd8983ed70f2281720d6af30c7f6e2c2283df03d36b8e7e0bfab0c9d
             resources:
               requests:
                 cpu: 10m
@@ -32,8 +32,13 @@ spec:
               limits:
                 memory: 64Mi
 
-            #? Needs privileged access to /dev/zfs to query pool/dataset state via libzfs ioctls.
-            #? On Talos, ZFS is loaded as a kernel extension so /dev/zfs is available on the host.
+            #? The upstream image runs the host's own zpool/zfs binaries chrooted into /host
+            #? (--host-root=/host is the image default), so the CLI always matches the host's
+            #? ZFS kernel module. On Talos these come from the siderolabs/zfs system extension
+            #? and live under /usr/local/{bin,sbin}, which the default --host-root.path covers.
+            #? Privileged access is still required: Kubernetes has no --device equivalent, so
+            #? /dev/zfs (visible through the host-root mount) is refused by the device cgroup
+            #? otherwise. Inside the chroot each command still runs as nobody.
             securityContext:
               privileged: true
 
@@ -60,8 +65,16 @@ spec:
             scrapeTimeout: 30s
 
     persistence:
-      dev-zfs:
+      #? Upstream image requirement: host root mounted read-only at /host as a slave of the
+      #? host's mounts (HostToContainer), so datasets the host unmounts also disappear from
+      #? the container (a private mount would keep them mounted and block host-side destroys).
+      #? /dev/zfs is reached through this mount inside the chroot; privileged mode grants the
+      #? device cgroup access. No separate /dev/zfs hostPath is needed.
+      host-root:
         type: hostPath
-        hostPath: /dev/zfs
+        hostPath: /
+        hostPathType: Directory
         globalMounts:
-          - path: /dev/zfs
+          - path: /host
+            readOnly: true
+            mountPropagation: HostToContainer
