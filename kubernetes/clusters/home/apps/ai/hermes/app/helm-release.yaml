@@ -59,6 +59,11 @@ spec:
               PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
 
+              # GitHub App auth for Hermes' native GitHub integration.
+              GITHUB_APP_ID: "900136"
+              GITHUB_APP_INSTALLATION_ID: "53131225"
+              GITHUB_APP_PRIVATE_KEY_PATH: /var/run/secrets/github-app/private_key_pem
+
               # LiteLLM
               LITELLM_BASE_URL: "http://litellm.ai.svc.cluster.local:4000/v1"
               LITELLM_API_KEY:
@@ -169,6 +174,15 @@ spec:
           hermes:
             seed-config:
               - path: /scripts
+                readOnly: true
+
+      github-app:
+        type: secret
+        name: hermes-github-app
+        advancedMounts:
+          hermes:
+            app:
+              - path: /var/run/secrets/github-app
                 readOnly: true
 
       mise:
