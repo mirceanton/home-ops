@@ -56,7 +56,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
 
     service:
-      app:
+      gridcraft:
         controller: gridcraft
         ports:
           http:

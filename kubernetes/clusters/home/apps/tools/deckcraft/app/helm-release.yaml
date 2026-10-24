@@ -56,7 +56,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
 
     service:
-      app:
+      deckcraft:
         controller: deckcraft
         ports:
           http:
