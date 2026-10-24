@@ -71,7 +71,7 @@ spec:
         rules:
           - name: excel-redirect
             matches:
-              - path: { type: PathExact, value: /excel }
+              - path: { type: Exact, value: /excel }
             filters:
               - type: RequestRedirect
                 requestRedirect:

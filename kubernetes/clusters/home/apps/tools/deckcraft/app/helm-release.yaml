@@ -71,7 +71,7 @@ spec:
         rules:
           - name: powerpoint-redirect
             matches:
-              - path: { type: PathExact, value: /powerpoint }
+              - path: { type: Exact, value: /powerpoint }
             filters:
               - type: RequestRedirect
                 requestRedirect:

@@ -71,7 +71,7 @@ spec:
         rules:
           - name: word-redirect
             matches:
-              - path: { type: PathExact, value: /word }
+              - path: { type: Exact, value: /word }
             filters:
               - type: RequestRedirect
                 requestRedirect:
