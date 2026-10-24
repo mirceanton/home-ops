@@ -8,6 +8,9 @@ resources:
   - ./namespace.yaml
   - ./carbon
   - ./convertx
+  - ./deckcraft
   - ./drawio
+  - ./gridcraft
   - ./omni-tools
   - ./openspeedtest
+  - ./wordcraft
