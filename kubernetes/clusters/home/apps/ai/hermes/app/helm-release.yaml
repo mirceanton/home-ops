@@ -25,11 +25,7 @@ spec:
             envFrom:
               - secretRef: { name: hermes-secret }
               - secretRef: { name: hermes-discord-secret }
-              - secretRef: { name: hermes-github-app-secret }
             env:
-              GITHUB_APP_ID: "900136"
-              GITHUB_APP_INSTALLATION_ID: "53131225"
-              GITHUB_APP_PRIVATE_KEY_PATH: /var/run/secrets/github-app/private_key_pem
               LITELLM_API_KEY:
                 valueFrom:
                   secretKeyRef:
