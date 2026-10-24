@@ -7,4 +7,5 @@ namespace: youtube
 resources:
   - ./namespace.yaml
   - ./davinci
+  - ./figcraft
   - ./teleprompter
