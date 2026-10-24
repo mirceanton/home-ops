@@ -56,7 +56,7 @@ spec:
               TZ: Europe/Bucharest
               HOME: /opt/data
               HERMES_HOME: /opt/data
-              PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/filmcraft/bin:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
 
               # LiteLLM
@@ -70,8 +70,8 @@ spec:
               # DASHBOARD settings
               HERMES_DASHBOARD: "1"
               HERMES_DASHBOARD_HOST: 0.0.0.0
-              HERMES_DASHBOARD_PORT: &port 9119
               HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.home.mirceanton.com"
+              HERMES_DASHBOARD_PORT: &port 9119
               HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email"
               HERMES_DASHBOARD_OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
               HERMES_DASHBOARD_OIDC_CLIENT_ID:
@@ -93,7 +93,6 @@ spec:
             resources:
               requests:
                 cpu: 150m
-                memory: 1Gi
               limits:
                 memory: 8Gi
 
@@ -193,6 +192,10 @@ spec:
         advancedMounts:
           hermes:
             app:
+              - path: /opt/filmcraft
+                subPath: opt/filmcraft
+                readOnly: true
+            seed-config:
               - path: /opt/filmcraft
                 subPath: opt/filmcraft
                 readOnly: true

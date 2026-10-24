@@ -40,7 +40,7 @@ mcp_servers:
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
   AnyType:
-    url: http://litellm.ai.svc.cluster.local:4000/anytype/mcp/
+    url: http://litellm.ai.svc.local:4000/anytype/mcp/
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
 
@@ -51,7 +51,7 @@ mcp_servers:
   # editing session per server instance (single-writer per project).
   # timeout is high because command_run can carry exports/renders.
   filmcraft:
-    command: /opt/filmcraft/bin/filmcraft-cli
+    command: /opt/data/.local/bin/filmcraft-cli
     args: [mcp]
     timeout: 600
     connect_timeout: 120
