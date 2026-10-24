@@ -44,6 +44,18 @@ mcp_servers:
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
 
+  # Headless NLE for the autonomous video pipeline. Stdio transport: the
+  # server is a filmcraft-cli subprocess with full access to the NFS media
+  # mounts (/Volumes/*) this pod already has. Starts projectless; open or
+  # create projects via file.open / file.newProject + file.saveAs. One
+  # editing session per server instance (single-writer per project).
+  # timeout is high because command_run can carry exports/renders.
+  filmcraft:
+    command: /opt/filmcraft/bin/filmcraft-cli
+    args: [mcp]
+    timeout: 600
+    connect_timeout: 120
+
 toolsets: [kanban, hermes-cli]
 
 skills:
