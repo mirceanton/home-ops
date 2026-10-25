@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: tavily-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: tavily
+  url: https://mcp.tavily.com/mcp/
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: tavily-mcp-secret
+    key: api_key
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name tavily-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  data:
+    - secretKey: api_key
+      remoteRef:
+        key: Tavily API Key
+        property: password

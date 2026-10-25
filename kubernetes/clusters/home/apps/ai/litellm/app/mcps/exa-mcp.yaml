@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: exa-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: exa
+  url: https://mcp.exa.ai/mcp
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: exa-mcp-secret
+    key: api_key
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: &name exa-mcp-secret
+spec:
+  refreshInterval: 1h
+
+  secretStoreRef:
+    name: onepassword
+    kind: ClusterSecretStore
+
+  target:
+    name: *name
+    creationPolicy: Owner
+
+  data:
+    - secretKey: api_key
+      remoteRef:
+        key: EXA API Key
+        property: password

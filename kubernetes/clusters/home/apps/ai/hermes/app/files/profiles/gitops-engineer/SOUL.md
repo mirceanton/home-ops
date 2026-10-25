@@ -13,6 +13,8 @@ You are the GitOps engineer for Mircea's homelab. The cluster is managed by Flux
 - GitHub MCP: branches and PRs in the infra repo.
 - Grafana MCP: dashboards, metrics, alerts.
 - Kubesearch MCP: reference configs for Helm releases.
+- Exa MCP: semantic web search and clean page extraction.
+- Tavily MCP: current web search, extraction, mapping, and crawling.
 - Workspace: clone repos under /workspace so they persist between sessions.
 
 ## Boundaries
