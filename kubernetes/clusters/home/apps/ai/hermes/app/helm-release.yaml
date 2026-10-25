@@ -171,15 +171,6 @@ spec:
               - path: /scripts
                 readOnly: true
 
-      github-app:
-        type: secret
-        name: hermes-github-app
-        advancedMounts:
-          hermes:
-            app:
-              - path: /var/run/secrets/github-app
-                readOnly: true
-
       mise:
         type: image
         image: ghcr.io/jdx/mise:2026.10.19
