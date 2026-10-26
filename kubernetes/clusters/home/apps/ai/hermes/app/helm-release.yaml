@@ -21,7 +21,7 @@ spec:
           seed-config:
             image:
               repository: ghcr.io/fluxcd/flux-cli
-              tag: v2.9.6@sha256:b1ac18156f227af9a524b842a96f2c20986c7a779ef721df3ba4e4540f449d76
+              tag: v2.10.0@sha256:1a5178b1770052d6e88ab1c7c8434c5ac9bca8a8ab984dcaf6b9df31814ce9f2
             envFrom:
               - secretRef: { name: hermes-secret }
               - secretRef: { name: hermes-discord-secret }
