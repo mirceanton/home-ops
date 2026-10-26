@@ -56,7 +56,7 @@ spec:
               TZ: Europe/Bucharest
               HOME: /opt/data
               HERMES_HOME: /opt/data
-              PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+              PATH: "/opt/data/.local/share/mise/shims:/opt/mise:/opt/filmcraft/bin:/opt/hermes/bin:/opt/hermes/.venv/bin:/opt/data/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
 
               # LiteLLM
@@ -183,6 +183,16 @@ spec:
             seed-config:
               - path: /opt/mise
                 subPath: usr/local/bin
+                readOnly: true
+
+      filmcraft:
+        type: image
+        image: ghcr.io/mirceanton/filmcraft:0.12.0@sha256:ed6fb8b6c7091cad4daed33f8c9147e949847e58eafb1afb5adc42b303362482
+        advancedMounts:
+          hermes:
+            app:
+              - path: /opt/filmcraft
+                subPath: opt/filmcraft
                 readOnly: true
 
       tmp:
