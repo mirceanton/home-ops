@@ -30,7 +30,11 @@ spec:
           openspeedtest:
             image:
               repository: openspeedtest/latest
-              tag: v2.0.7
+              # v2.0.7 ships without /entrypoint.sh: the nginx entrypoint execs it
+              # and the container dies with exit 127 (CrashLoopBackOff), so the
+              # rollout never becomes available. Held at v2.0.6 by a Renovate rule
+              # in .renovate/versions.json5 until upstream publishes a fixed image.
+              tag: v2.0.6
             env:
               # Image default is DOMAIN_NAME=false (non-empty string), which
               # makes `if [ "$DOMAIN_NAME" ]` truthy and triggers sed -i on
