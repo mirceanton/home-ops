@@ -10,7 +10,7 @@ secrets: ./talsecret.sops.yaml
 talosVersion: v1.14.2
 
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
-kubernetesVersion: v1.37.1
+kubernetesVersion: v1.37.2
 
 additionalSubjectAltNames:
   - zimaboard.utils.h.mirceanton.com
