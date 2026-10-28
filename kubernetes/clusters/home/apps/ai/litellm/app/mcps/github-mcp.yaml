@@ -18,7 +18,7 @@ spec:
 
   workload:
     image: ghcr.io/github/github-mcp-server:v2.0.3@sha256:250bc6ce70788207608ef74cef4397230ff2e8481218da74d6093e4bd9101132
-    args: ["http"]
+    args: ["http", "--toolsets", "default,actions"]
     port: 8082
     path: /mcp
 
