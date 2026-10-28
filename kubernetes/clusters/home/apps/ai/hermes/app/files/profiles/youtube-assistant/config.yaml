@@ -43,6 +43,14 @@ mcp_servers:
     url: http://litellm.ai.svc.cluster.local:4000/anytype/mcp/
     headers:
       Authorization: Bearer ${LITELLM_API_KEY}
+  Exa:
+    url: http://litellm.ai.svc.cluster.local:4000/exa/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+  Tavily:
+    url: http://litellm.ai.svc.cluster.local:4000/tavily/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
 
 toolsets: [kanban, hermes-cli]
 

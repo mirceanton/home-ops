@@ -21,6 +21,14 @@ mcp_servers:
   yt-dlp:
     command: uvx
     args: [yt-dlp-mcp]
+  Exa:
+    url: http://litellm.ai.svc.cluster.local:4000/exa/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
+  Tavily:
+    url: http://litellm.ai.svc.cluster.local:4000/tavily/mcp/
+    headers:
+      Authorization: Bearer ${LITELLM_API_KEY}
 
 skills:
   disabled:
