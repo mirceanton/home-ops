@@ -30,7 +30,7 @@ spec:
           openspeedtest:
             image:
               repository: openspeedtest/latest
-              tag: v2.0.7
+              tag: v2.0.8
             env:
               # Image default is DOMAIN_NAME=false (non-empty string), which
               # makes `if [ "$DOMAIN_NAME" ]` truthy and triggers sed -i on
