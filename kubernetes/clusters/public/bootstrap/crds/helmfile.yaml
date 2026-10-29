@@ -17,4 +17,4 @@ releases:
   - name: envoy-gateway
     namespace: network-system
     chart: oci://docker.io/envoyproxy/gateway-helm
-    version: 1.9.2
+    version: 1.9.3
