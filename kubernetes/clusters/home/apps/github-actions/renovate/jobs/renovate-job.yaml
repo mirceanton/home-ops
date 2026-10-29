@@ -28,10 +28,7 @@ spec:
       value: debug
     - name: RENOVATE_ALLOWED_COMMANDS
       value: |-
-        ["pnpm run bundle", "mise install", "mise lock", "helm-docs --chart-search-root=. --log-level=warn", "helm-schema --chart-search-root . --skip-auto-generation required,additionalProperties --append-newline"]
-    - name: RENOVATE_ALLOWED_UNSAFE_EXECUTIONS
-      value: |-
-        ["mise"]
+        ["pnpm run bundle", "helm-docs --chart-search-root=. --log-level=warn", "helm-schema --chart-search-root . --skip-auto-generation required,additionalProperties --append-newline"]
     # helm-docs/helm-schema live in their own OCI image volumes (see below)
     # outside the base image's default PATH dirs, since neither ships a
     # conveniently-empty directory to mount into like mise does. Appended
