@@ -9,6 +9,22 @@ spec:
     level:
       default: info
 
+  # Access logs to stdout: one line per request, including the address the
+  # connection actually came from (src=), the X-Forwarded-For envoy received and
+  # the Host/User-Agent. Without this a request can only be attributed by
+  # correlating application logs, which record the proxy address instead.
+  telemetry:
+    accessLog:
+      settings:
+        - format:
+            type: Text
+            text: |
+              [%START_TIME%] "%REQ(:METHOD)% %REQ(X-ENVOY-ORIGINAL-PATH?:PATH)% %PROTOCOL%" %RESPONSE_CODE% %RESPONSE_FLAGS% %BYTES_RECEIVED% %BYTES_SENT% %DURATION% src=%DOWNSTREAM_REMOTE_ADDRESS_WITHOUT_PORT% xff="%REQ(X-FORWARDED-FOR)%" host="%REQ(:AUTHORITY)%" ua="%REQ(USER-AGENT)%" req="%REQ(X-REQUEST-ID)%"
+          sinks:
+            - type: File
+              file:
+                path: /dev/stdout
+
   provider:
     type: Kubernetes
     kubernetes:
