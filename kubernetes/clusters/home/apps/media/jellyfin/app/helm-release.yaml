@@ -18,6 +18,44 @@ spec:
       jellyfin:
         annotations:
           reloader.stakater.com/auto: "true"
+        # Jellyfin only honours X-Forwarded-For when the sending address is listed
+        # under Dashboard -> Networking -> Known proxies, which is stored in
+        # /config/config/network.xml on the volsync-backed PVC. Without it every
+        # request appears to come from the Envoy pod and the activity log cannot
+        # show the real client, so register the pod network before Jellyfin starts.
+        initContainers:
+          known-proxies:
+            image:
+              repository: ghcr.io/home-operations/busybox
+              tag: 1.38.0
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                proxy=10.244.0.0/24
+                file=/config/config/network.xml
+
+                # First start: Jellyfin has not written its configuration yet.
+                if [ ! -f "${file}" ]; then
+                  echo "network.xml not present yet, nothing to do"
+                  exit 0
+                fi
+                grep -qF "<string>${proxy}</string>" "${file}" && exit 0
+
+                if grep -qF '<KnownProxies />' "${file}"; then
+                  sed -i "s|<KnownProxies />|<KnownProxies><string>${proxy}</string></KnownProxies>|" "${file}"
+                elif grep -qF '</KnownProxies>' "${file}"; then
+                  sed -i "s|</KnownProxies>|<string>${proxy}</string></KnownProxies>|" "${file}"
+                else
+                  sed -i "s|</NetworkConfiguration>|<KnownProxies><string>${proxy}</string></KnownProxies></NetworkConfiguration>|" "${file}"
+                fi
+
+                grep -qF "<string>${proxy}</string>" "${file}"
+                echo "registered known proxy ${proxy} in ${file}"
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
         containers:
           main:
             image:
