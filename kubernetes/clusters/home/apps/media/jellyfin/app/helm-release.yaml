@@ -30,38 +30,40 @@ spec:
               tag: 1.38.0
             command:
               - /bin/sh
-              - -ec
+              - -c
               - |
-                proxy=10.244.0.0/24
-                file=/config/config/network.xml
-
-                # Jellyfin only serialises network.xml when a network setting is
-                # changed, so a long-lived volume usually has none. Write the
-                # minimal document .NET deserialises into NetworkConfiguration;
-                # every element left out keeps its built-in default.
-                if [ ! -f "${file}" ]; then
-                  mkdir -p "$(dirname "${file}")"
-                  cat > "${file}" <<EOF
+                # Flux postBuild substitutes dollar-brace expressions in this
+                # manifest and resolves unknown ones to empty strings, so this
+                # script deliberately holds no shell variables: the path and CIDR
+                # are literal. It must never block the pod either, hence no -e.
+                if [ ! -f /config/config/network.xml ]; then
+                  mkdir -p /config/config
+                  cat > /config/config/network.xml <<'EOF'
                 <?xml version="1.0" encoding="utf-8"?>
                 <NetworkConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
                   <KnownProxies>
-                    <string>${proxy}</string>
+                    <string>10.244.0.0/24</string>
                   </KnownProxies>
                 </NetworkConfiguration>
                 EOF
                 fi
-                grep -qF "<string>${proxy}</string>" "${file}" && { echo "known proxy ${proxy} present in ${file}"; exit 0; }
 
-                if grep -qF '<KnownProxies />' "${file}"; then
-                  sed -i "s|<KnownProxies />|<KnownProxies><string>${proxy}</string></KnownProxies>|" "${file}"
-                elif grep -qF '</KnownProxies>' "${file}"; then
-                  sed -i "s|</KnownProxies>|<string>${proxy}</string></KnownProxies>|" "${file}"
-                else
-                  sed -i "s|</NetworkConfiguration>|<KnownProxies><string>${proxy}</string></KnownProxies></NetworkConfiguration>|" "${file}"
+                if ! grep -qF '<string>10.244.0.0/24</string>' /config/config/network.xml 2>/dev/null; then
+                  if grep -qF '<KnownProxies />' /config/config/network.xml; then
+                    sed -i 's|<KnownProxies />|<KnownProxies><string>10.244.0.0/24</string></KnownProxies>|' /config/config/network.xml
+                  elif grep -qF '</KnownProxies>' /config/config/network.xml; then
+                    sed -i 's|</KnownProxies>|<string>10.244.0.0/24</string></KnownProxies>|' /config/config/network.xml
+                  else
+                    sed -i 's|</NetworkConfiguration>|<KnownProxies><string>10.244.0.0/24</string></KnownProxies></NetworkConfiguration>|' /config/config/network.xml
+                  fi
                 fi
 
-                grep -qF "<string>${proxy}</string>" "${file}"
-                echo "registered known proxy ${proxy} in ${file}"
+                if grep -qF '<string>10.244.0.0/24</string>' /config/config/network.xml; then
+                  echo "known proxy 10.244.0.0/24 is registered in /config/config/network.xml"
+                else
+                  echo "WARNING: could not register 10.244.0.0/24 as a known proxy"
+                fi
+                exit 0
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
