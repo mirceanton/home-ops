@@ -23,7 +23,7 @@ spec:
         ld_library_path: [system]
         image:
           # renovate: datasource=docker
-          reference: ghcr.io/cloudnative-pg/postgis-extension-testing:3.6.4-18-trixie@sha256:c4d7cb6165d493769b0ef9217a2d22ce1163a9febeda4cce859c6880d9556577
+          reference: ghcr.io/cloudnative-pg/postgis-extension-testing:3.6.4-18-trixie@sha256:fcc5c9dfa3918bc0ce256c3c1a9ad0a32580481253cea836cb934255aea90f8e
       - name: vchord
         image:
           # renovate: datasource=docker
