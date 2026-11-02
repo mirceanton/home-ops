@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmodel_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMModel
+metadata:
+  name: gpt-6.1-terra
+spec:
+  proxyRef: litellm
+  modelName: gpt-6.1-terra
+  params:
+    model: chatgpt/gpt-6.1-terra
+  info:
+    mode: responses

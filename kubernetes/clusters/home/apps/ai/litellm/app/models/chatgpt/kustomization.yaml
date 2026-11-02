@@ -6,4 +6,4 @@ resources:
   - ./litellm-chatgpt-tokens.pvc.yaml
 
   - ./gpt6.yaml
-  - ./gpt5.6.yaml
+  - ./gpt6.1.yaml

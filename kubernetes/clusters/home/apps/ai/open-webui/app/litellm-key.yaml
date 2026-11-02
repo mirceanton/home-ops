@@ -14,8 +14,8 @@ spec:
     - "qwen3.8-27b"
     - "deepseek-v4-pro"
     - "gpt-6-luna"
-    - "gpt-5.6-terra"
-    - "gpt-6-sol"
+    - "gpt-6.1-terra"
+    - "gpt-6.1-sol"
 
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
