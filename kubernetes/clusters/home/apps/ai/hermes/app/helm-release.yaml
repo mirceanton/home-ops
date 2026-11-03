@@ -173,7 +173,7 @@ spec:
 
       mise:
         type: image
-        image: ghcr.io/jdx/mise:2026.10.25
+        image: ghcr.io/jdx/mise:2026.11.0
         advancedMounts:
           hermes:
             app:
