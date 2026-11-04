@@ -13,6 +13,9 @@ model:
   default: glm-5.3
   provider: litellm
 
+agent:
+  reasoning_effort: high
+
 # This profile owns the "YouTube Assistant" Discord app;
 discord:
   require_mention: true
