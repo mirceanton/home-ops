@@ -10,7 +10,7 @@ providers:
     discover_models: true
 
 model:
-  default: qwen3.8-max
+  default: glm-5.3
   provider: litellm
 
 # This profile owns the "YouTube Assistant" Discord app;
