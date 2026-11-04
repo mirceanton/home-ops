@@ -187,7 +187,7 @@ spec:
 
       filmcraft:
         type: image
-        image: ghcr.io/mirceanton/filmcraft:0.15.0@sha256:392eec3e274d31259ed3ee7f8f3796a7bcf7c4c92a08ccd13d4575656babc326
+        image: ghcr.io/mirceanton/filmcraft:0.16.0@sha256:e311ce34d235d3c4430bb7d582b0eddb2d3941f3ff8a671162432620e258f35c
         advancedMounts:
           hermes:
             app:
