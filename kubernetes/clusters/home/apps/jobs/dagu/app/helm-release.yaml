@@ -39,7 +39,7 @@ spec:
           dags:
             image: &image
               repository: ghcr.io/dagucloud/dagu
-              tag: 2.25.7
+              tag: 2.25.8
             command:
               - sh
               - -c
