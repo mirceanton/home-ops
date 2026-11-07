@@ -15,7 +15,7 @@ spec:
     # anytype-mcp only speaks stdio, so supergateway (mounted from its own image
     # below) bridges it to streamable HTTP. It runs on this image's Node 24 since
     # the supergateway image still ships Node 20.
-    image: ghcr.io/anyproto/anytype-mcp:2.0.1
+    image: ghcr.io/anyproto/anytype-mcp:v2.0.2
     command: ["node", "/supergateway/usr/local/lib/node_modules/supergateway/dist/index.js"]
     args:
       - --stdio
