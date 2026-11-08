@@ -51,7 +51,7 @@ spec:
           app:
             image:
               repository: vikunja/vikunja
-              tag: 2.7.1
+              tag: 2.8.0
 
             envFrom:
               - secretRef: { name: vikunja-secret }
