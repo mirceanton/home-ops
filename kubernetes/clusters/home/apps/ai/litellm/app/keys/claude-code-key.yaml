@@ -1,0 +1,52 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmteam_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMTeam
+metadata:
+  name: claude-code
+spec:
+  proxyRef: litellm
+  alias: claude-code
+  models: ["all-proxy-models"]
+  mcpServers: ["all-proxy-mcpservers"]
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmvirtualkey_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMVirtualKey
+metadata:
+  name: claude-code
+spec:
+  proxyRef: litellm
+  secretName: claude-code-litellm-key
+  keyAlias: claude-code
+  teamID: claude-code
+  metadata:
+    app: claude-code
+    description: API key for Claude Code MCP gateway access
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/external-secrets.io/pushsecret_v1alpha1.json
+apiVersion: external-secrets.io/v1alpha1
+kind: PushSecret
+metadata:
+  name: claude-code-litellm-key
+spec:
+  refreshInterval: 1h
+  deletionPolicy: Delete
+  updatePolicy: Replace
+
+  secretStoreRefs:
+    - name: onepassword
+      kind: ClusterSecretStore
+
+  selector:
+    secret:
+      name: claude-code-litellm-key
+
+  data:
+    - match:
+        secretKey: key
+        remoteRef:
+          remoteKey: LiteLLM Claude Code Key
+          property: password
