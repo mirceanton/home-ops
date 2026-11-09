@@ -1,0 +1,214 @@
+---
+# Presentation config for https://github.com/mirceanton/home-dashboard. Apps with a Keycloak
+# client are discovered automatically (see DASHBOARD_* in each app.ks.yaml); this file only
+# orders categories and adds links for things without a client.
+title: Home
+theme:
+  mode: auto
+  palette: default
+assetsDir: /config/assets
+categories:
+  - { name: Media }
+  - { name: Home }
+  - { name: Maker }
+  - { name: Downloads }
+  - { name: Tools }
+  - { name: AI }
+  - { name: Personal }
+  - { name: Bomkii }
+  - { name: Monitoring }
+  - { name: GitOps }
+  - { name: Networking }
+  - { name: Home Automation }
+  - { name: Servers }
+  - { name: Core Services }
+  - { name: Hardware }
+  - { name: External }
+links:
+  # --- Everyone -----------------------------------------------------------------------------
+  - title: Jellyfin
+    subtitle: Media Server
+    url: "https://movies.home.mirceanton.com"
+    icon: jellyfin
+    category: Media
+  - title: Feishin
+    subtitle: Music Player
+    url: "https://music.home.mirceanton.com"
+    icon: feishin
+    category: Media
+  - title: Navidrome
+    subtitle: Music Server
+    url: "https://navidrome.home.mirceanton.com"
+    icon: navidrome
+    category: Media
+  - title: SolidCraft
+    subtitle: Parametric 3D CAD
+    url: "https://cad.home.mirceanton.com"
+    category: Maker
+  - title: Readarr
+    subtitle: Audiobooks & eBooks
+    url: "https://readarr.home.mirceanton.com"
+    icon: readarr
+    category: Downloads
+  - title: WordCraft
+    subtitle: Document Editor
+    url: "https://office.home.mirceanton.com/word/"
+    category: Tools
+  - title: GridCraft
+    subtitle: Spreadsheet Editor
+    url: "https://office.home.mirceanton.com/excel/"
+    category: Tools
+  - title: DeckCraft
+    subtitle: Presentation Editor
+    url: "https://office.home.mirceanton.com/powerpoint/"
+    category: Tools
+  - title: ConvertX
+    subtitle: File Converter
+    url: "https://convert.home.mirceanton.com"
+    icon: convertx
+    category: Tools
+  - title: Omni-Tools
+    subtitle: Various Utilities
+    url: "https://tools.home.mirceanton.com"
+    icon: omni-tools
+    category: Tools
+  - title: OpenSpeedTest
+    subtitle: Network Speed Test
+    url: "https://speedtest.home.mirceanton.com"
+    icon: openspeedtest
+    category: Tools
+  - title: Carbon
+    subtitle: Code Screenshot Tool
+    url: "https://carbon.home.mirceanton.com"
+    category: Tools
+  - title: Draw.io
+    subtitle: Diagram Editor
+    url: "https://diagrams.home.mirceanton.com"
+    icon: draw-io
+    category: Tools
+  - title: SearXNG
+    subtitle: Meta Search Engine
+    url: "https://search.home.mirceanton.com"
+    icon: searxng
+    category: Tools
+  # --- Admins -------------------------------------------------------------------------------
+  - title: FigCraft
+    subtitle: Interface Designer
+    url: "https://design.home.mirceanton.com"
+    category: Personal
+    groups: [admins]
+  - title: Stockii
+    subtitle: Inventory Manager
+    url: "https://stockii.home.mirceanton.com"
+    category: Bomkii
+    groups: [admins]
+  - title: Prometheus
+    subtitle: Metrics
+    url: "https://prometheus.admin.mirceanton.com"
+    icon: prometheus
+    category: Monitoring
+    groups: [admins]
+  - title: AlertManager
+    subtitle: Alerting
+    url: "https://alertmanager.admin.mirceanton.com"
+    icon: alertmanager
+    category: Monitoring
+    groups: [admins]
+  - title: Flux
+    subtitle: GitOps
+    url: "https://flux.admin.mirceanton.com"
+    icon: flux-cd
+    category: GitOps
+    groups: [admins]
+  - title: Konflate
+    subtitle: Integration Platform
+    url: "https://konflate.home.mirceanton.com"
+    category: GitOps
+    groups: [admins]
+  - title: MikroTik
+    subtitle: RouterOS
+    url: "https://10.0.0.1"
+    icon: mikrotik
+    category: Networking
+    groups: [admins]
+  - title: Hubble
+    subtitle: Network Observability
+    url: "https://hubble.admin.mirceanton.com"
+    icon: hubble
+    category: Networking
+    groups: [admins]
+  - title: Zigbee2MQTT
+    subtitle: Zigbee Network
+    url: "https://z2m.home.mirceanton.com"
+    icon: zigbee2mqtt
+    category: Home Automation
+    groups: [admins]
+  - title: Sonoff Dongle
+    subtitle: Zigbee Dongle Manager
+    url: "http://sonoff-dongle-max.mgmt.h.mirceanton.com/"
+    category: Home Automation
+    groups: [admins]
+  - title: TrueNAS
+    subtitle: NAS
+    url: "https://nas.mgmt.h.mirceanton.com"
+    icon: truenas
+    category: Servers
+    groups: [admins]
+  - title: Proxmox
+    subtitle: Virtualization
+    url: "https://pve.mgmt.h.mirceanton.com"
+    icon: proxmox
+    category: Servers
+    groups: [admins]
+  - title: Keycloak
+    subtitle: Identity Provider
+    url: "https://keycloak.nas.svc.h.mirceanton.com"
+    icon: keycloak
+    category: Core Services
+    groups: [admins]
+  - title: Nexus
+    subtitle: Artifact Registry
+    url: "https://registry.nas.svc.h.mirceanton.com"
+    icon: nexus
+    category: Core Services
+    groups: [admins]
+  - title: Garage
+    subtitle: Object Storage
+    url: "https://garage.nas.svc.h.mirceanton.com/"
+    icon: garage
+    category: Core Services
+    groups: [admins]
+  - title: JetKVM
+    subtitle: Remote KVM
+    url: "http://jetkvm.mgmt.h.mirceanton.com/"
+    icon: jetkvm
+    category: Hardware
+    groups: [admins]
+  - title: TrueNAS BMC
+    subtitle: Out-of-Band Management
+    url: "https://bmc-nas.mgmt.h.mirceanton.com"
+    category: Hardware
+    groups: [admins]
+  - title: Cloudflare
+    subtitle: DNS & CDN
+    url: "https://dash.cloudflare.com/"
+    icon: cloudflare
+    category: External
+    groups: [admins]
+  - title: Backblaze B2
+    subtitle: Object Storage
+    url: "https://secure.backblaze.com/b2_buckets.htm"
+    icon: backblaze
+    category: External
+    groups: [admins]
+  - title: 1Password
+    subtitle: Secrets Manager
+    url: "https://my.1password.com/"
+    icon: 1password
+    category: External
+    groups: [admins]
+  - title: Migadu
+    subtitle: Email Hosting
+    url: "https://admin.migadu.com/"
+    category: External
+    groups: [admins]

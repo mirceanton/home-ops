@@ -1,0 +1,14 @@
+---
+# The dashboard's service account lists the realm's clients through the admin API.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: home-dashboard-view-clients
+spec:
+  subject:
+    serviceAccountRef:
+      name: home-dashboard
+  role:
+    name: view-clients
+    clientId: realm-management
