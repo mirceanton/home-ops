@@ -24,6 +24,10 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
+      DASHBOARD_TITLE: "Bambuddy"
+      DASHBOARD_SUBTITLE: "3D Printer Manager"
+      DASHBOARD_ICON: "bambu-lab"
+      DASHBOARD_CATEGORY: "Maker"
 
   decryption: { provider: sops }
   dependsOn:

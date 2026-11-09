@@ -23,6 +23,10 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      DASHBOARD_TITLE: "Dagu"
+      DASHBOARD_SUBTITLE: "Workflow Orchestration"
+      DASHBOARD_ICON: "https://avatars.githubusercontent.com/u/131097250?s=200&v=4"
+      DASHBOARD_CATEGORY: "GitOps"
 
   decryption: { provider: sops }
   dependsOn:

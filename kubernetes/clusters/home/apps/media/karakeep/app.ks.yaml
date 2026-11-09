@@ -26,6 +26,10 @@ spec:
       VOLSYNC_CAPACITY: 16Mi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "Karakeep"
+      DASHBOARD_SUBTITLE: "Bookmark Manager"
+      DASHBOARD_ICON: "karakeep"
+      DASHBOARD_CATEGORY: "Media"
 
   decryption: { provider: sops }
   dependsOn:

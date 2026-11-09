@@ -27,6 +27,10 @@ spec:
       VOLSYNC_CAPACITY: 2Gi
       VOLSYNC_PUID: "33"
       VOLSYNC_PGID: "33"
+      DASHBOARD_TITLE: "Firefly"
+      DASHBOARD_SUBTITLE: "Financial Manager"
+      DASHBOARD_ICON: "firefly-iii"
+      DASHBOARD_CATEGORY: "Home"
 
   decryption: { provider: sops }
   dependsOn:

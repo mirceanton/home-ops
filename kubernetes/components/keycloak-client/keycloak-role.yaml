@@ -1,0 +1,15 @@
+---
+# Every client gets an `access` role, granted through groups (see
+# security-system/keycloak-operator/access). Gateway-authenticated apps (components/oidc)
+# reject users without it, and the home dashboard lists a client for users who hold it.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrole_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRole
+metadata:
+  name: "${APP}-access"
+spec:
+  clientRef:
+    name: "${APP}"
+  name: access
+  definition:
+    description: "Can use ${APP}"

@@ -28,6 +28,10 @@ spec:
       VOLSYNC_CAPACITY: 256Mi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "Sonarr"
+      DASHBOARD_SUBTITLE: "TV Shows"
+      DASHBOARD_ICON: "sonarr"
+      DASHBOARD_CATEGORY: "Downloads"
 
   dependsOn:
     - name: 1password-connect

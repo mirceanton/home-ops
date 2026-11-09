@@ -1,0 +1,14 @@
+---
+# Grants members of the `dagu` group the client's `access` role, which oidc.yaml requires
+# (and which lists Dagu on the home dashboard).
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: dagu-access
+spec:
+  subject:
+    groupRef:
+      name: dagu
+  roleRef:
+    name: dagu-access

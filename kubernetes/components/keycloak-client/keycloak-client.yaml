@@ -28,3 +28,16 @@ spec:
     redirectUris: ${KEYCLOAK_CLIENT_REDIRECT_URLS:-["https://${APP}.home.mirceanton.com/*"]}
     webOrigins: ${KEYCLOAK_CLIENT_WEB_ORIGINS:-["https://${APP}.home.mirceanton.com"]}
     defaultClientScopes: ${KEYCLOAK_CLIENT_DEFAULT_SCOPES:-["profile", "email", "roles", "web-origins", "acr", "groups"]}
+
+    # Card metadata for the home dashboard (ghcr.io/mirceanton/home-dashboard). Empty means
+    # "fall back": title -> clientId, icon -> clientId from homarr-labs/dashboard-icons,
+    # url -> baseUrl, category -> "Apps". Keep the unquoted ${VAR:-""} form: Flux re-serializes
+    # before substituting, so quoting the whole value would turn an empty default into null.
+    # Only plain-text values belong here (attributes must stay strings); ordering and hiding
+    # live in the dashboard's own config file.
+    attributes:
+      dashboard.title: ${DASHBOARD_TITLE:-""}
+      dashboard.subtitle: ${DASHBOARD_SUBTITLE:-""}
+      dashboard.icon: ${DASHBOARD_ICON:-""}
+      dashboard.category: ${DASHBOARD_CATEGORY:-""}
+      dashboard.url: ${DASHBOARD_URL:-""}

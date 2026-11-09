@@ -1,0 +1,25 @@
+---
+# Access tiers for the home dashboard. Members of `users` see everyday apps; `admins` see
+# infrastructure and personal tools. Membership is managed in the Keycloak UI.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: users
+spec:
+  clusterRealmRef:
+    name: homelab
+  name: users
+  definition: {}
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakgroup_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakGroup
+metadata:
+  name: admins
+spec:
+  clusterRealmRef:
+    name: homelab
+  name: admins
+  definition: {}

@@ -27,6 +27,11 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://llm.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://llm.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://llm.home.mirceanton.com"
+      DASHBOARD_TITLE: "LiteLLM"
+      DASHBOARD_SUBTITLE: "LLM Gateway"
+      DASHBOARD_ICON: "litellm"
+      DASHBOARD_CATEGORY: "AI"
+      DASHBOARD_URL: "https://llm.home.mirceanton.com/ui/"
 
   dependsOn:
     - name: litellm-operator

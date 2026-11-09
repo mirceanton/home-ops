@@ -28,6 +28,10 @@ spec:
       VOLSYNC_CAPACITY: 1Gi #!TODO 256Mi?
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "Bazarr"
+      DASHBOARD_SUBTITLE: "Subtitles"
+      DASHBOARD_ICON: "bazarr"
+      DASHBOARD_CATEGORY: "Downloads"
 
   dependsOn:
     - name: 1password-connect

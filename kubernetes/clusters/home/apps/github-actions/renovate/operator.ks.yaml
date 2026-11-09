@@ -24,6 +24,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://renovate.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://renovate.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://renovate.home.mirceanton.com"
+      DASHBOARD_TITLE: "Renovate"
+      DASHBOARD_SUBTITLE: "Dependency Updates"
+      DASHBOARD_ICON: "renovate"
+      DASHBOARD_CATEGORY: "GitOps"
 
   dependsOn:
     - name: keycloak-operator-config

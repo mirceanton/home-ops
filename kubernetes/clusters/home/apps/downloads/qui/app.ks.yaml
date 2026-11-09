@@ -27,6 +27,10 @@ spec:
       VOLSYNC_CAPACITY: 16Mi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "Qui"
+      DASHBOARD_SUBTITLE: "Torrent Client"
+      DASHBOARD_ICON: "qui"
+      DASHBOARD_CATEGORY: "Downloads"
 
   dependsOn:
     - name: 1password-connect

@@ -1,0 +1,343 @@
+---
+# Who may use which app. Each entry grants a group the `access` client role that the
+# keycloak-client component creates for every app. Roles are referenced by clientId because
+# KeycloakRoleMapping can only reference groups in its own namespace; apps whose group lives
+# in their own namespace (dagu, open-webui) map it there instead.
+# The operator only creates the groups; add users to them in the Keycloak UI.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-immich
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: immich
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-paperless
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: paperless
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-bookorbit
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: bookorbit
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-karakeep
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: karakeep
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-home-assistant
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: home-assistant
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-sparkyfitness
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: sparkyfitness
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-firefly
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: firefly
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-vikunja
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: vikunja
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-miniflux
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: miniflux
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-bambuddy
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: bambuddy
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-modelhub
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: modelhub
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-qui
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: qui
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-sonarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: sonarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-radarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: radarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-lidarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: lidarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-shelfmark
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: shelfmark
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-bazarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: bazarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-streamarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: streamarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: users-prowlarr
+spec:
+  subject:
+    groupRef:
+      name: users
+  role:
+    name: access
+    clientId: prowlarr
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-litellm
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: litellm
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-hermes-dashboard
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: hermes-dashboard
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-hermano
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: hermano
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-teleprompter
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: teleprompter
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-grafana
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: grafana
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-headlamp
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: headlamp
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: admins-renovate-operator
+spec:
+  subject:
+    groupRef:
+      name: admins
+  role:
+    name: access
+    clientId: renovate-operator

@@ -27,6 +27,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://homeassistant.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://homeassistant.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://homeassistant.home.mirceanton.com"
+      DASHBOARD_TITLE: "Home Assistant"
+      DASHBOARD_SUBTITLE: "Home Automation"
+      DASHBOARD_ICON: "home-assistant"
+      DASHBOARD_CATEGORY: "Home"
 
   decryption: { provider: sops }
   dependsOn:

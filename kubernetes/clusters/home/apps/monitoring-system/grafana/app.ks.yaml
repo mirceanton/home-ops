@@ -24,6 +24,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://grafana.admin.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://grafana.admin.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://grafana.admin.mirceanton.com"
+      DASHBOARD_TITLE: "Grafana"
+      DASHBOARD_SUBTITLE: "Monitoring"
+      DASHBOARD_ICON: "grafana"
+      DASHBOARD_CATEGORY: "Monitoring"
 
   dependsOn:
     #? wait for the 1password-connect secret store to be ready

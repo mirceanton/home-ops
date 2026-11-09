@@ -31,6 +31,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://books.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://books.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://books.home.mirceanton.com"
+      DASHBOARD_TITLE: "BookOrbit"
+      DASHBOARD_SUBTITLE: "Book Library"
+      DASHBOARD_ICON: "booklore"
+      DASHBOARD_CATEGORY: "Media"
 
   decryption: { provider: sops }
   dependsOn:

@@ -56,6 +56,10 @@ spec:
       # endpoint Open WebUI falls back to rejects a token without one. The component's default
       # list leaves `basic` out.
       KEYCLOAK_CLIENT_DEFAULT_SCOPES: '["basic", "profile", "email", "roles", "web-origins", "acr", "groups"]'
+      DASHBOARD_TITLE: "Open WebUI"
+      DASHBOARD_SUBTITLE: "AI Chat"
+      DASHBOARD_ICON: "open-webui"
+      DASHBOARD_CATEGORY: "AI"
 
   decryption: { provider: sops }
   dependsOn:

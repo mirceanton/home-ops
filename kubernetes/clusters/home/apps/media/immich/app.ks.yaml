@@ -28,6 +28,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://photos.home.mirceanton.com/*", "app.immich:///oauth-callback"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://photos.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://photos.home.mirceanton.com"
+      DASHBOARD_TITLE: "Immich"
+      DASHBOARD_SUBTITLE: "Photo Library"
+      DASHBOARD_ICON: "immich"
+      DASHBOARD_CATEGORY: "Media"
 
   dependsOn:
     - name: dragonfly-operator

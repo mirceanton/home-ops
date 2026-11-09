@@ -27,6 +27,10 @@ spec:
       VOLSYNC_CAPACITY: 256Mi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "Prowlarr"
+      DASHBOARD_SUBTITLE: "Indexer Manager"
+      DASHBOARD_ICON: "prowlarr"
+      DASHBOARD_CATEGORY: "Downloads"
 
   dependsOn:
     - name: 1password-connect

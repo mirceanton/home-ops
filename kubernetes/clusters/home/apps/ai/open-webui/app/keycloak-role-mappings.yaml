@@ -1,0 +1,27 @@
+---
+# Grants both Open WebUI groups the client's `access` role, which lists it on the home
+# dashboard. Open WebUI itself still decides admin/user from the "groups" claim.
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: open-webui-access
+spec:
+  subject:
+    groupRef:
+      name: open-webui
+  roleRef:
+    name: open-webui-access
+
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/keycloak.hostzero.com/keycloakrolemapping_v1beta1.json
+apiVersion: keycloak.hostzero.com/v1beta1
+kind: KeycloakRoleMapping
+metadata:
+  name: open-webui-admins-access
+spec:
+  subject:
+    groupRef:
+      name: open-webui-admins
+  roleRef:
+    name: open-webui-access

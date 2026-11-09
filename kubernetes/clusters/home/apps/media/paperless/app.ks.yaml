@@ -31,6 +31,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://documents.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://documents.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://documents.home.mirceanton.com"
+      DASHBOARD_TITLE: "Paperless"
+      DASHBOARD_SUBTITLE: "Document Management"
+      DASHBOARD_ICON: "paperless-ng"
+      DASHBOARD_CATEGORY: "Media"
 
   decryption: { provider: sops }
   dependsOn:

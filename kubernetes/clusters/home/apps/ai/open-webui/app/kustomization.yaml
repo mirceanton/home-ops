@@ -6,5 +6,6 @@ resources:
   - ./oci-repository.yaml
   - ./helm-release.yaml
   - ./keycloak-groups.yaml
+  - ./keycloak-role-mappings.yaml
   - ./litellm-key.yaml
   - ./secret-key.yaml

@@ -27,6 +27,10 @@ spec:
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
+      DASHBOARD_TITLE: "ModelHub"
+      DASHBOARD_SUBTITLE: "3D Model Library"
+      DASHBOARD_ICON: "/assets/modelhub.svg"
+      DASHBOARD_CATEGORY: "Maker"
 
   decryption: { provider: sops }
   dependsOn:

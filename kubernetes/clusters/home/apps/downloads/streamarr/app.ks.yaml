@@ -28,6 +28,9 @@ spec:
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
+      DASHBOARD_TITLE: "Streamarr"
+      DASHBOARD_SUBTITLE: "Audio & Subtitle Janitor"
+      DASHBOARD_CATEGORY: "Downloads"
 
   decryption: { provider: sops }
   dependsOn:

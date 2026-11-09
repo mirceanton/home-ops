@@ -24,6 +24,9 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 1Gi
+      DASHBOARD_TITLE: "Teleprompter"
+      DASHBOARD_SUBTITLE: "Script Prompter"
+      DASHBOARD_CATEGORY: "Personal"
 
   decryption: { provider: sops }
   dependsOn:

@@ -27,6 +27,10 @@ spec:
       VOLSYNC_PUID: "10000"
       VOLSYNC_PGID: "10000"
       KEYCLOAK_CLIENT_ID: hermes-dashboard
+      DASHBOARD_TITLE: "Hermes"
+      DASHBOARD_SUBTITLE: "AI Agent"
+      DASHBOARD_ICON: "hermes-icon"
+      DASHBOARD_CATEGORY: "Personal"
 
   dependsOn:
     - name: 1password-connect

@@ -4,3 +4,4 @@ kind: Component
 
 resources:
   - keycloak-client.yaml
+  - keycloak-role.yaml

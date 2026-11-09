@@ -26,6 +26,9 @@ spec:
       VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "1000"
       VOLSYNC_PGID: "1000"
+      DASHBOARD_TITLE: "Hermano"
+      DASHBOARD_SUBTITLE: "Alert Triage"
+      DASHBOARD_CATEGORY: "Personal"
 
   dependsOn:
     - name: external-secrets-operator

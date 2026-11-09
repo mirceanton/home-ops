@@ -26,6 +26,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://rss.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://rss.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://rss.home.mirceanton.com"
+      DASHBOARD_TITLE: "Miniflux"
+      DASHBOARD_SUBTITLE: "RSS Reader"
+      DASHBOARD_ICON: "miniflux"
+      DASHBOARD_CATEGORY: "Home"
 
   dependsOn:
     - name: 1password-connect

@@ -30,6 +30,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://tasks.home.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://tasks.home.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://tasks.home.mirceanton.com"
+      DASHBOARD_TITLE: "Vikunja"
+      DASHBOARD_SUBTITLE: "Task Manager"
+      DASHBOARD_ICON: "vikunja"
+      DASHBOARD_CATEGORY: "Home"
 
   decryption: { provider: sops }
   dependsOn:

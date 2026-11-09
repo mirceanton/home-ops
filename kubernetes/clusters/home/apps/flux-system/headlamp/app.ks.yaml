@@ -25,6 +25,10 @@ spec:
       KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://headlamp.admin.mirceanton.com/*"]'
       KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://headlamp.admin.mirceanton.com"]'
       KEYCLOAK_CLIENT_HOME_URL: "https://headlamp.admin.mirceanton.com"
+      DASHBOARD_TITLE: "Headlamp"
+      DASHBOARD_SUBTITLE: "Kubernetes Dashboard"
+      DASHBOARD_ICON: "headlamp"
+      DASHBOARD_CATEGORY: "GitOps"
 
   dependsOn:
     - name: keycloak-operator-config
