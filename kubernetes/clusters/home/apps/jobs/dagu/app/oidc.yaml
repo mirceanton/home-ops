@@ -1,7 +1,7 @@
 ---
 # Dagu's own auth is disabled, so this policy is the only thing standing between
 # the network and a UI that can launch pods. It is self-contained (instead of the
-# shared components/oidc) because it adds a group check on top of the login.
+# shared components/oidc) for historical reasons; it enforces the same access role.
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.envoyproxy.io/backend_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: Backend
@@ -40,8 +40,7 @@ spec:
 
   # Stage 1: log in against Keycloak and forward the access token upstream as an
   # Authorization: Bearer header (forwardIDToken is not used, see the note in
-  # finance/firefly/app/oidc.yaml). The "groups" claim is in the access token via
-  # the default "groups" client scope (security-system/keycloak-operator).
+  # finance/firefly/app/oidc.yaml).
   oidc:
     provider:
       issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
@@ -75,17 +74,17 @@ spec:
               name: dagu-keycloak
               port: 443
 
-  # Stage 3: only members of the "dagu" Keycloak group get through (see
-  # keycloak-group.yaml). Everyone else who can log in gets a 403.
+  # Stage 3: only holders of the client's `access` role get through - the "dagu"
+  # group is granted it in keycloak-role-mapping.yaml. Everyone else gets a 403.
   authorization:
     defaultAction: Deny
     rules:
-      - name: dagu-group
+      - name: access-role
         action: Allow
         principal:
           jwt:
             provider: keycloak
             claims:
-              - name: groups
+              - name: resource_access.dagu.roles
                 valueType: StringArray
-                values: ["dagu"]
+                values: ["access"]

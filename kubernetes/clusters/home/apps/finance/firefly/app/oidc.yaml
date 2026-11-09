@@ -89,3 +89,18 @@ spec:
         claimToHeaders:
           - header: Remote-User
             claim: email
+
+  # Stage 3: only holders of the client's `access` role get through (granted to
+  # groups in security-system/keycloak-operator/access). Everyone else gets a 403.
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: access-role
+        action: Allow
+        principal:
+          jwt:
+            provider: keycloak
+            claims:
+              - name: resource_access.firefly.roles
+                valueType: StringArray
+                values: ["access"]

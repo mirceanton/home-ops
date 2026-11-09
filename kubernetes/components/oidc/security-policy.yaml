@@ -35,6 +35,9 @@ spec:
       kind: HTTPRoute
       name: "${APP}"
 
+  # Stage 1: log in against Keycloak and forward the access token upstream as an
+  # Authorization: Bearer header so stage 2 can read its claims (forwardIDToken is
+  # not used, see the note in finance/firefly/app/oidc.yaml).
   oidc:
     provider:
       issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
@@ -57,3 +60,34 @@ spec:
       name: "${APP}-oidc-secret"
     redirectURL: "https://${APP}.home.mirceanton.com/oauth2/callback"
     logoutPath: "/oauth2/logout"
+    forwardAccessToken: true
+
+  # Stage 2: verify that access token's signature against Keycloak's JWKS so the
+  # claims below can be trusted.
+  jwt:
+    providers:
+      - name: keycloak
+        issuer: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab
+        remoteJWKS:
+          uri: https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab/protocol/openid-connect/certs
+          backendRefs:
+            - group: gateway.envoyproxy.io
+              kind: Backend
+              name: "${APP}-keycloak"
+              port: 443
+
+  # Stage 3: having a Keycloak account is not enough - only users holding the
+  # client's `access` role (created by components/keycloak-client, granted to groups
+  # in security-system/keycloak-operator/access) get through. Everyone else gets a 403.
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: access-role
+        action: Allow
+        principal:
+          jwt:
+            provider: keycloak
+            claims:
+              - name: resource_access.${OIDC_CLIENT_ID:=${APP}}.roles
+                valueType: StringArray
+                values: ["access"]
