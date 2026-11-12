@@ -34,7 +34,7 @@ spec:
         metadata:
           name: open-webui-postgres
         spec:
-          imageName: ghcr.io/cloudnative-pg/postgresql:18.6-standard-trixie
+          imageName: ghcr.io/cloudnative-pg/postgresql:18.7-standard-trixie
     - target:
         kind: Database
         group: postgresql.cnpg.io
