@@ -135,19 +135,16 @@ gateway:
   # container env credentials injected by the HelmRelease.
   multiplex_profiles: true
 
+dashboard:
+  # Cilium's node pod subnet; UI ingress is restricted to Envoy by NetworkPolicy.
+  trusted_proxies: ["10.244.0.0/24"]
+
+# The gateway serves the workspace; the admin dashboard remains on port 9119.
 webapp:
-  # Desktop workspace served in a browser tab (v0.23.0+). Its own listener, separate from
-  # the admin dashboard on 9119 -- the dashboard is still the installation-wide admin
-  # surface (channels, gateway control, credentials, backups).
   enabled: true
-  # 0.0.0.0 is required in a container (the default loopback is unreachable through the
-  # Service); a non-loopback bind refuses to start without the dashboard sign-in provider,
-  # which the HelmRelease supplies via HERMES_DASHBOARD_OIDC_*.
   host: 0.0.0.0
   port: 9120
-  # Must match the https:// address Envoy serves it at, or the OIDC callback is built as
-  # http:// and fails against the Keycloak client's registered redirect URIs.
-  public_url: "https://hermes-web.home.mirceanton.com"
+  public_url: "https://hermes.home.mirceanton.com"
 
 mcp_servers: {}
 

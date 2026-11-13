@@ -71,7 +71,7 @@ spec:
               HERMES_DASHBOARD: "1"
               HERMES_DASHBOARD_HOST: 0.0.0.0
               HERMES_DASHBOARD_PORT: &port 9119
-              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.home.mirceanton.com"
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.admin.mirceanton.com"
               HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email"
               HERMES_DASHBOARD_OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
               HERMES_DASHBOARD_OIDC_CLIENT_ID:
@@ -145,19 +145,17 @@ spec:
 
     route:
       dashboard:
-        hostnames: ["hermes.home.mirceanton.com"]
+        hostnames: ["hermes.admin.mirceanton.com"]
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-admin
             namespace: network-system
         rules:
           - backendRefs:
               - identifier: dashboard
                 port: http
 
-      # Separate hostname: the Webapp serves from / and needs its own origin, and the
-      # wildcard cert only covers one label (hermes-web.home.mirceanton.com).
       webapp:
-        hostnames: ["hermes-web.home.mirceanton.com"]
+        hostnames: ["hermes.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system

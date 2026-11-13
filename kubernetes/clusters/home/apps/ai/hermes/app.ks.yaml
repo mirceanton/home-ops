@@ -27,11 +27,10 @@ spec:
       VOLSYNC_PUID: "10000"
       VOLSYNC_PGID: "10000"
       KEYCLOAK_CLIENT_ID: hermes-dashboard
-      # Two browser surfaces share this one client: the admin dashboard (hermes.) and the
-      # Webapp (hermes-web.). Overridden because the component's default wildcard is
-      # per-host, and the Webapp signs in at https://hermes-web.<domain>/auth/callback.
-      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://hermes.home.mirceanton.com/*","https://hermes-web.home.mirceanton.com/*"]'
-      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://hermes.home.mirceanton.com","https://hermes-web.home.mirceanton.com"]'
+      KEYCLOAK_CLIENT_HOME_URL: "https://hermes.home.mirceanton.com"
+      # Both browser surfaces authenticate through this operator-managed client.
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://hermes.home.mirceanton.com/*","https://hermes.admin.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://hermes.home.mirceanton.com","https://hermes.admin.mirceanton.com"]'
 
   dependsOn:
     - name: 1password-connect
