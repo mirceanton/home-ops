@@ -63,7 +63,7 @@ spec:
     - name: mise-bin
       image:
         # renovate: datasource=docker
-        reference: ghcr.io/jdx/mise:2026.11.7
+        reference: ghcr.io/jdx/mise:2026.11.8
         pullPolicy: IfNotPresent
     - name: helm-docs-bin
       image:
