@@ -12,4 +12,5 @@ resources:
   - ./qwen-image-3.0.yaml
   - ./qwen3.7.yaml
   - ./qwen3.8.yaml
+  - ./qwen4-max-preview.yaml
   - ./wan-2.7.yaml
