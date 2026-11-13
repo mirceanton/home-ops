@@ -101,6 +101,9 @@ spec:
               - containerPort: &dashboard_port 9119
                 name: dashboard
                 protocol: TCP
+              - containerPort: &webapp_port 9120
+                name: webapp
+                protocol: TCP
               - containerPort: &api_port 8642
                 name: api
                 protocol: TCP
@@ -127,6 +130,13 @@ spec:
           http:
             port: *dashboard_port
 
+      # The Webapp (hermes webapp, enabled in config.yaml) listens on its own port.
+      webapp:
+        controller: hermes
+        ports:
+          http:
+            port: *webapp_port
+
       api:
         controller: hermes
         ports:
@@ -142,6 +152,18 @@ spec:
         rules:
           - backendRefs:
               - identifier: dashboard
+                port: http
+
+      # Separate hostname: the Webapp serves from / and needs its own origin, and the
+      # wildcard cert only covers one label (hermes-web.home.mirceanton.com).
+      webapp:
+        hostnames: ["hermes-web.home.mirceanton.com"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: webapp
                 port: http
 
     persistence:
