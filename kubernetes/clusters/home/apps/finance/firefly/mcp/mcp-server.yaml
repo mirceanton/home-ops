@@ -17,7 +17,7 @@ spec:
     key: FIREFLY_MCP_TOKEN
 
   workload:
-    image: ghcr.io/daften/fireflyiii-mcp:1.0.0
+    image: ghcr.io/daften/fireflyiii-mcp:1.0.1
     port: 3000
     path: /
     env:
