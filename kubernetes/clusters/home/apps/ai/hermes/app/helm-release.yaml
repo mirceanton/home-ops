@@ -47,7 +47,7 @@ spec:
           app:
             image:
               repository: nousresearch/hermes-agent
-              tag: v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
+              tag: v0.23.1@sha256:276d44685c65c0cb2a25f190b63c65c8906f9dc76486fb1c05ae71b5826bda08
             args: ["sleep", "infinity"]
 
             envFrom:
@@ -71,7 +71,7 @@ spec:
               HERMES_DASHBOARD: "1"
               HERMES_DASHBOARD_HOST: 0.0.0.0
               HERMES_DASHBOARD_PORT: &port 9119
-              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.home.mirceanton.com"
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.admin.mirceanton.com"
               HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email"
               HERMES_DASHBOARD_OIDC_ISSUER: "https://keycloak.nas.svc.h.mirceanton.com/realms/Homelab"
               HERMES_DASHBOARD_OIDC_CLIENT_ID:
@@ -101,6 +101,9 @@ spec:
               - containerPort: &dashboard_port 9119
                 name: dashboard
                 protocol: TCP
+              - containerPort: &webapp_port 9120
+                name: webapp
+                protocol: TCP
               - containerPort: &api_port 8642
                 name: api
                 protocol: TCP
@@ -127,6 +130,13 @@ spec:
           http:
             port: *dashboard_port
 
+      # The Webapp (hermes webapp, enabled in config.yaml) listens on its own port.
+      webapp:
+        controller: hermes
+        ports:
+          http:
+            port: *webapp_port
+
       api:
         controller: hermes
         ports:
@@ -135,13 +145,23 @@ spec:
 
     route:
       dashboard:
+        hostnames: ["hermes.admin.mirceanton.com"]
+        parentRefs:
+          - name: envoy-admin
+            namespace: network-system
+        rules:
+          - backendRefs:
+              - identifier: dashboard
+                port: http
+
+      webapp:
         hostnames: ["hermes.home.mirceanton.com"]
         parentRefs:
           - name: envoy-internal
             namespace: network-system
         rules:
           - backendRefs:
-              - identifier: dashboard
+              - identifier: webapp
                 port: http
 
     persistence:

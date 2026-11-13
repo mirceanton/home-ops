@@ -7,6 +7,7 @@ resources:
   - ./litellm-key.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
+  - ./network-policy.yaml
 
 configMapGenerator:
   - name: hermes-seed-script

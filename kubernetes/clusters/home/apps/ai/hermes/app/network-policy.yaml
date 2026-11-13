@@ -1,0 +1,37 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hermes-ui
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: hermes
+      app.kubernetes.io/controller: hermes
+  policyTypes: [Ingress]
+  ingress:
+    # Only the TLS gateways may supply forwarded headers to the browser UIs.
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: network-system
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-name: envoy-internal
+      ports:
+        - protocol: TCP
+          port: 9120
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: network-system
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-name: envoy-admin
+      ports:
+        - protocol: TCP
+          port: 9119
+    # Preserve the existing API server's reachability and authentication boundary.
+    - ports:
+        - protocol: TCP
+          port: 8642
