@@ -7,6 +7,12 @@
       "automerge": false
     },
     {
+      "description": "nousresearch/hermes-agent switched its tag scheme from datestamp (v2026.9.24) to semver (v0.23.x) in 2026-10 and publishes no datestamp tags after v2026.9.24. Docker versioning parses v2026.9.24 as 2026.9.24, which sorts above every semver tag, so while the deployment sat on the datestamp pin Renovate silently proposed nothing, and from a semver pin it would keep proposing a 'newer' datestamp tag (a downgrade in reality). Ignore versions at or above 2000 so only the semver line tracks",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["nousresearch/hermes-agent"],
+      "allowedVersions": "< 2000.0.0"
+    },
+    {
       "description": "mise uses CalVer, so update types don't signal risk; trust its releases and automerge all updates",
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/jdx/mise"],
