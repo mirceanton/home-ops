@@ -9,21 +9,6 @@ resources:
   - ./oci-repository.yaml
   - ./network-policy.yaml
 
-configMapGenerator:
-  - name: hermes-seed-script
-    files: ["seed.sh=./scripts/seed.sh"]
-
-  # Runtime config (config.yaml / SOUL.md) is intentionally NOT shipped here any more — it is
-  # managed manually on the PVC. Only per-profile secret templates remain, so the seed init
-  # container can re-render .env on every boot. Profiles are discovered from these templates, so
-  # only LIVE profiles are listed: archived/folded profiles (finance-bro, home-assistant-helper,
-  # music-curator) are deliberately omitted to stop the seed step recreating empty profile dirs.
-  - name: hermes-config
-    files:
-      - profiles.gitops-engineer.env.template=./files/profiles/gitops-engineer/.env.template
-      - profiles.youtube-assistant.env.template=./files/profiles/youtube-assistant/.env.template
-
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
+# Runtime config (config.yaml, SOUL.md, profile .env, skills, MCP servers, cron jobs, etc.) is
+# managed manually on the PVC — the repo intentionally carries none of it.
+# Only cluster-level infrastructure (secrets, volumes, network policies) lives here.
