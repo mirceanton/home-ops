@@ -21,7 +21,6 @@ configMapGenerator:
   - name: hermes-config
     files:
       - profiles.gitops-engineer.env.template=./files/profiles/gitops-engineer/.env.template
-      - profiles.media-managearr.env.template=./files/profiles/media-managearr/.env.template
       - profiles.youtube-assistant.env.template=./files/profiles/youtube-assistant/.env.template
 
 generatorOptions:
