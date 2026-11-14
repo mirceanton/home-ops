@@ -105,27 +105,27 @@ platform_toolsets:
 
 auxiliary:
   compression:
-    provider: main
+    provider: litellm
     model: qwen3.8-flash
   curator:
-    provider: main
+    provider: litellm
     model: qwen3.7-plus
     reasoning_effort: high
   kanban_decomposer:
-    provider: main
+    provider: litellm
     model: qwen3.8-max
     reasoning_effort: high
   profile_describer:
-    provider: main
+    provider: litellm
     model: qwen3.8-flash
   skills_hub:
-    provider: main
+    provider: litellm
     model: deepseek-v4.1-flash
   mcp:
-    provider: main
+    provider: litellm
     model: qwen3.7-plus
   title_generation:
-    provider: main
+    provider: litellm
     model: qwen3.8-flash
 
 gateway:
