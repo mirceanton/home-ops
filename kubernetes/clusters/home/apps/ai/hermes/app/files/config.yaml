@@ -16,8 +16,11 @@ model:
   provider: litellm
 
 fallback_providers:
+  # The driver is qwen4-max-preview on the gitops profile; degrading to a
+  # flash-tier model on a provider outage is the wrong shape, so fall back
+  # to the strongest cheap-tier reasoner instead.
   - provider: litellm
-    model: qwen3.8-flash
+    model: deepseek-v4-pro
 
 terminal:
   backend: local
@@ -57,10 +60,22 @@ streaming:
 
 delegation:
   max_iterations: 100
+  # Children must not inherit the parent's route. Empty provider/model means
+  # "inherit the parent", so an expensive driver (e.g. the Claude subscription
+  # plugin) would spend its own budget and rate limit on mechanical fan-out.
+  # Both keys are recognized by the pinned v0.23.1 (`hermes config set` raises
+  # no unknown-key notice) and are what the delegate tool actually reads.
+  provider: litellm
+  model: qwen3.8-flash
+  # NOTE: `roles` is NOT a recognized key in Hermes v0.23.1 — `hermes config
+  # set delegation.roles.reviewer.model` answers "not a recognized config key",
+  # and no code path reads it, so nothing below routes a child today. Per-role
+  # routing (reviewer -> deepseek-v4-pro, creative -> glm-5.3) needs the
+  # advanced-delegation plugin's `model_map` backend; tracked as a follow-up.
   roles:
     reviewer:
       provider: litellm
-      model: qwen3.8-flash
+      model: deepseek-v4-pro
       max_concurrent_children: 2
 
 security: { redact_secrets: true }
