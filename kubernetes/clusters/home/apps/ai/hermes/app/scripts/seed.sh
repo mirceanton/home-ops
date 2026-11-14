@@ -25,7 +25,7 @@ seed_file() {
   if [ "$HERMES_SEED_FORCE" = "1" ]; then
     cp "$1" "$2"
     echo "  overwritten (HERMES_SEED_FORCE=1): $2"
-  elif [ -e "$2" ]; then
+  elif [ -s "$2" ]; then
     echo "  keeping existing file: $2"
   else
     cp "$1" "$2"
