@@ -10,7 +10,7 @@ providers:
     discover_models: true
 
 model:
-  default: deepseek-v4.1-flash
+  default: qwen4-max-preview
   provider: litellm
 
 # This profile owns the "Mr. Borboto" Discord app;
