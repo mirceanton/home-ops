@@ -24,7 +24,7 @@ spec:
           zfs-exporter:
             image:
               repository: ghcr.io/pdf/zfs_exporter
-              tag: v2.5.1@sha256:95289975bd8983ed70f2281720d6af30c7f6e2c2283df03d36b8e7e0bfab0c9d
+              tag: v2.5.2@sha256:4a32a55665c5ebe54131adb735bdd9fdbc8f55df660b3d6a0390758b69f1c45d
             resources:
               requests:
                 cpu: 10m
