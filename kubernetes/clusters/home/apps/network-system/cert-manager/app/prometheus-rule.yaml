@@ -22,40 +22,51 @@ spec:
               misconfigured.
 
         # ---- Certificate Readiness ----
+        # The cert-manager ServiceMonitor uses honorLabels: false, so the
+        # controller pod's namespace wins the `namespace` label and the
+        # certificate's own namespace is renamed to `exported_namespace`.
+        # Prefer exported_namespace in annotations, falling back to namespace
+        # for certificates that live in the controller's own namespace.
         - alert: CertificateNotReady
           expr: certmanager_certificate_ready_status{condition="True"} == 0
           for: 10m
           labels:
             severity: warning
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} is not ready"
+            summary: "Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} is not ready"
             description: >-
-              Certificate {{ $labels.namespace }}/{{ $labels.name }} has been in a
+              Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} has been in a
               non-Ready state for over 10 minutes. This may indicate an ACME challenge
               failure, a misconfigured issuer, or a DNS/HTTP validation problem.
 
         # ---- Certificate Expiry ----
+        # Only alert once the scheduled renewal (status.renewalTime, exposed as
+        # certmanager_certificate_renewal_timestamp_seconds) is actually overdue.
+        # A fixed threshold false-positives on certificates whose renewBefore is
+        # shorter than the threshold: the barman-cloud plugin's self-signed
+        # certificates are valid for 90 days with renewBefore=15d, so a 21-day
+        # threshold fires for ~6 days every cycle while renewal is still on track.
         - alert: CertificateExpiringSoon
-          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (21 * 24 * 3600)
+          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (21 * 24 * 3600) and time() > certmanager_certificate_renewal_timestamp_seconds
           for: 1h
           labels:
             severity: warning
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in less than 21 days"
+            summary: "Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} expires in less than 21 days and renewal is overdue"
             description: >-
-              Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in
-              {{ $value | humanizeDuration }}. Automatic renewal should have triggered
-              already for 90-day ACME certificates. Investigate the Certificate and
-              CertificateRequest resources for errors.
+              Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} expires in
+              {{ $value | humanizeDuration }} and its scheduled renewal time has
+              already passed. Investigate the Certificate and CertificateRequest
+              resources for errors.
 
         - alert: CertificateExpiringCritical
-          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (7 * 24 * 3600)
+          expr: (certmanager_certificate_expiration_timestamp_seconds - time()) < (7 * 24 * 3600) and time() > certmanager_certificate_renewal_timestamp_seconds
           for: 1h
           labels:
             severity: critical
           annotations:
-            summary: "Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in less than 7 days"
+            summary: "Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} expires in less than 7 days"
             description: >-
-              Certificate {{ $labels.namespace }}/{{ $labels.name }} expires in
+              Certificate {{ with $labels.exported_namespace }}{{ . }}{{ else }}{{ $labels.namespace }}{{ end }}/{{ $labels.name }} expires in
               {{ $value | humanizeDuration }}. Renewal has failed and the certificate
               is approaching expiry. Immediate action required to avoid an outage.
