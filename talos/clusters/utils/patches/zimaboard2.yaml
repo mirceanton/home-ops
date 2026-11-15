@@ -1,3 +1,4 @@
+---
 #? Install Talos onto the onboard eMMC (mmcblk0boot0/1 are read-only boot areas, so match the main device explicitly)
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
