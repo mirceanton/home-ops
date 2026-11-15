@@ -28,3 +28,6 @@ spec:
     redirectUris: ${KEYCLOAK_CLIENT_REDIRECT_URLS:-["https://${APP}.home.mirceanton.com/*"]}
     webOrigins: ${KEYCLOAK_CLIENT_WEB_ORIGINS:-["https://${APP}.home.mirceanton.com"]}
     defaultClientScopes: ${KEYCLOAK_CLIENT_DEFAULT_SCOPES:-["profile", "email", "roles", "web-origins", "acr", "groups"]}
+    # null = operator leaves Keycloak's optional-scope assignments untouched;
+    # a JSON list reconciles them exactly (adds listed scopes, removes unlisted).
+    optionalClientScopes: ${KEYCLOAK_CLIENT_OPTIONAL_SCOPES:-null}
