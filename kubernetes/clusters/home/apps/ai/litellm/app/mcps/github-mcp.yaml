@@ -17,7 +17,7 @@ spec:
     key: token
 
   workload:
-    image: ghcr.io/github/github-mcp-server:v2.1.0@sha256:f6056fc10bfffcc8c81a6417a2e9ca12808647e8dd6049642a4feaadee0e0f8a
+    image: ghcr.io/github/github-mcp-server:v2.2.0@sha256:040c4e99810076035eb1d9beb4b4a96fcf589c43cefed6ff51a46a553eb4e174
     args: ["http", "--toolsets", "default,actions"]
     port: 8082
     path: /mcp
