@@ -22,7 +22,7 @@ releases:
   - name: keda
     namespace: kube-system
     chart: oci://ghcr.io/home-operations/charts-mirror/keda
-    version: 2.21.0
+    version: 2.21.1
 
   - name: grafana-operator
     namespace: monitoring-system
