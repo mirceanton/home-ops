@@ -193,6 +193,14 @@ spec:
         globalMounts:
           - path: /Volumes/Media/Books
 
+      # Same STL/3D-print library ModelHub serves (its /library mount).
+      media-3d-printing:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/3D_Models
+        globalMounts:
+          - path: /Volumes/3D_Printing
+
       projects-mirceanton:
         type: nfs
         server: nas.stor.h.mirceanton.com
