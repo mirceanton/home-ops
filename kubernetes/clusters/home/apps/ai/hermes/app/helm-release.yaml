@@ -168,31 +168,6 @@ spec:
         globalMounts:
           - path: /run
 
-      media-music:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Music
-        globalMounts:
-          - path: /Volumes/Media/Music
-      media-movies:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Movies
-        globalMounts:
-          - path: /Volumes/Media/Movies
-      media-tvshows:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/TV_Shows
-        globalMounts:
-          - path: /Volumes/Media/TV_Shows
-      media-books:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Books
-        globalMounts:
-          - path: /Volumes/Media/Books
-
       # Same STL/3D-print library ModelHub serves (its /library mount).
       media-3d-printing:
         type: nfs
