@@ -11,7 +11,6 @@ spec:
   models:
     - "qwen3.8-flash"
     - "qwen3.8-max"
-    - "qwen3.8-27b"
     - "qwen4-max-preview"
     - "deepseek-v4-pro"
     - "gpt-6-luna"
