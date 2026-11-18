@@ -38,3 +38,5 @@ spec:
       namespace: kube-system
     - name: keycloak-operator-config
       namespace: security-system
+    - name: litellm-operator
+      namespace: ai
