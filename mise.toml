@@ -24,7 +24,7 @@ helmfile = "latest"
 
 # Talos Stuff
 "aqua:talosctl" = "1.14.6"
-"github:mirceanton/talstomize" = "v1.0.3"
+"github:mirceanton/talstomize" = "v1.0.4"
 "github:mirceanton/talswitcher" = "latest"
 
 # Misc Tools
