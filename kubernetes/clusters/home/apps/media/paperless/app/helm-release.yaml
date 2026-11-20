@@ -6,6 +6,7 @@ metadata:
   name: paperless
 spec:
   interval: 30m
+  timeout: 10m
   chartRef:
     kind: OCIRepository
     name: paperless
