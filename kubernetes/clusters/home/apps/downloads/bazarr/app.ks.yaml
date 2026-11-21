@@ -22,23 +22,10 @@ spec:
     name: flux-system
     namespace: flux-system
 
-  # home-ops#1425 migration window: pause nfs-scaler and scale to 0 so the
-  # tank->rusty final delta sees quiescent writers (replicas: 0 alone would
-  # not hold — KEDA scales back to 1 while the NAS probe is up). Remove to unpause.
-  patches:
-    - target:
-        kind: ScaledObject
-        group: keda.sh
-      patch: |-
-        - op: add
-          path: /metadata/annotations
-          value:
-            autoscaling.keda.sh/paused-replicas: "0"
-
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi #!TODO 256Mi?
+      VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_PUID: "568"
       VOLSYNC_PGID: "568"
 
