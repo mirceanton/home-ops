@@ -95,12 +95,55 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
+      # Media tree parent: writable emptyDir (fsGroup) so apps can still
+      # create entries at /data/media itself. Movies/TV_Shows moved to the
+      # rusty HDD pool; the other datasets stay on tank, same container paths.
       media:
-        type: nfs
-        server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/
+        type: emptyDir
         globalMounts:
           - path: /data/media
+      media-movies:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/rusty/Media/Movies
+        globalMounts:
+          - path: /data/media/Movies
+      media-tvshows:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/rusty/Media/TV_Shows
+        globalMounts:
+          - path: /data/media/TV_Shows
+      media-music:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Music
+        globalMounts:
+          - path: /data/media/Music
+      media-books:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Books
+        globalMounts:
+          - path: /data/media/Books
+      media-documents:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Documents
+        globalMounts:
+          - path: /data/media/Documents
+      media-photos:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/Photos
+        globalMounts:
+          - path: /data/media/Photos
+      media-3d-models:
+        type: nfs
+        server: nas.stor.h.mirceanton.com
+        path: /mnt/tank/Media/3D_Models
+        globalMounts:
+          - path: /data/media/3D_Models
       downloads:
         type: nfs
         server: nas.stor.h.mirceanton.com

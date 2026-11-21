@@ -85,13 +85,13 @@ spec:
       tvshows:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/TV_Shows
+        path: /mnt/rusty/Media/TV_Shows
         globalMounts:
           - path: /nfs-media/TV_Shows
       movies:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Movies
+        path: /mnt/rusty/Media/Movies
         globalMounts:
           - path: /nfs-media/Movies
       music:
