@@ -27,7 +27,7 @@ spec:
       - name: TRUENAS_MCP_ALLOW_PLAINTEXT
         value: "true"
       - name: TRUENAS_MCP_ENABLE_WRITES
-        value: "false"
+        value: "true"
 
     resources:
       requests:
