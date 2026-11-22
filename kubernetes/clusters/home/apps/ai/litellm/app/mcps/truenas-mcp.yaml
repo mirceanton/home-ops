@@ -17,7 +17,7 @@ spec:
     key: TRUENAS_API_KEY
 
   workload:
-    image: ghcr.io/cedricziel/truenas-mcp:0.4.2@sha256:1a165c9b3831b8cf546c78231857896431c27a4465d2fcb16260c7d578bbee55
+    image: ghcr.io/cedricziel/truenas-mcp:0.5.0@sha256:f6d7112743dbd1d4b00bb8bd4fd5dd90763e39957cc1cf060cea686151cdf4a4
     port: 8080
     path: /mcp
 
