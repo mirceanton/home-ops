@@ -15,7 +15,7 @@ uv = "latest"
 sofka = "latest"
 
 # Flux Tools
-"aqua:fluxcd/flux2" = "2.10.0"
+"aqua:fluxcd/flux2" = "2.10.1"
 "github:home-operations/flate" = "latest"
 
 # Helm + Plugins
