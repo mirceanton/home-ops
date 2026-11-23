@@ -20,6 +20,7 @@ spec:
     proxy_base_url: https://llm.home.mirceanton.com
     store_model_in_db: true
     store_prompts_in_spend_logs: true
+    maximum_spend_logs_retention_period: 30d
     health_check_endpoint: /
     require_auth_for_metrics_endpoint: false
     prometheus_adapter: true
