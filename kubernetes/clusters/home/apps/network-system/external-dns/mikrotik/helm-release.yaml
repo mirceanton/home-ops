@@ -24,8 +24,8 @@ spec:
     sources: [gateway-httproute, service, ingress, crd]
     managedRecordTypes: [A, CNAME]
 
-    txtOwnerId: iot
-    txtPrefix: k8s.iot.
+    txtOwnerId: home
+    txtPrefix: k8s.home.
 
     domainFilters: ["home.mirceanton.com", "admin.mirceanton.com"]
     excludeDomains: []
