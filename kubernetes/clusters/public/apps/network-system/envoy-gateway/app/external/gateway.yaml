@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/gateway.networking.k8s.io/gateway_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: envoy-external
+  annotations:
+    #! TODO: point this at the public IP (or tunnel) before exposing anything to the internet.
+    #! Until then, external-dns would publish this private DMZ IP for any HTTPRoute on this gateway.
+    external-dns.kubernetes.io/target: &loadbalancerIP 172.16.30.15
+spec:
+  gatewayClassName: envoy-external
+
+  infrastructure:
+    annotations:
+      lbipam.cilium.io/ips: *loadbalancerIP
+
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces: { from: Same } #? same namespace only, for https redirect
+    - name: https
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces: { from: All } #? allow all namespaces for https
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: mirceanton-tls
