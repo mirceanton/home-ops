@@ -13,5 +13,3 @@ spec:
   dnsNames:
     - home.mirceanton.com
     - "*.home.mirceanton.com"
-    # The existing wildcard covers only one label under home.mirceanton.com.
-    - "*.explo.home.mirceanton.com"

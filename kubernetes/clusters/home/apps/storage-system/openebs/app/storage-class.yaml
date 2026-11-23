@@ -26,6 +26,7 @@ parameters:
   compression: "zstd"
   dedup: "off"
   fstype: "zfs"
-  poolname: "cache-pool"
+  # Single-disk PN64: caches share the data pool (Samsung 860 QVO).
+  poolname: "data-pool"
   shared: "yes"
   recordsize: "128k"

@@ -19,7 +19,7 @@ spec:
       enabled: true
 
     llmkube:
-      autoRegister: true
+      autoRegister: false
 
     resources:
       requests:

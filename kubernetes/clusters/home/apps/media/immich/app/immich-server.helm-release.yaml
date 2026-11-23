@@ -16,7 +16,6 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
-      runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
@@ -98,6 +97,7 @@ spec:
                 memory: 650Mi
               limits:
                 memory: 8Gi
+                devic.es/dri-render: 1
 
             probes:
               liveness: &probe

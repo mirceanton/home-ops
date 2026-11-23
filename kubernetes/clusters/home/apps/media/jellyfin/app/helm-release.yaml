@@ -82,10 +82,10 @@ spec:
               requests:
                 cpu: 20m
                 memory: 256Mi
-                nvidia.com/gpu: 1
+                devic.es/dri-render: 1
               limits:
                 memory: 4Gi
-                nvidia.com/gpu: 1
+                devic.es/dri-render: 1
 
             probes:
               liveness: &probe
@@ -109,7 +109,6 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
-      runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true

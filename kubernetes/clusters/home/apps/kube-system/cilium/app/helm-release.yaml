@@ -13,7 +13,7 @@ spec:
   values:
     cluster:
       id: 0
-      name: home-ops
+      name: home
     tls:
       secretsNamespace:
         name: kube-system

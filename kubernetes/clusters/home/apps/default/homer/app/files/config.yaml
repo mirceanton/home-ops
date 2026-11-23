@@ -38,12 +38,6 @@ services:
         target: "_blank"
         logo: "assets/icons/webp/immich.webp"
 
-      - name: "Feishin"
-        subtitle: "Music Player"
-        url: "https://music.home.mirceanton.com"
-        target: "_blank"
-        logo: "assets/icons/webp/feishin.webp"
-
       - name: "Navidrome"
         subtitle: "Music Server"
         url: "https://navidrome.home.mirceanton.com"

@@ -16,7 +16,6 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
-      runtimeClassName: nvidia
       enableServiceLinks: false
 
     controllers:
@@ -43,7 +42,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.4.2-cuda
+              tag: v3.4.2-openvino
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
@@ -63,7 +62,7 @@ spec:
                 memory: 397Mi
               limits:
                 memory: 8Gi
-                nvidia.com/gpu: 1
+                devic.es/dri-render: 1
 
             probes:
               liveness: &probe

@@ -7,10 +7,6 @@ resources:
   - ./namespace.yaml
   - ./grafana-folder.yaml
 
-  - ./docling-serve
   - ./hermano
   - ./hermes
   - ./litellm
-  - ./llmkube
-  - ./open-webui
-  - ./speaches
