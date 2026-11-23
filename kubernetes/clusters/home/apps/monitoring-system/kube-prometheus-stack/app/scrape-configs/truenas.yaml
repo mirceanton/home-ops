@@ -7,16 +7,16 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - nas.mgmt.h.mirceanton.com:9100
+        - nas.stor.h.mirceanton.com:9100
       labels:
         job: node-exporter
         node_type: nas
     - targets:
-        - nas.mgmt.h.mirceanton.com:9633
+        - nas.stor.h.mirceanton.com:9633
       labels:
         job: smartctl-exporter
     - targets:
-        - nas.mgmt.h.mirceanton.com:8080
+        - nas.stor.h.mirceanton.com:8080
       labels:
         job: cadvisor
   metricsPath: /metrics
