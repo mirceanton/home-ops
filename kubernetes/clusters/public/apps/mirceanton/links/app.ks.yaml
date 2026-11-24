@@ -9,9 +9,9 @@ spec:
   prune: true
   wait: true
   timeout: 5m
-  targetNamespace: web
+  targetNamespace: mirceanton
 
-  path: ./kubernetes/clusters/public/apps/web/links/app
+  path: ./kubernetes/clusters/public/apps/mirceanton/links/app
   sourceRef:
     kind: GitRepository
     name: flux-system
