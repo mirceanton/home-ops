@@ -28,7 +28,11 @@ spec:
     auth.anonymous: { enabled: "false" }
     metrics: { enabled: "true" }
     news: { news_feed_enabled: "false" }
-    plugins: { plugin_admin_enabled: "false" }
+    plugins:
+      plugin_admin_enabled: "false"
+      # Updating a bundled plugin fails on the read-only root filesystem and
+      # leaves it unloaded (e.g. "prometheus data source not found").
+      preinstall_auto_update: "false"
     security: { angular_support_enabled: "true" }
 
     auth.generic_oauth:
