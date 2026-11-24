@@ -182,7 +182,7 @@ spec:
     kubeProxy: { enabled: false }
     kubeEtcd:
       enabled: true
-      endpoints: [10.0.0.15]
+      endpoints: [10.0.10.10]
       serviceMonitor: { scheme: http }
     coreDns: { enabled: true }
     kubelet: { enabled: true }
