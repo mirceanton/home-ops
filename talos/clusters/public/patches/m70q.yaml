@@ -28,3 +28,10 @@ apiVersion: v1alpha1
 kind: DHCPv4Config
 name: eno1
 routeMetric: 1024
+---
+#? Directory-backed user volume on the EPHEMERAL partition (SATA SSD), mounted at
+#? /var/mnt/local-path-provisioner. Backs the `local-path` StorageClass.
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-path-provisioner
+volumeType: directory
