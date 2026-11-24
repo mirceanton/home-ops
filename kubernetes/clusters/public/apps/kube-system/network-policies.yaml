@@ -1,0 +1,130 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+#? Each component opts in to exactly the traffic it needs below.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Every pod may resolve cluster DNS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? CoreDNS: answers every pod in the cluster, forwards to the DMZ's public resolvers.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: coredns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+    - fromEntities: [cluster]
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+    - toCIDR: [1.1.1.1/32, 1.0.0.1/32, 8.8.8.8/32]
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? metrics-server: called by the API server, scrapes the kubelet.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: metrics-server
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: metrics-server
+  ingress:
+    - fromEntities: [kube-apiserver]
+      toPorts:
+        - ports:
+            - { port: "10250", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEntities: [host, remote-node]
+      toPorts:
+        - ports:
+            - { port: "10250", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? reloader: only watches the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: reloader
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: reloader
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Hubble relay: reached by Hubble UI, pulls flows from the Cilium agents (hubble-peer).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-relay
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: hubble-relay
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s-app: hubble-ui
+      toPorts:
+        - ports:
+            - { port: "4245", protocol: TCP }
+  egress:
+    - toEntities: [host, remote-node]
+      toPorts:
+        - ports:
+            - { port: "4244", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Hubble UI: only reachable via kubectl port-forward; talks to relay and the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-ui
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: hubble-ui
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: hubble-relay
+      toPorts:
+        - ports:
+            - { port: "4245", protocol: TCP }

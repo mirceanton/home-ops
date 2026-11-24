@@ -6,5 +6,6 @@ namespace: flux-system
 
 resources:
   - ./namespace.yaml
+  - ./network-policies.yaml
   - ./flux-operator
   - ./flux-instance
