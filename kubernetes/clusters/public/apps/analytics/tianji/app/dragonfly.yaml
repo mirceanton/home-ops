@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/dragonflydb.io/dragonfly_v1alpha1.json
+#? Cache + auth rate limiting for Tianji. Pure cache, so no snapshots / no PVC.
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: tianji-dragonfly
+spec:
+  image: ghcr.io/dragonflydb/dragonfly:v2.1.0@sha256:94891bb22ce2fb0f7a5a3ff1bb3b2fbbc5830e2523293e47723d87fa3e5b1184
+  replicas: 1
+
+  env:
+    - name: MAX_MEMORY
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: 1Mi
+
+  args:
+    - --maxmemory=$(MAX_MEMORY)Mi
+    - --proactor_threads=1
+    - --version_check=false
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 256Mi

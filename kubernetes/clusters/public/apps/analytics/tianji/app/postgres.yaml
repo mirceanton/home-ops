@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/postgresql.cnpg.io/cluster_v1.json
+#? Single-instance Postgres on local-path storage. Fresh initdb, no backups yet:
+#? the home Garage object store isn't reachable from the DMZ.
+#? CNPG writes the app credentials (incl. `uri`) to the `tianji-postgres-app` Secret.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: tianji-postgres
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.7-minimal-trixie
+  primaryUpdateStrategy: unsupervised
+  enableSuperuserAccess: false
+
+  bootstrap:
+    initdb:
+      database: tianji
+      owner: tianji
+
+  storage:
+    storageClass: local-path
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 128Mi
+    limits:
+      memory: 512Mi

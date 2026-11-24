@@ -56,7 +56,7 @@ spec:
             - { port: "18000", protocol: TCP }
     - toEndpoints:
         - matchExpressions:
-            - { key: k8s:io.kubernetes.pod.namespace, operator: In, values: [mirceanton] }
+            - { key: k8s:io.kubernetes.pod.namespace, operator: In, values: [mirceanton, analytics] }
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
 #? Envoy Gateway controller: serves xDS to the proxies and a webhook to the API server.

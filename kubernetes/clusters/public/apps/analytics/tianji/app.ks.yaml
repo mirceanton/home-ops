@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tianji
+spec:
+  interval: 10m
+  prune: true
+  wait: true
+  timeout: 10m
+  targetNamespace: analytics
+
+  path: ./kubernetes/clusters/public/apps/analytics/tianji/app
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+
+  postBuild:
+    substitute: {}
+
+  dependsOn:
+    - name: cloudnative-pg-operator
+      namespace: database-system
+    - name: dragonfly-operator
+      namespace: database-system
+    - name: local-path-provisioner
+      namespace: storage-system
+    - name: external-secrets-operator
+      namespace: security-system
+    - name: envoy-gateway
+      namespace: network-system
