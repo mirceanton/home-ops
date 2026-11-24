@@ -6,6 +6,7 @@ namespace: network-system
 
 resources:
   - ./namespace.yaml
+  - ./network-policies.yaml
   - ./cert-manager
   - ./envoy-gateway
   - ./external-dns

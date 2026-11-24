@@ -6,5 +6,6 @@ namespace: security-system
 
 resources:
   - ./namespace.yaml
+  - ./network-policies.yaml
   - ./1password-connect
   - ./external-secrets-operator

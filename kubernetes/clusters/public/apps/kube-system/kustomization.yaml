@@ -6,6 +6,7 @@ namespace: kube-system
 
 resources:
   - ./namespace.yaml
+  - ./network-policies.yaml
   - ./cilium
   - ./metrics-server
   - ./reloader
