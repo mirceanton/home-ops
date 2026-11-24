@@ -13,7 +13,8 @@ spec:
   values:
     controllers:
       hermes:
-        strategy: RollingUpdate
+        # Single replica on an RWO volume; a surge pod can't fit on the single node anyway.
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
 
