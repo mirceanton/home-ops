@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+#? Each app opts in to exactly the traffic it needs with its own policy.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
