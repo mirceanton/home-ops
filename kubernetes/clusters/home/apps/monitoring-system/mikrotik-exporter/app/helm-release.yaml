@@ -24,7 +24,7 @@ spec:
           mktxp:
             image:
               repository: ghcr.io/akpw/mktxp
-              tag: 2.1.0
+              tag: 2.1.1
             command: ["mktxp"]
             args: ["--cfg-dir", "/mktxp_config", "export"]
 
