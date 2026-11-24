@@ -59,9 +59,9 @@ spec:
             resources:
               requests:
                 cpu: 39m
-                memory: 397Mi
+                memory: 512Mi
               limits:
-                memory: 8Gi
+                memory: 4Gi
                 devic.es/dri-render: 1
 
             probes:

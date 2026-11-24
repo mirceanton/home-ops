@@ -40,6 +40,6 @@ spec:
   resources:
     requests:
       cpu: ${DRAGONFLY_CPU_REQUEST:=20m}
-      memory: ${DRAGONFLY_MEMORY_REQUEST:=64Mi}
+      memory: ${DRAGONFLY_MEMORY_REQUEST:=96Mi}
     limits:
       memory: ${DRAGONFLY_MEMORY_LIMIT:=512Mi}

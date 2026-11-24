@@ -27,9 +27,9 @@ spec:
     resources:
       requests:
         cpu: 50m
-        memory: 256Mi
+        memory: 512Mi
       limits:
-        memory: 2Gi
+        memory: 1536Mi
 
     secret:
       existingSecret: konflate-secret

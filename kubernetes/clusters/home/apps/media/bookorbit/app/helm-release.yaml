@@ -99,9 +99,9 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                memory: 320Mi
               limits:
-                memory: 2Gi
+                memory: 768Mi
             securityContext:
               readOnlyRootFilesystem: false
 
