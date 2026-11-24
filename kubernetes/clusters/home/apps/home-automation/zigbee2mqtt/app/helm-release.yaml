@@ -55,7 +55,9 @@ spec:
               ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: "60"
               ZIGBEE2MQTT_CONFIG_MQTT_REJECT_UNAUTHORIZED: "true"
-              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://mosquitto.home-automation.svc.cluster.local:1883"
+              # Short name on purpose: musl (Alpine) stops at the DHCP search suffix
+              # svc.h.mirceanton.com, which upstream answers with NODATA instead of NXDOMAIN.
+              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: "mqtt://mosquitto:1883"
               ZIGBEE2MQTT_CONFIG_MQTT_VERSION: "5"
 
               # Serial Device Configuration
