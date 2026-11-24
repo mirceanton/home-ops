@@ -7,4 +7,5 @@ namespace: web
 resources:
   - ./namespace.yaml
   - ./default-deny.network-policy.yaml
+  - ./blog
   - ./links
