@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/source.toolkit.fluxcd.io/gitrepository_v1.json
+#? Upstream doesn't publish the chart to a Helm/OCI registry, so pull it from the tagged repo.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: local-path-provisioner
+spec:
+  interval: 1h
+  url: https://github.com/rancher/local-path-provisioner
+  ref:
+    # renovate: datasource=github-releases depName=rancher/local-path-provisioner
+    tag: v0.0.37
+  ignore: |
+    /*
+    !/deploy/chart/local-path-provisioner
