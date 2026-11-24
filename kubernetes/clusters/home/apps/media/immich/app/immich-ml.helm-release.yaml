@@ -42,7 +42,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.4.2-openvino
+              tag: v3.4.1-openvino # v3.4.2-openvino was never published
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
