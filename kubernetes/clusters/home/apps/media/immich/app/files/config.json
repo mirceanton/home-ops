@@ -8,7 +8,7 @@
   },
 
   "ffmpeg": {
-    "accel": "nvenc",
+    "accel": "qsv",
     "accelDecode": true,
     "acceptedAudioCodecs": ["aac", "mp3", "opus"],
     "acceptedContainers": ["mov", "ogg", "webm"],
