@@ -27,9 +27,9 @@ spec:
       route:
         main:
           enabled: true
-          hostnames: ["alertmanager.admin.mirceanton.com"]
+          hostnames: ["alertmanager.home.mirceanton.com"]
           parentRefs:
-            - name: envoy-admin
+            - name: envoy-internal
               namespace: network-system
 
       alertmanagerSpec:
@@ -37,7 +37,7 @@ spec:
         # =======================================
         # App Settings
         # =======================================
-        externalUrl: "https://alertmanager.admin.mirceanton.com"
+        externalUrl: "https://alertmanager.home.mirceanton.com"
         logFormat: json
         logLevel: info
 
@@ -96,16 +96,16 @@ spec:
       route:
         main:
           enabled: true
-          hostnames: ["prometheus.admin.mirceanton.com"]
+          hostnames: ["prometheus.home.mirceanton.com"]
           parentRefs:
-            - name: envoy-admin
+            - name: envoy-internal
               namespace: network-system
 
       prometheusSpec:
         # =======================================
         # App Settings
         # =======================================
-        externalUrl: "https://prometheus.admin.mirceanton.com"
+        externalUrl: "https://prometheus.home.mirceanton.com"
         enableAdminAPI: true
         retention: 90d
         retentionSize: 100GB

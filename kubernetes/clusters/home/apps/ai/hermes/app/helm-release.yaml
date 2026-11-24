@@ -45,7 +45,7 @@ spec:
               HERMES_DASHBOARD: "1"
               HERMES_DASHBOARD_HOST: 0.0.0.0
               HERMES_DASHBOARD_PORT: &port 9119
-              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.admin.mirceanton.com"
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes-dashboard.home.mirceanton.com"
               # offline_access: refresh tokens become Keycloak offline-session
               # tokens, surviving SSO idle expiry (no re-login after idle).
               HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email offline_access"
@@ -121,9 +121,9 @@ spec:
 
     route:
       dashboard:
-        hostnames: ["hermes.admin.mirceanton.com"]
+        hostnames: ["hermes-dashboard.home.mirceanton.com"]
         parentRefs:
-          - name: envoy-admin
+          - name: envoy-internal
             namespace: network-system
         rules:
           - backendRefs:

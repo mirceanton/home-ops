@@ -22,7 +22,7 @@ spec:
 
     server:
       enable_gzip: "true"
-      root_url: https://grafana.admin.mirceanton.com
+      root_url: https://grafana.home.mirceanton.com
 
     auth: { disable_login_form: "true" }
     auth.anonymous: { enabled: "false" }
@@ -84,9 +84,9 @@ spec:
 
   httpRoute:
     spec:
-      hostnames: ["grafana.admin.mirceanton.com"]
+      hostnames: ["grafana.home.mirceanton.com"]
       parentRefs:
-        - name: envoy-admin
+        - name: envoy-internal
           namespace: network-system
       rules:
         - backendRefs:

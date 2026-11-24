@@ -27,7 +27,7 @@ spec:
     txtOwnerId: home
     txtPrefix: k8s.home.
 
-    domainFilters: ["home.mirceanton.com", "admin.mirceanton.com"]
+    domainFilters: ["home.mirceanton.com"]
     excludeDomains: []
 
     resources:

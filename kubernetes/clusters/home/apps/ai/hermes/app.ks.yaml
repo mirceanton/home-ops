@@ -29,8 +29,8 @@ spec:
       KEYCLOAK_CLIENT_ID: hermes-dashboard
       KEYCLOAK_CLIENT_HOME_URL: "https://hermes.home.mirceanton.com"
       # Both browser surfaces authenticate through this operator-managed client.
-      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://hermes.home.mirceanton.com/*","https://hermes.admin.mirceanton.com/*"]'
-      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://hermes.home.mirceanton.com","https://hermes.admin.mirceanton.com"]'
+      KEYCLOAK_CLIENT_REDIRECT_URLS: '["https://hermes.home.mirceanton.com/*","https://hermes-dashboard.home.mirceanton.com/*"]'
+      KEYCLOAK_CLIENT_WEB_ORIGINS: '["https://hermes.home.mirceanton.com","https://hermes-dashboard.home.mirceanton.com"]'
       # Offline refresh tokens outlive the realm's 30-min SSO idle timeout, so
       # idle Hermes clients (web/desktop/Android) refresh silently instead of
       # forcing a full OIDC re-login. Scoped to this client only.

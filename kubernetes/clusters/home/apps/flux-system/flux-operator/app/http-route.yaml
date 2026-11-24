@@ -5,9 +5,9 @@ kind: HTTPRoute
 metadata:
   name: flux-operator
 spec:
-  hostnames: ["flux.admin.mirceanton.com"]
+  hostnames: ["flux.home.mirceanton.com"]
   parentRefs:
-    - name: envoy-admin
+    - name: envoy-internal
       namespace: network-system
   rules:
     - backendRefs:
