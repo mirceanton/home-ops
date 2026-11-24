@@ -108,7 +108,7 @@ spec:
         externalUrl: "https://prometheus.admin.mirceanton.com"
         enableAdminAPI: true
         retention: 90d
-        retentionSize: 200GB
+        retentionSize: 100GB
         logLevel: info
         logFormat: json
 
@@ -158,7 +158,7 @@ spec:
               storageClassName: openebs-zfs-cache
               resources:
                 requests:
-                  storage: 200Gi
+                  storage: 120Gi
 
     # ==========================================================================
     # Grafana
