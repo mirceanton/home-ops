@@ -46,13 +46,6 @@
         "#\\s*renovate:\\s*datasource=docker\\s*\\n\\s*\\S+:\\s*\"?(?<depName>[^\\s\"@]+):(?<currentValue>[^\\s\"@:]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\"?\\s"
       ],
       "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
-      "description": "Track the flux-operator-manifests artifact pinned in each FluxInstance. It decides which Flux versions `distribution.version` can resolve to, so it must move with the flux-operator chart",
-      "managerFilePatterns": ["/flux-instance/.+\\.yaml$/"],
-      "matchStrings": ["artifact:\\s*oci://(?<depName>ghcr\\.io/controlplaneio-fluxcd/flux-operator-manifests):(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
-      "datasourceTemplate": "docker"
     }
   ]
 }
