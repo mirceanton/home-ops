@@ -6,3 +6,10 @@ kind: Kustomization
 resources:
   - ./truenas.yaml
   - ./raspberry-pi.yaml
+
+configMapGenerator:
+  - name: truenas-docker-monitoring-dashboard
+    options:
+      disableNameSuffixHash: true
+    files:
+      - truenas-docker-monitoring.json

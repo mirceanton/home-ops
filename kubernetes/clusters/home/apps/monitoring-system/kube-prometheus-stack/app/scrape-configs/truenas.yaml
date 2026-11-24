@@ -50,6 +50,10 @@ kind: GrafanaDashboard
 metadata:
   name: truenas-docker-monitoring
 spec:
+  configMapRef:
+    name: truenas-docker-monitoring-dashboard
+    key: truenas-docker-monitoring.json
+
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
@@ -58,6 +62,3 @@ spec:
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
-
-  resyncPeriod: 5m
-  url: "https://raw.githubusercontent.com/mirceanton/home-ops/refs/heads/main/apps/monitoring-system/kube-prometheus-stack/app/scrape-configs/truenas-docker-monitoring.json"
