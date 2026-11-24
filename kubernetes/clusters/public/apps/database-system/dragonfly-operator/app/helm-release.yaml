@@ -28,4 +28,3 @@ spec:
         limits:
           cpu: null
           memory: 60Mi
-
