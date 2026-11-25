@@ -124,7 +124,7 @@ spec:
             command:
               - sh
               - -c
-              - curl -sS "http://firefly:8080/api/v1/cron/${STATIC_CRON_TOKEN}"
+              - curl -sS "http://firefly:8080/api/v1/cron/$${STATIC_CRON_TOKEN}"
 
             env:
               STATIC_CRON_TOKEN:
