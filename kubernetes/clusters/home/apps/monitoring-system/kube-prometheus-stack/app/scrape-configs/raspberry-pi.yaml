@@ -8,7 +8,6 @@ spec:
   staticConfigs:
     - targets:
         - livingroom-pi.utrst.h.mirceanton.com:9100
-        - mirkdesk-pi.utrst.h.mirceanton.com:9100
       labels:
         job: node-exporter
         node_type: raspberry_pi
