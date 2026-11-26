@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-cloudflare
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: external-dns-cloudflare
+
+  values:
+    fullnameOverride: external-dns-cloudflare
+
+    logLevel: info
+    logFormat: text
+
+    interval: 1m
+    triggerLoopOnEvent: true
+
+    #? upsert-only: never delete records, even if they are owned by this instance
+    policy: upsert-only
+
+    sources: [gateway-httproute, service, ingress, crd]
+    managedRecordTypes: [A, AAAA, CNAME]
+
+    txtOwnerId: utils
+    txtPrefix: k8s.utils.
+
+    domainFilters: ["mirceanton.com"]
+    excludeDomains: []
+
+    resources:
+      requests:
+        cpu: 20m
+        memory: 64Mi
+      limits:
+        memory: 128Mi
+
+    provider:
+      name: cloudflare
+
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare-credentials
+            key: api-token

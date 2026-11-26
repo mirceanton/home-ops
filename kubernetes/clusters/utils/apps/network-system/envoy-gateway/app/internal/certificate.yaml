@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cert-manager.io/certificate_v1.json
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: admin-mirceanton
+spec:
+  secretName: admin-mirceanton-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: admin.mirceanton.com
+  dnsNames:
+    - admin.mirceanton.com
+    - "*.admin.mirceanton.com"

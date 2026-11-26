@@ -1,0 +1,16 @@
+---
+#? The one address handed to the envoy-internal Gateway
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: envoy-internal
+spec:
+  addresses:
+    - 10.0.20.15/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: envoy-internal
+spec:
+  ipAddressPools: [envoy-internal]

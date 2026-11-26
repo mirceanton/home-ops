@@ -53,3 +53,10 @@ routeMetric: 1024
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: zfs
+---
+#? Directory-backed user volume on the EPHEMERAL partition (eMMC), mounted at
+#? /var/mnt/local-path-provisioner. Backs the `local-path` StorageClass.
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-path-provisioner
+volumeType: directory

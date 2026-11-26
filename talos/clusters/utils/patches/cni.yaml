@@ -1,0 +1,5 @@
+---
+#? Flannel (the Talos default), plus kube-network-policies so NetworkPolicy objects are enforced
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+kubeNetworkPoliciesEnabled: true
