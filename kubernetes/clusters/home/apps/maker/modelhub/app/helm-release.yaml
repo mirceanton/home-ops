@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/model-hub
-              tag: v0.19.0
+              tag: v0.19.6
 
             env:
               # UID 568 has no /etc/passwd entry in the image (only 1001/
@@ -115,9 +115,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 256Mi
+                memory: 192Mi
               limits:
-                memory: 2Gi
+                memory: 1Gi
 
             securityContext:
               allowPrivilegeEscalation: false
