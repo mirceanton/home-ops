@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/litellm.home-operations.com/litellmmcpserver_v1alpha1.json
+apiVersion: litellm.home-operations.com/v1alpha1
+kind: LiteLLMMCPServer
+metadata:
+  name: modelhub-mcp
+spec:
+  proxyRef: litellm
+  proxyNamespace: ai
+
+  alias: modelhub
+  url: http://modelhub.maker.svc.cluster.local:4000/api/mcp
+  transport: http
+
+  authType: bearer_token
+  authTokenRef:
+    name: modelhub-mcp-secret
+    key: MODELHUB_API_TOKEN
