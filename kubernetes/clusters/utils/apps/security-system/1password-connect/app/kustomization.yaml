@@ -6,3 +6,5 @@ resources:
   - ./clustersecretstore.yaml
   - ./helm-release.yaml
   - ./oci-repository.yaml
+  - ./op-credentials.secret.sops.yaml
+  - ./op-token.secret.sops.yaml

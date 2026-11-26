@@ -8,6 +8,13 @@ creation_rules:
       - age:
           - age1d7fjm42t7d8r9g4glua85tkrf4txswk2hnc8s4pgr8nyupnenfhqmegklw
 
+  # utils has its own key, so its in-cluster copy can't decrypt anything else. Must precede the generic rule.
+  - path_regex: kubernetes/clusters/utils/.*\.secret(\.sops)?\.yaml
+    encrypted_regex: '^(data|stringData)$'
+    key_groups:
+      - age:
+          - age19ep6fj2v2j3yd8zj3lg2e8k2f948hn0xqfn0hxtv45ru3t6kjsys5ap70n
+
   # Generic Kubernetes Secrets
   - path_regex: kubernetes/clusters/.*/.*\.secret(\.sops)?\.yaml
     encrypted_regex: '^(data|stringData)$'
