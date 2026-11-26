@@ -50,13 +50,12 @@ routeMetric: 1024
 # name: bond0
 # routeMetric: 1024
 ---
+#? For the OpenEBS data-pool: a ZFS mirror over the two Crucial MX500 SATA SSDs.
+#? Talos doesn't create zpools; create it once from a privileged pod with /dev mounted:
+#?   zpool create -o ashift=12 -o autotrim=on -O compression=zstd -O atime=off \
+#?     -O xattr=sa -O acltype=posixacl -m none data-pool mirror \
+#?     /dev/disk/by-id/<first MX500> /dev/disk/by-id/<second MX500>
+#? The zfs extension re-imports it on boot.
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: zfs
----
-#? Directory-backed user volume on the EPHEMERAL partition (eMMC), mounted at
-#? /var/mnt/local-path-provisioner. Backs the `local-path` StorageClass.
-apiVersion: v1alpha1
-kind: UserVolumeConfig
-name: local-path-provisioner
-volumeType: directory

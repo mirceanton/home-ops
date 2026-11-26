@@ -30,15 +30,32 @@ spec:
         - { port: 53, protocol: TCP }
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
-#? Watches PVCs and creates helper pods.
+#? Provisions volumes through the API server. The node plugin is host-networked.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: local-path-provisioner
+  name: openebs-zfs-controller
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: local-path-provisioner
+      app: openebs-zfs-controller
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - ipBlock: { cidr: 10.0.20.10/32 }
+      ports:
+        - { port: 6443, protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Only watches the API server.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: snapshot-controller
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: snapshot-controller
   policyTypes: [Egress]
   egress:
     - to:

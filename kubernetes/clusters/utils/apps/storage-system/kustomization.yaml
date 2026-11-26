@@ -7,4 +7,5 @@ namespace: storage-system
 resources:
   - ./namespace.yaml
   - ./network-policies.yaml
-  - ./local-path-provisioner
+  - ./openebs
+  - ./snapshot-controller
