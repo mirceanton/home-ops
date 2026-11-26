@@ -1,0 +1,68 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openebs
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: openebs
+
+  values:
+    zfs-localpv:
+      zfsNode:
+        # /home is read-only on Talos; use a writable path under /var
+        encrKeysDir: /var/local/openebs/keys
+        resources:
+          requests:
+            cpu: 89m
+            memory: 64Mi
+          limits:
+            memory: 256Mi
+        nodeDriverRegistrar:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 32Mi
+      zfs:
+        # Talos installs ZFS at a non-standard path
+        bin: /usr/local/sbin/zfs
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+      zfsController:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
+    # ====================================================================
+    # ====================== Disable EVERYTHING Else =====================
+    # ====================================================================
+    analytics: { enabled: false }
+    alloy: { enabled: false }
+    loki: { enabled: false }
+    engines:
+      local:
+        #? no directory-backed volumes: everything lives on the ZFS mirror
+        hostpath: { enabled: false }
+        zfs: { enabled: true }
+        lvm: { enabled: false }
+        rawfile: { enabled: false }
+      replicated:
+        mayastor: { enabled: false }
+    openebs-crds:
+      csi:
+        volumeSnapshots:
+          enabled: false # CRDs deployed by snapshot-controller
+          keep: false

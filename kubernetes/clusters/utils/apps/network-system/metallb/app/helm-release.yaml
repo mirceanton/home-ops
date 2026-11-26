@@ -1,0 +1,41 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: metallb
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: metallb
+
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+
+  values:
+    #? L2 mode only, so none of the FRR/BGP machinery
+    frrk8s:
+      enabled: false
+
+    controller:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    speaker:
+      #? Talos labels control-plane nodes exclude-from-external-load-balancers, and this is the only node
+      ignoreExcludeLB: true
+      frr:
+        enabled: false
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi

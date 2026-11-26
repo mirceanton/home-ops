@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dragonfly-operator
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: dragonfly-operator
+
+  values:
+    replicaCount: 1
+    manager:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 67Mi
+        limits:
+          memory: 79Mi
+
+    rbacProxy:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 52Mi
+        limits:
+          cpu: null
+          memory: 60Mi

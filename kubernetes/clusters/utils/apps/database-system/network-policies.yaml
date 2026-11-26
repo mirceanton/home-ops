@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress by default; each component opts in below.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Every pod may resolve cluster DNS.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: kube-system }
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - { port: 53, protocol: UDP }
+        - { port: 53, protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Webhook for the API server, instance status (8000) on Postgres pods in any namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cloudnative-pg
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudnative-pg
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - ipBlock: { cidr: 10.0.20.10/32 }
+        - ipBlock: { cidr: 10.244.0.1/32 }
+      ports:
+        - { port: 9443, protocol: TCP }
+  egress:
+    - to:
+        - ipBlock: { cidr: 10.0.20.10/32 }
+      ports:
+        - { port: 6443, protocol: TCP }
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              cnpg.io/podRole: instance
+      ports:
+        - { port: 8000, protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? API server and the Dragonfly pods it manages in any namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dragonfly-operator
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dragonfly-operator
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - ipBlock: { cidr: 10.0.20.10/32 }
+      ports:
+        - { port: 6443, protocol: TCP }
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: dragonfly
+      ports:
+        - { port: 6379, protocol: TCP }
+        - { port: 9999, protocol: TCP }
