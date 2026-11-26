@@ -15,7 +15,7 @@ spec:
     # anytype-mcp only speaks stdio, so supergateway (mounted from its own image
     # below) bridges it to streamable HTTP. It runs on this image's Node 24 since
     # the supergateway image still ships Node 20.
-    image: ghcr.io/anyproto/anytype-mcp:v2.0.2
+    image: ghcr.io/anyproto/anytype-mcp:v2.0.3
     command: ["node", "/supergateway/usr/local/lib/node_modules/supergateway/dist/index.js"]
     args:
       - --stdio
@@ -44,7 +44,7 @@ spec:
     resources:
       requests:
         cpu: 10m
-        memory: 128Mi
+        memory: 160Mi
       limits:
         memory: 512Mi
 
@@ -66,7 +66,7 @@ spec:
       - name: supergateway
         image:
           # renovate: datasource=docker
-          reference: ghcr.io/supercorp-ai/supergateway:4.2.2
+          reference: ghcr.io/supercorp-ai/supergateway:4.3.0
           pullPolicy: IfNotPresent
       - name: tmp
         emptyDir: {}

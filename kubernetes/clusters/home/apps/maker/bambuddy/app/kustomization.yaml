@@ -12,5 +12,7 @@ configMapGenerator:
   - name: bambuddy-dashboard
     options:
       disableNameSuffixHash: true
+      annotations:
+        kustomize.toolkit.fluxcd.io/substitute: disabled
     files:
       - dashboard.json

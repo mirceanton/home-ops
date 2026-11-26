@@ -27,7 +27,7 @@ spec:
               kubernetes.io/metadata.name: network-system
           podSelector:
             matchLabels:
-              gateway.envoyproxy.io/owning-gateway-name: envoy-admin
+              gateway.envoyproxy.io/owning-gateway-name: envoy-internal
       ports:
         - protocol: TCP
           port: 9119

@@ -29,7 +29,7 @@ spec:
           app:
             image:
               repository: ghcr.io/home-operations/qbittorrent
-              tag: 5.3.0
+              tag: 5.3.1
             env:
               QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: 51478
@@ -47,9 +47,9 @@ spec:
             resources:
               requests:
                 cpu: 57m
-                memory: 2Gi
+                memory: 256Mi
               limits:
-                memory: 4Gi
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
               capabilities:

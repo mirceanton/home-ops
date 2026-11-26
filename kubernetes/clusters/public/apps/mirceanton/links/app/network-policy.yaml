@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Static site: only the external Envoy gateway may reach it, on the app port.
+#? No egress at all (no DNS, no API server, no internet) - covered by the namespace default-deny.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: links
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: links
+      app.kubernetes.io/controller: links
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: network-system
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-name: envoy-external
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress: []

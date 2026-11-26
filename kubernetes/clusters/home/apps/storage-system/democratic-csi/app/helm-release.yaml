@@ -57,6 +57,9 @@ spec:
           memory: 128Mi
 
     controller:
+      # TODO: scale back up once steam-sunshine's steamlib iSCSI target is restored. The PN64 (Services
+      # VLAN) also needs firewall access to the TrueNAS API on nas.mgmt (10.0.0.245:443) first.
+      replicaCount: 0
       driver:
         resources:
           requests:

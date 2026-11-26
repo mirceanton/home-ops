@@ -1,0 +1,132 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tianji
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: tianji
+
+  values:
+    global: { createDefaultServiceAccount: false }
+
+    controllers:
+      tianji:
+        replicas: 1
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        containers:
+          app:
+            image:
+              repository: docker.io/moonrailgun/tianji
+              tag: 1.34.3@sha256:1fa262dcd64f6e9538bcd014392526ad67b27f60c7b07a6cff2b51c41345f368
+
+            #? Upstream CMD also starts `tianji-reporter`, which phones a hard-coded workspace
+            #? on the server itself, and applies ClickHouse migrations we don't use.
+            #? Run only the Prisma migrations and the server.
+            command: ["/bin/sh", "-c"]
+            args:
+              - >-
+                cd /app/tianji/src/server &&
+                ./node_modules/.bin/prisma migrate deploy &&
+                exec node ./dist/src/server/main.js
+
+            env:
+              NODE_ENV: production
+              PORT: "12345"
+              PUBLIC_URL: https://analytics.mirceanton.com
+              ALLOW_REGISTER: "false"
+              ALLOW_OPENAPI: "false"
+              AUTH_USE_SECURE_COOKIES: "true"
+              DISABLE_ANONYMOUS_TELEMETRY: "true"
+              CLIENT_IP_HEADER: x-forwarded-for
+              REDIS_URL: redis://tianji-dragonfly:6379
+              DATABASE_URL:
+                valueFrom:
+                  secretKeyRef:
+                    name: tianji-postgres-app
+                    key: uri
+              #? Prisma CLI / Chromium want a writable home and cache dir
+              HOME: /tmp
+              CHECKPOINT_DISABLE: "1"
+            envFrom:
+              - secretRef:
+                  name: tianji-secret
+
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 12345
+                  periodSeconds: 15
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 60
+
+            resources:
+              requests:
+                cpu: 50m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              privileged: false
+              capabilities: { drop: ["ALL"] }
+              seccompProfile: { type: RuntimeDefault }
+
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000 #? `node` user in the node:alpine base image
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+
+    service:
+      app:
+        controller: tianji
+        ports:
+          http:
+            port: *port
+
+    route:
+      app:
+        annotations:
+          #? The gateway's external-dns target is still the private LB IP.
+          #? Enable DNS for this route together with the other sites at cutover.
+          external-dns.kubernetes.io/controller: none
+        hostnames: ["analytics.mirceanton.com"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network-system
+            sectionName: https
+
+    persistence:
+      tmp:
+        type: emptyDir
+        sizeLimit: 256Mi
+        globalMounts:
+          - path: /tmp

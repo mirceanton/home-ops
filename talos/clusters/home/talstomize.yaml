@@ -7,10 +7,10 @@ controlPlaneEndpoint: https://pn64.svc.h.mirceanton.com:6443
 secrets: ./talsecret.sops.yaml
 
 # renovate: depName=ghcr.io/siderolabs/installer datasource=docker
-talosVersion: v1.14.2
+talosVersion: v1.14.7
 
 # renovate: depName=ghcr.io/siderolabs/kubelet datasource=docker
-kubernetesVersion: v1.37.2
+kubernetesVersion: v1.37.3
 
 additionalSubjectAltNames:
   - pn64.svc.h.mirceanton.com
@@ -28,7 +28,7 @@ installer:
           - siderolabs/zfs
 
 nodes:
-  #? ASUS PN64: i7-12700H, 32GiB RAM, 128GB SATA SSD, 16GB Optane M10, 2x 320GB USB HDD, I225-V
+  #? ASUS PN64: i7-12700H, 32GiB RAM, 500GB Samsung 860 EVO (Talos + ZFS), 16GB Optane M10 (etcd), I225-V
   pn64:
     ip: 10.0.10.10
     kind: controlplane

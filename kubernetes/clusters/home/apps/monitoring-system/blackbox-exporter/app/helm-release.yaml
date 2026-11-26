@@ -59,7 +59,7 @@ spec:
       rules:
         # WiFi Pi devices — silent notification (intermittent connectivity drops expected)
         - alert: BlackboxProbeFailed
-          expr: probe_success{instance=~"mirkdesk-pi\\..*|livingroom-pi\\..*"} == 0
+          expr: probe_success{instance=~"livingroom-pi\\..*"} == 0
           for: 15m
           labels:
             severity: info
@@ -68,7 +68,7 @@ spec:
 
         # All other targets (HTTP endpoints, NFS, wired devices) — critical as before
         - alert: BlackboxProbeFailed
-          expr: probe_success{instance!~"mirkdesk-pi\\..*|livingroom-pi\\..*"} == 0
+          expr: probe_success{instance!~"livingroom-pi\\..*"} == 0
           for: 15m
           labels:
             severity: critical

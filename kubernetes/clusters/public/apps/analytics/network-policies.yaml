@@ -1,0 +1,118 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Every pod may resolve cluster DNS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Tianji: reached only through the external Envoy gateway; talks only to its own
+#? Postgres and Dragonfly. No internet (uptime monitors / webhooks won't work by design).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tianji
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: tianji
+      app.kubernetes.io/controller: tianji
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: network-system
+            gateway.envoyproxy.io/owning-gateway-name: envoy-external
+      toPorts:
+        - ports:
+            - { port: "12345", protocol: TCP }
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: tianji-postgres
+      toPorts:
+        - ports:
+            - { port: "5432", protocol: TCP }
+    - toEndpoints:
+        - matchLabels:
+            app: tianji-dragonfly
+      toPorts:
+        - ports:
+            - { port: "6379", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Postgres instance + CNPG job pods: clients from Tianji, status checks from the operator,
+#? and the instance manager talks to the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tianji-postgres
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: tianji-postgres
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: tianji
+            app.kubernetes.io/controller: tianji
+      toPorts:
+        - ports:
+            - { port: "5432", protocol: TCP }
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database-system
+            app.kubernetes.io/name: cloudnative-pg
+      toPorts:
+        - ports:
+            - { port: "8000", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Dragonfly: clients from Tianji, replication/config from the operator. No egress.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tianji-dragonfly
+spec:
+  endpointSelector:
+    matchLabels:
+      app: tianji-dragonfly
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/instance: tianji
+            app.kubernetes.io/controller: tianji
+      toPorts:
+        - ports:
+            - { port: "6379", protocol: TCP }
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: database-system
+            app.kubernetes.io/name: dragonfly-operator
+      toPorts:
+        - ports:
+            - { port: "6379", protocol: TCP }
+            - { port: "9999", protocol: TCP }

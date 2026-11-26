@@ -41,9 +41,9 @@ spec:
   resources:
     requests:
       cpu: ${CNPG_CPU_REQUEST:-20m}
-      memory: ${CNPG_MEMORY_REQUEST:-256Mi}
+      memory: ${CNPG_MEMORY_REQUEST:-192Mi}
     limits:
-      memory: ${CNPG_MEMORY_LIMIT:-2Gi}
+      memory: ${CNPG_MEMORY_LIMIT:-1Gi}
 
   postgresql:
     parameters:

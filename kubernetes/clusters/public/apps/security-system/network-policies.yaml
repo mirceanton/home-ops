@@ -1,0 +1,103 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+#? Each component opts in to exactly the traffic it needs below.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Every pod may resolve cluster DNS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? external-secrets controller: reads from 1Password Connect, writes Secrets via the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-secrets
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: onepassword
+      toPorts:
+        - ports:
+            - { port: "80", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? external-secrets cert controller: manages the webhook certificate via the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-secrets-cert-controller
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets-cert-controller
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? external-secrets webhook: called by the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-secrets-webhook
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets-webhook
+  ingress:
+    - fromEntities: [kube-apiserver]
+      toPorts:
+        - ports:
+            - { port: "10250", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? 1Password Connect: only the external-secrets controller may query it;
+#? it syncs with 1Password.com over HTTPS. No API server access.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: onepassword
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: onepassword
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: external-secrets
+      toPorts:
+        - ports:
+            - { port: "80", protocol: TCP }
+  egress:
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - { port: "443", protocol: TCP }

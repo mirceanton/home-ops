@@ -3,8 +3,10 @@
 # - forwardKubeDNSToHost: Disabled to keep cluster DNS separate from host DNS,
 #   preventing potential DNS loops and maintaining isolation
 # - resolveMemberNames: Enable resolution of cluster member hostnames
-# Search domain disabled in /etc/resolv.conf to prevent short hostnames from
-# getting the cluster's search domain appended on external DNS lookups.
+# Search domains: none at all. disableDefault drops the hostname-derived domain;
+# the explicit empty list overrides DHCP-provided ones, which Talos applies since
+# v1.14 (siderolabs/talos 5b81b20d3). Otherwise pods inherit svc.h.mirceanton.com,
+# which upstream answers with NODATA, and musl (Alpine) resolvers give up on it.
 apiVersion: v1alpha1
 kind: ResolverConfig
 hostDNS:
@@ -13,3 +15,4 @@ hostDNS:
   resolveMemberNames: true
 searchDomains:
   disableDefault: true
+  domains: []

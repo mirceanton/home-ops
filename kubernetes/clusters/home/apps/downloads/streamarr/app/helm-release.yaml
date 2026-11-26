@@ -22,7 +22,7 @@ spec:
           main:
             image:
               repository: ghcr.io/mirceanton/streamarr
-              tag: v0.40.12
+              tag: v0.40.13
             env:
               TZ: "Europe/Bucharest"
               STREAMARR_PORT: &port 8080
@@ -31,9 +31,9 @@ spec:
             resources:
               requests:
                 cpu: 20m
-                memory: 256Mi
+                memory: 32Mi
               limits:
-                memory: 6Gi
+                memory: 2Gi
 
             probes:
               liveness: { enabled: true }
@@ -85,13 +85,13 @@ spec:
       tvshows:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/TV_Shows
+        path: /mnt/rusty/Media/TV_Shows
         globalMounts:
           - path: /nfs-media/TV_Shows
       movies:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Movies
+        path: /mnt/rusty/Media/Movies
         globalMounts:
           - path: /nfs-media/Movies
       music:

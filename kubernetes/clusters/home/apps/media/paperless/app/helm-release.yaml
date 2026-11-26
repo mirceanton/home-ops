@@ -6,6 +6,7 @@ metadata:
   name: paperless
 spec:
   interval: 30m
+  timeout: 10m
   chartRef:
     kind: OCIRepository
     name: paperless
@@ -37,7 +38,7 @@ spec:
           app:
             image:
               repository: ghcr.io/paperless-ngx/paperless-ngx
-              tag: 3.5.0
+              tag: 3.5.1
 
             envFrom:
               - secretRef: { name: paperless-secret }
@@ -116,9 +117,9 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 512Mi
+                memory: 1Gi
               limits:
-                memory: 2Gi
+                memory: 3Gi
 
             probes:
               liveness: &probes

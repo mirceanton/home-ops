@@ -1,0 +1,157 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+#? Each component opts in to exactly the traffic it needs below.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Every pod may resolve cluster DNS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Envoy proxies: the only internet-facing pods. Ingress from outside the cluster on the
+#? listener ports; egress only to the Envoy Gateway controller (xDS) and backend apps.
+#? No API server, no internet. Add each new backend namespace to the egress list.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: envoy-external
+spec:
+  endpointSelector:
+    matchLabels:
+      gateway.envoyproxy.io/owning-gateway-name: envoy-external
+  ingress:
+    - fromEntities: [world, host]
+      toPorts:
+        - ports:
+            - { port: "10080", protocol: TCP }
+            - { port: "10443", protocol: TCP }
+            - { port: "10443", protocol: UDP }
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            control-plane: envoy-gateway
+      toPorts:
+        - ports:
+            - { port: "18000", protocol: TCP }
+    - toEndpoints:
+        - matchExpressions:
+            - { key: k8s:io.kubernetes.pod.namespace, operator: In, values: [mirceanton, analytics] }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Envoy Gateway controller: serves xDS to the proxies and a webhook to the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: envoy-gateway
+spec:
+  endpointSelector:
+    matchLabels:
+      control-plane: envoy-gateway
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/component: proxy
+            app.kubernetes.io/name: envoy
+      toPorts:
+        - ports:
+            - { port: "18000", protocol: TCP }
+            - { port: "18001", protocol: TCP }
+            - { port: "18002", protocol: TCP }
+    - fromEntities: [kube-apiserver]
+      toPorts:
+        - ports:
+            - { port: "9443", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? cert-manager controller: ACME (Let's Encrypt) and Cloudflare API over HTTPS,
+#? DNS-over-HTTPS to 1.1.1.1/1.0.0.1 for propagation checks.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cert-manager
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: controller
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - { port: "443", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? cert-manager webhook: called by the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: cert-manager-webhook
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/component: webhook
+  ingress:
+    - fromEntities: [kube-apiserver]
+      toPorts:
+        - ports:
+            - { port: "10250", protocol: TCP }
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? API-server-only components: cainjector, and the Helm hook jobs
+#? (cert-manager startupapicheck, envoy-gateway certgen).
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: apiserver-only
+spec:
+  endpointSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [cainjector, startupapicheck, certgen]
+  egress:
+    - toEntities: [kube-apiserver]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? external-dns: watches routes via the API server, writes records via the Cloudflare API.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-dns
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+  egress:
+    - toEntities: [kube-apiserver]
+    - toEntities: [world]
+      toPorts:
+        - ports:
+            - { port: "443", protocol: TCP }

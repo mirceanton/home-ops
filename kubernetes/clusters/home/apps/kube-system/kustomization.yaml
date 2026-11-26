@@ -10,5 +10,4 @@ resources:
   - ./generic-device-plugin
   - ./keda
   - ./metrics-server
-  - ./nvidia
   - ./reloader

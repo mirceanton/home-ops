@@ -39,7 +39,7 @@ spec:
     resources:
       requests:
         cpu: 10m
-        memory: 64Mi
+        memory: 128Mi
       limits:
         memory: 256Mi
 
@@ -97,14 +97,6 @@ spec:
             host: 10.0.0.1
             username: {{ .rb5009_username | quote }}
             password: {{ .rb5009_password | quote }}
-          - title: CRS317
-            host: 10.0.0.2
-            username: {{ .crs317_username | quote }}
-            password: {{ .crs317_password | quote }}
-          - title: CRS326
-            host: 10.0.0.3
-            username: {{ .crs326_username | quote }}
-            password: {{ .crs326_password | quote }}
           - title: HEX
             host: 10.0.0.4
             username: {{ .hex_username | quote }}
@@ -122,22 +114,6 @@ spec:
     - secretKey: rb5009_password
       remoteRef:
         key: RB5009 - mcp-readonly
-        property: password
-    - secretKey: crs317_username
-      remoteRef:
-        key: CRS317 - mcp-readonly
-        property: username
-    - secretKey: crs317_password
-      remoteRef:
-        key: CRS317 - mcp-readonly
-        property: password
-    - secretKey: crs326_username
-      remoteRef:
-        key: CRS326 - mcp-readonly
-        property: username
-    - secretKey: crs326_password
-      remoteRef:
-        key: CRS326 - mcp-readonly
         property: password
     - secretKey: hex_username
       remoteRef:

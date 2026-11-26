@@ -1,0 +1,10 @@
+---
+#? local-path-provisioner's helper pods mount hostPath, which needs the privileged PSA level.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: _
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled

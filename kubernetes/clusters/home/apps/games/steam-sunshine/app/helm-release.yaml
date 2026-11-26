@@ -17,6 +17,8 @@ spec:
     controllers:
       steam-sunshine:
         type: statefulset
+        # TODO: scale back up once the mircea-steamlib iSCSI target exists on the NAS again
+        replicas: 0
         annotations:
           reloader.stakater.com/auto: "true"
         containers:

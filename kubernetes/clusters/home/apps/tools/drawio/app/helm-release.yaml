@@ -23,7 +23,7 @@ spec:
           app:
             image:
               repository: docker.io/jgraph/drawio
-              tag: 32.6.10
+              tag: 32.7.4
             probes:
               liveness:
                 enabled: true
@@ -38,9 +38,9 @@ spec:
             resources:
               requests:
                 cpu: 50m
-                memory: 256Mi
+                memory: 192Mi
               limits:
-                memory: 2Gi
+                memory: 512Mi
 
             securityContext:
               allowPrivilegeEscalation: false

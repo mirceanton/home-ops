@@ -13,7 +13,7 @@ spec:
   values:
     cluster:
       id: 0
-      name: home-ops
+      name: home
     tls:
       secretsNamespace:
         name: kube-system
@@ -132,7 +132,7 @@ spec:
     resources:
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 384Mi
       limits:
         memory: 1Gi
 

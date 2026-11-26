@@ -13,7 +13,8 @@ spec:
   values:
     controllers:
       hermes:
-        strategy: RollingUpdate
+        # Single replica on an RWO volume; a surge pod can't fit on the single node anyway.
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
 
@@ -21,7 +22,7 @@ spec:
           app:
             image:
               repository: nousresearch/hermes-agent
-              tag: v0.23.1@sha256:276d44685c65c0cb2a25f190b63c65c8906f9dc76486fb1c05ae71b5826bda08
+              tag: v0.23.3@sha256:3e9fe4c6ef36490f43aa0d0d80f9df64e9c92a576eee3042f1a97c8813c05355
             args: ["sleep", "infinity"]
 
             envFrom:
@@ -45,7 +46,7 @@ spec:
               HERMES_DASHBOARD: "1"
               HERMES_DASHBOARD_HOST: 0.0.0.0
               HERMES_DASHBOARD_PORT: &port 9119
-              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes.admin.mirceanton.com"
+              HERMES_DASHBOARD_PUBLIC_URL: "https://hermes-dashboard.home.mirceanton.com"
               # offline_access: refresh tokens become Keycloak offline-session
               # tokens, surviving SSO idle expiry (no re-login after idle).
               HERMES_DASHBOARD_OIDC_SCOPES: "openid profile email offline_access"
@@ -71,7 +72,7 @@ spec:
                 cpu: 150m
                 memory: 1Gi
               limits:
-                memory: 24Gi
+                memory: 4Gi
 
             ports:
               - containerPort: &dashboard_port 9119
@@ -121,9 +122,9 @@ spec:
 
     route:
       dashboard:
-        hostnames: ["hermes.admin.mirceanton.com"]
+        hostnames: ["hermes-dashboard.home.mirceanton.com"]
         parentRefs:
-          - name: envoy-admin
+          - name: envoy-internal
             namespace: network-system
         rules:
           - backendRefs:
@@ -150,7 +151,7 @@ spec:
 
       mise:
         type: image
-        image: ghcr.io/jdx/mise:2026.11.9
+        image: ghcr.io/jdx/mise:2026.11.14
         advancedMounts:
           hermes:
             app:
@@ -177,13 +178,13 @@ spec:
       media-movies:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/Movies
+        path: /mnt/rusty/Media/Movies
         globalMounts:
           - path: /Volumes/Media/Movies
       media-tvshows:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/TV_Shows
+        path: /mnt/rusty/Media/TV_Shows
         globalMounts:
           - path: /Volumes/Media/TV_Shows
       media-books:

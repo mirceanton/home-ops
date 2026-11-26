@@ -1,11 +1,37 @@
 ---
-#? Install Talos onto the Samsung SATA SSD. Matched by model rather than /dev/sdX, since the
-#? USB HDDs can shift the sdX ordering.
+#? Install Talos onto the Samsung 860 EVO 500GB in the internal SATA slot (ex home-ops cache-pool,
+#? serial S3Z2NB1K729005X). Matched by WWID: Talos reports no serial and a truncated model
+#? ("Samsung SSD 860") for it. The disk is shared: EPHEMERAL is capped below, the rest is ZFS.
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
 provisioning:
   diskSelector:
-    match: disk.transport == "sata" && disk.model == "SAMSUNG MZ7PD128"
+    match: disk.transport == "sata" && disk.wwid == "naa.5002538e405dc1b7"
+
+---
+#? Cap EPHEMERAL (container images, logs, emptyDirs) so the rest of the disk is left for ZFS.
+#? The old node's imagefs sat at ~100GiB (30d peak ~190GiB, incl. the dropped CUDA/AI images);
+#? kubelet image GC kicks in at 85%, so 150GiB leaves headroom for image churn.
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  maxSize: 150GiB
+
+---
+#? Raw partition (label r-zfs) for the OpenEBS ZFS pool, taking the remaining ~310GiB.
+#? Talos doesn't create zpools; after install, create it once from a privileged pod with /dev mounted:
+#?   zpool create -o ashift=12 -o autotrim=on -O compression=zstd -O atime=off \
+#?     -O xattr=sa -O acltype=posixacl -m none data-pool /dev/disk/by-partlabel/r-zfs
+#? The zfs extension re-imports it on boot.
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: zfs
+provisioning:
+  diskSelector:
+    match: system_disk
+  minSize: 250GiB
+  grow: true
 
 ---
 #? Use the Intel Optane M10 for the etcd data volume.
@@ -33,7 +59,7 @@ name: enp2s0
 routeMetric: 1024
 
 ---
-#? For a ZFS mirror on the two USB HDDs
+#? For the OpenEBS data-pool on the r-zfs partition
 apiVersion: v1alpha1
 kind: KernelModuleConfig
 name: zfs

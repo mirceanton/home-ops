@@ -15,7 +15,7 @@ uv = "latest"
 sofka = "latest"
 
 # Flux Tools
-"aqua:fluxcd/flux2" = "2.10.0"
+"aqua:fluxcd/flux2" = "2.10.1"
 "github:home-operations/flate" = "latest"
 
 # Helm + Plugins
@@ -24,7 +24,7 @@ helmfile = "latest"
 
 # Talos Stuff
 "aqua:talosctl" = "1.14.6"
-"github:mirceanton/talstomize" = "v1.0.3"
+"github:mirceanton/talstomize" = "v1.0.4"
 "github:mirceanton/talswitcher" = "latest"
 
 # Misc Tools

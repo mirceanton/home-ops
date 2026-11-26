@@ -48,10 +48,10 @@ spec:
     resources:
       requests:
         cpu: 10m
-        memory: 128Mi
+        memory: 64Mi
       limits:
         cpu: 500m
-        memory: 1Gi
+        memory: 512Mi
 
   # The headlamp chart's values.schema.json only allows literal `value:`
   # strings in the top-level `env` list (no valueFrom), so the OIDC client

@@ -16,7 +16,6 @@ spec:
 
     defaultPodOptions:
       automountServiceAccountToken: false
-      runtimeClassName: nvidia
       enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
@@ -79,7 +78,7 @@ spec:
           main:
             image:
               repository: ghcr.io/immich-app/immich-server
-              tag: v3.4.1
+              tag: v3.4.2
             env:
               TZ: "Europe/Bucharest"
               REDIS_HOSTNAME: immich-dragonfly
@@ -95,9 +94,10 @@ spec:
             resources:
               requests:
                 cpu: 13m
-                memory: 650Mi
+                memory: 1280Mi
               limits:
-                memory: 8Gi
+                memory: 4Gi
+                devic.es/dri-render: 1
 
             probes:
               liveness: &probe

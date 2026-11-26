@@ -5,7 +5,7 @@ kind: LiteLLMProxy
 metadata:
   name: litellm
 spec:
-  image: ghcr.io/berriai/litellm:v1.109.1
+  image: ghcr.io/berriai/litellm:1.111.0
   replicas: 1
 
   applyMode: api
@@ -20,6 +20,7 @@ spec:
     proxy_base_url: https://llm.home.mirceanton.com
     store_model_in_db: true
     store_prompts_in_spend_logs: true
+    maximum_spend_logs_retention_period: 30d
     health_check_endpoint: /
     require_auth_for_metrics_endpoint: false
     prometheus_adapter: true
@@ -101,9 +102,9 @@ spec:
   resources:
     requests:
       cpu: 10m
-      memory: 1126Mi
+      memory: 1Gi
     limits:
-      memory: 8Gi
+      memory: 2560Mi
 
   securityContext:
     allowPrivilegeEscalation: false

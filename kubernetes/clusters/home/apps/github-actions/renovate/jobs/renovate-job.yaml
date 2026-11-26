@@ -6,7 +6,7 @@ metadata:
   name: mirceanton
 spec:
   schedule: 15/30 * * * * # every 30 minutes
-  image: ghcr.io/renovatebot/renovate:44.240.0
+  image: ghcr.io/renovatebot/renovate:44.257.9
   parallelism: 5
 
   resources:
@@ -63,7 +63,7 @@ spec:
     - name: mise-bin
       image:
         # renovate: datasource=docker
-        reference: ghcr.io/jdx/mise:2026.11.9
+        reference: ghcr.io/jdx/mise:2026.11.14
         pullPolicy: IfNotPresent
     - name: helm-docs-bin
       image:

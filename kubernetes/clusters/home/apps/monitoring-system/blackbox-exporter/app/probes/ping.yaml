@@ -16,7 +16,5 @@ spec:
         # - pve03.mgmt.h.mirceanton.com
 
         - sonoff-dongle-max.mgmt.h.mirceanton.com
-        - jetkvm.mgmt.h.mirceanton.com
 
-        - mirkdesk-pi.utrst.h.mirceanton.com
         - livingroom-pi.utrst.h.mirceanton.com

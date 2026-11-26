@@ -24,16 +24,16 @@ spec:
     sources: [gateway-httproute, service, ingress, crd]
     managedRecordTypes: [A, CNAME]
 
-    txtOwnerId: iot
-    txtPrefix: k8s.iot.
+    txtOwnerId: home
+    txtPrefix: k8s.home.
 
-    domainFilters: ["home.mirceanton.com", "admin.mirceanton.com"]
+    domainFilters: ["home.mirceanton.com"]
     excludeDomains: []
 
     resources:
       requests:
         cpu: 20m
-        memory: 128Mi
+        memory: 64Mi
       limits:
         memory: 256Mi
 

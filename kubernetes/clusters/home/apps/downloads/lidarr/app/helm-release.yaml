@@ -95,12 +95,12 @@ spec:
         existingClaim: ${APP}
         globalMounts:
           - path: /config
-      media:
+      media-music:
         type: nfs
         server: nas.stor.h.mirceanton.com
-        path: /mnt/tank/Media/
+        path: /mnt/tank/Media/Music
         globalMounts:
-          - path: /data/media
+          - path: /data/media/Music
       downloads:
         type: nfs
         server: nas.stor.h.mirceanton.com

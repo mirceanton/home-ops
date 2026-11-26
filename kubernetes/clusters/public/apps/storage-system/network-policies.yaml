@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
+#? Deny all ingress and egress for every pod in this namespace by default.
+#? The helper pods that create/delete volume directories need no network at all.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? Every pod may resolve cluster DNS.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - { port: "53", protocol: UDP }
+            - { port: "53", protocol: TCP }
+---
+# yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/cilium.io/ciliumnetworkpolicy_v2.json
+#? local-path-provisioner: watches PVCs and creates helper pods through the API server.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: local-path-provisioner
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: local-path-provisioner
+  egress:
+    - toEntities: [kube-apiserver]
