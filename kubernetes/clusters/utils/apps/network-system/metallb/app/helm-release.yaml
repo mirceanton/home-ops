@@ -29,6 +29,8 @@ spec:
           memory: 128Mi
 
     speaker:
+      #? Talos labels control-plane nodes exclude-from-external-load-balancers, and this is the only node
+      ignoreExcludeLB: true
       frr:
         enabled: false
       resources:
