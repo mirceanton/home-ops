@@ -153,7 +153,7 @@ spec:
         - { port: 6443, protocol: TCP }
 ---
 # yaml-language-server: $schema=https://k8s-schemas.mirceanton.com/networking.k8s.io/networkpolicy_v1.json
-#? Watches routes, writes records through the Cloudflare API.
+#? Watches routes, writes records through the MikroTik REST API.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -169,9 +169,7 @@ spec:
       ports:
         - { port: 6443, protocol: TCP }
     - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+        - ipBlock: { cidr: 10.0.20.1/32 }
       ports:
         - { port: 443, protocol: TCP }
 ---
