@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: docker.io/moonrailgun/tianji
-              tag: 1.34.3@sha256:1fa262dcd64f6e9538bcd014392526ad67b27f60c7b07a6cff2b51c41345f368
+              tag: 1.34.4@sha256:cb9c14ff85553003bb6ed825933ba327c8c6e3dbea2e2656eff574ca7a03927b
 
             #? Upstream CMD also starts `tianji-reporter`, which phones a hard-coded workspace
             #? on the server itself, and applies ClickHouse migrations we don't use.
