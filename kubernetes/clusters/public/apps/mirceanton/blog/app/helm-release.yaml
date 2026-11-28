@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/mirceanton/mirceanton.com
-              tag: 2026.11.28@sha256:4191ed2f4e5f8d5670eacb3413a991c0b661c51b347417127b97453c9877d85a
+              tag: 2026.11.28@sha256:9e7cd9f37ae67423c3a82e156671578695f917da0f023b0978ac835984c5373b
 
             env:
               NGINX_ENTRYPOINT_QUIET_LOGS: "1"
