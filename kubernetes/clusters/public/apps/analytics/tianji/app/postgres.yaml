@@ -9,7 +9,7 @@ metadata:
   name: tianji-postgres
 spec:
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:18.7-minimal-trixie
+  imageName: ghcr.io/cloudnative-pg/postgresql:19.0-minimal-trixie
   primaryUpdateStrategy: unsupervised
   enableSuperuserAccess: false
 
